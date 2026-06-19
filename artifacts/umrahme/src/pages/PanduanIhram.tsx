@@ -47,17 +47,20 @@ export default function PanduanIhram() {
     <div>
       <PageHeader title="Panduan Ihram" eyebrow="Panduan" backTo="/panduan" />
 
-      <div className="space-y-5 px-5 pt-5">
-        {/* Niat ihram */}
+      <div className="space-y-5 px-5 pt-5 lg:px-8 lg:max-w-5xl lg:mx-auto">
+        {/* Niat ihram — di desktop, 2 niat berdampingan kalau lebih dari 1 */}
         <div>
           <h2 className="mb-2.5 font-mono text-[11px] uppercase tracking-widest text-mute-500">
             Niat Ihram
           </h2>
-          <div className="space-y-3">
+          <div className="space-y-3 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-3">
             {niatIhram.map((n) => (
               <MihrabCard key={n.id} bodyClassName="px-5 pb-5 pt-2">
                 <p className="text-xs font-medium text-rose-400">{n.judul}</p>
-                <p className="mt-2 text-center font-arab text-[26px] leading-loose text-gold-400" dir="rtl">
+                <p
+                  className="mt-2 text-center font-arab text-[26px] leading-loose text-gold-400"
+                  dir="rtl"
+                >
                   {n.arab}
                 </p>
                 <p className="mt-2 text-center text-sm italic text-parchment-100">{n.latin}</p>
@@ -67,7 +70,7 @@ export default function PanduanIhram() {
           </div>
         </div>
 
-        {/* Larangan ihram — dipisah per gender */}
+        {/* Larangan ihram */}
         <div>
           <h2 className="mb-2.5 font-mono text-[11px] uppercase tracking-widest text-mute-500">
             Larangan Ihram
@@ -88,7 +91,7 @@ export default function PanduanIhram() {
               </button>
             ))}
           </div>
-          <ul className="space-y-2.5">
+          <ul className="space-y-2.5 lg:grid lg:grid-cols-2 lg:gap-2.5 lg:space-y-0">
             {larangan.map((l) => (
               <li
                 key={l.id}
@@ -106,12 +109,12 @@ export default function PanduanIhram() {
           </ul>
         </div>
 
-        {/* Tata cara memakai ihram — accordion */}
+        {/* Cara memakai ihram */}
         <div>
           <h2 className="mb-2.5 font-mono text-[11px] uppercase tracking-widest text-mute-500">
             Cara Memakai Ihram
           </h2>
-          <div className="space-y-2.5">
+          <div className="space-y-2.5 lg:grid lg:grid-cols-2 lg:gap-2.5 lg:space-y-0">
             {tataCaraMemakaiIhram.map((s, i) => (
               <Section key={s.id} title={s.judul} defaultOpen={i === 0}>
                 <ol className="space-y-2">
