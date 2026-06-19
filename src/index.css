@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    background-color: #0d0509;
+    color: #f5ede4;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    /* halus radial glow maroon di belakang konten */
+    background-image: radial-gradient(
+      120% 80% at 50% -10%,
+      rgba(194, 24, 91, 0.08),
+      rgba(13, 5, 9, 0) 60%
+    );
+    background-attachment: fixed;
+  }
+
+  /* hilangkan tap highlight biru bawaan di mobile */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  ::selection {
+    background: rgba(233, 30, 140, 0.3);
+    color: #f5ede4;
+  }
+}
+
+@layer utilities {
+  /* teks gold dengan kontras aman di atas ink-950 */
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  /* hormati prefers-reduced-motion: matikan animasi non-esensial */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+
+  /* scrollbar tipis */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
