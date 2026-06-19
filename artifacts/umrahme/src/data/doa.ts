@@ -1,22 +1,9 @@
 import type { Doa, KategoriDoa } from '../types';
 
-// =============================================================
-// DATA DOA
-// -------------------------------------------------------------
-// 4 doa inti diisi LENGKAP & berdasarkan riwayat yang masyhur
-// (Talbiyah & "Rabbana atina" sahih; doa lihat Ka'bah ditandai
-// perluVerifikasi karena sanadnya diperdebatkan).
-//
-// Kategori lain berisi entri dengan struktur lengkap; field
-// konten yang belum pasti DIKOSONGKAN dan ditandai
-// perluVerifikasi: true + dalil "perlu verifikasi ulama".
-// JANGAN isi konten doa kompleks tanpa kepastian.
-// =============================================================
-
 export const kategoriDoaMeta: { id: KategoriDoa; judul: string; deskripsi: string }[] = [
   { id: 'persiapan', judul: 'Persiapan & Safar', deskripsi: 'Doa sebelum & selama perjalanan' },
   { id: 'ihram', judul: 'Ihram', deskripsi: 'Niat & talbiyah' },
-  { id: 'tawaf', judul: 'Tawaf', deskripsi: 'Bacaan mengelilingi Ka’bah' },
+  { id: 'tawaf', judul: 'Tawaf', deskripsi: 'Bacaan mengelilingi Ka\u2019bah' },
   { id: 'sai', judul: "Sa'i", deskripsi: 'Antara Shafa & Marwah' },
   { id: 'tahallul', judul: 'Tahallul', deskripsi: 'Mencukur / memotong rambut' },
   { id: 'ziarah', judul: 'Ziarah', deskripsi: 'Madinah & tempat bersejarah' },
@@ -24,136 +11,251 @@ export const kategoriDoaMeta: { id: KategoriDoa; judul: string; deskripsi: strin
 ];
 
 export const daftarDoa: Doa[] = [
-  // ----------------------------------------------------------- IHRAM (inti, lengkap)
+  // ----------------------------------------------------------- IHRAM
   {
     id: 'niat-ihram-umrah',
     kategori: 'ihram',
     judul: 'Niat Ihram Umrah',
-    arab: 'لَبَّيْكَ اللّٰهُمَّ عُمْرَةً',
-    latin: "Labbaika Allāhumma ‘umratan",
+    arab: '\u0644\u064e\u0628\u0651\u064e\u064a\u0652\u0643\u064e \u0627\u0644\u0644\u0651\u0670\u0647\u064f\u0645\u0651\u064e \u0639\u064f\u0645\u0652\u0631\u064e\u0629\u064b',
+    latin: "Labbaika All\u0101humma 'umratan",
     terjemahan: 'Aku penuhi panggilan-Mu, ya Allah, untuk berumrah.',
-    arti:
-      'Pernyataan niat memulai ibadah umrah. Diucapkan saat hendak memasuki ihram dari miqat, menandai dimulainya rangkaian ibadah dan berlakunya larangan-larangan ihram.',
-    dalil:
-      'Berdasarkan praktik Nabi ﷺ yang melafalkan jenis ibadah saat ihram (HR. Muslim dari Anas bin Malik). Sebagian ulama menambahkan lafal "Nawaitul ‘umrata wa aḥramtu bihā lillāhi ta‘ālā".',
-    cara:
-      'Dibaca sekali setelah berihram (mandi, memakai kain ihram, shalat sunnah bila memungkinkan) tepat saat hendak berniat di miqat. Setelah ini langsung memperbanyak talbiyah.',
+    arti: 'Pernyataan niat memulai ibadah umrah. Diucapkan saat hendak memasuki ihram dari miqat, menandai dimulainya rangkaian ibadah dan berlakunya larangan-larangan ihram.',
+    dalil: 'Berdasarkan praktik Nabi \ufe3f yang melafalkan jenis ibadah saat ihram (HR. Muslim dari Anas bin Malik).',
+    cara: 'Dibaca sekali setelah berihram (mandi, memakai kain ihram, shalat sunnah bila memungkinkan) tepat saat hendak berniat di miqat.',
     waktu: 'Di miqat, sebelum bertolak menuju Makkah.',
   },
   {
     id: 'talbiyah',
     kategori: 'ihram',
     judul: 'Talbiyah',
-    arab:
-      'لَبَّيْكَ اللّٰهُمَّ لَبَّيْكَ، لَبَّيْكَ لَا شَرِيكَ لَكَ لَبَّيْكَ، إِنَّ الْحَمْدَ وَالنِّعْمَةَ لَكَ وَالْمُلْكَ، لَا شَرِيكَ لَكَ',
-    latin:
-      "Labbaika Allāhumma labbaik, labbaika lā syarīka laka labbaik, innal-ḥamda wan-ni‘mata laka wal-mulk, lā syarīka lak",
-    terjemahan:
-      'Aku penuhi panggilan-Mu ya Allah, aku penuhi panggilan-Mu. Aku penuhi panggilan-Mu, tiada sekutu bagi-Mu, aku penuhi panggilan-Mu. Sesungguhnya segala puji, nikmat, dan kerajaan adalah milik-Mu, tiada sekutu bagi-Mu.',
-    arti:
-      'Pengakuan tauhid dan kesiapan memenuhi panggilan Allah. Inilah syiar utama orang yang berihram.',
-    dalil:
-      'Hadis sahih riwayat al-Bukhari (no. 1549) dan Muslim (no. 1184) dari Ibnu ‘Umar radhiyallahu ‘anhuma, dari Nabi ﷺ.',
-    cara:
-      'Diperbanyak dengan suara dikeraskan bagi laki-laki dan dilirihkan bagi perempuan. Diulang-ulang sejak berihram, terutama saat berganti keadaan (naik kendaraan, menanjak, bertemu rombongan).',
-    waktu: 'Sejak berniat ihram hingga mulai tawaf (talbiyah berhenti saat menyentuh/menghadap Hajar Aswad untuk memulai tawaf).',
+    arab: '\u0644\u064e\u0628\u0651\u064e\u064a\u0652\u0643\u064e \u0627\u0644\u0644\u0651\u0670\u0647\u064f\u0645\u0651\u064e \u0644\u064e\u0628\u0651\u064e\u064a\u0652\u0643\u064e\u060c \u0644\u064e\u0628\u0651\u064e\u064a\u0652\u0643\u064e \u0644\u064e\u0627 \u0634\u064e\u0631\u0650\u064a\u0643\u064e \u0644\u064e\u0643\u064e \u0644\u064e\u0628\u0651\u064e\u064a\u0652\u0643\u064e\u060c \u0625\u0650\u0646\u0651\u064e \u0627\u0644\u0652\u062d\u064e\u0645\u0652\u062f\u064e \u0648\u064e\u0627\u0644\u0646\u0651\u0650\u0639\u0652\u0645\u064e\u0629\u064e \u0644\u064e\u0643\u064e \u0648\u064e\u0627\u0644\u0652\u0645\u064f\u0644\u0652\u0643\u064f\u060c \u0644\u064e\u0627 \u0634\u064e\u0631\u0650\u064a\u0643\u064e \u0644\u064e\u0643\u064e',
+    latin: "Labbaika All\u0101humma labbaik, labbaika l\u0101 syar\u012bka laka labbaik, innal-\u1e25amda wan-ni'mata laka wal-mulk, l\u0101 syar\u012bka lak",
+    terjemahan: 'Aku penuhi panggilan-Mu ya Allah, aku penuhi panggilan-Mu. Aku penuhi panggilan-Mu, tiada sekutu bagi-Mu, aku penuhi panggilan-Mu. Sesungguhnya segala puji, nikmat, dan kerajaan adalah milik-Mu, tiada sekutu bagi-Mu.',
+    arti: 'Pengakuan tauhid dan kesiapan memenuhi panggilan Allah. Inilah syiar utama orang yang berihram.',
+    dalil: 'Hadis sahih riwayat al-Bukhari (no. 1549) dan Muslim (no. 1184) dari Ibnu \u2018Umar radhiyallahu \u2018anhuma, dari Nabi \ufe3f.',
+    cara: 'Diperbanyak dengan suara dikeraskan bagi laki-laki dan dilirihkan bagi perempuan.',
+    waktu: 'Sejak berniat ihram hingga mulai tawaf.',
   },
   {
     id: 'doa-masuk-masjidil-haram',
     kategori: 'persiapan',
     judul: 'Doa Memasuki Masjidil Haram',
-    arab:
-      'بِسْمِ اللّٰهِ، وَالصَّلَاةُ وَالسَّلَامُ عَلَىٰ رَسُولِ اللّٰهِ، اللّٰهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ',
-    latin:
-      "Bismillāh, waṣ-ṣalātu was-salāmu ‘alā rasūlillāh. Allāhummaftaḥ lī abwāba raḥmatik",
-    terjemahan:
-      'Dengan nama Allah, shalawat dan salam atas Rasulullah. Ya Allah, bukakanlah untukku pintu-pintu rahmat-Mu.',
-    arti:
-      'Doa masuk masjid secara umum yang juga dibaca saat memasuki Masjidil Haram, memohon dibukakan pintu rahmat Allah.',
-    dalil:
-      'Lafal "Allāhummaftaḥ lī abwāba raḥmatik" adalah doa masuk masjid riwayat Muslim (no. 713) dari Abu Humaid/Abu Usaid. Para ulama menyebut tidak ada doa khusus tersendiri saat masuk Masjidil Haram selain doa masuk masjid pada umumnya.',
-    cara:
-      'Mendahulukan kaki kanan saat masuk, lalu membaca doa ini. Disunnahkan masuk melalui mana saja, dan bagi pelaku umrah segera menuju tawaf.',
+    arab: '\u0628\u0650\u0633\u0652\u0645\u0650 \u0627\u0644\u0644\u0651\u0670\u0647\u060c \u0648\u064e\u0627\u0644\u0635\u0651\u064e\u0644\u064e\u0627\u0629\u064f \u0648\u064e\u0627\u0644\u0633\u0651\u064e\u0644\u064e\u0627\u0645\u064f \u0639\u064e\u0644\u064a\u0670 \u0631\u064e\u0633\u0648\u0644\u0650 \u0627\u0644\u0644\u0651\u0670\u0647\u060c \u0627\u0644\u0644\u0651\u0670\u0647\u064f\u0645\u0651\u064e \u0627\u0641\u0652\u062a\u064e\u062d\u0652 \u0644\u0650\u064a \u0623\u064e\u0628\u0652\u0648\u064e\u0627\u0628\u064e \u0631\u064e\u062d\u0652\u0645\u064e\u062a\u0650\u0643\u064e',
+    latin: "Bism\u012bll\u0101h, wa\u1e63-\u1e63al\u0101tu was-sal\u0101mu 'al\u0101 ras\u016blill\u0101h. All\u0101hummafta\u1e25 l\u012b abw\u0101ba ra\u1e25matik",
+    terjemahan: 'Dengan nama Allah, shalawat dan salam atas Rasulullah. Ya Allah, bukakanlah untukku pintu-pintu rahmat-Mu.',
+    arti: 'Doa masuk masjid yang dibaca saat memasuki Masjidil Haram, memohon dibukakan pintu rahmat Allah.',
+    dalil: 'Lafal doa masuk masjid riwayat Muslim (no. 713) dari Abu Humaid/Abu Usaid.',
+    cara: 'Mendahulukan kaki kanan saat masuk, lalu membaca doa ini.',
     waktu: 'Saat melangkah masuk ke dalam Masjidil Haram.',
   },
   {
     id: 'doa-melihat-kabah',
     kategori: 'persiapan',
     judul: "Doa Melihat Ka'bah Pertama Kali",
-    arab:
-      'اللّٰهُمَّ زِدْ هٰذَا الْبَيْتَ تَشْرِيفًا وَتَعْظِيمًا وَتَكْرِيمًا وَمَهَابَةً',
-    latin:
-      "Allāhumma zid hādzal-baita tasyrīfan wa ta‘ẓīman wa takrīman wa mahābah",
-    terjemahan:
-      'Ya Allah, tambahkanlah kemuliaan, keagungan, kehormatan, dan kewibawaan pada Baitullah ini.',
-    arti:
-      'Ungkapan pengagungan terhadap Baitullah saat pertama kali memandangnya.',
-    dalil:
-      'Riwayat ini masyhur di kalangan masyarakat namun sanadnya diperbincangkan (sebagian ulama menilainya mursal/lemah). Sebagian ulama (mis. Syaikh Ibnu Baz) menyatakan tidak ada doa khusus yang sahih saat melihat Ka’bah, dan jamaah boleh berdoa/bertakbir dengan doa apa pun yang baik. — perlu verifikasi ulama.',
-    cara:
-      'Boleh mengangkat tangan, bertakbir, dan memperbanyak doa kebaikan dengan lafal apa pun. Tidak mengapa membaca lafal di atas tanpa meyakininya sebagai sunnah yang pasti.',
-    waktu: 'Saat pandangan pertama tertuju pada Ka’bah.',
+    arab: '\u0627\u0644\u0644\u0651\u0670\u0647\u064f\u0645\u0651\u064e \u0632\u0650\u062f\u0652 \u0647\u0670\u0630\u064e\u0627 \u0627\u0644\u0652\u0628\u064e\u064a\u0652\u062a\u064e \u062a\u064e\u0634\u0652\u0631\u0650\u064a\u0641\u064b\u0627 \u0648\u064e\u062a\u064e\u0639\u0652\u0638\u0650\u064a\u0645\u064b\u0627 \u0648\u064e\u062a\u064e\u0643\u0652\u0631\u0650\u064a\u0645\u064b\u0627 \u0648\u064e\u0645\u064e\u0647\u064e\u0627\u0628\u064e\u0629\u064b',
+    latin: "All\u0101humma zid h\u0101dzal-baita tasyr\u012bfan wa ta'\u1e93\u012bman wa takr\u012bman wa mah\u0101bah",
+    terjemahan: 'Ya Allah, tambahkanlah kemuliaan, keagungan, kehormatan, dan kewibawaan pada Baitullah ini.',
+    arti: 'Ungkapan pengagungan terhadap Baitullah saat pertama kali memandangnya.',
+    dalil: 'Riwayat ini masyhur di kalangan masyarakat; sebagian ulama menyatakan tidak ada doa khusus yang sahih saat melihat Ka\u2019bah dan jamaah boleh berdoa dengan apa pun yang baik.',
+    cara: 'Boleh mengangkat tangan, bertakbir, dan memperbanyak doa kebaikan.',
+    waktu: "Saat pandangan pertama tertuju pada Ka'bah.",
     perluVerifikasi: true,
   },
 
-  // ----------------------------------------------------------- TAWAF
+  // ----------------------------------------------------------- TAWAF — 7 putaran
   {
-    id: 'doa-antara-dua-rukun',
+    id: 'tawaf-putaran-1',
     kategori: 'tawaf',
-    judul: 'Doa Antara Rukun Yamani & Hajar Aswad',
-    arab:
-      'رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ',
-    latin:
-      "Rabbanā ātinā fid-dunyā ḥasanah, wa fil-ākhirati ḥasanah, wa qinā ‘adzāban-nār",
-    terjemahan:
-      'Ya Tuhan kami, berilah kami kebaikan di dunia dan kebaikan di akhirat, dan lindungilah kami dari azab neraka.',
-    arti:
-      'Doa ringkas yang menghimpun kebaikan dunia dan akhirat. Dibaca di antara Rukun Yamani dan Hajar Aswad pada setiap putaran tawaf.',
-    dalil:
-      'Ayat QS. al-Baqarah: 201. Praktik membacanya di antara dua rukun diriwayatkan Abu Dawud (no. 1892) dari Abdullah bin as-Sa’ib.',
-    cara:
-      'Dibaca pada setiap putaran ketika berada di antara Rukun Yamani dan Hajar Aswad. Selebihnya, sepanjang tawaf tidak ada doa wajib tertentu — boleh berzikir & berdoa dengan bahasa apa pun.',
-    waktu: 'Setiap putaran tawaf, di sisi akhir menjelang Hajar Aswad.',
+    judul: 'Doa Tawaf Putaran 1',
+    arab: '\u0633\u064f\u0628\u0652\u062d\u064e\u0627\u0646\u064e \u0627\u0644\u0644\u0647\u0650 \u0648\u064e\u0627\u0644\u0652\u062d\u064e\u0645\u0652\u062f\u064f\u0644\u0650\u0644\u0651\u064e\u0647\u0650 \u0648\u064e\u0644\u064a\u0652\u0633\u064e \u0625\u0650\u0644\u064e\u0647\u064e \u0625\u0650\u0644\u0627\u0651\u064e \u0627\u0644\u0644\u0647\u064f \u0648\u064e\u0627\u0644\u0644\u0647\u064f \u0623\u064e\u0643\u0652\u0628\u064e\u0631\u064f \u0648\u064e\u0644\u064a\u0652\u0633\u064e \u062d\u064e\u0648\u0652\u0644\u064e \u0648\u064e\u0644\u064a\u0652\u0633\u064e \u0642\u064f\u0648\u0651\u064e\u0629\u064e \u0625\u0650\u0644\u0651\u064e\u0627 \u0628\u0650\u0627\u0644\u0644\u0647\u0650 \u0627\u0644\u0652\u0639\u064e\u0644\u0650\u064a\u0651\u0650 \u0627\u0644\u0652\u0639\u064e\u0638\u0650\u064a\u0652\u0645\u0650 \u0648\u064e\u0627\u0644\u0635\u0651\u064e\u0644\u064e\u0627\u0629\u064f \u0648\u064e\u0627\u0644\u0633\u0651\u064e\u0644\u064e\u0627\u0645\u064f \u0639\u064e\u0644\u064e\u0649 \u0631\u064e\u0633\u064f\u0648\u0652\u0644\u0650 \u0627\u0644\u0644\u0647\u0650 \u0635\u064e\u0644\u0651\u064e\u0649 \u0627\u0644\u0644\u0647\u064f \u0639\u064e\u0644\u064e\u064a\u0652\u0647\u0650 \u0648\u064e\u0633\u064e\u0644\u0651\u064e\u0645\u064e. \u0627\u064e\u0644\u0644\u0651\u064e\u0647\u064f\u0645\u0651\u064e \u0625\u0650\u064a\u0652\u0645\u064e\u0627\u0646\u064b\u0627 \u0628\u0650\u0643\u064e \u0648\u064e\u062a\u064e\u0635\u0652\u062f\u0650\u064a\u0642\u064b\u0627 \u0628\u0650\u0643\u0650\u062a\u064e\u0627\u0628\u0650\u0643\u064e \u0648\u064e\u0648\u064e\u0641\u064e\u0627\u0621\u064b \u0628\u0650\u0639\u064e\u0647\u0652\u062f\u0650\u0643\u064e \u0648\u064e\u0627\u062a\u0650\u0651\u062a\u0650\u0628\u064e\u0627\u0639\u064b\u0627 \u0644\u0650\u0633\u064f\u0646\u0651\u064e\u0629\u0650 \u0646\u064e\u0628\u0650\u064a\u0651\u0650\u0643\u064e \u0648\u064e\u062d\u064e\u0628\u0650\u064a\u0652\u0628\u0650\u0643\u064e \u0645\u064f\u062d\u064e\u0645\u0651\u064e\u062f\u064d \u0635\u064e\u0644\u0651\u064e\u0649 \u0627\u0644\u0644\u0647\u064f \u0639\u064e\u0644\u064e\u064a\u0652\u0647\u0650 \u0648\u064e\u0633\u064e\u0644\u0651\u064e\u0645\u064e. \u0627\u064e\u0644\u0644\u0651\u064e\u0647\u064f\u0645\u0651\u064e \u0625\u0650\u0646\u0651\u0650\u064a\u0652 \u0623\u064e\u0633\u0652\u0623\u064e\u0644\u064f\u0643\u064e \u0627\u0644\u0652\u0639\u064e\u0641\u0652\u0648\u064e \u0648\u064e\u0627\u0644\u0652\u0639\u064e\u0627\u0641\u0650\u064a\u064e\u0629\u064e \u0648\u064e\u0627\u0644\u0652\u0645\u064f\u0639\u064e\u0627\u0641\u064e\u0627\u0629\u064e \u0627\u0644\u062f\u0651\u064e\u0627\u0626\u0650\u0645\u064e\u0629\u064e \u0641\u0650\u064a\u0652 \u0627\u0644\u062f\u0651\u0650\u064a\u0652\u0646\u0650 \u0648\u064e\u0627\u0644\u062f\u0651\u064f\u0646\u0652\u064a\u064e\u0627 \u0648\u064e\u0627\u0644\u0652\u0622\u062e\u0650\u0631\u064e\u0629\u0650 \u0648\u064e\u0627\u0644\u0652\u0641\u064e\u0648\u0652\u0632\u064e \u0628\u0650\u0627\u0644\u0652\u062c\u064e\u0646\u0651\u064e\u0629\u0650 \u0648\u064e\u0627\u0644\u0646\u0651\u064e\u062c\u064e\u0627\u0629\u064e \u0645\u0650\u0646\u064e \u0627\u0644\u0646\u0651\u064e\u0627\u0631\u0650',
+    latin: "Subhanallaahi wal hamdulillaahi wa laa ilaaha illallaahu wallaahu akbar wa laa hawla wa laa quwwata illaa billaahil-'aliyyil-'aziim. Wash-shalaatu was-salaamu 'alaa rosuulillahi shallallaahu 'alaihi wasallam. Allahumma iimanan bika watasdhiiqon bikitaabika wawafaa'an bia'hdika wat-tibaa'an lissunnati nabiyyika Muhammadin SAW. Allahumma innii as'alukal-'afwa wa-'aafiyata walmu'aafata-ddaaimata fid-diini wad-dunya wal-aakhiroh wal-fauza bil-jannati wannajaata minannaar",
+    terjemahan: "Maha suci Allah, segala puji bagi Allah, tiada Tuhan selain Allah, Allah Maha Besar, tiada daya dan kekuatan selain dengan kuasa Allah Yang Maha Tinggi lagi Maha Agung. Shalawat dan salam atas Rasulullah SAW. Ya Allah aku tawaf ini karena beriman kepada-Mu, membenarkan kitab-Mu, dan memenuhi janji-Mu serta mengikuti sunnah nabi-Mu, yaitu nabi Muhammad SAW. Ya Allah sesungguhnya aku mohon kepada-Mu ampunan, kesehatan dan perlindungan yang kekal dalam menjalankan agama baik di dunia maupun di akhirat dan keberuntungan memperoleh surga serta terhindar dari api neraka.",
+    arti: 'Tasbih, tahmid, takbir, dan permohonan ampunan, kesehatan, serta surga di awal putaran tawaf.',
+    cara: "Dibaca sambil mengelilingi Ka'bah dari Hajar Aswad menuju Rukun Yamani (atau sebaliknya sesuai arah tawaf).",
+    waktu: 'Tawaf, putaran ke-1',
+    dalil: 'Bacaan tawaf dari putaran ke-1, dibaca mulai dari Hajar Aswad sampai Rukun Yamani. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
   },
   {
-    id: 'tawaf-zikir-umum',
+    id: 'tawaf-putaran-2',
     kategori: 'tawaf',
-    judul: 'Zikir & Doa Umum Saat Tawaf',
-    arab: '',
-    latin: '',
-    terjemahan: '',
-    dalil: 'TODO: verifikasi konten oleh ustadz.',
-    cara: 'Tidak ada doa khusus yang wajib tiap putaran selain antara dua rukun; jamaah dianjurkan memperbanyak zikir, istighfar, dan doa pribadi.',
-    waktu: 'Sepanjang tujuh putaran tawaf.',
-    perluVerifikasi: true,
+    judul: 'Doa Tawaf Putaran 2',
+    arab: '\u0627\u064e\u0644\u0644\u0651\u0670\u0647\u064f\u0645\u0651\u064e \u0625\u0650\u0646\u0651\u064e \u0647\u064e\u0630\u064e\u0627 \u0627\u0644\u0652\u0628\u064e\u064a\u0652\u062a\u064e \u0628\u064e\u064a\u0652\u062a\u064f\u0643\u064e \u0648\u064e\u0627\u0644\u0652\u062d\u064e\u0631\u064e\u0645\u064e \u062d\u064e\u0631\u064e\u0645\u064f\u0643\u064e \u0648\u064e\u0627\u0644\u0652\u0623\u064e\u0645\u0652\u0646\u064e \u0623\u064e\u0645\u0652\u0646\u064f\u0643\u064e \u0648\u064e\u0627\u0644\u0652\u0639\u064e\u0628\u0652\u062f\u064e \u0639\u064e\u0628\u0652\u062f\u064f\u0643\u064e \u0648\u064e\u0623\u064e\u0646\u064e\u0627 \u0639\u064e\u0628\u0652\u062f\u064f\u0643\u064e \u0648\u064e\u0627\u0628\u0652\u0646\u064f \u0639\u064e\u0628\u0652\u062f\u0650\u0643\u064e \u0648\u064e\u0647\u064e\u0630\u064e\u0627 \u0645\u064e\u0642\u064e\u0627\u0645\u064f \u0627\u0644\u0652\u0639\u064e\u0627\u0626\u0650\u0630\u0650 \u0628\u0650\u0643\u064e \u0645\u0650\u0646\u064e \u0627\u0644\u0646\u0651\u064e\u0627\u0631\u0650. \u0641\u064e\u062d\u064e\u0631\u0651\u0650\u0645\u0652 \u0644\u064f\u062d\u064f\u0648\u0652\u0645\u064e\u0646\u064e\u0627 \u0648\u064e\u0628\u064e\u0634\u064e\u0631\u064e\u062a\u064e\u0646\u064e\u0627 \u0639\u064e\u0644\u064e\u0649 \u0627\u0644\u0646\u0651\u064e\u0627\u0631\u0650. \u0627\u064e\u0644\u0644\u0651\u064e\u0647\u064f\u0645\u0651\u064e \u062d\u064e\u0628\u0651\u0650\u0628\u0652 \u0625\u0650\u0644\u064e\u064a\u0652\u0646\u064e\u0627 \u0627\u0644\u0652\u0625\u0650\u064a\u0652\u0645\u064e\u0627\u0646\u064e \u0648\u064e\u0632\u064e\u064a\u0651\u0650\u0646\u0652\u0647\u064f \u0641\u0650\u064a\u0652 \u0642\u064f\u0644\u064f\u0648\u0628\u0650\u0646\u064e\u0627 \u0648\u064e\u0643\u064e\u0631\u0651\u0650\u0647\u0652 \u0625\u0650\u0644\u064e\u064a\u0652\u0646\u064e\u0627 \u0627\u0644\u0652\u0643\u064f\u0641\u0652\u0631\u064e \u0648\u064e\u0627\u0644\u0652\u0641\u064f\u0633\u064f\u0648\u0642\u064e \u0648\u064e\u0627\u0644\u0652\u0639\u0650\u0635\u0652\u064a\u064e\u0627\u0646\u064e \u0648\u064e\u0627\u062c\u0652\u0639\u064e\u0644\u0652\u0646\u064e\u0627 \u0645\u0650\u0646\u064e \u0627\u0644\u0631\u0651\u064e\u0627\u0634\u0650\u062f\u0650\u064a\u0652\u0646\u064e. \u0627\u064e\u0644\u0644\u0651\u064e\u0647\u064f\u0645\u0651\u064e \u0642\u0650\u0646\u0650\u064a\u0652 \u0639\u064e\u0630\u064e\u0627\u0628\u064e\u0643\u064e \u064a\u064e\u0648\u0652\u0645\u064e \u062a\u064e\u0628\u0652\u0639\u064e\u062b\u064f \u0639\u0650\u0628\u064e\u0627\u062f\u064e\u0643\u064e. \u0627\u064e\u0644\u0644\u0651\u064e\u0647\u064f\u0645\u0651\u064e \u0627\u0631\u0652\u0632\u064f\u0642\u0652\u0646\u0650\u064a\u0652 \u0627\u0644\u0652\u062c\u064e\u0646\u0651\u064e\u0629\u064e \u0628\u0650\u063a\u064e\u064a\u0652\u0631\u0650 \u062d\u0650\u0633\u064e\u0627\u0628\u064d',
+    latin: "Allahumma inna haadzal-baita baituka wal-haroma haromuka wal amna amnuka wal 'abda 'abduka wabnu 'abdika wa haadza maqoomul-'aaidi bika minannaari faharrim luhuumanaa wa basyarotanaa 'alannaar. Allaahumma habbib ilainal-kufro walfusuuqo iimaana wazayyinhu fiquluubinaa wakarrih ilainal kufro walfusuuqo wal'ishyaana waj'alnaa minarroosyidiin. Allahumma qinii 'adzaabaka yauma tab'atsu 'ibaadaka, Allaahummarzuqniyal-jannata bighairi hisaab",
+    terjemahan: "Ya Allah sesungguhnya bait ini adalah rumah-Mu, tanah yang mulia ini adalah tanah haram-Mu, negeri yang aman ini adalah negeri-Mu, hamba ini adalah hamba-Mu, dan tempat ini adalah tempat orang berlindung pada-Mu dari api neraka. Maka periharalah/haramkanlah daging dan kulit kami dari api neraka. Ya Allah cintakanlah kami pada iman dan hiaskanlah ia di hati kami. Dan tanamkanlah kebencian di hati kami pada perbuatan kufur, fasiq, maksiat dan durhaka serta masukkanlah kami ke dalam golongan orang-orang yang mendapat petunjuk.",
+    arti: "Permohonan perlindungan dari neraka dan cinta kepada iman di hadapan Baitullah Allah.",
+    cara: "Dibaca sambil mengelilingi Ka'bah dari Hajar Aswad menuju Rukun Yamani (atau sebaliknya sesuai arah tawaf).",
+    waktu: 'Tawaf, putaran ke-2',
+    dalil: 'Bacaan tawaf dari putaran ke-2, dibaca mulai dari Hajar Aswad sampai Rukun Yamani. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+  },
+  {
+    id: 'tawaf-putaran-3',
+    kategori: 'tawaf',
+    judul: 'Doa Tawaf Putaran 3',
+    arab: '\u0627\u064e\u0644\u0644\u0651\u064e\u0647\u064f\u0645\u0651\u064e \u0625\u0650\u0646\u0650\u064a\u0652 \u0623\u064e\u0639\u064f\u0648\u0630\u064f\u0628\u0650\u0643\u064e \u0645\u0650\u0646\u064e \u0627\u0644\u0634\u0651\u064e\u0643\u0651\u0650 \u0648\u064e\u0627\u0644\u0634\u0651\u0650\u0631\u0652\u0643\u0650 \u0648\u064e\u0627\u0644\u0634\u0651\u0650\u0642\u064e\u0627\u0642\u0650 \u0648\u064e\u0627\u0644\u0646\u0651\u0650\u0641\u064e\u0627\u0642\u0650 \u0648\u064e\u0633\u064f\u0648\u0652\u0621\u0650 \u0627\u0644\u0652\u0623\u064e\u062e\u0652\u0644\u064e\u0627\u0642\u0650 \u0648\u064e\u0627\u0644\u0652\u0645\u064e\u0646\u0652\u0638\u064e\u0631\u0650 \u0648\u064e\u0627\u0644\u0652\u0645\u064f\u0646\u0652\u0642\u064e\u0644\u064e\u0628\u0650 \u0641\u0650\u064a\u0652 \u0627\u0644\u0652\u0645\u064e\u0627\u0644\u0650 \u0648\u064e\u0627\u0644\u0652\u0623\u064e\u0647\u0652\u0644\u0650 \u0648\u064e\u0627\u0644\u0652\u0648\u064e\u0644\u064e\u062f\u0650. \u0627\u064e\u0644\u0644\u0651\u064e\u0647\u064f\u0645\u0651\u064e \u0625\u0650\u0646\u0650\u064a\u0652 \u0623\u064e\u0633\u0652\u0623\u064e\u0644\u064f\u0643\u064e \u0631\u0650\u0636\u064e\u0627\u0643\u064e \u0648\u064e\u0627\u0644\u0652\u062c\u064e\u0646\u0651\u064e\u0629\u064e \u0648\u064e\u0623\u064e\u0639\u064f\u0648\u0630\u064f\u0628\u0650\u0643\u064e \u0645\u0650\u0646\u0652 \u0633\u064e\u062e\u064e\u0637\u0650\u0643\u064e \u0648\u064e\u0627\u0644\u0646\u0651\u064e\u0627\u0631\u0650. \u0627\u064e\u0644\u0644\u0651\u064e\u0647\u064f\u0645\u0651\u064e \u0625\u0650\u0646\u0650\u064a\u0652 \u0623\u064e\u0639\u064f\u0648\u0630\u064f\u0628\u0650\u0643\u064e \u0645\u0650\u0646\u0652 \u0641\u0650\u062a\u0652\u0646\u064e\u0629\u0650 \u0627\u0644\u0652\u0642\u064e\u0628\u0652\u0631\u0650 \u0648\u064e\u0623\u064e\u0639\u064f\u0648\u0630\u064f\u0628\u0650\u0643\u064e \u0645\u0650\u0646\u0652 \u0641\u0650\u062a\u0652\u0646\u064e\u0629\u0650 \u0627\u0644\u0652\u0645\u064e\u062d\u0652\u064a\u064e\u0627 \u0648\u064e\u0627\u0644\u0652\u0645\u064e\u0645\u064e\u0627\u062a\u0650',
+    latin: "Allahumma innii a'udzubika minasysyakki wasysyirki wasy-syiqooqi wan-nifaaqi wasuu'il-akhlaaqi manzhori walmunqalabi filmaali walahli walwaladi. Allahumma inni as'aluka ridhaaka waljannata wa a'uudzubika min fitnatilqabri wa a'uudzu bika min fitnatilmahyaa walmamaat",
+    terjemahan: "Ya Allah, sesungguhnya aku berlindung kepada-Mu dari keraguan, syirik, cerai berai, kemunafikan, buruk budi pekerti, buruk penampilan dan salah urus terhadap harta benda, keluarga dan anak. Ya Allah sesungguhnya aku mohon kepada Engkau ridha-Mu dan surga dan aku berlindung kepada-Mu dari murka-Mu dan api neraka. Ya Allah, sesungguhnya aku berlindung kepada Engkau dari fitnah kubur dan aku berlindung kepada Engkau dari fitnah kehidupan dan derita kematian.",
+    arti: 'Berlindung dari sifat buruk, syirik, nifak, dan fitnah dunia serta kubur.',
+    cara: "Dibaca sambil mengelilingi Ka'bah dari Hajar Aswad menuju Rukun Yamani (atau sebaliknya sesuai arah tawaf).",
+    waktu: 'Tawaf, putaran ke-3',
+    dalil: 'Bacaan tawaf dari putaran ke-3, dibaca mulai dari Hajar Aswad sampai Rukun Yamani. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+  },
+  {
+    id: 'tawaf-putaran-4',
+    kategori: 'tawaf',
+    judul: 'Doa Tawaf Putaran 4',
+    arab: '\u0627\u064e\u0644\u0644\u0651\u064e\u0647\u064f\u0645\u0651\u064e \u0627\u062c\u0652\u0639\u064e\u0644\u0652 \u062d\u064e\u062c\u0651\u0650\u064a\u0652 \u0645\u064e\u0628\u0652\u0631\u064f\u0648\u0652\u0631\u064b\u0627 \u0648\u064e\u0633\u064e\u0639\u0652\u064a\u064b\u0627 \u0645\u064e\u0634\u0652\u0643\u064f\u0648\u0631\u064b\u0627 \u0648\u064e\u0630\u064e\u0646\u0652\u0628\u064b\u0627 \u0645\u064e\u063a\u0652\u0641\u064f\u0648\u0652\u0631\u064b\u0627 \u0648\u064e\u0639\u064e\u0645\u064e\u0644\u0627\u064b \u0635\u064e\u0627\u0644\u0650\u062d\u064b\u0627 \u0645\u064e\u0642\u0652\u0628\u064f\u0648\u0644\u0627\u064b \u0648\u064e\u062a\u0650\u062c\u064e\u0627\u0631\u064e\u0629\u064b \u0644\u064e\u0646\u0652 \u062a\u064e\u0628\u064f\u0648\u0652\u0631\u064e. \u064a\u064e\u0627\u0639\u064e\u0627\u0644\u0650\u0645\u064e \u0645\u064e\u0627 \u0641\u0650\u064a\u0652 \u0627\u0644\u0635\u0651\u064f\u062f\u064f\u0648\u0652\u0631\u0650 \u0623\u062e\u0652\u0631\u0650\u062c\u0652\u0646\u0650\u064a\u0652 \u064a\u064e\u0627 \u0627\u0644\u0644\u0647\u064f \u0645\u0650\u0646\u064e \u0627\u0644\u0638\u0651\u064f\u0644\u064f\u0645\u064e\u0627\u062a\u0650 \u0625\u0650\u0644\u064e\u0649 \u0627\u0644\u0646\u0651\u064f\u0648\u0652\u0631\u0650. \u0627\u064e\u0644\u0644\u0651\u064e\u0647\u064f\u0645\u0651\u064e \u0625\u0650\u0646\u0650\u064a\u0652 \u0623\u064e\u0633\u0652\u0623\u064e\u0644\u064f\u0643\u064e \u0645\u064f\u0648\u0652\u062c\u0650\u0628\u064e\u0627\u062a\u0650 \u0631\u064e\u062d\u0652\u0645\u064e\u062a\u0650\u0643\u064e \u0648\u064e\u0639\u064e\u0632\u064e\u0627\u0626\u0650\u0645\u064e \u0645\u064e\u063a\u0652\u0641\u0650\u0631\u064e\u062a\u0650\u0643\u064e \u0648\u064e\u0627\u0644\u0633\u0651\u064e\u0644\u064e\u0627\u0645\u064e\u0629\u064e \u0645\u0650\u0646\u0652\u0643\u064f\u0644\u0651\u0650 \u0625\u0650\u062b\u0652\u0645\u064d \u0648\u064e\u0627\u0644\u0652\u063a\u064e\u0646\u0650\u064a\u0652\u0645\u064e\u0629\u064e \u0645\u0650\u0646\u0652\u0643\u064f\u0644\u0651\u0650 \u0628\u0650\u0631\u0651\u064d \u0648\u064e\u0627\u0644\u0652\u0641\u064e\u0648\u0652\u0632\u064e \u0628\u0650\u0627\u0644\u0652\u062c\u064e\u0646\u0651\u064e\u0629\u0650 \u0648\u064e\u0627\u0644\u0646\u0651\u064e\u062c\u064e\u0627\u0629\u064e \u0645\u0650\u0646\u064e \u0627\u0644\u0646\u0651\u064e\u0627\u0631\u0650. \u0631\u064e\u0628\u0651\u0650 \u0642\u064e\u0646\u0651\u0650\u0639\u0652\u0646\u0650\u064a\u0652 \u0628\u0650\u0645\u064e\u0627 \u0631\u064e\u0632\u064e\u0642\u0652\u062a\u064e\u0646\u0650\u064a\u0652 \u0648\u064e\u0628\u064e\u0627\u0631\u0650\u0643\u0652 \u0644\u0650\u064a\u0652 \u0641\u0650\u064a\u0652\u0645\u064e\u0627 \u0623\u064e\u0639\u0652\u0637\u064e\u064a\u0652\u062a\u064e\u0646\u0650\u064a\u0652 \u0648\u064e\u0627\u062e\u0652\u0644\u064f\u0641\u0652 \u0639\u064e\u0644\u064e\u064a\u0651\u064e \u0643\u064f\u0644\u0651\u064e \u063a\u064e\u0627\u0626\u0650\u0628\u064e\u0629\u064d \u0644\u0650\u064a\u0652 \u0645\u0650\u0646\u0652\u0643\u064e \u0628\u0650\u062e\u064e\u064a\u0652\u0631\u064d',
+    latin: "Allaahummaj'al hajji'i mabruuroo wasa'yan masykuuroo wadzanban maghfuuroo wa'amalan shoolihan maqbuulaa watijaarotan lantaburoo ya 'aalima mafishshuduur. Akhrijni ya Allah minazhzhulumaati ilannuur. Allahumma innii as'aluka muujiibaati rahmatika wa 'azaaima maghfirotika wassalaamata minkulli itsmin walghaniimata minkulli birrin walfauza biljannati wannajaata minannaari. Robbi qanni'ni bimaa rozaqtanii wabaarikli fiimaa a'thaitanii wakhluf 'alayya kulla ghaaibatin lii minka bikhairin",
+    terjemahan: "Ya Allah, jadikanlah hajiku ini haji yang mabrur, sa'i yang diterima, dosa yang diampuni, amal shaleh yang diterima dan usaha yang tidak mengalami rugi selamanya. Wahai Tuhan yang Maha Mengetahui apa yang terkandung dalam hati sanubari, keluarkanlah aku dari kegelapan menuju cahaya yang terang benderang. Ya Allah aku mohon kepada-Mu segala hal yang dapat mendatangkan rahmat-Mu dan keteguhan ampunan-Mu, selamat dari segala dosa, beruntung dengan mendapat kebaikan, beruntung memperoleh surga dan terhindar dari segala dosa. Tuhanku, anugerahilah aku sifat hemat terhadap rizki-Mu, berkatilah aku atas semua yang Engkau anugerahkan padaku dan gantilah apa-apa yang aku luput daripadanya dengan kebaikan dari-Mu.",
+    arti: "Permohonan ibadah yang mabrur, ampunan dosa, ridha-Nya, dan keselamatan dari gelap menuju cahaya.",
+    cara: "Dibaca sambil mengelilingi Ka'bah dari Hajar Aswad menuju Rukun Yamani (atau sebaliknya sesuai arah tawaf).",
+    waktu: 'Tawaf, putaran ke-4',
+    dalil: 'Bacaan tawaf dari putaran ke-4, dibaca mulai dari Hajar Aswad sampai Rukun Yamani. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+  },
+  {
+    id: 'tawaf-putaran-5',
+    kategori: 'tawaf',
+    judul: 'Doa Tawaf Putaran 5',
+    arab: '\u0627\u064e\u0644\u0644\u0651\u064e\u0647\u064f\u0645\u0651\u064e \u0623\u064e\u0638\u0650\u0644\u0651\u064e\u0646\u0650\u064a\u0652 \u062a\u064e\u062d\u0652\u062a\u064e \u0638\u0650\u0644\u0651\u0650 \u0639\u064e\u0631\u0652\u0634\u0650\u0643\u064e \u064a\u064e\u0648\u0652\u0645\u064e \u0644\u064e\u0627 \u0638\u0650\u0644\u0651\u064e \u0625\u0650\u0644\u0651\u064e\u0627 \u0638\u0650\u0644\u0651\u064f\u0643\u064e \u0648\u064e\u0644\u064e\u0627 \u0628\u064e\u0627\u0642\u0650\u064a\u064e \u0625\u0650\u0644\u0651\u064e\u0627 \u0648\u064e\u062c\u0652\u0647\u064f\u0643\u064e \u0648\u064e\u0627\u0633\u0652\u0642\u0650\u0646\u0650\u064a\u0652 \u0645\u0650\u0646\u0652 \u062d\u064e\u0648\u0652\u0636\u0650 \u0646\u064e\u0628\u0650\u064a\u0651\u0650\u0643\u064e \u0645\u064f\u062d\u064e\u0645\u0651\u064e\u062f\u064d \u0635\u064e\u0644\u0651\u064e\u0649 \u0627\u0644\u0644\u0647\u064f \u0639\u064e\u0644\u064e\u064a\u0652\u0647\u0650 \u0648\u064e\u0633\u064e\u0644\u0651\u064e\u0645\u064e \u0634\u064f\u0631\u0652\u0628\u064e\u0629\u064b \u0647\u064e\u0646\u0650\u064a\u0652\u0626\u064e\u0629\u064b \u0645\u064e\u0631\u0650\u064a\u0652\u0626\u064e\u0629\u064b \u0644\u064e\u0627 \u0623\u064e\u0638\u0652\u0645\u064e\u0623\u064f \u0628\u064e\u0639\u0652\u062f\u064e\u0647\u064e\u0627 \u0623\u064e\u0628\u064e\u062f\u064b\u0627. \u0627\u064e\u0644\u0644\u0651\u064e\u0647\u064f\u0645\u0651\u064e \u0625\u0650\u0646\u0650\u064a\u0652 \u0623\u064e\u0633\u0652\u0623\u064e\u0644\u064f\u0643\u064e \u0645\u0650\u0646\u0652 \u062e\u064e\u064a\u0652\u0631\u0650 \u0645\u064e\u0627 \u0633\u064e\u0623\u064e\u0644\u064e\u0643\u064e \u0645\u0650\u0646\u0652\u0647\u064f \u0646\u064e\u0628\u0650\u064a\u0651\u064f\u0643\u064e \u0645\u064f\u062d\u064e\u0645\u0651\u064e\u062f\u064c \u0635\u064e\u0644\u0651\u064e\u0649 \u0627\u0644\u0644\u0647\u064f \u0639\u064e\u0644\u064e\u064a\u0652\u0647\u0650 \u0648\u064e\u0633\u064e\u0644\u0651\u064e\u0645\u064e \u0648\u064e\u0623\u064e\u0639\u064f\u0648\u0630\u064f\u0628\u0650\u0643\u064e \u0645\u0650\u0646\u0652 \u0634\u064e\u0631\u0651\u0650 \u0645\u064e\u0627 \u0627\u0633\u0652\u062a\u064e\u0639\u064e\u0627\u0630\u064e\u0643\u064e \u0645\u0650\u0646\u0652\u0647\u064f \u0646\u064e\u0628\u0650\u064a\u0651\u064f\u0643\u064e \u0645\u064f\u062d\u064e\u0645\u0651\u064e\u062f\u064c \u0635\u064e\u0644\u0651\u064e\u0649 \u0627\u0644\u0644\u0647\u064f \u0639\u064e\u0644\u064e\u064a\u0652\u0647\u0650 \u0648\u064e\u0633\u064e\u0644\u0651\u064e\u0645\u064e. \u0627\u064e\u0644\u0644\u0651\u064e\u0647\u064f\u0645\u0651\u064e \u0625\u0650\u0646\u0650\u064a\u0652 \u0623\u064e\u0633\u0652\u0623\u064e\u0644\u064f\u0643\u064e \u0627\u0644\u0652\u062c\u064e\u0646\u0651\u064e\u0629\u064e \u0648\u064e\u0646\u064e\u0639\u0650\u064a\u0652\u0645\u064e\u0647\u064e\u0627 \u0648\u064e\u0645\u064e\u0627 \u064a\u064f\u0642\u064e\u0631\u0651\u0650\u0628\u064f\u0646\u0650\u064a\u0652 \u0625\u0650\u0644\u064e\u064a\u0652\u0647\u064e\u0627 \u0645\u0650\u0646\u0652 \u0642\u064e\u0648\u0652\u0644\u064d \u0623\u064e\u0648\u0652\u0641\u0650\u0639\u0652\u0644\u064d \u0623\u064e\u0648\u0652\u0639\u064e\u0645\u064e\u0644\u064d \u0648\u064e\u0623\u064e\u0639\u064f\u0648\u0630\u064f\u0628\u0650\u0643\u064e \u0645\u0650\u0646\u064e \u0627\u0644\u0646\u0651\u064e\u0627\u0631\u0650 \u0648\u064e\u0645\u064e\u0627 \u064a\u064f\u0642\u064e\u0631\u0651\u0650\u0628\u064f\u0646\u0650\u064a\u0652 \u0625\u0650\u0644\u064e\u064a\u0652\u0647\u064e\u0627 \u0645\u0650\u0646\u0652 \u0642\u064e\u0648\u0652\u0644\u064d \u0623\u064e\u0648\u0652\u0641\u0650\u0639\u0652\u0644\u064d \u0623\u064e\u0648\u0652\u0639\u064e\u0645\u064e\u0644\u064d',
+    latin: "Allahumma azhilnii tahta zhilli 'arsyika yawma laa zhilla illa zhilluka wa la baaqin illa wajhuka wa asqinii min hawdhi nabiyyika muhammadin shalallaahu 'alaihi wa sallama syurbatan hanii'atan marii'atan la azma'u ba'dahaa abadaa. Allahumma innii as'aluka min khairi maa sa'alaka minhu nabiyyuka muhammadun shalallaahu 'alaihi wa sallama wa a'udzu bika min syarri masta'aadzaka minhu nabiyyuka Muhammadun shalallaahu 'alaihi wa sallama. Allahumma inni as'alukaljannata wana'iimahaa wamaa yuqarribunii ilaihaa minqaulin awfi'lin awiamalin wa a'udzu bika minnaari wamaayuqarribunii ilaihaa minqaulin awfi'lin aw'amalin",
+    terjemahan: "Yaa Allah, lindungilah aku dalam naungan 'Arsy-Mu pada hari yang tidak ada naungan selain dari naungan-Mu, dan tidak ada yang tinggal kekal selain dari wajah-Mu, dan berilah aku minuman dari telaga Nabi Muhammad SAW dengan suatu minuman yang lezat, segar dan nyaman, sesudah itu aku tidak akan haus untuk selamanya. Yaa Allah, aku mohon pada-Mu kebaikan yang diminta oleh Nabimu Muhammad SAW dan aku berlindung pada-Mu dari yang dimintakan perlindungan oleh Nabi-Mu Muhammad SAW. Yaa Allah, aku mohon pada-Mu surga serta nikmatnya dan apapun yang dapat mendekatkan aku kepadanya baik ucapan, perbuatan maupun amal-amal yang lain dan aku berlindung pada-Mu dari neraka serta apapun yang mendekatkan aku kepadanya.",
+    arti: "Permohonan naungan Allah di hari kiamat, minuman dari telaga Nabi, dan surga beserta nikmatnya.",
+    cara: "Dibaca sambil mengelilingi Ka'bah dari Hajar Aswad menuju Rukun Yamani (atau sebaliknya sesuai arah tawaf).",
+    waktu: 'Tawaf, putaran ke-5',
+    dalil: 'Bacaan tawaf dari putaran ke-5, dibaca mulai dari Hajar Aswad sampai Rukun Yamani. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+  },
+  {
+    id: 'tawaf-putaran-6',
+    kategori: 'tawaf',
+    judul: 'Doa Tawaf Putaran 6',
+    arab: '\u0627\u064e\u0644\u0644\u0651\u064e\u0647\u064f\u0645\u0651\u064e \u0625\u0650\u0646\u0651\u064e \u0644\u064e\u0643\u064e \u0639\u064e\u0644\u064e\u064a\u0651\u064e \u062d\u064f\u0642\u064f\u0648\u0642\u064b\u0627 \u0643\u064e\u062b\u0650\u064a\u0652\u0631\u064e\u0629\u064b \u0641\u0650\u064a\u0652\u0645\u064e\u0627 \u0628\u064e\u064a\u0652\u0646\u0650\u064a\u0652 \u0648\u064e\u0628\u064e\u064a\u0652\u0646\u064e\u0643\u064e \u0648\u064e\u062d\u064f\u0642\u064f\u0648\u0642\u064b\u0627 \u0643\u064e\u062b\u0650\u064a\u0652\u0631\u064e\u0629\u064b \u0641\u0650\u064a\u0652\u0645\u064e\u0627 \u0628\u064e\u064a\u0652\u0646\u0650\u064a\u0652 \u0648\u064e\u0628\u064e\u064a\u0652\u0646\u064e \u062e\u064e\u0644\u0652\u0642\u0650\u0643\u064e. \u0627\u064e\u0644\u0644\u0651\u064e\u0647\u064f\u0645\u0651\u064e \u0645\u064e\u0627\u0643\u064e\u0627\u0646\u064e \u0644\u064e\u0643\u064e \u0645\u0650\u0646\u0652\u0647\u064e\u0627 \u0641\u064e\u0627\u063a\u0652\u0641\u0650\u0631\u0652\u0647\u064f \u0644\u0650\u064a\u0652 \u0648\u064e\u0645\u064e\u0627\u0643\u064e\u0627\u0646\u064e \u0644\u0650\u062e\u064e\u0644\u0652\u0642\u0650\u0643\u064e \u0641\u064e\u062a\u064e\u062d\u064e\u0645\u0651\u064e\u0644\u0652\u0647\u064f \u0639\u064e\u0646\u0651\u0650\u064a\u0652 \u0648\u064e\u0623\u064e\u063a\u0652\u0646\u0650\u0646\u0650\u064a\u0652 \u0628\u0650\u062d\u064e\u0644\u064e\u0627\u0644\u0650\u0643\u064e \u0639\u064e\u0646\u0652\u062d\u064e\u0631\u064e\u0627\u0645\u0650\u0643\u064e \u0648\u064e\u0628\u0650\u0637\u064e\u0627\u0639\u064e\u062a\u0650\u0643\u064e \u0639\u064e\u0646\u0652\u0645\u064e\u0639\u0652\u0635\u0650\u064a\u064e\u062a\u0650\u0643\u064e \u0648\u064e\u0628\u0650\u0641\u064e\u0636\u0652\u0644\u0650\u0643\u064e \u0639\u064e\u0645\u0651\u064e\u0646\u0652 \u0633\u0650\u0648\u064e\u0627\u0643\u064e \u064a\u064e\u0627 \u0648\u064e\u0627\u0633\u0650\u0639\u064e \u0627\u0644\u0652\u0645\u064e\u063a\u0652\u0641\u0650\u0631\u064e\u0629\u0650. \u0627\u064e\u0644\u0644\u0651\u064e\u0647\u064f\u0645\u0651\u064e \u0625\u0650\u0646\u0651\u064e \u0628\u064e\u064a\u0652\u062a\u064e\u0643\u064e \u0639\u064e\u0638\u0650\u064a\u0652\u0645\u064c \u0648\u064e\u0648\u064e\u062c\u0652\u0647\u064e\u0643\u064e \u0643\u064e\u0631\u0650\u064a\u0652\u0645\u064c \u0648\u064e\u0623\u064e\u0646\u0652\u062a\u064e \u064a\u064e\u0627 \u0627\u0644\u0644\u0647\u064f \u062d\u064e\u0644\u0650\u064a\u0652\u0645\u064c \u0643\u064e\u0631\u0650\u064a\u0652\u0645\u064c \u0639\u064e\u0638\u0650\u064a\u0652\u0645\u064c \u062a\u064f\u062d\u0650\u0628\u0651\u064f \u0627\u0644\u0652\u0639\u064e\u0641\u0652\u0648\u064e \u0641\u064e\u0627\u0639\u0652\u0641\u064f \u0639\u064e\u0646\u0651\u0650\u064a\u0652',
+    latin: "Allahumma inna laka 'alayya huquuqon katsirotan fiimaa baini wa bainaka wa huquuqan katsiirotan fiimaa bainii wabaina kholqika. Allahumma maa kaana laka minhaa faghfirhu lii wamaa kaana likhoqika fatahammalhu 'annii wa aghninii bihalalika 'anharoomika wabithoo'atika 'ama'shiyatika wabifadhlika 'amman siwaaka ya waasi'almaghfiroh. Allahumma inna baitaka 'azhiimun wa wajhaka kariimun wa Anta yaa Allahu haliimun kariimun 'azhiimun tuhibbul 'afwa fa'fu 'annii",
+    terjemahan: "Ya Allah, sesungguhnya Engkau memberi beberapa kewajiban kepada diriku, yang terletak diantaraku dengan Engkau dan kewajiban-kewajiban yang ada padaku dengan makhluk-Mu. Ya Allah apa yang menjadi hak-Mu padaku, maka ampunilah diriku dan apa saja yang menjadi hak-Mu kepada makhluk-Mu maka tanggunglah diriku, cukupkanlah aku dengan rizeki-Mu yang halal, terhindar dari pada yang haram, dengan taat kepadamu terhindar dari maksiat kepada-Mu dan dengan kemurahan-Mu dari selain Engkau, wahai Tuhan Yang Maha Luas Ampunan-Nya. Ya Allah sesungguhnya bait-Mu agung dan wajah-Mu mulia, dan Engkau ya Allah Maha Penyantun, Maha Mulia, Maha Agung, Engkau menyukai pengampunan, maka ampunilah diriku.",
+    arti: "Pengakuan kewajiban kepada Allah dan sesama makhluk, permohonan ampunan dan kecukupan dari yang halal.",
+    cara: "Dibaca sambil mengelilingi Ka'bah dari Hajar Aswad menuju Rukun Yamani (atau sebaliknya sesuai arah tawaf).",
+    waktu: 'Tawaf, putaran ke-6',
+    dalil: 'Bacaan tawaf dari putaran ke-6, dibaca mulai dari Hajar Aswad sampai Rukun Yamani. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+  },
+  {
+    id: 'tawaf-putaran-7',
+    kategori: 'tawaf',
+    judul: 'Doa Tawaf Putaran 7',
+    arab: '\u0627\u064e\u0644\u0644\u0651\u064e\u0647\u064f\u0645\u0651\u064e \u0625\u0650\u0646\u0650\u064a\u0652 \u0623\u064e\u0633\u0652\u0623\u064e\u0644\u064f\u0643\u064e \u0625\u0650\u064a\u0652\u0645\u064e\u0627\u0646\u064b\u0627 \u0643\u064e\u0627\u0645\u0650\u0644\u0627\u064b \u0648\u064e\u064a\u064e\u0642\u0650\u064a\u0652\u0646\u064b\u0627 \u0635\u064e\u0627\u062f\u0650\u0642\u064b\u0627 \u0648\u064e\u0642\u064e\u0644\u0652\u0628\u064b\u0627 \u062e\u064e\u0627\u0634\u0650\u0639\u064b\u0627 \u0648\u064e\u0644\u0650\u0633\u064e\u0627\u0646\u064b\u0627 \u0630\u064e\u0627\u0643\u0650\u0631\u064b\u0627 \u0648\u064e\u0631\u0650\u0632\u0652\u0642\u064b\u0627 \u0648\u064e\u0627\u0633\u0650\u0639\u064b\u0627 \u0648\u064e\u062d\u064e\u0644\u064e\u0627\u0644\u0627\u064b \u0637\u064e\u064a\u0651\u0650\u0628\u064b\u0627 \u0648\u064e\u062a\u064e\u0648\u0652\u0628\u064e\u0629\u064b \u0646\u064e\u0635\u064f\u0648\u062d\u064b\u0627 \u0648\u064e\u062a\u064e\u0648\u0652\u0628\u064e\u0629\u064b \u0642\u064e\u0628\u0652\u0644\u064e \u0627\u0644\u0652\u0645\u064e\u0648\u0652\u062a\u0650 \u0648\u064e\u0631\u064e\u062d\u0652\u0645\u064e\u0629\u064b \u0639\u0650\u0646\u0652\u062f\u064e \u0627\u0644\u0652\u0645\u064e\u0648\u0652\u062a\u0650 \u0648\u064e\u0645\u064e\u063a\u0652\u0641\u0650\u0631\u064e\u0629\u064b \u0628\u064e\u0639\u0652\u062f\u064e \u0627\u0644\u0652\u0645\u064e\u0648\u0652\u062a\u0650 \u0648\u064e\u0627\u0644\u0652\u0639\u064e\u0641\u0652\u0648\u064e \u0639\u0650\u0646\u0652\u062f\u064e \u0627\u0644\u0652\u062d\u0650\u0633\u064e\u0627\u0628\u0650 \u0648\u064e\u0627\u0644\u0652\u0641\u064e\u0648\u0652\u0632\u064e \u0628\u0650\u0627\u0644\u0652\u062c\u064e\u0646\u0651\u064e\u0629\u0650 \u0648\u064e\u0627\u0644\u0646\u0651\u064e\u062c\u064e\u0627\u0629\u064e \u0645\u0650\u0646\u064e \u0627\u0644\u0646\u0651\u064e\u0627\u0631\u0650 \u0628\u0650\u0631\u064e\u062d\u0652\u0645\u064e\u062a\u0650\u0643\u064e \u064a\u064e\u0627\u0639\u064e\u0632\u0650\u064a\u0652\u0632\u064f \u064a\u064e\u0627 \u063a\u064e\u0641\u0651\u064e\u0627\u0631\u064f. \u0631\u064e\u0628\u0651\u0650 \u0632\u0650\u062f\u0652\u0646\u0650\u064a\u0652 \u0639\u0650\u0644\u0652\u0645\u064b\u0627 \u0648\u064e\u0623\u064e\u0644\u0652\u062d\u0650\u0642\u0652\u0646\u0650\u064a\u0652 \u0628\u0650\u0627\u0644\u0635\u0651\u064e\u0627\u0644\u0650\u062d\u0650\u064a\u0652\u0646\u064e',
+    latin: "Allaahumma innii as'aluka iimaanan kaamila wa yaqiinan shoodiqoo waqalban khossi'aan walisaanan dzaakiroo warizqon waasi'an wahalalan thoyyiba wataubatan-nashuuhaa wa taubatan qablal mauti warahmatan 'indal mauti wamaghfirtan ba'dal mauti wal 'afwa 'indal hisaab walfauza biljannati wannajaata minannari birohmatika yaa 'Aziizu ya Ghaffaar. Robbi zidnii 'ilmaa wa alhiqnii bishshaalihiin",
+    terjemahan: "Ya Allah, aku mohon pada-Mu iman yang sempurna, keyakinan yang benar, hati yang khusuk, lidah yang senantiasa berdzikir, rizki yang luas, halal lagi baik, taubat yang diterima dan taubat sebelum mati, keampunan dan rahmat sesudah mati, keampunan ketika di hisab, keberuntungan memperoleh surga dan terhindar dari neraka dengan rahmat kasih sayang-Mu, Wahai Tuhan yang Maha Perkasa, yang Maha Pengampun. Tuhanku, berilah aku tambahan ilmu pengetahuan dan masukkanlah aku ke dalam golongan orang-orang yang shaleh.",
+    arti: "Doa penutup tawaf — permohonan iman sempurna, hati khusuk, ilmu, taubat, dan surga.",
+    cara: "Dibaca sambil mengelilingi Ka'bah dari Hajar Aswad menuju Rukun Yamani (atau sebaliknya sesuai arah tawaf).",
+    waktu: 'Tawaf, putaran ke-7',
+    dalil: 'Bacaan tawaf dari putaran ke-7, dibaca mulai dari Hajar Aswad sampai Rukun Yamani. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+  },
+  {
+    id: 'tawaf-rabbana-atina',
+    kategori: 'tawaf',
+    judul: "Doa Antara Rukun Yamani & Hajar Aswad",
+    arab: '\u0631\u064e\u0628\u0651\u064e\u0646\u064e\u0627 \u0622\u062a\u0650\u0646\u064e\u0627 \u0641\u0650\u064a \u0627\u0644\u062f\u0651\u064f\u0646\u0652\u064a\u064e\u0627 \u062d\u064e\u0633\u064e\u0646\u064e\u0629\u064b \u0648\u064e\u0641\u0650\u064a \u0627\u0644\u0652\u0622\u062e\u0650\u0631\u064e\u0629\u0650 \u062d\u064e\u0633\u064e\u0646\u064e\u0629\u064b \u0648\u064e\u0642\u0650\u0646\u064e\u0627 \u0639\u064e\u0630\u064e\u0627\u0628\u064e \u0627\u0644\u0646\u0651\u064e\u0627\u0631\u0650. \u0648\u064e\u0623\u064e\u062f\u0652\u062e\u0650\u0644\u0652\u0646\u064e\u0627 \u0627\u0644\u0652\u062c\u064e\u0646\u0651\u064e\u0629\u064e \u0645\u064e\u0639\u064e \u0627\u0644\u0652\u0623\u064e\u0628\u0652\u0631\u064e\u0627\u0631\u0650 \u064a\u064e\u0627\u0639\u064e\u0632\u0650\u064a\u0652\u0632\u064f \u064a\u064e\u0627 \u063a\u064e\u0641\u0651\u064e\u0627\u0631\u064f \u064a\u064e\u0627 \u0631\u064e\u0628\u0651\u064e \u0627\u0644\u0652\u0639\u064e\u0627\u0644\u064e\u0645\u0650\u064a\u0652\u0646\u064e',
+    latin: "Rabbanaa aatinaa fiddunyaa hasanah wa fil-aakhirati hasanah wa qinaa 'adzabannaar. Wa adkhilnal-jannata ma'al abroor. Yaa 'Azizu yaa ghoffaaru yaa Robbal-'aalamiin",
+    terjemahan: "Ya Tuhan kami, karuniakanlah pada kami kebajikan di dunia, kebajikan pula di akhirat dan hindarkanlah kami dari siksa neraka. Dan masukkanlah kami ke dalam surga bersama orang-orang yang berbuat baik. Wahai Tuhan Yang Maha Perkasa, Yang Maha Pengampun, Wahai Tuhan Yang menguasai seluruh alam.",
+    arti: "Doa kebaikan dunia-akhirat yang dibaca di antara Rukun Yamani dan Hajar Aswad, melengkapi doa utama setiap putaran.",
+    dalil: "Ayat QS. al-Baqarah: 201. Praktik membacanya di antara dua rukun diriwayatkan Abu Dawud (no. 1892) dari Abdullah bin as-Sa'ib.",
+    cara: "Dibaca pada setiap putaran ketika berada di antara Rukun Yamani dan Hajar Aswad.",
+    waktu: "Dibaca di antara Rukun Yamani dan Hajar Aswad, di akhir setiap putaran tawaf (1-7).",
   },
 
-  // ----------------------------------------------------------- SA'I
+  // ----------------------------------------------------------- SA'I — 7 lintasan
   {
-    id: 'sai-di-shafa',
+    id: 'sai-putaran-1',
     kategori: 'sai',
-    judul: "Bacaan di Bukit Shafa & Marwah",
-    arab: 'إِنَّ الصَّفَا وَالْمَرْوَةَ مِنْ شَعَائِرِ اللّٰهِ',
-    latin: "Innaṣ-ṣafā wal-marwata min sya‘ā’irillāh",
-    terjemahan: 'Sesungguhnya Shafa dan Marwah adalah sebagian dari syiar (agama) Allah.',
-    arti: 'Ayat yang dibaca saat mendekati Shafa untuk memulai sa’i. Selebihnya, lafal takbir & doa di atas bukit perlu dirujuk ke panduan ustadz.',
-    dalil:
-      'Awal ayat QS. al-Baqarah: 158, dibaca Nabi ﷺ saat mendekati Shafa (HR. Muslim). Rincian takbir & doa di atas bukit — TODO: verifikasi konten oleh ustadz.',
-    cara: 'Dibaca sekali saat hendak memulai sa’i di Shafa.',
-    waktu: 'Sebelum memulai putaran pertama sa’i.',
-    perluVerifikasi: true,
+    judul: "Sa'i Lintasan 1 — Shafa ke Marwah",
+    arab: '\u0627\u064e\u0644\u0644\u0647\u064f \u0623\u064e\u0643\u0652\u0628\u064e\u0631\u064f\u060c \u0627\u064e\u0644\u0644\u0647\u064f \u0623\u064e\u0643\u0652\u0628\u064e\u0631\u064f\u060c \u0627\u064e\u0644\u0644\u0647\u064f \u0623\u064e\u0643\u0652\u0628\u064e\u0631\u064f\u060c \u0627\u064e\u0644\u0644\u0647\u064f \u0623\u064e\u0643\u0652\u0628\u064e\u0631\u064f \u0643\u064e\u0628\u0650\u064a\u0652\u0631\u064b\u0627 \u0648\u064e\u0627\u0644\u0652\u062d\u064e\u0645\u0652\u062f\u064f\u0644\u0650\u0644\u0651\u064e\u0647\u0650 \u0643\u064e\u062b\u0650\u064a\u0652\u0631\u064b\u0627 \u0648\u064e\u0633\u064f\u0628\u0652\u062d\u064e\u0627\u0646\u064e \u0627\u0644\u0644\u0647\u0650 \u0627\u0644\u0652\u0639\u064e\u0638\u0650\u064a\u0652\u0645\u0650 \u0648\u064e\u0628\u0650\u062d\u064e\u0645\u0652\u062f\u0650\u0647\u0650 \u0628\u064f\u0643\u0652\u0631\u064e\u0629\u064b \u0648\u064e\u0623\u064e\u0635\u0650\u064a\u0652\u0644\u0627\u064b',
+    latin: "Allaahu Akbar, Allaahu Akbar, Allaahu Akbar, Allaahu Akbar kabiiroo, Walhamdulillahi katsiiroo, wa subhaanallaahil-'azhiimi wa bihamdihil-kariimi bukrotaw-wa'ashiilaa",
+    terjemahan: "Allah Maha Besar, Allah Maha Besar, Allah Maha Besar, Allah Maha Besar dengan segala kebesaran-Nya. Segala puji bagi Allah yang Maha Agung dengan segala Pujian-Nya yang tidak terhingga. Maha Suci Allah Yang Maha Agung dengan pujian yang Maha Mulia di waktu pagi dan petang.",
+    arti: "Takbir dan tasbih di awal sa'i, menyambut perjalanan dari Shafa menuju Marwah.",
+    cara: "Dibaca sambil berjalan dari Shafa ke Marwah (atau sebaliknya).",
+    waktu: "Sa'i, putaran ke-1 (Shafa → Marwah)",
+    dalil: "Bacaan sa'i putaran ke-1, dibaca dari bukit Shafa sampai pilar hijau. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.",
   },
   {
-    id: 'sai-doa-perjalanan',
+    id: 'sai-putaran-2',
     kategori: 'sai',
-    judul: "Doa di Sepanjang Sa'i",
-    arab: '',
-    latin: '',
-    terjemahan: '',
-    dalil: 'TODO: verifikasi konten oleh ustadz.',
-    cara: 'Tidak ada doa wajib tertentu sepanjang lintasan sa’i; perbanyak zikir & doa pribadi.',
-    waktu: 'Antara Shafa dan Marwah, 7 kali lintasan.',
-    perluVerifikasi: true,
+    judul: "Sa'i Lintasan 2 — Marwah ke Shafa",
+    arab: '\u0627\u064e\u0644\u0644\u0647\u064f \u0623\u064e\u0643\u0652\u0628\u064e\u0631\u064f \u0627\u064e\u0644\u0644\u0647\u064f \u0623\u064e\u0643\u0652\u0628\u064e\u0631\u064f \u0627\u064e\u0644\u0644\u0647\u064f \u0623\u064e\u0643\u0652\u0628\u064e\u0631\u064f \u0627\u064e\u0644\u0644\u0647\u064f \u0623\u064e\u0643\u0652\u0628\u064e\u0631\u064f \u0648\u064e\u0644\u0650\u0644\u0651\u064e\u0647\u0650 \u0627\u0644\u0652\u062d\u064e\u0645\u0652\u062f\u064f \u0625\u0650\u0646\u0651\u0650\u064a\u0652 \u0623\u064e\u0633\u0652\u0623\u064e\u0644\u064f\u0643\u064e \u062e\u064e\u064a\u0652\u0631\u064e \u0645\u064e\u0627 \u062a\u064e\u0639\u0652\u0644\u064e\u0645\u064f \u0648\u064e\u0623\u064e\u0639\u064f\u0648\u0630\u064f\u0628\u0650\u0643\u064e \u0645\u0650\u0646\u0652 \u0634\u064e\u0631\u0651\u0650 \u0645\u064e\u0627 \u062a\u064e\u0639\u0652\u0644\u064e\u0645\u064f \u0648\u064e\u0623\u064e\u0633\u0652\u062a\u064e\u063a\u0652\u0641\u0650\u0631\u064f\u0643\u064e \u0645\u0650\u0646\u0652 \u0643\u064f\u0644\u0651\u0650 \u0645\u064e\u0627 \u062a\u064e\u0639\u0652\u0644\u064e\u0645\u064f \u0625\u0650\u0646\u0651\u064e\u0643\u064e \u0623\u064e\u0646\u0652\u062a\u064e \u0639\u064e\u0644\u0627\u0651\u064e\u0645\u064f \u0627\u0644\u0652\u063a\u064f\u064a\u064f\u0648\u0628\u0650\u060c \u0644\u064e\u0627 \u0625\u0650\u0644\u064e\u0647\u064e \u0625\u0650\u0644\u0651\u064e\u0627 \u0627\u0644\u0644\u0647\u064f \u0627\u0644\u0652\u0645\u064e\u0644\u0650\u0643\u064f \u0627\u0644\u0652\u062d\u064e\u0642\u0651\u064f \u0627\u0644\u0652\u0645\u064f\u0628\u0650\u064a\u0652\u0646\u064f\u060c \u0645\u064f\u062d\u064e\u0645\u0651\u064e\u062f\u064c \u0631\u064e\u0633\u064f\u0648\u0652\u0644\u064f \u0627\u0644\u0644\u0647\u0650 \u0635\u064e\u0627\u062f\u0650\u0642\u064f \u0627\u0644\u0652\u0648\u064e\u0639\u0652\u062f\u0650 \u0627\u0644\u0652\u0623\u064e\u0645\u0650\u064a\u0652\u0646\u064f',
+    latin: "Allaahu Akbar, Allaahu Akbar, Allaahu Akbar, walillaahilhamd. Allahumma innii as'aluka min khairi maa ta'lamu wa a'udzu bika min syarri maa a'lamu wa astaghfiruka min kulli ma ta'lamu innaka anta 'allaamulghuyuub. Laailaaha illallaahul-malikil-haqqul-mubbin. Muhammadurrosuulullaahi shoodiqul-wa'dil-amin",
+    terjemahan: "Allah Maha Besar, Allah Maha Besar, Allah Maha Besar, dan bagi-Nya segala pujian. Ya Allah, aku mohon kepada-Mu dari kebaikan yang Engkau tahu dan berlindung pada-Mu dari kejahatan yang Engkau tahu, dan aku mohon ampun pada-Mu akan dosaku. Sesungguhnya Engkau Maha mengetahui yang ghaib. Tidak ada Tuhan selain Allah, Maha Raja yang sebenar-benarnya. Muhammad utusan Allah yang senantiasa menepati janji lagi terpercaya.",
+    arti: "Takbir, permohonan kebaikan, perlindungan dari kejahatan, dan pengakuan keesaan Allah dalam lintasan balik.",
+    cara: "Dibaca sambil berjalan dari Marwah ke Shafa (atau sebaliknya).",
+    waktu: "Sa'i, putaran ke-2 (Marwah → Shafa)",
+    dalil: "Bacaan sa'i putaran ke-2, dibaca dari bukit Marwah sampai pilar hijau. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.",
+  },
+  {
+    id: 'sai-putaran-3',
+    kategori: 'sai',
+    judul: "Sa'i Lintasan 3 — Shafa ke Marwah",
+    arab: '\u0627\u064e\u0644\u0644\u0647\u064f \u0623\u064e\u0643\u0652\u0628\u064e\u0631\u064f \u0627\u064e\u0644\u0644\u0647\u064f \u0623\u064e\u0643\u0652\u0628\u064e\u0631\u064f \u0627\u064e\u0644\u0644\u0647\u064f \u0623\u064e\u0643\u0652\u0628\u064e\u0631\u064f \u0648\u064e\u0644\u0650\u0644\u0651\u064e\u0647\u0650 \u0627\u0644\u0652\u062d\u064e\u0645\u0652\u062f\u064f \u0631\u064e\u0628\u0651\u064e\u0646\u064e\u0627 \u0623\u062a\u0652\u0645\u0650\u0645\u0652 \u0644\u064e\u0646\u064e\u0627 \u0646\u064f\u0648\u0652\u0631\u064e\u0646\u064e\u0627 \u0648\u064e\u0627\u063a\u0652\u0641\u0650\u0631\u0652\u0644\u064e\u0646\u064e\u0627 \u0625\u0650\u0646\u0651\u064e\u0643\u064e \u0639\u064e\u0644\u064e\u0649 \u0643\u064f\u0644\u0651\u0650 \u0634\u064e\u064a\u0652\u0621\u064d \u0642\u064e\u062f\u0650\u064a\u0652\u0631\u064c. \u0627\u064e\u0644\u0644\u0651\u064e\u0647\u064f\u0645\u0651\u064e \u0625\u0650\u0646\u0650\u064a\u0652 \u0623\u064e\u0633\u0652\u0623\u064e\u0644\u064f\u0643\u064e\u0627\u0644\u0652\u062e\u064e\u064a\u0652\u0631\u064e \u0643\u064f\u0644\u0651\u064e\u0647\u064f \u0639\u064e\u0627\u062c\u0650\u0644\u064e\u0647\u064f \u0648\u064e\u0622\u062c\u0650\u0644\u064e\u0647\u064f \u0648\u064e\u0623\u064e\u0633\u0652\u062a\u064e\u063a\u0652\u0641\u0650\u0631\u064f\u0643\u064e \u0644\u0650\u0630\u064e\u0646\u0652\u0628\u0650\u064a\u0652 \u0648\u064e\u0623\u064e\u0633\u0652\u0623\u064e\u0644\u064f\u0643\u064e \u0631\u064e\u062d\u0652\u0645\u064e\u062a\u064e\u0643\u064e \u064a\u064e\u0627 \u0623\u064e\u0631\u0652\u062d\u064e\u0645\u064e \u0627\u0644\u0631\u0651\u064e\u0627\u062d\u0650\u0645\u0650\u064a\u0652\u0646\u064e',
+    latin: "Allaahu Akbar, Allaahu Akbar, Allaahu Akbar, walillaahilhamd. Robbanaa atmim lanaa nuuronaa waghfir lanaa innaka 'alaa kulli syaiin qadiir. Allahumma innii as'aluka-khairo kullahuu 'aajilahuu wa aajilahu wa astaghfiruka lidzanbii wa as'aluka rohmataka yaa arhamarrohimiin",
+    terjemahan: "Allah Maha Besar, Allah Maha Besar, Allah Maha Besar, dan bagi-Nya-lah segala pujian. Ya Allah, sempurnakanlah cahaya terang kami, sesungguhnya aku mohon kepada-Mu segala kebaikan yang sekarang dan masa yang akan datang dan aku mohon ampun kepada-Mu akan dosaku dan aku mohon kepada-Mu akan rahmat-Mu, wahai Tuhan yang Maha Pengasih dari segenap yang Pengasih.",
+    arti: "Permohonan cahaya yang sempurna, segala kebaikan saat ini dan mendatang, serta rahmat Allah.",
+    cara: "Dibaca sambil berjalan dari Shafa ke Marwah (atau sebaliknya).",
+    waktu: "Sa'i, putaran ke-3 (Shafa → Marwah)",
+    dalil: "Bacaan sa'i putaran ke-3, dibaca dari bukit Shafa sampai pilar hijau. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.",
+  },
+  {
+    id: 'sai-putaran-4',
+    kategori: 'sai',
+    judul: "Sa'i Lintasan 4 — Marwah ke Shafa",
+    arab: '\u0627\u064e\u0644\u0644\u0647\u064f \u0623\u064e\u0643\u0652\u0628\u064e\u0631\u064f \u0627\u064e\u0644\u0644\u0647\u064f \u0623\u064e\u0643\u0652\u0628\u064e\u0631\u064f \u0627\u064e\u0644\u0644\u0647\u064f \u0623\u064e\u0643\u0652\u0628\u064e\u0631\u064f \u0648\u064e\u0644\u0650\u0644\u0651\u064e\u0647\u0650 \u0627\u0644\u0652\u062d\u064e\u0645\u0652\u062f\u064f\u060c \u0627\u064e\u0644\u0644\u0651\u064e\u0647\u064f\u0645\u0651\u064e \u0625\u0650\u0646\u0650\u064a\u0652 \u0623\u064e\u0633\u0652\u0623\u064e\u0644\u064f\u0643\u064e \u0645\u064e\u0627 \u062a\u064e\u0639\u0652\u0644\u064e\u0645\u064f \u0648\u064e\u0623\u064e\u0639\u064f\u0648\u0630\u064f\u0628\u0650\u0643\u064e \u0645\u0650\u0645\u0651\u064e\u0627 \u062a\u064e\u0639\u0652\u0644\u064e\u0645\u064f \u0648\u064e\u0623\u064e\u0633\u0652\u062a\u064e\u063a\u0652\u0641\u0650\u0631\u064f\u0643\u064e \u0645\u0650\u0646\u0652 \u0643\u064f\u0644\u0651\u0650 \u0645\u064e\u0627 \u062a\u064e\u0639\u0652\u0644\u064e\u0645\u064f \u0625\u0650\u0646\u0651\u064e\u0643\u064e \u0623\u064e\u0646\u0652\u062a\u064e \u0639\u064e\u0644\u0627\u0651\u064e\u0645\u064f \u0627\u0644\u0652\u063a\u064f\u064a\u064f\u0648\u0628\u0650\u060c \u0644\u064e\u0627\u0625\u0650\u0644\u064e\u0647\u064e \u0625\u0650\u0644\u0651\u064e\u0627 \u0627\u0644\u0644\u0647\u064f \u0627\u0644\u0652\u0645\u064e\u0644\u0650\u0643\u064f \u0627\u0644\u0652\u062d\u064e\u0642\u0651\u064f \u0627\u0644\u0652\u0645\u064f\u0628\u0650\u064a\u0652\u0646\u064f\u060c \u0645\u064f\u062d\u064e\u0645\u0651\u064e\u062f\u064c \u0631\u064e\u0633\u064f\u0648\u0652\u0644\u064f \u0627\u0644\u0644\u0647\u0650 \u0635\u064e\u0627\u062f\u0650\u0642\u064f \u0627\u0644\u0652\u0648\u064e\u0639\u0652\u062f\u0650 \u0627\u0644\u0652\u0623\u064e\u0645\u0650\u064a\u0652\u0646\u064f',
+    latin: "Allaahu Akbar, Allaahu Akbar, Allaahu Akbar, walillaahilhamd. Allahumma innii as'aluka maa ta'lamu wa a'uudzu bika min syarri maa ta'lamu wa astaghfiruka min kulli maa ta'lamu innaka anta 'allaamulghuyuub. Laailaaha illallaahul-malikil-haqqul-mubin. Muhammadurrosuulullaahi shoodiqul-wa'dil-amin",
+    terjemahan: "Allah Maha Besar, Allah Maha Besar, Allah Maha Besar, dan bagi-Nya segala pujian, Ya Allah, aku mohon kepada-Mu dari kebaikan yang Engkau tahu dan berlindung pada-Mu dari kejahatan yang Engkau tahu, dan aku mohon ampun pada-Mu akan segala dosa yang Engkau tahu. Sesungguhnya Engkau Maha mengetahui yang ghaib. Tidak ada Tuhan selain Allah, Maha Raja yang sebenar-benarnya. Muhammad utusan Allah yang senantiasa menepati janji lagi terpercaya.",
+    arti: "Memohon dari segala kebaikan yang Allah ketahui, berlindung dari kejahatan, dan pengakuan tauhid.",
+    cara: "Dibaca sambil berjalan dari Marwah ke Shafa (atau sebaliknya).",
+    waktu: "Sa'i, putaran ke-4 (Marwah → Shafa)",
+    dalil: "Bacaan sa'i putaran ke-4, dibaca dari bukit Marwah sampai pilar hijau. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.",
+  },
+  {
+    id: 'sai-putaran-5',
+    kategori: 'sai',
+    judul: "Sa'i Lintasan 5 — Shafa ke Marwah",
+    arab: '\u0627\u064e\u0644\u0644\u0647\u064f \u0623\u064e\u0643\u0652\u0628\u064e\u0631\u064f \u0627\u064e\u0644\u0644\u0647\u064f \u0623\u064e\u0643\u0652\u0628\u064e\u0631\u064f \u0627\u064e\u0644\u0644\u0647\u064f \u0623\u064e\u0643\u0652\u0628\u064e\u0631\u064f \u0648\u064e\u0644\u0650\u0644\u0651\u064e\u0647\u0650 \u0627\u0644\u0652\u062d\u064e\u0645\u0652\u062f\u064f. \u0633\u064f\u0628\u0652\u062d\u064e\u0627\u0646\u064e\u0643\u064e \u0645\u064e\u0627 \u0634\u064e\u0643\u064e\u0631\u0652\u0646\u064e\u0627\u0643\u064e \u062d\u064e\u0642\u0651\u064e \u0634\u064f\u0643\u0652\u0631\u0650\u0643\u064e \u064a\u064e\u0627 \u0627\u0644\u0644\u0647\u064f \u0633\u064f\u0628\u0652\u062d\u064e\u0627\u0646\u064e\u0643\u064e \u0645\u064e\u0627 \u0623\u064e\u0639\u0652\u0644\u064e\u0649 \u0634\u064e\u0623\u0652\u0646\u064e\u0643\u064e \u064a\u064e\u0627 \u0627\u0644\u0644\u0647\u064f. \u0627\u064e\u0644\u0644\u0651\u064e\u0647\u064f\u0645\u0651\u064e \u062d\u064e\u0628\u0651\u0650\u0628\u0652 \u0625\u0650\u0644\u064e\u064a\u0652\u0646\u064e\u0627 \u0627\u0644\u0652\u0625\u0650\u064a\u0652\u0645\u064e\u0627\u0646\u064e \u0648\u064e\u0632\u064e\u064a\u0651\u0650\u0646\u0652\u0647\u064f \u0641\u0650\u064a\u0652 \u0642\u064f\u0644\u064f\u0648\u0628\u0650\u0646\u064e\u0627 \u0648\u064e\u0643\u064e\u0631\u0651\u0650\u0647\u0652 \u0625\u0650\u0644\u064e\u064a\u0652\u0646\u064e\u0627 \u0627\u0644\u0652\u0643\u064f\u0641\u0652\u0631\u064e \u0648\u064e\u0627\u0644\u0652\u0641\u064f\u0633\u064f\u0648\u0642\u064e \u0648\u064e\u0627\u0644\u0652\u0639\u0650\u0635\u0652\u064a\u064e\u0627\u0646\u064e \u0648\u064e\u0627\u062c\u0652\u0639\u064e\u0644\u0652\u0646\u064e\u0627 \u0645\u0650\u0646\u064e \u0627\u0644\u0631\u0651\u064e\u0627\u0634\u0650\u062f\u0650\u064a\u0652\u0646\u064e',
+    latin: "Allaahu Akbar, Allaahu Akbar, Allaahu Akbar, walillaahilhamd. Subhaanaka maa syakarnaaka haqqo syukrika yaa Allaahu subhaanaka maa a'laa sya'naka yaa Allaahu. Allahumma habbib ilainal-iimaana wa zayyinhu fii quluubinaa wa karrih ilainal-kufro walfusuuqo wal'ishyaana waj'alnaa minarroosyidiin",
+    terjemahan: "Allah Maha Besar, Allah Maha Besar, Allah Maha Besar, dan bagi-Nya-lah segala pujian. Maha Suci Engkau seperti kami bersyukur pada-Mu sebenar-benar syukur wahai Allah, Maha Suci Engkau sepadan ketinggian-mu wahai Allah. Ya Allah, cintakanlah kami kepada iman dan hiaskanlah ia di hati kami, bencikanlah kami pada perbuatan kufur, fasiq, dan durhaka. Jadikanlah kami termasuk golongan orang-orang yang mendapat petunjuk.",
+    arti: "Tasbih atas keagungan Allah dan permohonan cinta kepada iman serta benci kepada kufur.",
+    cara: "Dibaca sambil berjalan dari Shafa ke Marwah (atau sebaliknya).",
+    waktu: "Sa'i, putaran ke-5 (Shafa → Marwah)",
+    dalil: "Bacaan sa'i putaran ke-5, dibaca dari bukit Shafa sampai pilar hijau. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.",
+  },
+  {
+    id: 'sai-putaran-6',
+    kategori: 'sai',
+    judul: "Sa'i Lintasan 6 — Marwah ke Shafa",
+    arab: '\u0627\u064e\u0644\u0644\u0647\u064f \u0623\u064e\u0643\u0652\u0628\u064e\u0631\u064f \u0627\u064e\u0644\u0644\u0647\u064f \u0623\u064e\u0643\u0652\u0628\u064e\u0631\u064f \u0627\u064e\u0644\u0644\u0647\u064f \u0623\u064e\u0643\u0652\u0628\u064e\u0631\u064f \u0648\u064e\u0644\u0650\u0644\u0651\u064e\u0647\u0650 \u0627\u0644\u0652\u062d\u064e\u0645\u0652\u062f\u064f. \u0627\u064e\u0644\u0644\u0651\u064e\u0647\u064f\u0645\u0651\u064e \u062d\u064e\u0628\u0651\u0650\u0628\u0652 \u0625\u0650\u0644\u064e\u064a\u0651\u064e \u0627\u0644\u0652\u0625\u0650\u064a\u0652\u0645\u064e\u0627\u0646\u064e \u0648\u064e\u0632\u064e\u064a\u0651\u0650\u0646\u0652\u0647\u064f \u0641\u0650\u064a\u0652 \u0642\u064e\u0644\u0652\u0628\u0650\u064a\u0652 \u0648\u064e\u0623\u064e\u0639\u064f\u0648\u0630\u064f\u0628\u0650\u0643\u064e \u0645\u0650\u0646\u0652 \u0648\u064e\u0633\u064e\u0627\u0648\u0650\u0633\u0650 \u0627\u0644\u0635\u0651\u064e\u062f\u0652\u0631\u0650 \u0648\u064e\u0634\u064e\u062a\u064e\u0627\u062a\u0650 \u0627\u0644\u0652\u0623\u064e\u0645\u0652\u0631\u0650 \u0648\u064e\u0641\u0650\u062a\u0652\u0646\u064e\u0629\u0650 \u0627\u0644\u0652\u0642\u064e\u0628\u0652\u0631\u0650\u060c \u0627\u064e\u0644\u0644\u0651\u064e\u0647\u064f\u0645\u0651\u064e \u0625\u0650\u0646\u0650\u064a\u0652 \u0623\u064e\u0639\u064f\u0648\u0630\u064f\u0628\u0650\u0643\u064e \u0645\u0650\u0646\u0652 \u0634\u064e\u0631\u0651\u0650 \u0645\u064e\u0627 \u064a\u064e\u0644\u0650\u062c\u064f \u0641\u0650\u064a\u0652 \u0627\u0644\u0644\u0651\u064e\u064a\u0652\u0644\u0650 \u0648\u064e\u0634\u064e\u0631\u0651\u0650 \u0645\u064e\u0627 \u064a\u064e\u0644\u0650\u062c\u064f \u0641\u0650\u064a\u0652 \u0627\u0644\u0646\u0651\u064e\u0647\u064e\u0627\u0631\u0650 \u0648\u064e\u0645\u0650\u0646\u0652 \u0634\u064e\u0631\u0651\u0650 \u0645\u064e\u0627 \u062a\u064e\u0647\u064f\u0628\u0651\u064f \u0628\u0650\u0647\u0650 \u0627\u0644\u0631\u0651\u0650\u064a\u064e\u0627\u062d\u064f \u064a\u064e\u0627 \u0623\u064e\u0631\u0652\u062d\u064e\u0645\u064e \u0627\u0644\u0631\u0651\u064e\u0627\u062d\u0650\u0645\u0650\u064a\u0652\u0646\u064e',
+    latin: "Allaahu Akbar, Allaahu Akbar, Allaahu Akbar, walillaahilhamd. Allahumma habbib ilayyal-iimaana wa zayyinhu fii qalbii wa a'udzu bika min wasaawisish-shodri wa syataatil-amri wa fitnatil-qobri. Allahumma innii a'uudzu bika min syarri maa yaliju fil-laili wa syarri maa yaliju fin-nahaari wa min syarri maa tahubbu bihir-riyaahu yaa arhamarrohimiin",
+    terjemahan: "Allah Maha Besar, Allah Maha Besar, Allah Maha Besar, dan bagi-Nya-lah segala pujian. Ya Allah, cintakanlah aku kepada iman dan hiaskanlah ia di dalam hatiku. Dan aku berlindung kepada-Mu dari godaan bisikan hati, kekacauan urusan dan fitnah kubur. Ya Allah aku berlindung kepada-Mu dari kejahatan yang tersembunyi di waktu malam dan siang hari, serta kejahatan yang dibawa angin lalu, wahai Tuhan Yang Maha Pengasih dari segenap yang pengasih.",
+    arti: "Permohonan perlindungan dari bisikan hati, kekacauan, fitnah kubur, dan kejahatan siang serta malam.",
+    cara: "Dibaca sambil berjalan dari Marwah ke Shafa (atau sebaliknya).",
+    waktu: "Sa'i, putaran ke-6 (Marwah → Shafa)",
+    dalil: "Bacaan sa'i putaran ke-6, dibaca dari bukit Marwah sampai pilar hijau. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.",
+  },
+  {
+    id: 'sai-putaran-7',
+    kategori: 'sai',
+    judul: "Sa'i Lintasan 7 — Shafa ke Marwah",
+    arab: '\u0627\u064e\u0644\u0644\u0647\u064f \u0623\u064e\u0643\u0652\u0628\u064e\u0631\u064f \u0627\u064e\u0644\u0644\u0647\u064f \u0623\u064e\u0643\u0652\u0628\u064e\u0631\u064f \u0627\u064e\u0644\u0644\u0647\u064f \u0623\u064e\u0643\u0652\u0628\u064e\u0631\u064f \u0643\u064e\u0628\u0650\u064a\u0652\u0631\u064b\u0627 \u0648\u064e\u0627\u0644\u0652\u062d\u064e\u0645\u0652\u062f\u064f\u0644\u0650\u0644\u0651\u064e\u0647\u0650 \u0643\u064e\u062b\u0650\u064a\u0652\u0631\u064b\u0627. \u0627\u064e\u0644\u0644\u0651\u064e\u0647\u064f\u0645\u0651\u064e \u062d\u064e\u0628\u0651\u0650\u0628\u0652 \u0625\u0650\u0644\u064e\u064a\u0651\u064e \u0627\u0644\u0652\u0625\u0650\u064a\u0652\u0645\u064e\u0627\u0646\u064e \u0648\u064e\u0632\u064e\u064a\u0651\u0650\u0646\u0652\u0647\u064f \u0641\u0650\u064a\u0652 \u0642\u064e\u0644\u0652\u0628\u0650\u064a\u0652 \u0648\u064e\u0643\u064e\u0631\u0651\u0650\u0647\u0652 \u0625\u0650\u0644\u064e\u064a\u0651\u064e \u0627\u0644\u0652\u0643\u064f\u0641\u0652\u0631\u064e \u0648\u064e\u0627\u0644\u0652\u0641\u064f\u0633\u064f\u0648\u0642\u064e \u0648\u064e\u0627\u0644\u0652\u0639\u0650\u0635\u0652\u064a\u064e\u0627\u0646\u064e \u0648\u064e\u0627\u062c\u0652\u0639\u064e\u0644\u0652\u0646\u0650\u064a\u0652 \u0645\u0650\u0646\u064e \u0627\u0644\u0631\u0651\u064e\u0627\u0634\u0650\u062f\u0650\u064a\u0652\u0646\u064e',
+    latin: "Allaahu Akbar, Allaahu Akbar, Allaahu Akbar kabiiroo walhamdulillahi katsiiroo. Allahumma habbib ilayyal-iimaana wa zayyinhu fii qalbii wa karrih ilayyal-kufro wal-fusuuqo wal-'ishyaana waj'alnii minarroosyidiin",
+    terjemahan: "Allah Maha Besar, Allah Maha Besar, Allah Maha Besar dengan segala kebesaran-Nya dan segala puji bagi Allah dengan pujian yang tak terhingga. Ya Allah, cintakanlah aku kepada iman dan hiaskanlah ia ke dalam hatiku. Dan bencikanlah kepadaku pada perbuatan kufur, fasiq, dan durhaka serta jadikanlah aku termasuk orang-orang yang mendapatkan petunjuk.",
+    arti: "Doa penutup sa'i — takbir, tahmid, dan permohonan iman yang menghias hati serta jauh dari kufur.",
+    cara: "Dibaca sambil berjalan dari Shafa ke Marwah (atau sebaliknya).",
+    waktu: "Sa'i, putaran ke-7 (Shafa → Marwah)",
+    dalil: "Bacaan sa'i putaran ke-7, dibaca dari bukit Shafa sampai pilar hijau. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.",
+  },
+  {
+    id: 'sai-lampu-hijau',
+    kategori: 'sai',
+    judul: "Doa di Area Lampu Hijau (Sa'i)",
+    arab: '\u0631\u064e\u0628\u0651\u0650 \u0627\u063a\u0652\u0641\u0650\u0631\u0652 \u0648\u064e\u0627\u0631\u0652\u062d\u064e\u0645\u0652 \u0648\u064e\u0627\u0639\u0652\u0641\u064f \u0648\u064e\u062a\u064e\u0643\u064e\u0631\u0651\u064e\u0645\u0652 \u0648\u064e\u062a\u064e\u062c\u064e\u0627\u0648\u064e\u0632\u0652 \u0639\u064e\u0645\u0651\u064e\u0627 \u062a\u064e\u0639\u0652\u0644\u064e\u0645\u064f \u0625\u0650\u0646\u0651\u064e\u0643\u064e \u062a\u064e\u0639\u0652\u0644\u064e\u0645\u064f \u0645\u064e\u0627 \u0644\u064e\u0627 \u0646\u064e\u0639\u0652\u0644\u064e\u0645\u064f \u0625\u0650\u0646\u0651\u064e\u0643\u064e \u0623\u064e\u0646\u0652\u062a\u064e \u0627\u0644\u0644\u0647\u064f \u0627\u0644\u0652\u0623\u064e\u0639\u064e\u0632\u0651\u064f \u0627\u0644\u0652\u0623\u064e\u0643\u0652\u0631\u064e\u0645\u064f',
+    latin: "Robbighfir warham wa'fu wa takarrom wa tajaawaz 'ammaa ta'lamu innaka ta'lamu maa laa na'lamu innaka antallaahul-a'azzul-akrom",
+    terjemahan: "Ya Tuhanku, ampunilah, sayangilah, maafkanlah, bermurah hatilah, dan hapuskanlah apa-apa yang Engkau ketahui dari dosa kami. Sesungguhnya Engkau Maha Mengetahui apa-apa yang tidak kami ketahui. Sesungguhnya Engkau ya Allah Maha Tinggi dan Maha Pemurah.",
+    arti: "Permohonan ampunan dan kasih sayang Allah yang dibaca saat melintas di area dua lampu/pilar hijau.",
+    cara: "Dibaca di sepanjang area antara dua lampu/pilar hijau. Laki-laki dianjurkan berlari-lari kecil (harwalah) di area ini.",
+    waktu: "Dibaca di sepanjang area antara dua lampu/pilar hijau, setiap kali melintasinya dalam tiap putaran sa'i (1-7).",
+    dalil: "Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.",
   },
 
   // ----------------------------------------------------------- TAHALLUL
@@ -166,7 +268,7 @@ export const daftarDoa: Doa[] = [
     terjemahan: '',
     dalil: 'TODO: verifikasi konten oleh ustadz.',
     cara: 'Mencukur (gundul, lebih utama bagi laki-laki) atau memendekkan rambut secara merata. Bagi perempuan cukup memotong seujung jari dari rambutnya.',
-    waktu: 'Setelah sa’i selesai, menandai berakhirnya ihram umrah.',
+    waktu: 'Setelah sa\u2019i selesai, menandai berakhirnya ihram umrah.',
     perluVerifikasi: true,
   },
   {
@@ -186,13 +288,13 @@ export const daftarDoa: Doa[] = [
   {
     id: 'ziarah-salam-nabi',
     kategori: 'ziarah',
-    judul: 'Salam Saat Ziarah Makam Rasulullah ﷺ',
-    arab: 'السَّلَامُ عَلَيْكَ يَا رَسُولَ اللّٰهِ',
-    latin: "As-salāmu ‘alaika yā rasūlallāh",
+    judul: 'Salam Saat Ziarah Makam Rasulullah \ufe3f',
+    arab: '\u0627\u0644\u0633\u0651\u064e\u0644\u064e\u0627\u0645\u064f \u0639\u064e\u0644\u064e\u064a\u0652\u0643\u064e \u064a\u064e\u0627 \u0631\u064e\u0633\u064f\u0648\u0644\u064e \u0627\u0644\u0644\u0651\u0670\u0647\u0650',
+    latin: "As-sal\u0101mu 'alaika y\u0101 ras\u016blall\u0101h",
     terjemahan: 'Salam sejahtera atasmu, wahai Rasulullah.',
-    arti: 'Salam yang diucapkan saat berziarah ke makam Nabi ﷺ di Masjid Nabawi. Lafal lengkap & adab rinci — perlu dirujuk ke panduan ustadz.',
-    dalil: 'Adab ziarah & lafal lengkap — TODO: verifikasi konten oleh ustadz.',
-    cara: 'Mengucap salam dengan tenang & suara lirih sambil menghadap makam, lalu bergeser memberi salam kepada Abu Bakar & Umar radhiyallahu ‘anhuma.',
+    arti: 'Salam yang diucapkan saat berziarah ke makam Nabi \ufe3f di Masjid Nabawi.',
+    dalil: 'Adab ziarah & lafal lengkap \u2014 TODO: verifikasi konten oleh ustadz.',
+    cara: 'Mengucap salam dengan tenang & suara lirih sambil menghadap makam.',
     waktu: 'Saat ziarah ke Masjid Nabawi, Madinah.',
     perluVerifikasi: true,
   },
@@ -214,14 +316,11 @@ export const daftarDoa: Doa[] = [
     id: 'doa-safar',
     kategori: 'harian',
     judul: 'Doa Naik Kendaraan / Safar',
-    arab:
-      'سُبْحَانَ الَّذِي سَخَّرَ لَنَا هٰذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ، وَإِنَّا إِلَىٰ رَبِّنَا لَمُنْقَلِبُونَ',
-    latin:
-      "Subḥānalladzī sakhkhara lanā hādzā wa mā kunnā lahū muqrinīn, wa innā ilā rabbinā lamunqalibūn",
-    terjemahan:
-      'Mahasuci Allah yang telah menundukkan kendaraan ini untuk kami, padahal kami sebelumnya tidak mampu menguasainya. Dan sesungguhnya kami akan kembali kepada Tuhan kami.',
+    arab: '\u0633\u064f\u0628\u0652\u062d\u064e\u0627\u0646\u064e \u0627\u0644\u0651\u064e\u0630\u0650\u064a \u0633\u064e\u062e\u0651\u064e\u0631\u064e \u0644\u064e\u0646\u064e\u0627 \u0647\u0670\u0630\u064e\u0627 \u0648\u064e\u0645\u064e\u0627 \u0643\u064f\u0646\u0651\u064e\u0627 \u0644\u064e\u0647\u064f \u0645\u064f\u0642\u0652\u0631\u0650\u0646\u0650\u064a\u0646\u064e\u060c \u0648\u064e\u0625\u0650\u0646\u0651\u064e\u0627 \u0625\u0650\u0644\u064e\u0649\u0670 \u0631\u064e\u0628\u0651\u0650\u0646\u064e\u0627 \u0644\u064e\u0645\u064f\u0646\u0642\u064e\u0644\u0650\u0628\u064f\u0648\u0646\u064e',
+    latin: "Sub\u1e25\u0101nallad\u017b\u012b sakhkhara lan\u0101 h\u0101dz\u0101 wa m\u0101 kunn\u0101 lah\u016b muqrin\u012bn, wa inn\u0101 il\u0101 rabbinā lamunqalib\u016bn",
+    terjemahan: 'Mahasuci Allah yang telah menundukkan kendaraan ini untuk kami, padahal kami sebelumnya tidak mampu menguasainya. Dan sesungguhnya kami akan kembali kepada Tuhan kami.',
     arti: 'Doa saat menaiki kendaraan dalam perjalanan, mengingat nikmat & tempat kembali kepada Allah.',
-    dalil: 'QS. az-Zukhruf: 13–14; dibaca Nabi ﷺ saat menaiki tunggangan (HR. Muslim no. 1342 dari Ibnu ‘Umar).',
+    dalil: 'QS. az-Zukhruf: 13\u201314; dibaca Nabi \ufe3f saat menaiki tunggangan (HR. Muslim no. 1342 dari Ibnu \u2018Umar).',
     cara: 'Dibaca setelah duduk di kendaraan, didahului takbir tiga kali.',
     waktu: 'Setiap memulai perjalanan dengan kendaraan.',
   },
@@ -232,7 +331,7 @@ export const daftarDoa: Doa[] = [
     arab: '',
     latin: '',
     terjemahan: '',
-    dalil: 'Riwayat doa khusus zamzam diperbincangkan keabsahannya — TODO: verifikasi konten oleh ustadz.',
+    dalil: 'Riwayat doa khusus zamzam diperbincangkan keabsahannya \u2014 TODO: verifikasi konten oleh ustadz.',
     cara: 'Disunnahkan minum sambil berdiri, menghadap kiblat, dengan tiga tarikan napas, dan berdoa dengan hajat apa pun yang baik.',
     waktu: 'Saat meminum air zamzam.',
     perluVerifikasi: true,

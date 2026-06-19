@@ -9,6 +9,7 @@ import TataCara from './pages/TataCara';
 import PanduanIhram from './pages/PanduanIhram';
 import Ibadah from './pages/Ibadah';
 import CounterTawaf from './pages/CounterTawaf';
+import CounterSai from './pages/CounterSai';
 import Doa from './pages/Doa';
 import DoaDetail from './pages/DoaDetail';
 import Peta from './pages/Peta';
@@ -39,6 +40,7 @@ export default function App() {
         {/* Slot: Ibadah (Mode B — pintu cepat) */}
         <Route path="/ibadah" element={<Ibadah />} />
         <Route path="/ibadah/tawaf" element={<CounterTawaf />} />
+        <Route path="/ibadah/sai" element={<CounterSai />} />
 
         {/* Slot: Doa */}
         <Route path="/doa" element={<Doa />} />

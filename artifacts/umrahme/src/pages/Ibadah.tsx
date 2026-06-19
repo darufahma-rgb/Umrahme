@@ -2,8 +2,16 @@ import { Link } from 'react-router-dom';
 import MihrabCard from '../components/MihrabCard';
 import { IconIbadah, IconDoa, IconChevron } from '../components/icons';
 
-// Slot tengah "Ibadah" — pintu masuk cepat ke aktivitas Mode B.
-// Aksi utama (Counter Tawaf) dominan; doa terkait sekunder.
+// Ikon Sa'i — dua garis horisontal bolak-balik (Shafa ↔ Marwah)
+function IconSai({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 8h16M20 8l-3-3M20 8l-3 3" />
+      <path d="M20 16H4M4 16l3-3M4 16l3 3" />
+    </svg>
+  );
+}
+
 export default function Ibadah() {
   return (
     <div>
@@ -22,8 +30,8 @@ export default function Ibadah() {
         </p>
       </header>
 
-      {/* Aksi utama — dominan */}
-      <section className="mt-5 px-5">
+      {/* Dua aksi utama — setara secara visual */}
+      <section className="mt-5 px-5 space-y-3">
         <Link to="/ibadah/tawaf" className="block active:scale-[0.99]">
           <MihrabCard fill="#261019" bodyClassName="px-5 pb-6 pt-2">
             <div className="flex items-start gap-4">
@@ -45,6 +53,27 @@ export default function Ibadah() {
             </span>
           </MihrabCard>
         </Link>
+
+        <Link to="/ibadah/sai" className="block active:scale-[0.99]">
+          <MihrabCard fill="#261019" bodyClassName="px-5 pb-6 pt-2">
+            <div className="flex items-start gap-4">
+              <span className="flex h-14 w-14 flex-none items-center justify-center rounded-2xl bg-rose-600 text-parchment-100 shadow-glow">
+                <IconSai className="h-7 w-7" />
+              </span>
+              <div className="flex-1">
+                <h2 className="font-display text-2xl font-semibold text-parchment-100">
+                  Counter Sa'i
+                </h2>
+                <p className="mt-1 text-sm leading-relaxed text-mute-500">
+                  Hitung 7 lintasan Shafa–Marwah. Arah & doa per lintasan tampil otomatis.
+                </p>
+              </div>
+            </div>
+            <span className="mt-4 inline-flex items-center gap-1 font-medium text-rose-400">
+              Mulai Sa'i <IconChevron className="h-4 w-4" />
+            </span>
+          </MihrabCard>
+        </Link>
       </section>
 
       {/* Sekunder — doa terkait */}
@@ -54,7 +83,7 @@ export default function Ibadah() {
         </h3>
         <div className="space-y-3">
           {[
-            { to: '/doa?kategori=tawaf', label: 'Doa Tawaf', desc: 'Bacaan saat mengelilingi Ka’bah' },
+            { to: '/doa?kategori=tawaf', label: 'Doa Tawaf', desc: 'Bacaan saat mengelilingi Ka\u2019bah' },
             { to: '/doa?kategori=sai', label: "Doa Sa'i", desc: 'Antara Shafa & Marwah' },
             { to: '/doa?kategori=tahallul', label: 'Doa Tahallul', desc: 'Mencukur / memotong rambut' },
           ].map((it) => (
