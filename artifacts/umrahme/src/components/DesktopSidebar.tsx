@@ -24,15 +24,25 @@ export default function DesktopSidebar() {
   const idxFase = urutanFase.findIndex((f) => f.id === jamaah.fase);
 
   return (
-    <aside className="hidden lg:flex w-[270px] flex-none flex-col h-screen sticky top-0 bg-ink-900 border-r border-ink-800 overflow-y-auto z-20">
+    <aside
+      className="hidden lg:flex w-[270px] flex-none flex-col h-screen sticky top-0 border-r border-ink-800/70 overflow-y-auto z-20"
+      style={{
+        background: 'linear-gradient(180deg, #1A0A10 0%, #0D0509 100%)',
+      }}
+    >
       {/* Brand + jamaah info */}
-      <div className="px-6 pt-8 pb-5 border-b border-ink-800/60">
+      <div className="px-6 pt-8 pb-5 border-b border-ink-800/50">
         <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-rose-400 mb-0.5">
           Pendamping Umrah
         </p>
         <h1 className="font-display text-[22px] font-semibold text-parchment-100">Umrahme</h1>
 
-        <div className="mt-4 rounded-xl border border-ink-800 bg-ink-950/60 px-3.5 py-3">
+        <div
+          className="mt-4 rounded-xl border border-ink-800/80 px-3.5 py-3"
+          style={{
+            background: 'linear-gradient(135deg, #1E0C14 0%, #0D0509 100%)',
+          }}
+        >
           <p className="text-[14px] font-semibold leading-tight text-parchment-100">{jamaah.nama}</p>
           <p className="mt-0.5 font-mono text-[11px] text-mute-500">{jamaah.nomorJamaah}</p>
           <p className="mt-1.5 text-[12px] text-mute-500">
@@ -46,8 +56,7 @@ export default function DesktopSidebar() {
         <ul className="space-y-0.5">
           {navItems.map(({ to, label, Icon, isIbadah }) => (
             <li key={to}>
-              {/* Divider tipis di atas Ibadah */}
-              {isIbadah && <div className="my-2 border-t border-ink-800/50" aria-hidden />}
+              {isIbadah && <div className="my-2 border-t border-ink-800/40" aria-hidden />}
 
               <NavLink
                 to={to}
@@ -55,10 +64,15 @@ export default function DesktopSidebar() {
                   `group flex items-center gap-3 rounded-xl px-3.5 py-2.5 transition-colors ${
                     isActive
                       ? isIbadah
-                        ? 'bg-rose-600/10 border border-gold-400/20 text-parchment-100'
-                        : 'bg-ink-800 text-parchment-100'
-                      : 'text-mute-500 hover:bg-ink-800/50 hover:text-parchment-100/80'
+                        ? 'border border-gold-400/15 text-parchment-100'
+                        : 'bg-ink-800/70 text-parchment-100'
+                      : 'text-mute-500 hover:bg-ink-800/40 hover:text-parchment-100/80'
                   }`
+                }
+                style={({ isActive }) =>
+                  isActive && isIbadah
+                    ? { background: 'linear-gradient(135deg, rgba(194,24,91,0.12) 0%, rgba(13,5,9,0.6) 100%)' }
+                    : {}
                 }
               >
                 {({ isActive }) => (
@@ -80,15 +94,17 @@ export default function DesktopSidebar() {
                 )}
               </NavLink>
 
-              {/* Divider tipis di bawah Ibadah */}
-              {isIbadah && <div className="my-2 border-t border-ink-800/50" aria-hidden />}
+              {isIbadah && <div className="my-2 border-t border-ink-800/40" aria-hidden />}
             </li>
           ))}
         </ul>
       </nav>
 
       {/* Fase + logout */}
-      <div className="px-5 py-5 border-t border-ink-800/60">
+      <div
+        className="px-5 py-5 border-t border-ink-800/50"
+        style={{ background: 'linear-gradient(0deg, rgba(13,5,9,0.8) 0%, transparent 100%)' }}
+      >
         <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-mute-500">
           Fase Perjalanan
         </p>
@@ -121,7 +137,8 @@ export default function DesktopSidebar() {
         <button
           type="button"
           onClick={logout}
-          className="mt-5 w-full rounded-xl border border-ink-800 px-4 py-2.5 text-left font-mono text-[11px] uppercase tracking-wider text-mute-500 transition-colors hover:border-ink-700 hover:text-parchment-100"
+          className="mt-5 w-full rounded-xl border border-ink-800/70 px-4 py-2.5 text-left font-mono text-[11px] uppercase tracking-wider text-mute-500 transition-colors hover:border-ink-700 hover:text-parchment-100"
+          style={{ background: 'transparent' }}
         >
           Keluar
         </button>

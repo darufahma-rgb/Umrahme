@@ -53,36 +53,93 @@ export default function Peta() {
           ))}
         </div>
 
-        {/* List mobile / Grid desktop */}
-        <div className="space-y-3 lg:space-y-0 lg:grid lg:grid-cols-2 xl:grid-cols-3 lg:gap-3">
+        {/* List mobile — tidak berubah */}
+        <div className="space-y-3 lg:hidden">
           {lokasi.map((l) => (
             <Link
               key={l.id}
               to={`/peta/${l.id}`}
-              className="flex items-center gap-3 rounded-2xl border border-ink-800/70 bg-ink-900/50 px-4 py-4 transition-colors hover:border-ink-700 hover:bg-ink-900 active:scale-[0.99] lg:flex-col lg:items-start lg:gap-3"
+              className="flex items-center gap-3 rounded-2xl border border-ink-800/70 bg-ink-900/50 px-4 py-4 active:scale-[0.99]"
             >
-              <div className="min-w-0 flex-1 lg:flex-none lg:w-full">
+              <div className="min-w-0 flex-1">
                 <div className="flex items-center justify-between gap-2">
                   <h2 className="truncate text-[15px] font-semibold text-parchment-100">{l.nama}</h2>
-                  <IconChevron className="h-4 w-4 flex-none text-mute-500 lg:hidden" />
+                  <IconChevron className="h-4 w-4 flex-none text-mute-500" />
                 </div>
-                <p className="mt-0.5 truncate text-xs text-mute-500 lg:whitespace-normal lg:line-clamp-2">
-                  {l.ringkas}
-                </p>
+                <p className="mt-0.5 truncate text-xs text-mute-500">{l.ringkas}</p>
                 <div className="mt-2 flex items-center gap-3 font-mono text-[11px] text-gold-400/90">
                   <span>{l.kota}</span>
                   <span className="text-mute-500">·</span>
                   <span>{l.jarakKm} km</span>
                 </div>
               </div>
-              {/* Chevron desktop — sudut kanan atas */}
-              <div className="hidden lg:flex w-full justify-end">
-                <span className="font-mono text-[10px] uppercase tracking-wider text-rose-400 flex items-center gap-1">
-                  Detail <IconChevron className="h-3.5 w-3.5" />
-                </span>
-              </div>
             </Link>
           ))}
+        </div>
+
+        {/* Grid desktop — bento asimetris, lokasi utama lebih besar */}
+        <div className="hidden lg:grid lg:grid-cols-3 lg:gap-3">
+          {lokasi.map((l) => {
+            const isFeatured = l.id === 'masjidil-haram' || l.id === 'masjid-nabawi';
+            return (
+              <Link
+                key={l.id}
+                to={`/peta/${l.id}`}
+                className={`group relative overflow-hidden rounded-2xl border transition-colors hover:border-ink-700 ${
+                  isFeatured ? 'lg:col-span-2' : 'lg:col-span-1'
+                } ${isFeatured ? 'border-ink-800/80' : 'border-ink-800/60'}`}
+                style={{
+                  background: isFeatured
+                    ? 'radial-gradient(ellipse at 90% 10%, rgba(194,24,91,0.07) 0%, transparent 50%), linear-gradient(155deg, #18090F 0%, #0D0509 100%)'
+                    : 'linear-gradient(155deg, #18090F 0%, #0D0509 100%)',
+                }}
+              >
+                {/* Mihrab arc signature — hanya pada kartu featured */}
+                {isFeatured && (
+                  <svg viewBox="0 0 100 10" preserveAspectRatio="none" className="block w-full h-[14px]" aria-hidden>
+                    <path
+                      d="M0,10 L0,6 C0,2 24,0.3 50,0.3 C76,0.3 100,2 100,6 L100,10"
+                      fill="transparent"
+                      stroke="#D4A24E"
+                      strokeWidth="1"
+                      strokeOpacity="0.45"
+                      vectorEffect="non-scaling-stroke"
+                    />
+                  </svg>
+                )}
+
+                <div className={`flex flex-col gap-2 ${isFeatured ? 'px-5 pb-5 pt-2' : 'px-4 py-4'}`}>
+                  {isFeatured && (
+                    <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-rose-400/70">
+                      Lokasi Utama
+                    </span>
+                  )}
+                  <div className="flex items-start justify-between gap-2">
+                    <h2
+                      className={`font-semibold leading-tight text-parchment-100 ${
+                        isFeatured ? 'text-[18px]' : 'text-[14px]'
+                      }`}
+                    >
+                      {l.nama}
+                    </h2>
+                    <IconChevron className="h-4 w-4 flex-none text-mute-500 mt-0.5 group-hover:text-parchment-100/50 transition-colors" />
+                  </div>
+                  <p
+                    className={`leading-relaxed text-mute-500 ${
+                      isFeatured ? 'text-[13px] line-clamp-2' : 'text-[12px] line-clamp-1'
+                    }`}
+                  >
+                    {l.ringkas}
+                  </p>
+                  <div className="flex items-center gap-3 font-mono text-[11px] text-gold-400/80 mt-1">
+                    <span>{l.kota}</span>
+                    <span className="text-mute-500">·</span>
+                    <span>{l.jarakKm} km</span>
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </div>

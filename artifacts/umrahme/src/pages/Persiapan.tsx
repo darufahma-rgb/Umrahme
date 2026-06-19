@@ -32,6 +32,16 @@ export default function Persiapan() {
     [checked],
   );
 
+  // Tentukan satu kategori desktop yang paling tertinggal (untuk penekanan visual)
+  const laggingKategoriId = useMemo(() => {
+    const incomplete = statPerKategori.filter((x) => !x.complete);
+    if (!incomplete.length) return null;
+    const minRasio = Math.min(...incomplete.map((x) => (x.total > 0 ? x.done / x.total : 0)));
+    const allSame = incomplete.every((x) => (x.total > 0 ? x.done / x.total : 0) === minRasio);
+    if (allSame) return null; // tidak ada yang benar-benar tertinggal
+    return incomplete.find((x) => (x.total > 0 ? x.done / x.total : 0) === minRasio)?.id ?? null;
+  }, [statPerKategori]);
+
   useEffect(() => {
     if (!openCat) return;
     const cur = statPerKategori.find((k) => k.id === openCat);
@@ -224,8 +234,13 @@ export default function Persiapan() {
 
       {/* ===================== DESKTOP (≥ lg) ===================== */}
       <div className="hidden lg:block px-8 py-6 max-w-5xl mx-auto">
-        {/* Progress bar header */}
-        <div className="mb-6 rounded-2xl border border-ink-800/70 bg-ink-900/50 px-6 py-5">
+        {/* Progress bar header — dengan gradasi halus */}
+        <div
+          className="mb-6 overflow-hidden rounded-2xl border border-ink-800/70 px-6 py-5"
+          style={{
+            background: 'radial-gradient(ellipse at 5% 50%, rgba(194,24,91,0.07) 0%, transparent 50%), linear-gradient(135deg, #18090F 0%, #0D0509 100%)',
+          }}
+        >
           <div className="flex items-center justify-between">
             <div>
               <p className="font-mono text-[11px] uppercase tracking-widest text-rose-400">
@@ -242,7 +257,7 @@ export default function Persiapan() {
               <p className="text-sm text-mute-500">tugas selesai</p>
             </div>
           </div>
-          <div className="mt-4 h-2 overflow-hidden rounded-full bg-ink-800">
+          <div className="mt-4 h-2 overflow-hidden rounded-full bg-ink-800/80">
             <div
               className="h-full rounded-full bg-rose-600 transition-all duration-500"
               style={{ width: `${persen}%` }}
@@ -250,23 +265,43 @@ export default function Persiapan() {
           </div>
         </div>
 
-        {/* Kategori side-by-side — 2 kolom */}
+        {/* Kategori — 2 kolom, kategori progress terendah mendapat penekanan visual */}
         <div className="grid grid-cols-2 gap-4">
           {statPerKategori.map((k) => {
+            const rasioProgress = k.total > 0 ? k.done / k.total : 1;
+            const isLaggingBehind = !k.complete && k.id === laggingKategoriId && rasioProgress < 1;
+
             return (
               <div
                 key={k.id}
-                className={`rounded-2xl border bg-ink-900/40 ${
-                  k.complete ? 'border-gold-400/30' : 'border-ink-800/70'
+                className={`overflow-hidden rounded-2xl border transition-all ${
+                  k.complete
+                    ? 'border-gold-400/25'
+                    : isLaggingBehind
+                      ? 'border-rose-600/30'
+                      : 'border-ink-800/60'
                 }`}
+                style={{
+                  background: k.complete
+                    ? 'linear-gradient(155deg, #1A0E08 0%, #0D0509 100%)'
+                    : isLaggingBehind
+                      ? 'radial-gradient(ellipse at 100% 0%, rgba(194,24,91,0.08) 0%, transparent 55%), linear-gradient(155deg, #1A080F 0%, #0D0509 100%)'
+                      : 'linear-gradient(155deg, #18090F 0%, #0D0509 100%)',
+                }}
               >
                 {/* Header kategori */}
-                <div className="flex items-center gap-3 border-b border-ink-800/50 px-4 py-3.5">
+                <div
+                  className={`flex items-center gap-3 border-b px-4 py-3.5 ${
+                    k.complete ? 'border-gold-400/15' : 'border-ink-800/50'
+                  }`}
+                >
                   <span
                     className={`flex h-8 w-8 flex-none items-center justify-center rounded-full border ${
                       k.complete
                         ? 'border-gold-400/50 bg-gold-400/10 text-gold-400'
-                        : 'border-ink-800 bg-ink-950 text-mute-500'
+                        : isLaggingBehind
+                          ? 'border-rose-600/40 bg-rose-600/10 text-rose-400'
+                          : 'border-ink-800 bg-ink-950/80 text-mute-500'
                     }`}
                   >
                     {k.complete ? (
@@ -280,9 +315,18 @@ export default function Persiapan() {
                   <div className="min-w-0 flex-1">
                     <p className="text-[15px] font-semibold text-parchment-100">{k.judul}</p>
                     <p className="truncate text-xs text-mute-500">
-                      {k.complete ? 'Selesai — semua tugas tercentang' : k.deskripsi}
+                      {k.complete
+                        ? 'Selesai — semua tugas tercentang'
+                        : isLaggingBehind
+                          ? 'Butuh perhatian — belum banyak tercentang'
+                          : k.deskripsi}
                     </p>
                   </div>
+                  {isLaggingBehind && (
+                    <span className="flex-none font-mono text-[9px] uppercase tracking-wider text-rose-400/80">
+                      Prioritas
+                    </span>
+                  )}
                 </div>
 
                 {/* Items — selalu terbuka di desktop */}

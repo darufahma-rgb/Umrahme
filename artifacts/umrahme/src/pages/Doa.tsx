@@ -418,16 +418,23 @@ export default function DoaPage() {
         </div>
       </div>
 
-      {/* Panel kanan — detail doa terpilih */}
-      <div className="flex-1 overflow-y-auto">
+      {/* Panel kanan — detail doa terpilih, dengan gradasi halus */}
+      <div
+        className="flex-1 overflow-y-auto"
+        style={{
+          background: 'linear-gradient(160deg, #0F060A 0%, #0D0509 60%, #110708 100%)',
+        }}
+      >
         {selectedDoa ? (
           <div className="px-8 py-8 max-w-2xl">
             <DoaDetailContent doa={selectedDoa} />
           </div>
         ) : (
-          /* Placeholder saat belum ada doa dipilih */
           <div className="flex h-full flex-col items-center justify-center px-12 text-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-ink-800/70 bg-ink-900/50 text-mute-500">
+            <div
+              className="flex h-16 w-16 items-center justify-center rounded-2xl border border-ink-800/60 text-mute-500"
+              style={{ background: 'linear-gradient(135deg, #18090F 0%, #0D0509 100%)' }}
+            >
               <IconDoa className="h-7 w-7" />
             </div>
             <p className="mt-4 font-display text-xl font-semibold text-parchment-100">
