@@ -10,6 +10,7 @@ import PanduanIhram from './pages/PanduanIhram';
 import Ibadah from './pages/Ibadah';
 import CounterTawaf from './pages/CounterTawaf';
 import CounterSai from './pages/CounterSai';
+import JadwalSholat from './pages/JadwalSholat';
 import Doa from './pages/Doa';
 import DoaDetail from './pages/DoaDetail';
 import Peta from './pages/Peta';
@@ -41,6 +42,7 @@ export default function App() {
         <Route path="/ibadah" element={<Ibadah />} />
         <Route path="/ibadah/tawaf" element={<CounterTawaf />} />
         <Route path="/ibadah/sai" element={<CounterSai />} />
+        <Route path="/ibadah/jadwal-sholat" element={<JadwalSholat />} />
 
         {/* Slot: Doa */}
         <Route path="/doa" element={<Doa />} />

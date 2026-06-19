@@ -1,8 +1,9 @@
-import { type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import PhaseIndicator from '../components/PhaseIndicator';
 import { urutanFase } from '../data/jamaah';
+import { checklistItems } from '../data/checklist';
 import {
   IconDoa,
   IconPanduan,
@@ -22,6 +23,17 @@ function IconSai({ className = '' }: { className?: string }) {
       <path d="M7 16l-4-4 4-4" />
       <path d="M3 12h18" />
       <path d="M17 8l4 4-4 4" />
+    </svg>
+  );
+}
+
+// -----------------------------------------------------------------------
+// Ikon bulan sabit — shortcut Jadwal Sholat di circle row
+// -----------------------------------------------------------------------
+function IconMoon({ className = '' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
     </svg>
   );
 }
@@ -154,6 +166,19 @@ function BentoSmallCard({
 // -----------------------------------------------------------------------
 export default function Beranda() {
   const { jamaah } = useAuth();
+
+  // Progress persiapan — baca dari localStorage agar konsisten dengan Persiapan.tsx
+  const totalPersiapan = checklistItems.length;
+  const [persiapanDone] = useState<number>(() => {
+    try {
+      const raw = localStorage.getItem('umrahme.persiapan');
+      return raw ? (JSON.parse(raw) as string[]).length : 0;
+    } catch {
+      return 0;
+    }
+  });
+  const persiapanPersen = totalPersiapan > 0 ? Math.round((persiapanDone / totalPersiapan) * 100) : 0;
+
   if (!jamaah) return null;
 
   const idxFase = urutanFase.findIndex((f) => f.id === jamaah.fase);
@@ -175,57 +200,135 @@ export default function Beranda() {
     selesai: 'Rangkaian umrah telah selesai, insya Allah mabrur.',
   };
 
+  // Label fase pendek untuk header mobile
+  const faseLabelMobile: Record<string, string> = {
+    persiapan: 'Fase Persiapan',
+    perjalanan: 'Dalam Perjalanan',
+    'tanah-suci': 'Di Tanah Suci · Makkah',
+    kepulangan: 'Dalam Kepulangan',
+    selesai: 'Ibadah Selesai',
+  };
+
   return (
     <>
-      {/* ==================== MOBILE (< lg) — TIDAK DIUBAH ==================== */}
+      {/* ==================== MOBILE (< lg) ==================== */}
       <div className="lg:hidden">
+
+        {/* 1. HEADER */}
         <header
-          className="px-5 pb-2 pt-8"
+          className="px-5 pb-3 pt-8"
           style={{ paddingTop: 'max(2rem, env(safe-area-inset-top))' }}
         >
           <p className="font-arab text-xl text-gold-400" dir="rtl">
             السَّلَامُ عَلَيْكُمْ
           </p>
-          <h1 className="mt-1 font-display text-3xl font-semibold leading-tight text-parchment-100">
+          <h1 className="mt-0.5 font-display text-3xl font-semibold leading-tight text-parchment-100">
             {jamaah.nama.split(' ')[0]}
           </h1>
-          <p className="mt-1 text-sm text-mute-500">
-            Disediakan oleh <span className="text-parchment-100">{jamaah.travel}</span>
-          </p>
+          <div className="mt-1.5 flex items-center gap-1.5">
+            <span className="h-1.5 w-1.5 flex-none rounded-full bg-rose-400" aria-hidden />
+            <p className="text-[12px] text-mute-500">
+              {faseLabelMobile[jamaah.fase] ?? jamaah.fase}
+            </p>
+          </div>
         </header>
 
-        <div className="mx-5 mt-3 rounded-xl border border-ink-800/70 bg-ink-900/50 px-4 py-3">
-          <PhaseIndicator fase={jamaah.fase} />
+        {/* 2. ROW LINGKARAN AKSES CEPAT */}
+        <div
+          className="mt-2 flex gap-5 overflow-x-auto px-5 pb-3"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          role="navigation"
+          aria-label="Akses cepat"
+        >
+          {[
+            { to: '/doa', label: 'Doa', icon: <IconDoa className="h-6 w-6 text-rose-400" /> },
+            { to: '/panduan/ihram', label: 'Ihram', icon: <IconPanduan className="h-6 w-6 text-rose-400" /> },
+            { to: '/ibadah/tawaf', label: 'Tawaf', icon: <IconIbadah className="h-6 w-6 text-rose-400" /> },
+            { to: '/ibadah/sai', label: "Sa'i", icon: <IconSai className="h-6 w-6 text-rose-400" /> },
+            { to: '/peta', label: 'Peta', icon: <IconPeta className="h-6 w-6 text-rose-400" /> },
+            { to: '/ibadah/jadwal-sholat', label: 'Sholat', icon: <IconMoon className="h-6 w-6 text-rose-400" /> },
+          ].map(({ to, label, icon }) => (
+            <Link
+              key={to}
+              to={to}
+              className="flex-none flex flex-col items-center gap-2 active:scale-95 transition-transform"
+            >
+              <div
+                className="flex h-[64px] w-[64px] items-center justify-center rounded-full border border-gold-400/30 bg-ink-900/80"
+                style={{ boxShadow: '0 0 0 1px rgba(212,162,78,0.08) inset' }}
+              >
+                {icon}
+              </div>
+              <span className="font-mono text-[10px] uppercase tracking-wider text-mute-500">{label}</span>
+            </Link>
+          ))}
         </div>
 
-        <section className="mt-6 px-5">
-          <MobileFeaturedCard fase={jamaah.fase} />
+        {/* 3. KARTU FASE PERJALANAN */}
+        <section className="mt-4 px-5">
+          <MobileFaseCard fase={jamaah.fase} faseAktif={faseAktif?.label} faseDesc={faseDesc[jamaah.fase]} heroCta={heroCta} />
         </section>
 
-        <section className="mt-7 px-5">
+        {/* 4. CARD PROGRESS PERSIAPAN */}
+        <section className="mt-3 px-5">
+          <Link to="/profil/persiapan" className="block active:scale-[0.99] transition-transform">
+            <div
+              className="rounded-2xl border border-ink-800/70 px-4 py-4"
+              style={{ background: 'linear-gradient(135deg, #18090F 0%, #0D0509 100%)' }}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <div className="flex h-8 w-8 flex-none items-center justify-center rounded-xl border border-ink-800/60 bg-ink-900/60">
+                    <IconCheck className="h-4 w-4 text-rose-400" />
+                  </div>
+                  <div>
+                    <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-mute-500">Checklist Persiapan</p>
+                    <p className="mt-0.5 text-[13px] font-semibold text-parchment-100">
+                      {persiapanDone} dari {totalPersiapan} item selesai
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <p className="font-display text-[22px] font-semibold text-parchment-100">{persiapanPersen}%</p>
+                  <IconChevron className="h-4 w-4 flex-none text-mute-500" />
+                </div>
+              </div>
+              <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-ink-800">
+                <div
+                  className="h-full rounded-full bg-rose-600 transition-all duration-500"
+                  style={{ width: `${persiapanPersen}%` }}
+                />
+              </div>
+            </div>
+          </Link>
+        </section>
+
+        {/* 5. GRID FITUR LAINNYA */}
+        <section className="mt-5 px-5 pb-6">
           <h3 className="mb-3 font-mono text-[11px] uppercase tracking-widest text-mute-500">
-            Akses Cepat
+            Panduan &amp; Lainnya
           </h3>
           <div className="grid grid-cols-3 gap-3">
-            {mobileQuickAccess.map(({ to, label, Icon }) => (
+            {[
+              { to: '/panduan/tata-cara', label: 'Tata Cara', Icon: IconPanduan },
+              { to: '/panduan/ihram', label: 'Panduan Ihram', Icon: IconPanduan },
+              { to: '/peta', label: 'Peta Lokasi', Icon: IconPeta },
+            ].map(({ to, label, Icon }) => (
               <Link
                 key={to + label}
                 to={to}
-                className="flex min-h-[92px] flex-col items-center justify-center gap-2 rounded-2xl border border-ink-800/70 bg-ink-900/60 px-2 py-3 text-center active:scale-[0.97]"
+                className="flex min-h-[88px] flex-col items-center justify-center gap-2 rounded-2xl border border-ink-800/70 bg-ink-900/60 px-2 py-3 text-center active:scale-[0.97] transition-transform"
               >
-                <Icon className="h-6 w-6 text-rose-400" />
-                <span className="text-[12px] font-medium leading-tight text-parchment-100">
-                  {label}
-                </span>
+                <Icon className="h-5 w-5 text-rose-400" />
+                <span className="text-[11px] font-medium leading-tight text-parchment-100">{label}</span>
               </Link>
             ))}
           </div>
-        </section>
 
-        <section className="mt-4 px-5">
+          {/* Sertifikat — wide card */}
           <Link
             to="/profil/sertifikat"
-            className="flex items-center gap-3 rounded-2xl border border-ink-800/70 bg-ink-900/40 px-4 py-3.5 active:scale-[0.99]"
+            className="mt-3 flex items-center gap-3 rounded-2xl border border-ink-800/70 bg-ink-900/40 px-4 py-3.5 active:scale-[0.99] transition-transform"
           >
             <IconSertifikat className="h-5 w-5 flex-none text-gold-400" />
             <div className="min-w-0 flex-1">
@@ -416,7 +519,6 @@ export default function Beranda() {
               className="group flex items-center gap-4 overflow-hidden rounded-2xl border border-ink-800/60 px-6 py-4 transition-colors hover:border-gold-400/30"
               style={{ background: 'linear-gradient(135deg, #18090F 0%, #0D0509 100%)' }}
             >
-              {/* Glow gold halus di sudut kiri */}
               <div
                 className="pointer-events-none absolute left-0 top-0 h-full w-32 opacity-[0.04]"
                 style={{ background: 'radial-gradient(ellipse at 0% 50%, #D4A24E 0%, transparent 70%)' }}
@@ -440,63 +542,79 @@ export default function Beranda() {
 }
 
 // -----------------------------------------------------------------------
-// Mobile-only components (tidak berubah dari sebelumnya)
+// MobileFaseCard — kartu fase hero (mobile only), lebih besar dengan
+// pattern geometris islami dan CTA button jelas
 // -----------------------------------------------------------------------
-const mobileQuickAccess = [
-  { to: '/doa', label: 'Kumpulan Doa', Icon: IconDoa },
-  { to: '/panduan/tata-cara', label: 'Tata Cara', Icon: IconPanduan },
-  { to: '/panduan/ihram', label: 'Panduan Ihram', Icon: IconPanduan },
-  { to: '/ibadah/tawaf', label: 'Counter Tawaf', Icon: IconIbadah },
-  { to: '/peta', label: 'Peta Lokasi', Icon: IconPeta },
-  { to: '/profil/persiapan', label: 'Persiapan', Icon: IconCheck },
-];
+function MobileFaseCard({
+  fase,
+  faseAktif,
+  faseDesc,
+  heroCta,
+}: {
+  fase: string;
+  faseAktif?: string;
+  faseDesc?: string;
+  heroCta: { label: string; to: string };
+}) {
+  const fillColor = fase === 'tanah-suci' ? '#261019' : '#18090F';
+  const eyebrow =
+    fase === 'tanah-suci'
+      ? 'Sedang di Tanah Suci'
+      : fase === 'selesai'
+        ? 'Mabrur, insya Allah'
+        : 'Fase Perjalanan';
 
-function MobileFeaturedCard({ fase }: { fase: string }) {
-  if (fase === 'selesai') {
-    return (
-      <Link to="/profil/sertifikat" className="block active:scale-[0.99]">
-        <div className="relative">
-          <svg viewBox="0 0 100 22" preserveAspectRatio="none" className="block w-full h-[26px]" aria-hidden>
-            <path d="M0,22 L0,13 C0,5 24,0.6 50,0.6 C76,0.6 100,5 100,13 L100,22" fill="#18090F" stroke="#D4A24E" strokeWidth="1" strokeOpacity="0.8" vectorEffect="non-scaling-stroke" />
-          </svg>
-          <div className="-mt-px rounded-b-2xl bg-ink-900 px-5 pb-5 pt-2">
-            <p className="font-mono text-[11px] uppercase tracking-widest text-gold-400">Mabrur, insya Allah</p>
-            <h2 className="mt-1 font-display text-2xl font-semibold text-parchment-100">Lihat Sertifikat Umrah Anda</h2>
-            <p className="mt-1.5 text-sm leading-relaxed text-mute-500">Rangkaian ibadah telah selesai. Buka kenang-kenangan digital Anda.</p>
-            <span className="mt-4 inline-flex items-center gap-1 font-medium text-rose-400">Buka Sertifikat <IconChevron className="h-4 w-4" /></span>
-          </div>
-        </div>
-      </Link>
-    );
-  }
-  if (fase === 'tanah-suci') {
-    return (
-      <Link to="/ibadah/tawaf" className="block active:scale-[0.99]">
-        <div className="relative">
-          <svg viewBox="0 0 100 22" preserveAspectRatio="none" className="block w-full h-[26px]" aria-hidden>
-            <path d="M0,22 L0,13 C0,5 24,0.6 50,0.6 C76,0.6 100,5 100,13 L100,22" fill="#261019" stroke="#D4A24E" strokeWidth="1" strokeOpacity="0.8" vectorEffect="non-scaling-stroke" />
-          </svg>
-          <div className="-mt-px rounded-b-2xl px-5 pb-5 pt-2" style={{ backgroundColor: '#261019' }}>
-            <p className="font-mono text-[11px] uppercase tracking-widest text-rose-400">Sedang di Tanah Suci</p>
-            <h2 className="mt-1 font-display text-2xl font-semibold text-parchment-100">Mulai Hitung Tawaf</h2>
-            <p className="mt-1.5 text-sm leading-relaxed text-mute-500">Tombol besar, satu tap tiap putaran. Doa muncul otomatis.</p>
-            <span className="mt-4 inline-flex items-center gap-1 font-medium text-rose-400">Buka Counter Tawaf <IconChevron className="h-4 w-4" /></span>
-          </div>
-        </div>
-      </Link>
-    );
-  }
   return (
-    <Link to="/profil/persiapan" className="block active:scale-[0.99]">
-      <div className="relative">
-        <svg viewBox="0 0 100 22" preserveAspectRatio="none" className="block w-full h-[26px]" aria-hidden>
-          <path d="M0,22 L0,13 C0,5 24,0.6 50,0.6 C76,0.6 100,5 100,13 L100,22" fill="#18090F" stroke="#D4A24E" strokeWidth="1" strokeOpacity="0.8" vectorEffect="non-scaling-stroke" />
+    <Link to={heroCta.to} className="block active:scale-[0.99] transition-transform">
+      <div className="relative overflow-hidden rounded-2xl">
+        {/* Arch mihrab SVG (signature Umrahme) */}
+        <svg viewBox="0 0 100 22" preserveAspectRatio="none" className="block w-full h-[30px]" aria-hidden>
+          <path
+            d="M0,22 L0,13 C0,5 24,0.6 50,0.6 C76,0.6 100,5 100,13 L100,22"
+            fill={fillColor}
+            stroke="#D4A24E"
+            strokeWidth="1"
+            strokeOpacity="0.75"
+            vectorEffect="non-scaling-stroke"
+          />
         </svg>
-        <div className="-mt-px rounded-b-2xl bg-ink-900 px-5 pb-5 pt-2">
-          <p className="font-mono text-[11px] uppercase tracking-widest text-rose-400">Fase Persiapan</p>
-          <h2 className="mt-1 font-display text-2xl font-semibold text-parchment-100">Siapkan Perjalanan Anda</h2>
-          <p className="mt-1.5 text-sm leading-relaxed text-mute-500">Mulai dari dokumen perjalanan, kesehatan, hingga niat. Centang satu per satu dengan tenang.</p>
-          <span className="mt-4 inline-flex items-center gap-1 font-medium text-rose-400">Buka Checklist <IconChevron className="h-4 w-4" /></span>
+
+        <div
+          className="-mt-px rounded-b-2xl px-5 pb-6 pt-3"
+          style={{
+            backgroundColor: fillColor,
+            background: `radial-gradient(ellipse at 80% 0%, rgba(194,24,91,0.08) 0%, transparent 60%), ${fillColor}`,
+          }}
+        >
+          {/* Pola geometris islami — sangat halus */}
+          <div
+            className="pointer-events-none absolute inset-0 opacity-[0.04]"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cpath d='M20 0L40 20L20 40L0 20Z' fill='none' stroke='%23D4A24E' stroke-width='0.7'/%3E%3Cpath d='M20 8L32 20L20 32L8 20Z' fill='none' stroke='%23D4A24E' stroke-width='0.4'/%3E%3C/svg%3E")`,
+              backgroundSize: '40px 40px',
+            }}
+            aria-hidden
+          />
+
+          <div className="relative">
+            <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-rose-400/90">
+              {eyebrow}
+            </p>
+            <h2 className="mt-1.5 font-display text-2xl font-semibold leading-tight text-parchment-100">
+              {faseAktif ?? 'Persiapan'}
+            </h2>
+            <p className="mt-2 text-[13px] leading-relaxed text-mute-500">
+              {faseDesc ?? 'Ikuti panduan dan doa yang telah disiapkan untuk perjalanan Anda.'}
+            </p>
+
+            {/* CTA Button */}
+            <div className="mt-5 flex items-center justify-between">
+              <span className="inline-flex items-center gap-2 rounded-xl bg-rose-600 px-4 py-2.5 text-[13px] font-semibold text-parchment-100">
+                {heroCta.label}
+                <IconChevron className="h-4 w-4" />
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </Link>

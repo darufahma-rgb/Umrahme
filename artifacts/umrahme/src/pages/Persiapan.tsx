@@ -5,10 +5,22 @@ import PageHeader from '../components/PageHeader';
 import { IconCheck, IconChevron } from '../components/icons';
 
 export default function Persiapan() {
-  const [checked, setChecked] = useState<Set<string>>(new Set());
+  const [checked, setChecked] = useState<Set<string>>(() => {
+    try {
+      const raw = localStorage.getItem('umrahme.persiapan');
+      return raw ? new Set<string>(JSON.parse(raw) as string[]) : new Set();
+    } catch {
+      return new Set();
+    }
+  });
   const [openCat, setOpenCat] = useState<KategoriChecklist | null>(() => {
     return kategoriChecklist[0]?.id ?? null;
   });
+
+  // Simpan ke localStorage setiap kali checked berubah
+  useEffect(() => {
+    localStorage.setItem('umrahme.persiapan', JSON.stringify([...checked]));
+  }, [checked]);
 
   const toggle = (id: string) =>
     setChecked((prev) => {

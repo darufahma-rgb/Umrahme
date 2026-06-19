@@ -2,6 +2,14 @@ import { Link } from 'react-router-dom';
 import MihrabCard from '../components/MihrabCard';
 import { IconIbadah, IconDoa, IconChevron } from '../components/icons';
 
+function IconMoon({ className = '' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+    </svg>
+  );
+}
+
 // Ikon Sa'i — dua garis horisontal bolak-balik (Shafa ↔ Marwah)
 function IconSai({ className }: { className?: string }) {
   return (
@@ -71,6 +79,30 @@ export default function Ibadah() {
             </div>
             <span className="mt-4 inline-flex items-center gap-1 font-medium text-rose-400">
               Mulai Sa'i <IconChevron className="h-4 w-4" />
+            </span>
+          </MihrabCard>
+        </Link>
+      </section>
+
+      {/* Jadwal Sholat */}
+      <section className="mt-3 px-5">
+        <Link to="/ibadah/jadwal-sholat" className="block active:scale-[0.99]">
+          <MihrabCard fill="#18090F" bodyClassName="px-5 pb-5 pt-2">
+            <div className="flex items-start gap-4">
+              <span className="flex h-14 w-14 flex-none items-center justify-center rounded-2xl border border-ink-800/60 bg-ink-900/80 text-mute-500">
+                <IconMoon className="h-7 w-7" />
+              </span>
+              <div className="flex-1">
+                <h2 className="font-display text-2xl font-semibold text-parchment-100">
+                  Jadwal Sholat
+                </h2>
+                <p className="mt-1 text-sm leading-relaxed text-mute-500">
+                  Waktu sholat 5 waktu dengan gauge jam dan pengingat adzan.
+                </p>
+              </div>
+            </div>
+            <span className="mt-4 inline-flex items-center gap-1 font-medium text-rose-400">
+              Lihat Jadwal <IconChevron className="h-4 w-4" />
             </span>
           </MihrabCard>
         </Link>
