@@ -43,7 +43,7 @@ export default function BottomNav() {
                       style={{
                         marginTop: '-38px',
                         background: isActive
-                          ? 'linear-gradient(145deg, #ea2804 0%, #c01f00 100%)'
+                          ? 'linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%)'
                           : 'linear-gradient(145deg, #ff3d1a 0%, #d42200 100%)',
                         boxShadow: isActive
                           ? '0 0 0 3px rgba(234,40,4,0.18), 0 8px 24px rgba(234,40,4,0.42), 0 2px 6px rgba(0,0,0,0.25)'

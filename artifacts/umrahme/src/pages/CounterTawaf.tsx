@@ -185,7 +185,7 @@ export default function CounterTawaf() {
               aria-label={`Tap untuk menambah putaran. Saat ini ${count} dari ${TOTAL}.`}
               className="relative mt-8 mb-2 flex h-56 w-56 select-none items-center justify-center rounded-full active:scale-[0.98] transition-transform"
               style={{
-                background: `conic-gradient(#ea2804 ${persen}%, #f3f0e8 ${persen}%)`,
+                background: `conic-gradient(#2563eb ${persen}%, #f3f0e8 ${persen}%)`,
                 padding: '8px',
               }}
             >

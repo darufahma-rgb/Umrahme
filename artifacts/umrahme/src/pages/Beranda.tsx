@@ -278,7 +278,7 @@ export default function Beranda() {
                   className="h-full rounded-full transition-all duration-700"
                   style={{
                     width: `${persiapanPersen}%`,
-                    background: 'linear-gradient(90deg, #ea2804 0%, #ff6b47 100%)',
+                    background: 'linear-gradient(90deg, #2563eb 0%, #60a5fa 100%)',
                     boxShadow: '0 0 8px rgba(234,40,4,0.35)',
                   }}
                 />

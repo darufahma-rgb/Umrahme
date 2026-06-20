@@ -81,7 +81,7 @@ function PrayerTimeline({
         width={Math.max(0, progressX - padL)}
         height={2}
         rx={1}
-        fill="#ea2804"
+        fill="#2563eb"
         opacity="0.65"
       />
 
@@ -99,7 +99,7 @@ function PrayerTimeline({
           <g key={prayer.id}>
             {/* Lingkaran halo untuk sholat aktif */}
             {isSekarang && (
-              <circle cx={x} cy={lineY} r={11} fill="#ea2804" opacity="0.08" />
+              <circle cx={x} cy={lineY} r={11} fill="#2563eb" opacity="0.08" />
             )}
 
             {/* Titik sholat */}
@@ -107,8 +107,8 @@ function PrayerTimeline({
               cx={x}
               cy={lineY}
               r={isSekarang ? 5.5 : 4}
-              fill={isSekarang ? '#ea2804' : passed ? '#ea2804' : '#f6f3ec'}
-              stroke={isSekarang ? 'none' : passed ? '#ea2804' : '#c8c3b8'}
+              fill={isSekarang ? '#2563eb' : passed ? '#2563eb' : '#f6f3ec'}
+              stroke={isSekarang ? 'none' : passed ? '#2563eb' : '#c8c3b8'}
               strokeWidth={1.5}
               opacity={passed && !isSekarang ? 0.55 : 1}
             />
@@ -120,7 +120,7 @@ function PrayerTimeline({
               textAnchor="middle"
               fontSize={6.5}
               fontFamily="monospace"
-              fill={isSekarang ? '#ea2804' : '#9a9590'}
+              fill={isSekarang ? '#2563eb' : '#9a9590'}
               fontWeight={isSekarang ? '600' : '400'}
             >
               {prayer.jamMulai}
@@ -133,7 +133,7 @@ function PrayerTimeline({
               textAnchor="middle"
               fontSize={6.5}
               fontFamily="monospace"
-              fill={isSekarang ? '#ea2804' : '#9a9590'}
+              fill={isSekarang ? '#2563eb' : '#9a9590'}
               fontWeight={isSekarang ? '600' : '400'}
             >
               {prayer.nama.toUpperCase()}
@@ -148,7 +148,7 @@ function PrayerTimeline({
         y1={lineY - 8}
         x2={progressX}
         y2={lineY + 8}
-        stroke="#ea2804"
+        stroke="#2563eb"
         strokeWidth={1.5}
         strokeLinecap="round"
         opacity={0.4}

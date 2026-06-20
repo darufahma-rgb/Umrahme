@@ -39,7 +39,7 @@ function IlustrasiManasik({ tipe }: { tipe: ManasikKartu['ilustrasiTipe'] }) {
   /* shared colors */
   const bg = '#f3f0e8';
   const gold = '#d4a24e';
-  const red = '#ea2804';
+  const red = '#2563eb';
 
   switch (tipe) {
     case 'miqat':
