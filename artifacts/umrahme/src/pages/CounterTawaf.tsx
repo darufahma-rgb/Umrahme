@@ -6,7 +6,64 @@ import { IconBack, IconReset, IconCheck, IconChevron } from '../components/icons
 const TOTAL = 7;
 const STORAGE = 'umrahme.tawaf';
 
-const doaPutaran = doaById('tawaf-rabbana-atina');
+const doaRabbana = doaById('tawaf-rabbana-atina');
+
+function DoaCard({
+  putaran,
+}: {
+  putaran: number;
+}) {
+  const [bukaTerjemahan, setBukaTerjemahan] = useState(false);
+  const doa = doaById(`tawaf-putaran-${putaran}`);
+
+  return (
+    <div className="mt-5 w-full space-y-2">
+      <div className="w-full rounded-md border border-hairline bg-surface-card px-4 py-3 text-center shadow-drop-card">
+        <p className="font-mono text-[10px] uppercase tracking-widest text-primary">
+          Doa Putaran Ke-{putaran}
+        </p>
+        {doa ? (
+          <>
+            <p className="mt-2 font-arab text-2xl leading-relaxed text-ink" dir="rtl">
+              {doa.arab}
+            </p>
+            <p className="mt-1.5 text-xs italic leading-relaxed text-charcoal">
+              {doa.latin}
+            </p>
+            <button
+              type="button"
+              onClick={() => setBukaTerjemahan((v) => !v)}
+              className="mt-2 font-mono text-[10px] uppercase tracking-widest text-mute"
+            >
+              {bukaTerjemahan ? '▲ Sembunyikan' : '▼ Terjemahan'}
+            </button>
+            {bukaTerjemahan && (
+              <p className="mt-1.5 text-xs leading-relaxed text-charcoal">
+                {doa.terjemahan}
+              </p>
+            )}
+          </>
+        ) : (
+          <p className="mt-2 text-xs text-mute">Doa untuk putaran ini belum tersedia.</p>
+        )}
+      </div>
+
+      {doaRabbana && (
+        <div className="w-full rounded-md border border-hairline bg-surface-bone px-4 py-3 text-center">
+          <p className="font-mono text-[9px] uppercase tracking-widest text-mute">
+            Dibaca antara Rukun Yamani & Hajar Aswad
+          </p>
+          <p className="mt-1.5 font-arab text-xl leading-relaxed text-gold" dir="rtl">
+            {doaRabbana.arab}
+          </p>
+          <p className="mt-1 text-[11px] italic leading-relaxed text-charcoal">
+            {doaRabbana.latin}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function CounterTawaf() {
   const navigate = useNavigate();
@@ -21,6 +78,7 @@ export default function CounterTawaf() {
   }, [count]);
 
   const selesai = count >= TOTAL;
+  const putaranBerjalan = Math.min(count + 1, TOTAL);
 
   function tap() {
     if (selesai) return;
@@ -118,19 +176,7 @@ export default function CounterTawaf() {
               ))}
             </div>
 
-            {doaPutaran ? (
-              <div className="mt-5 w-full rounded-md border border-hairline bg-surface-card px-4 py-3 text-center shadow-drop-card">
-                <p className="font-mono text-[10px] uppercase tracking-widest text-gold">
-                  Dibaca antara Rukun Yamani & Hajar Aswad
-                </p>
-                <p className="mt-2 font-arab text-2xl leading-relaxed text-gold" dir="rtl">
-                  {doaPutaran.arab}
-                </p>
-                <p className="mt-1.5 text-xs italic leading-relaxed text-charcoal">
-                  {doaPutaran.latin}
-                </p>
-              </div>
-            ) : null}
+            <DoaCard putaran={putaranBerjalan} />
 
             <button
               type="button"
