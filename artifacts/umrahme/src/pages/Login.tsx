@@ -114,13 +114,13 @@ export default function Login() {
 
           {/* Heading */}
           <h2
-            className="font-display font-bold leading-tight text-ink"
+            className="font-display font-bold leading-tight text-ink text-center"
             style={{ fontSize: 'clamp(20px, 5vw, 26px)' }}
           >
             Selamat Datang!
           </h2>
-          <p className="mt-1.5 text-[13px] text-charcoal">
-            Masukkan kode aktivasi dari biro travel Anda.
+          <p className="mt-1.5 text-[13px] text-charcoal text-center">
+            Masukkan kode aktivasi.
           </p>
 
           <form onSubmit={handleSubmit} className="mt-5 space-y-3">
