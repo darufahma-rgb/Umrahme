@@ -56,24 +56,66 @@ function PrayerTimeline({
   waktuList: WaktuSholat[];
   progressMenit: number;
 }) {
-  const W = 300, H = 72, padL = 10, padR = 10;
+  const W = 300, H = 64, padL = 18, padR = 18;
   const trackW = W - padL - padR;
   const lineY = 29;
 
-  // Zoom ke rentang waktu sholat (bukan 24 jam penuh)
-  const MARGIN = 75; // menit margin sebelum/sesudah
-  const allMins = waktuList.flatMap((w) => {
-    const [h, m] = w.jamMulai.split(':').map(Number);
-    const [ah, am] = w.jamAkhir.split(':').map(Number);
-    return [h * 60 + m, ah * 60 + am];
-  });
-  const rangeStart = Math.max(0, Math.min(...allMins) - MARGIN);
-  const rangeEnd   = Math.min(1440, Math.max(...allMins) + MARGIN);
-  const rangeTotal = rangeEnd - rangeStart;
+  const toX = (menit: number) => padL + (menit / 1440) * trackW;
+  const progressX = Math.min(toX(progressMenit), padL + trackW);
 
-  const toX = (menit: number) =>
-    padL + Math.max(0, Math.min(1, (menit - rangeStart) / rangeTotal)) * trackW;
-  const progressX = toX(Math.min(progressMenit, rangeEnd));
+  // Estimasi lebar karakter pada font monospace fontSize 6.5 (≈0.6× fontSize).
+  // Dipakai untuk mendeteksi overflow ke tepi SVG dan tabrakan antar label.
+  const fontSize = 6.5;
+  const charW = fontSize * 0.6;
+  const halfWidth = (s: string) => (s.length * charW) / 2;
+
+  const points = waktuList.map((prayer) => {
+    const [ph, pm] = prayer.jamMulai.split(':').map(Number);
+    const pMin = ph * 60 + pm;
+    const [ah, am] = prayer.jamAkhir.split(':').map(Number);
+    const aMin = ah * 60 + am;
+    const x = toX(pMin);
+    const isSekarang = progressMenit >= pMin && progressMenit < aMin;
+    const passed = pMin <= progressMenit && !isSekarang;
+    const label = prayer.nama.toUpperCase();
+    const w = Math.max(halfWidth(label), halfWidth(prayer.jamMulai));
+    return { prayer, x, isSekarang, passed, label, w };
+  });
+
+  // Tentukan anchor per titik secara adaptif: default 'middle'.
+  // Jika label akan melewati tepi kiri → 'start', tepi kanan → 'end'.
+  const anchors = points.map((p) => {
+    const overflowLeft  = p.x - p.w < padL;
+    const overflowRight = p.x + p.w > padL + trackW;
+    let textAnchor: 'start' | 'middle' | 'end' = 'middle';
+    let textX = p.x;
+    if (overflowLeft) {
+      textAnchor = 'start';
+      textX = padL;
+    } else if (overflowRight) {
+      textAnchor = 'end';
+      textX = padL + trackW;
+    }
+    return { textAnchor, textX };
+  });
+
+  // Deteksi tabrakan antar label bertetangga: bila jarak x dua titik
+  // berurutan < jumlah setengah-lebar keduanya + 4px margin, geser label
+  // titik kedua ke baris bawah (vOffset +9px) secara berselang-seling.
+  const rowOffset = points.map(() => 0);
+  for (let i = 1; i < points.length; i++) {
+    const prev = points[i - 1];
+    const cur  = points[i];
+    const gap    = cur.x - prev.x;
+    const needed = prev.w + cur.w + 4;
+    if (
+      gap < needed &&
+      anchors[i].textAnchor === 'middle' &&
+      anchors[i - 1].textAnchor === 'middle'
+    ) {
+      rowOffset[i] = rowOffset[i - 1] === 0 ? 1 : 0;
+    }
+  }
 
   return (
     <svg
@@ -84,87 +126,68 @@ function PrayerTimeline({
       aria-hidden="true"
     >
       {/* Track latar */}
-      <rect x={padL} y={lineY - 2} width={trackW} height={4} rx={2} fill="#ded9ce" />
+      <rect x={padL} y={lineY - 1} width={trackW} height={2} rx={1} fill="#ded9ce" />
 
       {/* Progress terisi */}
       <rect
         x={padL}
-        y={lineY - 2}
+        y={lineY - 1}
         width={Math.max(0, progressX - padL)}
-        height={4}
-        rx={2}
+        height={2}
+        rx={1}
         fill="#0ea5e9"
         opacity="0.65"
       />
 
-      {(() => {
-        const MIN_GAP = 38;
-        const xList = waktuList.map((w) => {
-          const [h, m] = w.jamMulai.split(':').map(Number);
-          return toX(h * 60 + m);
-        });
-        const flipped: boolean[] = waktuList.map((_, i) => {
-          if (i === 0) return false;
-          return Math.abs(xList[i] - xList[i - 1]) < MIN_GAP;
-        });
+      {points.map((p, i) => {
+        const { x, isSekarang, passed, label, prayer } = p;
+        const { textAnchor, textX } = anchors[i];
+        const vOffset = rowOffset[i] * 9; // geser turun 9px jika baris kedua
 
-        return waktuList.map((prayer, i) => {
-          const [ph, pm] = prayer.jamMulai.split(':').map(Number);
-          const pMin = ph * 60 + pm;
-          const [ah, am] = prayer.jamAkhir.split(':').map(Number);
-          const aMin = ah * 60 + am;
-          const x = xList[i];
-          const flip = flipped[i];
+        return (
+          <g key={prayer.id}>
+            {isSekarang && (
+              <circle cx={x} cy={lineY} r={11} fill="#0ea5e9" opacity="0.08" />
+            )}
 
-          const isSekarang = progressMenit >= pMin && progressMenit < aMin;
-          const passed = pMin <= progressMenit && !isSekarang;
-          const color = isSekarang ? '#0ea5e9' : '#9a9590';
+            <circle
+              cx={x}
+              cy={lineY}
+              r={isSekarang ? 5.5 : 4}
+              fill={isSekarang ? '#0ea5e9' : passed ? '#0ea5e9' : '#f6f3ec'}
+              stroke={isSekarang ? 'none' : passed ? '#0ea5e9' : '#c8c3b8'}
+              strokeWidth={1.5}
+              opacity={passed && !isSekarang ? 0.55 : 1}
+            />
 
-          return (
-            <g key={prayer.id}>
-              {isSekarang && (
-                <circle cx={x} cy={lineY} r={11} fill="#0ea5e9" opacity="0.08" />
-              )}
+            {/* Jam di atas titik */}
+            <text
+              x={textX}
+              y={lineY - 13 - vOffset}
+              textAnchor={textAnchor}
+              fontSize={fontSize}
+              fontFamily="monospace"
+              fill={isSekarang ? '#0ea5e9' : '#9a9590'}
+              fontWeight={isSekarang ? '600' : '400'}
+            >
+              {prayer.jamMulai}
+            </text>
 
-              <circle
-                cx={x}
-                cy={lineY}
-                r={isSekarang ? 5.5 : 4}
-                fill={isSekarang ? '#0ea5e9' : passed ? '#0ea5e9' : '#f6f3ec'}
-                stroke={isSekarang ? 'none' : passed ? '#0ea5e9' : '#c8c3b8'}
-                strokeWidth={1.5}
-                opacity={passed && !isSekarang ? 0.55 : 1}
-              />
-
-              {/* Jam */}
-              <text
-                x={x}
-                y={flip ? lineY + 22 : lineY - 13}
-                textAnchor="middle"
-                fontSize={6.5}
-                fontFamily="monospace"
-                fill={color}
-                fontWeight={isSekarang ? '600' : '400'}
-              >
-                {prayer.jamMulai}
-              </text>
-
-              {/* Nama */}
-              <text
-                x={x}
-                y={flip ? lineY + 30 : lineY + 16}
-                textAnchor="middle"
-                fontSize={6.5}
-                fontFamily="monospace"
-                fill={color}
-                fontWeight={isSekarang ? '600' : '400'}
-              >
-                {prayer.nama.toUpperCase()}
-              </text>
-            </g>
-          );
-        });
-      })()}
+            {/* Nama di bawah titik */}
+            <text
+              x={textX}
+              y={lineY + 16 + vOffset}
+              textAnchor={textAnchor}
+              fontSize={fontSize}
+              fontFamily="monospace"
+              fill={isSekarang ? '#0ea5e9' : '#9a9590'}
+              fontWeight={isSekarang ? '600' : '400'}
+            >
+              {label}
+            </text>
+          </g>
+        );
+      })}
 
       {/* Penanda posisi saat ini — garis vertikal tipis */}
       <line
