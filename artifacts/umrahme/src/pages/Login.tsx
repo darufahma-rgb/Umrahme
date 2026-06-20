@@ -132,7 +132,7 @@ export default function Login() {
               </div>
               {/* Input */}
               <div className="flex-1 min-w-0">
-                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-mute mb-0.5">
+                <p className="font-display text-[10px] uppercase tracking-[0.18em] text-mute mb-0.5">
                   Kode Aktivasi
                 </p>
                 <input
@@ -159,7 +159,7 @@ export default function Login() {
 
             {/* Nama Jamaah — styled like "Display Name" field in reference */}
             <div style={{ marginTop: '16px' }}>
-              <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-mute mb-1.5 px-1">
+              <p className="font-display text-[11px] uppercase tracking-[0.15em] text-mute mb-1.5 px-1">
                 Nama Jamaah
               </p>
               <div
