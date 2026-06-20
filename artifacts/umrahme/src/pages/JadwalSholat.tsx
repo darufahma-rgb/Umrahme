@@ -61,7 +61,6 @@ function PrayerTimeline({
   const lineY = 29;
 
   const toX = (menit: number) => padL + (menit / 1440) * trackW;
-  const progressX = Math.min(toX(progressMenit), padL + trackW);
 
   // Estimasi lebar karakter pada font monospace fontSize 6.5 (≈0.6× fontSize).
   // Dipakai untuk mendeteksi overflow ke tepi SVG dan tabrakan antar label.
@@ -129,20 +128,6 @@ function PrayerTimeline({
       className="w-full"
       aria-hidden="true"
     >
-      {/* Track latar */}
-      <rect x={padL} y={lineY - 1} width={trackW} height={2} rx={1} fill="#ded9ce" />
-
-      {/* Progress terisi */}
-      <rect
-        x={padL}
-        y={lineY - 1}
-        width={Math.max(0, progressX - padL)}
-        height={2}
-        rx={1}
-        fill="#0ea5e9"
-        opacity="0.65"
-      />
-
       {points.map((p, i) => {
         const { x, isSekarang, passed, label, prayer } = p;
         const { textAnchor, textX } = anchors[i];
@@ -192,17 +177,6 @@ function PrayerTimeline({
         );
       })}
 
-      {/* Penanda posisi saat ini — garis vertikal tipis */}
-      <line
-        x1={progressX}
-        y1={lineY - 8}
-        x2={progressX}
-        y2={lineY + 8}
-        stroke="#0ea5e9"
-        strokeWidth={1.5}
-        strokeLinecap="round"
-        opacity={0.4}
-      />
     </svg>
   );
 }
