@@ -146,13 +146,10 @@ export default function Beranda() {
       {/* ==================== MOBILE (< lg) ==================== */}
       <div className="lg:hidden">
 
-        {/* HEADER BAND — mosque photo */}
+        {/* HEADER — full-bleed mosque photo */}
         <header
           className="relative overflow-hidden"
-          style={{
-            paddingTop: 'max(2.5rem, env(safe-area-inset-top))',
-            paddingBottom: '44px',
-          }}
+          style={{ height: 'clamp(260px, 58vw, 340px)' }}
         >
           {/* Mosque photo */}
           <img
@@ -160,58 +157,54 @@ export default function Beranda() {
             alt=""
             aria-hidden
             className="absolute inset-0 w-full h-full object-cover"
-            style={{ objectPosition: 'center 40%', transform: 'scale(1.35)', transformOrigin: 'center 40%' }}
-          />
-          {/* Dark overlay so text stays readable */}
-          <div
-            className="pointer-events-none absolute inset-0"
-            style={{ background: 'linear-gradient(160deg, rgba(10,8,4,0.72) 0%, rgba(20,13,4,0.60) 55%, rgba(10,8,4,0.50) 100%)' }}
-          />
-          {/* Gold glow at bottom */}
-          <div
-            className="pointer-events-none absolute inset-0"
-            style={{ background: 'radial-gradient(ellipse 80% 50% at 50% 110%, rgba(212,162,78,0.18) 0%, transparent 70%)' }}
+            style={{ objectPosition: 'center 38%', transform: 'scale(1.3)', transformOrigin: 'center 38%' }}
           />
 
-          <div className="relative px-5">
+          {/* Top scrim — status bar area */}
+          <div
+            className="pointer-events-none absolute inset-x-0 top-0"
+            style={{ height: '90px', background: 'linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, transparent 100%)' }}
+          />
+
+          {/* Bottom scrim — text area */}
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-0"
+            style={{ height: '70%', background: 'linear-gradient(to top, rgba(4,3,2,0.82) 0%, rgba(4,3,2,0.50) 45%, transparent 100%)' }}
+          />
+
+          {/* Content pinned to bottom */}
+          <div
+            className="absolute inset-x-0 bottom-0 px-5 pb-5"
+            style={{ paddingTop: 'max(2.5rem, env(safe-area-inset-top))' }}
+          >
             {/* Greeting row */}
             <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
                 <span className="h-1.5 w-1.5 flex-none rounded-full bg-gold animate-pulse" />
-                <p className="font-mono text-[10px] uppercase tracking-widest text-gold/70">
+                <p className="font-display text-[10px] uppercase tracking-widest text-white/60">
                   Assalamu'alaikum
                 </p>
               </div>
-              <p className="font-arab text-[16px] leading-none text-gold/80" dir="rtl">
+              <p className="font-arab text-[15px] leading-none text-white/60" dir="rtl">
                 السَّلَامُ عَلَيْكُمْ
               </p>
             </div>
 
-            <h1 className="mt-2 font-display text-[34px] font-bold leading-none tracking-[-1.5px] text-on-dark">
+            <h1 className="mt-1.5 font-display text-[36px] font-bold leading-none tracking-[-1.5px] text-white">
               {firstName}
             </h1>
 
             {/* Fase badge */}
-            <div className="mt-3 inline-flex items-center gap-2 rounded-full px-3 py-1.5"
-              style={{ background: 'rgba(212,162,78,0.14)', border: '1px solid rgba(212,162,78,0.28)' }}
+            <div
+              className="mt-3 inline-flex items-center gap-2 rounded-full px-3 py-1.5"
+              style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.22)', backdropFilter: 'blur(8px)' }}
             >
               <span className="h-1.5 w-1.5 flex-none rounded-full bg-gold animate-pulse" />
-              <p className="font-mono text-[10px] uppercase tracking-wider text-gold/90">
+              <p className="font-display text-[10px] uppercase tracking-wider text-white/80">
                 {faseLabelMobile[jamaah.fase] ?? jamaah.fase}
               </p>
             </div>
           </div>
-
-          {/* Curved bottom edge */}
-          <svg
-            viewBox="0 0 390 32"
-            preserveAspectRatio="none"
-            className="absolute bottom-0 left-0 right-0 w-full"
-            style={{ height: '32px' }}
-            aria-hidden
-          >
-            <path d="M0,32 L0,10 Q195,0 390,10 L390,32 Z" fill="#f9f7f3" />
-          </svg>
         </header>
 
         {/* AKSES CEPAT */}
