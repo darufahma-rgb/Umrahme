@@ -52,53 +52,96 @@ export default function Login() {
             height: '52vw',
             maxHeight: '260px',
             minHeight: '200px',
-            background: 'linear-gradient(160deg, #1a1208 0%, #2d1e0a 50%, #1c1005 100%)',
           }}
         >
-          {/* Placeholder: decorative rings + Arabic — will be replaced by user's image */}
-          <div className="pointer-events-none absolute inset-0 bg-dot-gold-dense opacity-50" />
+          {/* Base gradient: warm golden sunrise → deep sky blue */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: 'linear-gradient(180deg, #f5a623 0%, #e8720c 18%, #c0392b 32%, #7b5ea7 52%, #3a7bd5 72%, #a8d8ea 90%, #f0f8ff 100%)',
+            }}
+          />
+
+          {/* Soft radial light bloom at top center (sun glow) */}
+          <div
+            className="pointer-events-none absolute"
+            style={{
+              top: '-20%',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: '140%',
+              height: '80%',
+              background: 'radial-gradient(ellipse at 50% 30%, rgba(255,220,100,0.55) 0%, rgba(255,140,50,0.25) 40%, transparent 70%)',
+            }}
+          />
+
+          {/* Atmospheric haze in the middle */}
           <div
             className="pointer-events-none absolute inset-0"
             style={{
-              background:
-                'radial-gradient(ellipse 80% 55% at 50% 110%, rgba(212,162,78,0.32) 0%, transparent 70%)',
+              background: 'linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.22) 80%, rgba(255,255,255,0.55) 100%)',
             }}
           />
-          {/* Decorative rings */}
-          {[300, 210, 130].map((size) => (
-            <div
-              key={size}
-              className="pointer-events-none absolute"
-              style={{
-                width: `${size}px`,
-                height: `${size}px`,
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -45%)',
-                border: `1px solid rgba(212,162,78,${size === 130 ? 0.22 : size === 210 ? 0.14 : 0.08})`,
-                borderRadius: '50%',
-              }}
-            />
-          ))}
-          {/* Arabic calligraphy */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-6">
+
+          {/* Subtle cloud wisps */}
+          <div
+            className="pointer-events-none absolute"
+            style={{
+              top: '38%',
+              left: '-10%',
+              width: '55%',
+              height: '22%',
+              background: 'radial-gradient(ellipse, rgba(255,255,255,0.35) 0%, transparent 70%)',
+              borderRadius: '50%',
+              filter: 'blur(8px)',
+            }}
+          />
+          <div
+            className="pointer-events-none absolute"
+            style={{
+              top: '30%',
+              right: '-5%',
+              width: '45%',
+              height: '18%',
+              background: 'radial-gradient(ellipse, rgba(255,255,255,0.28) 0%, transparent 70%)',
+              borderRadius: '50%',
+              filter: 'blur(10px)',
+            }}
+          />
+
+          {/* Arabic calligraphy over gradient */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-6"
+            style={{ paddingBottom: '12px' }}
+          >
             <p
-              className="font-arab text-center text-gold animate-gold-breath"
-              style={{ fontSize: 'clamp(28px, 9vw, 44px)', direction: 'rtl' }}
+              className="font-arab text-center drop-shadow-sm"
+              style={{
+                fontSize: 'clamp(26px, 9vw, 40px)',
+                direction: 'rtl',
+                color: '#1a0a00',
+                textShadow: '0 1px 12px rgba(255,220,80,0.50), 0 2px 4px rgba(0,0,0,0.15)',
+              }}
             >
               لَبَّيْكَ اللّٰهُمَّ لَبَّيْكَ
             </p>
-            <div className="flex items-center gap-3 mt-1">
-              <span className="h-px w-8 bg-gold/30" />
-              <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-gold/55">Talbiyah</p>
-              <span className="h-px w-8 bg-gold/30" />
+            <div className="flex items-center gap-3">
+              <span className="h-px w-8" style={{ background: 'rgba(80,40,0,0.30)' }} />
+              <p
+                className="font-mono text-[10px] uppercase tracking-[0.3em]"
+                style={{ color: 'rgba(80,40,0,0.60)' }}
+              >
+                Talbiyah
+              </p>
+              <span className="h-px w-8" style={{ background: 'rgba(80,40,0,0.30)' }} />
             </div>
           </div>
-          {/* Bottom fade so card body bleeds cleanly */}
+
+          {/* Bottom fade into white card body */}
           <div
-            className="absolute bottom-0 left-0 right-0 h-12 pointer-events-none"
+            className="absolute bottom-0 left-0 right-0 pointer-events-none"
             style={{
-              background: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.06) 100%)',
+              height: '40px',
+              background: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.85) 100%)',
             }}
           />
         </div>
