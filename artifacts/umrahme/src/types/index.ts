@@ -117,3 +117,13 @@ export interface IhramSection {
   judul: string;
   langkah: string[];
 }
+
+/** Satu entri jurnal perjalanan jamaah. */
+export interface JurnalEntry {
+  id: string;
+  tanggal: string;       // ISO date string, mis. "2025-12-15"
+  judul?: string;        // judul singkat opsional
+  isi: string;           // catatan/tulisan, wajib ada
+  fotoDataUrl?: string;  // base64 JPEG setelah di-resize, opsional
+  lokasi?: string;       // tag lokasi bebas teks, opsional
+}

@@ -5,6 +5,26 @@ import { urutanFase } from '../data/jamaah';
 import PhaseIndicator from '../components/PhaseIndicator';
 import { IconCheck, IconSertifikat, IconChevron } from '../components/icons';
 
+function IconJurnal({ className }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.75}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+      <line x1="9" y1="9" x2="15" y2="9" />
+      <line x1="9" y1="13" x2="13" y2="13" />
+    </svg>
+  );
+}
+
 export default function Profil() {
   const { jamaah, logout, setFase } = useAuth();
   const navigate = useNavigate();
@@ -88,6 +108,17 @@ export default function Profil() {
             <div className="flex-1">
               <p className="text-[15px] font-medium text-parchment-100">Persiapan</p>
               <p className="text-xs text-mute-500">Checklist sebelum berangkat</p>
+            </div>
+            <IconChevron className="h-4 w-4 flex-none text-mute-500" />
+          </Link>
+          <Link
+            to="/profil/jurnal"
+            className="flex items-center gap-3 rounded-2xl border border-ink-800/70 bg-ink-900/50 px-4 py-4 active:scale-[0.99]"
+          >
+            <IconJurnal className="h-5 w-5 flex-none text-rose-400" />
+            <div className="flex-1">
+              <p className="text-[15px] font-medium text-parchment-100">Jurnal & Kenangan</p>
+              <p className="text-xs text-mute-500">Catatan harian & galeri foto perjalanan</p>
             </div>
             <IconChevron className="h-4 w-4 flex-none text-mute-500" />
           </Link>
