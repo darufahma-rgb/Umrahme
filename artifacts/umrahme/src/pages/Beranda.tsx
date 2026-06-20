@@ -195,34 +195,37 @@ export default function Beranda() {
           </p>
         </header>
 
-        {/* ── CHIP FILTER MENGAMBANG — overlap hero bawah & card atas ─── */}
-        <div
-          className="relative z-10 -mt-5 flex gap-2.5 overflow-x-auto no-scrollbar px-5 pb-4"
-          role="navigation"
-          aria-label="Akses cepat"
-        >
-          {[
-            { to: '/doa',                 label: 'Doa',    icon: <IconDoa   className="h-4 w-4" />, aktif: true  },
-            { to: '/panduan/ihram',       label: 'Ihram',  icon: <IconIhram className="h-4 w-4" />, aktif: false },
-            { to: '/ibadah/tawaf',        label: 'Tawaf',  icon: <IconTawaf className="h-4 w-4" />, aktif: false },
-            { to: '/ibadah/sai',          label: "Sa'i",   icon: <IconSai   className="h-4 w-4" />, aktif: false },
-            { to: '/peta',                label: 'Peta',   icon: <IconPeta  className="h-4 w-4" />, aktif: false },
-            { to: '/ibadah/jadwal-sholat',label: 'Sholat', icon: <IconMoon  className="h-4 w-4" />, aktif: false },
-          ].map(({ to, label, icon, aktif }) => (
-            <Link
-              key={to}
-              to={to}
-              className={`flex-none inline-flex items-center gap-2 rounded-full px-4 py-2 text-[12px] font-semibold transition-all active:scale-[0.96] ${
-                aktif
-                  ? 'bg-primary text-on-primary'
-                  : 'bg-white border border-hairline text-charcoal shadow-drop-lifted'
-              }`}
-            >
-              {icon}
-              {label}
-            </Link>
-          ))}
-        </div>
+        {/* ── SHEET PUTIH — slide up menutupi bagian bawah hero ──────── */}
+        <div className="relative z-10 -mt-12 rounded-t-[28px] bg-canvas">
+
+          {/* Chip filter mengambang — baris pertama di dalam sheet */}
+          <div
+            className="flex gap-2.5 overflow-x-auto no-scrollbar px-5 pt-5 pb-4"
+            role="navigation"
+            aria-label="Akses cepat"
+          >
+            {[
+              { to: '/doa',                 label: 'Doa',    icon: <IconDoa   className="h-4 w-4" />, aktif: true  },
+              { to: '/panduan/ihram',       label: 'Ihram',  icon: <IconIhram className="h-4 w-4" />, aktif: false },
+              { to: '/ibadah/tawaf',        label: 'Tawaf',  icon: <IconTawaf className="h-4 w-4" />, aktif: false },
+              { to: '/ibadah/sai',          label: "Sa'i",   icon: <IconSai   className="h-4 w-4" />, aktif: false },
+              { to: '/peta',                label: 'Peta',   icon: <IconPeta  className="h-4 w-4" />, aktif: false },
+              { to: '/ibadah/jadwal-sholat',label: 'Sholat', icon: <IconMoon  className="h-4 w-4" />, aktif: false },
+            ].map(({ to, label, icon, aktif }) => (
+              <Link
+                key={to}
+                to={to}
+                className={`flex-none inline-flex items-center gap-2 rounded-full px-4 py-2 text-[12px] font-semibold transition-all active:scale-[0.96] ${
+                  aktif
+                    ? 'bg-primary text-on-primary'
+                    : 'bg-white border border-hairline text-charcoal shadow-drop-lifted'
+                }`}
+              >
+                {icon}
+                {label}
+              </Link>
+            ))}
+          </div>
 
         {/* ── KARTU FASE — putih, 3 kotak pilihan ─────────────────── */}
         <section className="px-5">
@@ -374,6 +377,8 @@ export default function Beranda() {
             <IconChevron className="h-3.5 w-3.5 flex-none text-stone" />
           </Link>
         </section>
+
+        </div>{/* end sheet */}
       </div>
 
       {/* ==================== DESKTOP (≥ lg) — BENTO GRID ==================== */}
