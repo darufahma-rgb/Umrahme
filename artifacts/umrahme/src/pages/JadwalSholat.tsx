@@ -306,7 +306,7 @@ export default function JadwalSholat() {
               <div
                 key={w.id}
                 className={[
-                  'relative flex min-h-[64px] items-center gap-4 px-4 py-3',
+                  'relative flex min-h-[64px] items-center gap-4 pl-4 pr-5 py-3',
                   i < jadwal.waktuList.length - 1 ? 'border-b border-hairline' : '',
                   isSekarang ? 'bg-primary/[0.035]' : isBerikutnya ? 'bg-gold/[0.04]' : '',
                 ].join(' ')}
