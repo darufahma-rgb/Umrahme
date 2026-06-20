@@ -17,28 +17,41 @@ export default function BottomNav() {
       aria-label="Navigasi utama"
     >
       <ul
-        className="relative flex items-end justify-around rounded-[22px] border border-hairline bg-canvas/96 px-2 pt-2.5 pb-1.5 backdrop-blur-nav"
+        className="relative flex items-end justify-around rounded-[22px] border border-hairline bg-canvas/96 px-2 pt-2.5 pb-1.5 backdrop-blur-nav overflow-visible"
         style={{ boxShadow: '0 -1px 0 0 rgba(0,0,0,0.04), 0 20px 48px -8px rgba(0,0,0,0.14), 0 4px 16px rgba(0,0,0,0.06)' }}
       >
         {slots.map(({ to, label, Icon, center }) =>
           center ? (
-            <li key={to} className="flex -translate-y-6 flex-col items-center">
-              <NavLink to={to} aria-label={label} className="flex flex-col items-center gap-1.5">
+            /* ── FAB "Ibadah" ──
+               Lingkaran ditarik ke atas dengan marginTop negatif (HANYA pada span),
+               sehingga label tetap sejajar baseline dengan 4 item lain.
+               ~60% lingkaran berada di atas permukaan nav bar.
+            */
+            <li key={to}>
+              <NavLink
+                to={to}
+                aria-label={label}
+                className="flex flex-col items-center pb-1"
+              >
                 {({ isActive }) => (
                   <>
                     <span
                       className="flex h-[68px] w-[68px] items-center justify-center rounded-full transition-all active:scale-95"
                       style={{
+                        marginTop: '-40px',
                         background: '#C2185B',
                         boxShadow: isActive
                           ? '0 0 0 3px rgba(194,24,91,0.18), 0 0 28px rgba(233,30,140,0.55), 0 6px 20px rgba(194,24,91,0.40)'
-                          : '0 0 0 3px rgba(194,24,91,0.12), 0 0 20px rgba(233,30,140,0.35), 0 4px 16px rgba(0,0,0,0.20)',
+                          : '0 0 0 3px rgba(194,24,91,0.12), 0 0 20px rgba(233,30,140,0.35), 0 4px 16px rgba(0,0,0,0.22)',
                       }}
                     >
-                      <Icon className="h-[28px] w-[28px]" style={{ color: '#fdf8f5' }} />
+                      <Icon
+                        className="h-[26px] w-[26px]"
+                        style={{ color: '#fdf8f5' }}
+                      />
                     </span>
                     <span
-                      className={`font-mono text-[10px] uppercase tracking-wider transition-colors ${
+                      className={`mt-2 font-mono text-[10px] uppercase tracking-wider transition-colors ${
                         isActive ? 'text-primary' : 'text-mute'
                       }`}
                     >
@@ -49,6 +62,7 @@ export default function BottomNav() {
               </NavLink>
             </li>
           ) : (
+            /* ── Item nav biasa ── */
             <li key={to} className="flex">
               <NavLink
                 to={to}
