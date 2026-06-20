@@ -24,10 +24,10 @@ function MiniRing({ progress = 0, total = 7 }: { progress?: number; total?: numb
   const dash = (progress / total) * circ;
   return (
     <svg width="52" height="52" viewBox="0 0 52 52" className="flex-none" aria-hidden>
-      <circle cx="26" cy="26" r={r} fill="none" stroke="#f3f0e8" strokeWidth="5" />
+      <circle cx="26" cy="26" r={r} fill="none" stroke="rgba(212,162,78,0.18)" strokeWidth="5" />
       <circle
         cx="26" cy="26" r={r} fill="none"
-        stroke="#ea2804"
+        stroke="#d4a24e"
         strokeWidth="5"
         strokeDasharray={`${dash} ${circ}`}
         strokeLinecap="round"
@@ -40,11 +40,24 @@ function MiniRing({ progress = 0, total = 7 }: { progress?: number; total?: numb
   );
 }
 
-function QuickIcon({ to, label, icon }: { to: string; label: string; icon: ReactNode }) {
+const quickIconColors: Record<string, { bg: string; icon: string; border: string }> = {
+  doa:    { bg: '#fff8f0', icon: '#c8792a', border: 'rgba(200,121,42,0.22)' },
+  ihram:  { bg: '#f0f4ff', icon: '#3d6fd4', border: 'rgba(61,111,212,0.22)' },
+  tawaf:  { bg: '#fff0ee', icon: '#ea2804', border: 'rgba(234,40,4,0.22)' },
+  sai:    { bg: '#f0faf4', icon: '#1e9a56', border: 'rgba(30,154,86,0.22)' },
+  peta:   { bg: '#f5f0ff', icon: '#7c3aed', border: 'rgba(124,58,237,0.22)' },
+  sholat: { bg: '#fffbf0', icon: '#b08a1e', border: 'rgba(176,138,30,0.22)' },
+};
+
+function QuickIcon({ to, label, icon, colorKey }: { to: string; label: string; icon: ReactNode; colorKey: string }) {
+  const c = quickIconColors[colorKey] ?? quickIconColors.doa;
   return (
     <Link to={to} className="group flex-none flex flex-col items-center gap-2 active:scale-95 transition-transform">
-      <div className="flex h-[60px] w-[60px] items-center justify-center rounded-[18px] border border-hairline bg-surface-card shadow-drop-card group-active:shadow-none transition-shadow">
-        {icon}
+      <div
+        className="flex h-[62px] w-[62px] items-center justify-center rounded-[20px] shadow-drop-lifted transition-all group-active:shadow-drop-card group-active:scale-95"
+        style={{ background: c.bg, border: `1.5px solid ${c.border}` }}
+      >
+        <span style={{ color: c.icon }}>{icon}</span>
       </div>
       <span className="font-mono text-[10px] uppercase tracking-wider text-mute">{label}</span>
     </Link>
@@ -54,15 +67,18 @@ function QuickIcon({ to, label, icon }: { to: string; label: string; icon: React
 function FeatureCard({ to, label, desc, icon }: { to: string; label: string; desc: string; icon: ReactNode }) {
   return (
     <Link to={to} className="group block">
-      <div className="h-full rounded-xl border border-hairline bg-surface-card p-4 flex flex-col gap-3 transition-shadow hover:shadow-drop-soft">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-hairline bg-surface-bone">
-          <span className="text-primary">{icon}</span>
+      <div className="h-full rounded-2xl border border-hairline bg-white p-4 flex flex-col gap-3 transition-all hover:shadow-drop-lifted hover:-translate-y-0.5">
+        <div
+          className="flex h-10 w-10 items-center justify-center rounded-xl"
+          style={{ background: 'linear-gradient(135deg, #fff8ee 0%, #fdf0d8 100%)', border: '1.5px solid rgba(212,162,78,0.22)' }}
+        >
+          <span className="text-gold">{icon}</span>
         </div>
         <div className="flex-1">
           <p className="text-[14px] font-semibold leading-snug text-ink">{label}</p>
           <p className="mt-0.5 text-[12px] leading-relaxed text-charcoal">{desc}</p>
         </div>
-        <span className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-wider text-primary/70 group-hover:text-primary group-hover:gap-1.5 transition-all">
+        <span className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-wider text-primary/60 group-hover:text-primary group-hover:gap-1.5 transition-all">
           Buka <IconChevron className="h-3 w-3" />
         </span>
       </div>
@@ -72,7 +88,7 @@ function FeatureCard({ to, label, desc, icon }: { to: string; label: string; des
 
 function SmallCard({ to, label, icon }: { to: string; label: string; icon: ReactNode }) {
   return (
-    <Link to={to} className="group flex items-center gap-3 rounded-xl border border-hairline bg-surface-card px-4 py-3.5 transition-shadow hover:shadow-drop-soft">
+    <Link to={to} className="group flex items-center gap-3 rounded-xl border border-hairline bg-white px-4 py-3.5 transition-all hover:shadow-drop-lifted hover:-translate-y-0.5">
       <span className="flex-none text-mute group-hover:text-primary transition-colors">{icon}</span>
       <span className="flex-1 text-[13px] font-medium text-ink">{label}</span>
       <IconChevron className="h-3.5 w-3.5 flex-none text-stone group-hover:text-ash transition-colors" />
@@ -129,74 +145,101 @@ export default function Beranda() {
       {/* ==================== MOBILE (< lg) ==================== */}
       <div className="lg:hidden">
 
-        {/* HEADER BAND */}
+        {/* HEADER BAND — dark atmospheric */}
         <header
-          className="relative overflow-hidden bg-surface-bone px-5 pb-6"
-          style={{ paddingTop: 'max(2.25rem, env(safe-area-inset-top))' }}
+          className="relative overflow-hidden"
+          style={{
+            background: 'linear-gradient(160deg, #1a1208 0%, #2a1a08 55%, #1c1005 100%)',
+            paddingTop: 'max(2.5rem, env(safe-area-inset-top))',
+            paddingBottom: '28px',
+          }}
         >
-          {/* Faint dot pattern */}
-          <div className="pointer-events-none absolute inset-0 bg-dot-gold opacity-60" />
+          {/* Gold glow at bottom */}
           <div
             className="pointer-events-none absolute inset-0"
-            style={{ background: 'radial-gradient(80% 100% at 100% 0%, transparent 40%, #f3f0e8 80%)' }}
+            style={{ background: 'radial-gradient(ellipse 80% 50% at 50% 110%, rgba(212,162,78,0.22) 0%, transparent 70%)' }}
           />
+          {/* Dot pattern */}
+          <div className="pointer-events-none absolute inset-0 bg-dot-gold-dense opacity-60" />
 
-          <div className="relative">
-            {/* Baris sapaan: Latin kiri ↔ Arab kanan — sejajar dalam satu komposisi */}
-            <div className="flex items-baseline justify-between gap-4">
-              <p className="font-mono text-[11px] uppercase tracking-widest text-primary">
-                Assalamu'alaikum,
-              </p>
-              <p className="font-arab text-[17px] leading-none text-gold flex-none" dir="rtl">
+          <div className="relative px-5">
+            {/* Greeting row */}
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2">
+                <span className="h-1.5 w-1.5 flex-none rounded-full bg-gold animate-pulse" />
+                <p className="font-mono text-[10px] uppercase tracking-widest text-gold/70">
+                  Assalamu'alaikum
+                </p>
+              </div>
+              <p className="font-arab text-[16px] leading-none text-gold/80" dir="rtl">
                 السَّلَامُ عَلَيْكُمْ
               </p>
             </div>
 
-            <h1 className="mt-1.5 font-display text-[32px] font-bold leading-none tracking-[-1px] text-ink">
+            <h1 className="mt-2 font-display text-[34px] font-bold leading-none tracking-[-1.5px] text-on-dark">
               {firstName}
             </h1>
 
-            <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-canvas/80 px-3 py-1">
-              <span className="h-1.5 w-1.5 flex-none rounded-full bg-primary animate-pulse" />
-              <p className="font-mono text-[10px] uppercase tracking-wider text-charcoal">
+            {/* Fase badge */}
+            <div className="mt-3 inline-flex items-center gap-2 rounded-full px-3 py-1.5"
+              style={{ background: 'rgba(212,162,78,0.14)', border: '1px solid rgba(212,162,78,0.28)' }}
+            >
+              <span className="h-1.5 w-1.5 flex-none rounded-full bg-gold animate-pulse" />
+              <p className="font-mono text-[10px] uppercase tracking-wider text-gold/90">
                 {faseLabelMobile[jamaah.fase] ?? jamaah.fase}
               </p>
             </div>
           </div>
+
+          {/* Curved bottom edge */}
+          <svg
+            viewBox="0 0 390 32"
+            preserveAspectRatio="none"
+            className="absolute bottom-0 left-0 right-0 w-full"
+            style={{ height: '32px' }}
+            aria-hidden
+          >
+            <path d="M0,32 L0,10 Q195,0 390,10 L390,32 Z" fill="#f9f7f3" />
+          </svg>
         </header>
 
         {/* AKSES CEPAT */}
-        <div
-          className="mt-4 flex gap-4 overflow-x-auto px-5 pb-1 no-scrollbar"
-          role="navigation"
-          aria-label="Akses cepat"
-        >
-          <QuickIcon to="/doa" label="Doa" icon={<IconDoa className="h-6 w-6 text-primary" />} />
-          <QuickIcon to="/panduan/ihram" label="Ihram" icon={<IconIhram className="h-6 w-6 text-primary" />} />
-          <QuickIcon to="/ibadah/tawaf" label="Tawaf" icon={<IconTawaf className="h-6 w-6 text-primary" />} />
-          <QuickIcon to="/ibadah/sai" label="Sa'i" icon={<IconSai className="h-6 w-6 text-primary" />} />
-          <QuickIcon to="/peta" label="Peta" icon={<IconPeta className="h-6 w-6 text-primary" />} />
-          <QuickIcon to="/ibadah/jadwal-sholat" label="Sholat" icon={<IconMoon className="h-6 w-6 text-primary" />} />
+        <div className="mt-5 flex gap-3.5 overflow-x-auto px-5 pb-1 no-scrollbar" role="navigation" aria-label="Akses cepat">
+          <QuickIcon to="/doa"                   label="Doa"    colorKey="doa"    icon={<IconDoa    className="h-6 w-6" />} />
+          <QuickIcon to="/panduan/ihram"          label="Ihram"  colorKey="ihram"  icon={<IconIhram  className="h-6 w-6" />} />
+          <QuickIcon to="/ibadah/tawaf"           label="Tawaf"  colorKey="tawaf"  icon={<IconTawaf  className="h-6 w-6" />} />
+          <QuickIcon to="/ibadah/sai"             label="Sa'i"   colorKey="sai"    icon={<IconSai    className="h-6 w-6" />} />
+          <QuickIcon to="/peta"                   label="Peta"   colorKey="peta"   icon={<IconPeta   className="h-6 w-6" />} />
+          <QuickIcon to="/ibadah/jadwal-sholat"   label="Sholat" colorKey="sholat" icon={<IconMoon   className="h-6 w-6" />} />
         </div>
 
-        {/* KARTU FASE */}
+        {/* KARTU FASE — dark gradient hero card */}
         <section className="mt-5 px-5">
-          <div className="overflow-hidden rounded-xl border border-hairline bg-surface-card shadow-drop-card">
-            {/* Accent strip */}
-            <div className="h-[3px] w-full bg-primary" />
-            <div className="p-5">
-              <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-primary">
+          <div
+            className="relative overflow-hidden rounded-2xl shadow-drop-lifted"
+            style={{ background: 'linear-gradient(135deg, #2d1e0a 0%, #1a1208 100%)' }}
+          >
+            {/* Dot pattern inside card */}
+            <div className="pointer-events-none absolute inset-0 bg-dot-gold-dense opacity-40" />
+            {/* Gold glow bottom-right */}
+            <div
+              className="pointer-events-none absolute inset-0"
+              style={{ background: 'radial-gradient(ellipse 70% 60% at 100% 110%, rgba(212,162,78,0.20) 0%, transparent 70%)' }}
+            />
+
+            <div className="relative p-5">
+              <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-gold/70">
                 Fase Perjalanan
               </p>
-              <h2 className="mt-1.5 font-display text-[24px] font-bold leading-tight text-ink">
+              <h2 className="mt-1.5 font-display text-[26px] font-bold leading-tight text-on-dark">
                 {faseAktif?.label ?? 'Persiapan'}
               </h2>
-              <p className="mt-2 text-[13px] leading-relaxed text-charcoal">
+              <p className="mt-2 text-[13px] leading-relaxed text-on-dark-mute">
                 {faseDesc[jamaah.fase] ?? 'Ikuti panduan dan doa yang telah disiapkan.'}
               </p>
               <Link
                 to={heroCta.to}
-                className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-primary px-5 py-2.5 text-[13px] font-bold text-on-primary shadow-glow-primary transition-all active:scale-[0.98]"
+                className="mt-4 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-[13px] font-bold text-on-primary shadow-glow-primary transition-all active:scale-[0.97]"
               >
                 {heroCta.label} <IconChevron className="h-3.5 w-3.5" />
               </Link>
@@ -207,10 +250,13 @@ export default function Beranda() {
         {/* PROGRESS PERSIAPAN */}
         <section className="mt-3 px-5">
           <Link to="/profil/persiapan" className="block active:scale-[0.99] transition-transform">
-            <div className="rounded-xl border border-hairline bg-surface-card px-4 py-4">
+            <div className="rounded-2xl border border-hairline bg-white px-4 py-4 shadow-drop-card">
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 flex-none items-center justify-center rounded-xl border border-hairline bg-surface-bone">
+                  <div
+                    className="flex h-10 w-10 flex-none items-center justify-center rounded-xl"
+                    style={{ background: 'linear-gradient(135deg, #fff0ee 0%, #ffe6e2 100%)', border: '1.5px solid rgba(234,40,4,0.18)' }}
+                  >
                     <IconCheck className="h-4 w-4 text-primary" />
                   </div>
                   <div>
@@ -221,15 +267,18 @@ export default function Beranda() {
                   </div>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <p className="font-display text-[24px] font-bold text-ink">{persiapanPersen}%</p>
+                  <p className="font-display text-[26px] font-bold text-ink">{persiapanPersen}%</p>
                   <IconChevron className="h-3.5 w-3.5 flex-none text-stone" />
                 </div>
               </div>
-              {/* Progress bar */}
-              <div className="mt-3.5 h-1.5 overflow-hidden rounded-full bg-surface-bone">
+              <div className="mt-3.5 h-2 overflow-hidden rounded-full bg-surface-bone">
                 <div
-                  className="h-full rounded-full bg-primary transition-all duration-700"
-                  style={{ width: `${persiapanPersen}%` }}
+                  className="h-full rounded-full transition-all duration-700"
+                  style={{
+                    width: `${persiapanPersen}%`,
+                    background: 'linear-gradient(90deg, #ea2804 0%, #ff6b47 100%)',
+                    boxShadow: '0 0 8px rgba(234,40,4,0.35)',
+                  }}
                 />
               </div>
             </div>
@@ -238,22 +287,23 @@ export default function Beranda() {
 
         {/* GRID FITUR */}
         <section className="mt-5 px-5 pb-8">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.25em] text-mute">
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.28em] text-mute">
             Panduan &amp; Lainnya
           </p>
           <div className="grid grid-cols-3 gap-2.5">
             {[
-              { to: '/panduan/tata-cara', label: 'Tata Cara', Icon: IconPanduan },
-              { to: '/panduan/ihram', label: 'Ihram', Icon: IconIhram },
-              { to: '/peta', label: 'Peta', Icon: IconPeta },
-            ].map(({ to, label, Icon }) => (
+              { to: '/panduan/tata-cara', label: 'Tata Cara', Icon: IconPanduan,  bg: '#f0f4ff', ic: '#3d6fd4', br: 'rgba(61,111,212,0.20)' },
+              { to: '/panduan/ihram',     label: 'Ihram',     Icon: IconIhram,    bg: '#fff8f0', ic: '#c8792a', br: 'rgba(200,121,42,0.20)' },
+              { to: '/peta',              label: 'Peta',       Icon: IconPeta,     bg: '#f5f0ff', ic: '#7c3aed', br: 'rgba(124,58,237,0.20)' },
+            ].map(({ to, label, Icon, bg, ic, br }) => (
               <Link
                 key={to + label}
                 to={to}
-                className="flex min-h-[80px] flex-col items-center justify-center gap-2 rounded-xl border border-hairline bg-surface-card px-2 py-3 text-center active:scale-[0.97] transition-transform"
+                className="flex min-h-[84px] flex-col items-center justify-center gap-2 rounded-2xl border px-2 py-3 text-center active:scale-[0.96] transition-all hover:shadow-drop-card"
+                style={{ background: bg, borderColor: br }}
               >
-                <Icon className="h-5 w-5 text-primary" />
-                <span className="text-[11px] font-medium leading-tight text-ink">{label}</span>
+                <Icon className="h-5 w-5" style={{ color: ic }} />
+                <span className="text-[11px] font-semibold leading-tight text-ink">{label}</span>
               </Link>
             ))}
           </div>
@@ -261,9 +311,13 @@ export default function Beranda() {
           {/* Sertifikat */}
           <Link
             to="/profil/sertifikat"
-            className="mt-2.5 flex items-center gap-3 rounded-xl border border-hairline bg-surface-card px-4 py-3.5 active:scale-[0.99] transition-transform"
+            className="mt-2.5 flex items-center gap-3 rounded-2xl border bg-white px-4 py-3.5 active:scale-[0.99] transition-all shadow-drop-card hover:shadow-drop-lifted"
+            style={{ borderColor: 'rgba(212,162,78,0.22)' }}
           >
-            <div className="flex h-9 w-9 flex-none items-center justify-center rounded-xl border border-gold/30 bg-gold/8">
+            <div
+              className="flex h-10 w-10 flex-none items-center justify-center rounded-xl"
+              style={{ background: 'linear-gradient(135deg, #fffcf0 0%, #fdf5e0 100%)', border: '1.5px solid rgba(212,162,78,0.28)' }}
+            >
               <IconSertifikat className="h-4 w-4 text-gold" />
             </div>
             <div className="min-w-0 flex-1">
@@ -280,22 +334,27 @@ export default function Beranda() {
 
         {/* Header */}
         <header className="mb-6">
-          {/* Baris sapaan: Latin kiri ↔ Arab kanan */}
           <div className="flex items-baseline justify-between gap-4">
-            <p className="font-mono text-[11px] uppercase tracking-widest text-primary">
-              Assalamu'alaikum,
-            </p>
+            <div className="flex items-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+              <p className="font-mono text-[11px] uppercase tracking-widest text-primary">
+                Assalamu'alaikum
+              </p>
+            </div>
             <p className="font-arab text-[20px] leading-none text-gold flex-none" dir="rtl">
               السَّلَامُ عَلَيْكُمْ
             </p>
           </div>
-          <h1 className="mt-2 font-display text-[40px] font-bold leading-none tracking-[-1.5px] text-ink">
+          <h1 className="mt-2 font-display text-[42px] font-bold leading-none tracking-[-2px] text-ink">
             {firstName}
           </h1>
           <div className="mt-2.5 flex items-center gap-3">
-            <span className="inline-flex items-center gap-2 rounded-full border border-hairline bg-surface-bone px-3 py-1">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-              <span className="font-mono text-[10px] uppercase tracking-wider text-charcoal">
+            <span
+              className="inline-flex items-center gap-2 rounded-full px-3.5 py-1.5"
+              style={{ background: 'rgba(212,162,78,0.10)', border: '1px solid rgba(212,162,78,0.25)' }}
+            >
+              <span className="h-1.5 w-1.5 rounded-full bg-gold animate-pulse" />
+              <span className="font-mono text-[10px] uppercase tracking-wider text-gold/80">
                 {faseLabelMobile[jamaah.fase] ?? jamaah.fase}
               </span>
             </span>
@@ -304,16 +363,16 @@ export default function Beranda() {
         </header>
 
         {/* Stats strip */}
-        <div className="mb-6 grid grid-cols-4 divide-x divide-hairline overflow-hidden rounded-xl border border-hairline bg-surface-card shadow-drop-card">
+        <div className="mb-6 grid grid-cols-4 divide-x divide-hairline overflow-hidden rounded-2xl border border-hairline bg-white shadow-drop-card">
           {[
-            { label: 'Fase Aktif', value: faseAktif?.label ?? '—', accent: false },
-            { label: 'Tawaf', value: '7 Putaran', accent: false },
-            { label: "Sa'i", value: '7 Lintasan', accent: false },
-            { label: 'Mode Ibadah', value: 'Mode B', accent: true },
+            { label: 'Fase Aktif',   value: faseAktif?.label ?? '—', accent: false },
+            { label: 'Tawaf',        value: '7 Putaran',              accent: false },
+            { label: "Sa'i",         value: '7 Lintasan',             accent: false },
+            { label: 'Mode Ibadah',  value: 'Mode B',                 accent: true  },
           ].map(({ label, value, accent }) => (
             <div key={label} className="px-5 py-4">
               <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-mute">{label}</p>
-              <p className={`mt-1 text-[13px] font-semibold ${accent ? 'text-primary' : 'text-ink'}`}>
+              <p className={`mt-1 text-[14px] font-semibold ${accent ? 'text-primary' : 'text-ink'}`}>
                 {value}
               </p>
             </div>
@@ -323,24 +382,32 @@ export default function Beranda() {
         {/* BENTO GRID */}
         <div className="grid grid-cols-4 gap-4">
 
-          {/* HERO: Fase (col-span-2, row-span-2) */}
+          {/* HERO: Fase (col-span-2, row-span-2) — dark card */}
           <div className="col-span-2 row-span-2">
-            <div className="h-full overflow-hidden rounded-xl border border-hairline bg-surface-card shadow-drop-card flex flex-col">
-              {/* Accent strip */}
-              <div className="h-[3px] w-full bg-primary flex-none" />
-              <div className="flex flex-1 flex-col p-6">
-                <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-primary">
+            <div
+              className="relative h-full overflow-hidden rounded-2xl shadow-drop-lifted flex flex-col"
+              style={{ background: 'linear-gradient(145deg, #2d1e0a 0%, #1a1208 100%)' }}
+            >
+              {/* Decorative dot bg */}
+              <div className="pointer-events-none absolute inset-0 bg-dot-gold-dense opacity-40" />
+              <div
+                className="pointer-events-none absolute inset-0"
+                style={{ background: 'radial-gradient(ellipse 70% 55% at 90% 110%, rgba(212,162,78,0.22) 0%, transparent 65%)' }}
+              />
+
+              <div className="relative flex flex-1 flex-col p-6">
+                <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-gold/70">
                   Fase Perjalanan
                 </p>
-                <h2 className="mt-1.5 font-display text-[28px] font-bold leading-tight text-ink">
+                <h2 className="mt-1.5 font-display text-[30px] font-bold leading-tight text-on-dark">
                   {faseAktif?.label ?? 'Persiapan'}
                 </h2>
-                <p className="mt-2 text-[13px] leading-relaxed text-charcoal">
+                <p className="mt-2 text-[13px] leading-relaxed text-on-dark-mute">
                   {faseDesc[jamaah.fase] ?? 'Ikuti panduan dan doa yang telah disiapkan.'}
                 </p>
 
                 <div className="mt-6 flex-1">
-                  <p className="mb-3 font-mono text-[9px] uppercase tracking-[0.2em] text-mute">
+                  <p className="mb-3 font-mono text-[9px] uppercase tracking-[0.2em] text-on-dark/40">
                     Progres Perjalanan
                   </p>
                   <PhaseIndicator fase={jamaah.fase} />
@@ -348,7 +415,7 @@ export default function Beranda() {
 
                 <Link
                   to={heroCta.to}
-                  className="mt-8 inline-flex items-center gap-2 self-start rounded-full bg-primary px-5 py-2.5 text-[13px] font-bold text-on-primary shadow-glow-primary transition-all active:scale-[0.99]"
+                  className="mt-8 inline-flex items-center gap-2 self-start rounded-full bg-primary px-5 py-2.5 text-[13px] font-bold text-on-primary shadow-glow-primary transition-all active:scale-[0.98] hover:bg-primary-deep"
                 >
                   {heroCta.label} <IconChevron className="h-4 w-4" />
                 </Link>
@@ -359,7 +426,10 @@ export default function Beranda() {
           {/* COUNTER TAWAF */}
           <div className="col-span-2">
             <Link to="/ibadah/tawaf" className="group block h-full">
-              <div className="h-full rounded-xl border border-hairline bg-surface-card p-5 transition-shadow hover:shadow-drop-soft">
+              <div
+                className="h-full rounded-2xl border p-5 transition-all hover:shadow-drop-lifted hover:-translate-y-0.5"
+                style={{ background: '#fffef8', borderColor: 'rgba(212,162,78,0.20)' }}
+              >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1">
                     <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-mute">Mode B · Counter</p>
@@ -383,7 +453,10 @@ export default function Beranda() {
           {/* COUNTER SA'I */}
           <div className="col-span-2">
             <Link to="/ibadah/sai" className="group block h-full">
-              <div className="h-full rounded-xl border border-hairline bg-surface-card p-5 transition-shadow hover:shadow-drop-soft">
+              <div
+                className="h-full rounded-2xl border p-5 transition-all hover:shadow-drop-lifted hover:-translate-y-0.5"
+                style={{ background: '#f8fff8', borderColor: 'rgba(30,154,86,0.20)' }}
+              >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1">
                     <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-mute">Mode B · Counter</p>
@@ -405,9 +478,9 @@ export default function Beranda() {
           </div>
 
           {/* ROW 3: Kartu fitur */}
-          <FeatureCard to="/doa" label="Kumpulan Doa" desc="Talbiyah, tawaf, sa'i & lebih" icon={<IconDoa className="h-5 w-5" />} />
-          <FeatureCard to="/panduan/tata-cara" label="Tata Cara" desc="Urutan 6 langkah umrah berurutan" icon={<IconPanduan className="h-5 w-5" />} />
-          <FeatureCard to="/panduan/ihram" label="Panduan Ihram" desc="Niat, larangan & cara memakai kain" icon={<IconIhram className="h-5 w-5" />} />
+          <FeatureCard to="/doa"                label="Kumpulan Doa"  desc="Talbiyah, tawaf, sa'i & lebih"         icon={<IconDoa     className="h-5 w-5" />} />
+          <FeatureCard to="/panduan/tata-cara"  label="Tata Cara"     desc="Urutan 6 langkah umrah berurutan"      icon={<IconPanduan className="h-5 w-5" />} />
+          <FeatureCard to="/panduan/ihram"      label="Panduan Ihram" desc="Niat, larangan & cara memakai kain"    icon={<IconIhram   className="h-5 w-5" />} />
 
           <SmallCard to="/peta" label="Peta Lokasi" icon={<IconPeta className="h-5 w-5" />} />
 
@@ -417,9 +490,13 @@ export default function Beranda() {
           <div className="col-span-3">
             <Link
               to="/profil/sertifikat"
-              className="group flex items-center gap-4 overflow-hidden rounded-xl border border-hairline bg-surface-card px-6 py-4 transition-shadow hover:shadow-drop-soft"
+              className="group flex items-center gap-4 overflow-hidden rounded-2xl border px-6 py-4 transition-all hover:shadow-drop-lifted hover:-translate-y-0.5 bg-white"
+              style={{ borderColor: 'rgba(212,162,78,0.22)' }}
             >
-              <div className="flex h-10 w-10 flex-none items-center justify-center rounded-xl border border-gold/30 bg-gold/8">
+              <div
+                className="flex h-10 w-10 flex-none items-center justify-center rounded-xl"
+                style={{ background: 'linear-gradient(135deg, #fffcf0 0%, #fdf5e0 100%)', border: '1.5px solid rgba(212,162,78,0.28)' }}
+              >
                 <IconSertifikat className="h-5 w-5 text-gold" />
               </div>
               <div className="min-w-0 flex-1">

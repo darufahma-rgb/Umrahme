@@ -71,9 +71,111 @@
     background-size: 22px 22px;
   }
 
+  /* Denser dot pattern for dark hero */
+  .bg-dot-gold-dense {
+    background-image: radial-gradient(circle, rgba(212, 162, 78, 0.22) 1px, transparent 1px);
+    background-size: 18px 18px;
+  }
+
   /* Glassmorphism blur for bottom nav */
   .backdrop-blur-nav {
     -webkit-backdrop-filter: blur(24px) saturate(1.6);
     backdrop-filter: blur(24px) saturate(1.6);
   }
+
+  /* Glassmorphism for cards over dark bg */
+  .glass-card {
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    backdrop-filter: blur(20px) saturate(1.4);
+    background: rgba(255, 255, 255, 0.10);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
+
+  /* Hero dark background — deep espresso + warm amber glow */
+  .bg-hero-dark {
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 100%, rgba(212, 162, 78, 0.22) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 50% at 80% 20%, rgba(234, 40, 4, 0.10) 0%, transparent 60%),
+      linear-gradient(160deg, #1a1208 0%, #2d1e0a 40%, #1c1005 100%);
+  }
+
+  /* Shimmer sweep animation */
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(212, 162, 78, 0.18) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer-sweep 2.4s ease-in-out infinite;
+  }
+
+  /* Gold text glow */
+  .text-glow-gold {
+    text-shadow:
+      0 0 20px rgba(212, 162, 78, 0.55),
+      0 0 40px rgba(212, 162, 78, 0.30),
+      0 2px 4px rgba(0,0,0,0.40);
+  }
+
+  /* Gradient border card */
+  .card-gradient-border {
+    position: relative;
+    background-clip: padding-box;
+  }
+
+  /* Card gradient fill */
+  .card-warm {
+    background: linear-gradient(135deg, #fffdf8 0%, #faf6ed 100%);
+  }
+
+  .card-gold-tint {
+    background: linear-gradient(135deg, #fffcf0 0%, #fdf5e0 100%);
+  }
+
+  .card-primary-tint {
+    background: linear-gradient(135deg, #fff8f7 0%, #fff0ee 100%);
+  }
 }
+
+@layer components {
+  /* Animated fade-up entry for list stagger */
+  .stagger-1 { animation-delay: 0.05s; }
+  .stagger-2 { animation-delay: 0.10s; }
+  .stagger-3 { animation-delay: 0.15s; }
+  .stagger-4 { animation-delay: 0.20s; }
+  .stagger-5 { animation-delay: 0.25s; }
+  .stagger-6 { animation-delay: 0.30s; }
+}
+
+/* Keyframe definitions */
+@keyframes shimmer-sweep {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.04); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes gold-breath {
+  0%, 100% { text-shadow: 0 0 16px rgba(212,162,78,0.40), 0 2px 4px rgba(0,0,0,0.35); }
+  50%       { text-shadow: 0 0 32px rgba(212,162,78,0.70), 0 0 60px rgba(212,162,78,0.35), 0 2px 4px rgba(0,0,0,0.40); }
+}
+
+.animate-float-slow  { animation: float-slow 4s ease-in-out infinite; }
+.animate-pulse-glow  { animation: pulse-glow 2s ease-in-out infinite; }
+.animate-spin-slow   { animation: spin-slow 12s linear infinite; }
+.animate-gold-breath { animation: gold-breath 3s ease-in-out infinite; }

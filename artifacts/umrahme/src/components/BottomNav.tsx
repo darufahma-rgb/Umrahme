@@ -4,9 +4,9 @@ import { IconBeranda, IconPanduan, IconIbadah, IconDoa, IconProfil } from './ico
 const slots = [
   { to: '/beranda', label: 'Beranda', Icon: IconBeranda, center: false },
   { to: '/panduan', label: 'Panduan', Icon: IconPanduan, center: false },
-  { to: '/ibadah', label: 'Ibadah', Icon: IconIbadah, center: true },
-  { to: '/doa', label: 'Doa', Icon: IconDoa, center: false },
-  { to: '/profil', label: 'Profil', Icon: IconProfil, center: false },
+  { to: '/ibadah',  label: 'Ibadah',  Icon: IconIbadah,  center: true  },
+  { to: '/doa',     label: 'Doa',     Icon: IconDoa,     center: false },
+  { to: '/profil',  label: 'Profil',  Icon: IconProfil,  center: false },
 ];
 
 export default function BottomNav() {
@@ -17,16 +17,19 @@ export default function BottomNav() {
       aria-label="Navigasi utama"
     >
       <ul
-        className="relative flex items-end justify-around rounded-[22px] border border-hairline bg-canvas/96 px-2 pt-2.5 pb-1.5 backdrop-blur-nav overflow-visible"
-        style={{ boxShadow: '0 -1px 0 0 rgba(0,0,0,0.04), 0 20px 48px -8px rgba(0,0,0,0.14), 0 4px 16px rgba(0,0,0,0.06)' }}
+        className="relative flex items-end justify-around rounded-[26px] overflow-visible px-2 pt-2.5 pb-1.5"
+        style={{
+          background: 'rgba(252, 250, 247, 0.88)',
+          WebkitBackdropFilter: 'blur(28px) saturate(1.8)',
+          backdropFilter: 'blur(28px) saturate(1.8)',
+          border: '1px solid rgba(32,32,32,0.07)',
+          boxShadow:
+            '0 -1px 0 0 rgba(255,255,255,0.55) inset, 0 24px 48px -8px rgba(0,0,0,0.16), 0 4px 12px rgba(0,0,0,0.06)',
+        }}
       >
         {slots.map(({ to, label, Icon, center }) =>
           center ? (
-            /* ── FAB "Ibadah" ──
-               Lingkaran ditarik ke atas dengan marginTop negatif (HANYA pada span),
-               sehingga label tetap sejajar baseline dengan 4 item lain.
-               ~60% lingkaran berada di atas permukaan nav bar.
-            */
+            /* ── FAB "Ibadah" — center elevated button ── */
             <li key={to}>
               <NavLink
                 to={to}
@@ -36,18 +39,20 @@ export default function BottomNav() {
                 {({ isActive }) => (
                   <>
                     <span
-                      className="flex h-[68px] w-[68px] items-center justify-center rounded-full transition-all active:scale-95"
+                      className="flex h-[66px] w-[66px] items-center justify-center rounded-full transition-all duration-200 active:scale-90"
                       style={{
-                        marginTop: '-40px',
-                        background: '#C2185B',
+                        marginTop: '-38px',
+                        background: isActive
+                          ? 'linear-gradient(145deg, #ea2804 0%, #c01f00 100%)'
+                          : 'linear-gradient(145deg, #ff3d1a 0%, #d42200 100%)',
                         boxShadow: isActive
-                          ? '0 0 0 3px rgba(194,24,91,0.14), 0 0 14px rgba(233,30,140,0.30), 0 4px 14px rgba(194,24,91,0.28)'
-                          : '0 0 0 3px rgba(194,24,91,0.08), 0 0 10px rgba(233,30,140,0.18), 0 4px 12px rgba(0,0,0,0.20)',
+                          ? '0 0 0 3px rgba(234,40,4,0.18), 0 8px 24px rgba(234,40,4,0.42), 0 2px 6px rgba(0,0,0,0.25)'
+                          : '0 0 0 3px rgba(234,40,4,0.10), 0 6px 18px rgba(234,40,4,0.30), 0 2px 6px rgba(0,0,0,0.20)',
                       }}
                     >
                       <Icon
                         className="h-[26px] w-[26px]"
-                        style={{ color: '#fdf8f5' }}
+                        style={{ color: '#ffffff' }}
                       />
                     </span>
                     <span
@@ -62,23 +67,38 @@ export default function BottomNav() {
               </NavLink>
             </li>
           ) : (
-            /* ── Item nav biasa ── */
+            /* ── Regular nav item ── */
             <li key={to} className="flex">
               <NavLink
                 to={to}
-                className="flex min-h-[56px] flex-col items-center justify-end gap-1 px-3 pb-1"
+                className="group flex min-h-[56px] flex-col items-center justify-end gap-1 px-3 pb-1"
                 aria-label={label}
               >
                 {({ isActive }) => (
                   <>
-                    <Icon
-                      className={`h-[22px] w-[22px] transition-colors ${
-                        isActive ? 'text-primary' : 'text-ash'
+                    {/* Active indicator dot */}
+                    <span
+                      className={`absolute top-1.5 h-1 w-1 rounded-full bg-primary transition-all duration-200 ${
+                        isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-0'
                       }`}
                     />
+                    {/* Icon with active pill bg */}
                     <span
-                      className={`font-mono text-[10px] uppercase tracking-wider transition-colors ${
-                        isActive ? 'text-ink' : 'text-ash'
+                      className={`relative flex items-center justify-center rounded-full transition-all duration-200 ${
+                        isActive
+                          ? 'h-8 w-8 bg-primary/10'
+                          : 'h-8 w-8'
+                      }`}
+                    >
+                      <Icon
+                        className={`h-[20px] w-[20px] transition-colors duration-200 ${
+                          isActive ? 'text-primary' : 'text-ash group-hover:text-charcoal'
+                        }`}
+                      />
+                    </span>
+                    <span
+                      className={`font-mono text-[10px] uppercase tracking-wider transition-colors duration-200 ${
+                        isActive ? 'text-ink font-semibold' : 'text-ash'
                       }`}
                     >
                       {label}
