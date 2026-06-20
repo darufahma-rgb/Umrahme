@@ -56,7 +56,7 @@ function PrayerTimeline({
   waktuList: WaktuSholat[];
   progressMenit: number;
 }) {
-  const W = 300, H = 58, padL = 18, padR = 18;
+  const W = 300, H = 72, padL = 18, padR = 18;
   const trackW = W - padL - padR;
   const lineY = 29;
 
@@ -85,62 +85,74 @@ function PrayerTimeline({
         opacity="0.65"
       />
 
-      {waktuList.map((prayer) => {
-        const [ph, pm] = prayer.jamMulai.split(':').map(Number);
-        const pMin = ph * 60 + pm;
-        const [ah, am] = prayer.jamAkhir.split(':').map(Number);
-        const aMin = ah * 60 + am;
-        const x = toX(pMin);
+      {(() => {
+        const MIN_GAP = 38;
+        const xList = waktuList.map((w) => {
+          const [h, m] = w.jamMulai.split(':').map(Number);
+          return toX(h * 60 + m);
+        });
+        const flipped: boolean[] = waktuList.map((_, i) => {
+          if (i === 0) return false;
+          return Math.abs(xList[i] - xList[i - 1]) < MIN_GAP;
+        });
 
-        const isSekarang = progressMenit >= pMin && progressMenit < aMin;
-        const passed = pMin <= progressMenit && !isSekarang;
+        return waktuList.map((prayer, i) => {
+          const [ph, pm] = prayer.jamMulai.split(':').map(Number);
+          const pMin = ph * 60 + pm;
+          const [ah, am] = prayer.jamAkhir.split(':').map(Number);
+          const aMin = ah * 60 + am;
+          const x = xList[i];
+          const flip = flipped[i];
 
-        return (
-          <g key={prayer.id}>
-            {/* Lingkaran halo untuk sholat aktif */}
-            {isSekarang && (
-              <circle cx={x} cy={lineY} r={11} fill="#2563eb" opacity="0.08" />
-            )}
+          const isSekarang = progressMenit >= pMin && progressMenit < aMin;
+          const passed = pMin <= progressMenit && !isSekarang;
+          const color = isSekarang ? '#2563eb' : '#9a9590';
 
-            {/* Titik sholat */}
-            <circle
-              cx={x}
-              cy={lineY}
-              r={isSekarang ? 5.5 : 4}
-              fill={isSekarang ? '#2563eb' : passed ? '#2563eb' : '#f6f3ec'}
-              stroke={isSekarang ? 'none' : passed ? '#2563eb' : '#c8c3b8'}
-              strokeWidth={1.5}
-              opacity={passed && !isSekarang ? 0.55 : 1}
-            />
+          return (
+            <g key={prayer.id}>
+              {isSekarang && (
+                <circle cx={x} cy={lineY} r={11} fill="#2563eb" opacity="0.08" />
+              )}
 
-            {/* Jam di atas titik */}
-            <text
-              x={x}
-              y={lineY - 13}
-              textAnchor="middle"
-              fontSize={6.5}
-              fontFamily="monospace"
-              fill={isSekarang ? '#2563eb' : '#9a9590'}
-              fontWeight={isSekarang ? '600' : '400'}
-            >
-              {prayer.jamMulai}
-            </text>
+              <circle
+                cx={x}
+                cy={lineY}
+                r={isSekarang ? 5.5 : 4}
+                fill={isSekarang ? '#2563eb' : passed ? '#2563eb' : '#f6f3ec'}
+                stroke={isSekarang ? 'none' : passed ? '#2563eb' : '#c8c3b8'}
+                strokeWidth={1.5}
+                opacity={passed && !isSekarang ? 0.55 : 1}
+              />
 
-            {/* Nama di bawah titik */}
-            <text
-              x={x}
-              y={lineY + 16}
-              textAnchor="middle"
-              fontSize={6.5}
-              fontFamily="monospace"
-              fill={isSekarang ? '#2563eb' : '#9a9590'}
-              fontWeight={isSekarang ? '600' : '400'}
-            >
-              {prayer.nama.toUpperCase()}
-            </text>
-          </g>
-        );
-      })}
+              {/* Jam */}
+              <text
+                x={x}
+                y={flip ? lineY + 22 : lineY - 13}
+                textAnchor="middle"
+                fontSize={6.5}
+                fontFamily="monospace"
+                fill={color}
+                fontWeight={isSekarang ? '600' : '400'}
+              >
+                {prayer.jamMulai}
+              </text>
+
+              {/* Nama */}
+              <text
+                x={x}
+                y={flip ? lineY + 30 : lineY + 16}
+                textAnchor="middle"
+                fontSize={6.5}
+                fontFamily="monospace"
+                fill={color}
+                fontWeight={isSekarang ? '600' : '400'}
+              >
+                {prayer.nama.toUpperCase()}
+              </text>
+            </g>
+          );
+        });
+      })()}
 
       {/* Penanda posisi saat ini — garis vertikal tipis */}
       <line
