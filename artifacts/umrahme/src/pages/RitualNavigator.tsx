@@ -349,30 +349,28 @@ export default function RitualNavigator() {
               <IconChevron className="h-4 w-4 flex-none" />
             </Link>
           ) : null}
-        </div>
 
-        <div
-          className="sticky bottom-28 lg:bottom-0 border-t border-hairline bg-canvas/95 px-5 py-4 backdrop-blur-md"
-          style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}
-        >
-          <button
-            type="button"
-            onClick={maju}
-            className="flex min-h-[56px] w-full items-center justify-center gap-2 rounded-full bg-primary text-[17px] font-semibold text-on-primary active:scale-[0.99]"
-          >
-            {isLast ? 'Selesaikan Umrah' : 'Tahap Selanjutnya'}
-            <IconChevron className="h-5 w-5" />
-          </button>
-
-          {stepIdx > 0 ? (
+          {/* Tombol aksi — bagian dari aliran konten, muncul setelah semua kartu doa */}
+          <div className="mt-6 border-t border-hairline pt-5">
             <button
               type="button"
-              onClick={mundur}
-              className="mt-2.5 flex w-full items-center justify-center gap-1.5 py-2 font-mono text-[11px] uppercase tracking-wider text-mute active:text-body"
+              onClick={maju}
+              className="flex min-h-[56px] w-full items-center justify-center gap-2 rounded-full bg-primary text-[17px] font-semibold text-on-primary active:scale-[0.99]"
             >
-              <IconChevron className="h-3.5 w-3.5 rotate-180" /> Kembali ke tahap sebelumnya
+              {isLast ? 'Selesaikan Umrah' : 'Tahap Selanjutnya'}
+              <IconChevron className="h-5 w-5" />
             </button>
-          ) : null}
+
+            {stepIdx > 0 ? (
+              <button
+                type="button"
+                onClick={mundur}
+                className="mt-2.5 flex w-full items-center justify-center gap-1.5 py-2 font-mono text-[11px] uppercase tracking-wider text-mute active:text-body"
+              >
+                <IconChevron className="h-3.5 w-3.5 rotate-180" /> Kembali ke tahap sebelumnya
+              </button>
+            ) : null}
+          </div>
         </div>
       </div>
 
