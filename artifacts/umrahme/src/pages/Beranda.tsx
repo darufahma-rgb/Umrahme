@@ -173,38 +173,36 @@ export default function Beranda() {
           />
 
           {/* Content pinned to bottom */}
-          <div
-            className="absolute inset-x-0 bottom-0 px-5 pb-5"
-            style={{ paddingTop: 'max(2.5rem, env(safe-area-inset-top))' }}
-          >
-            {/* Greeting row */}
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-1.5">
-                <span className="h-1.5 w-1.5 flex-none rounded-full bg-gold animate-pulse" />
-                <p className="font-display text-[10px] uppercase tracking-widest text-white/60">
-                  Assalamu'alaikum
-                </p>
-              </div>
-              <p className="font-arab text-[15px] leading-none text-white/60" dir="rtl">
-                السَّلَامُ عَلَيْكُمْ
-              </p>
-            </div>
+          <div className="absolute inset-x-0 bottom-0 px-5 pb-6">
+            {/* Greeting */}
+            <p className="font-display text-[11px] uppercase tracking-[0.2em] text-white/55">
+              Assalamu'alaikum
+            </p>
 
-            <h1 className="mt-1.5 font-display text-[36px] font-bold leading-none tracking-[-1.5px] text-white">
+            <h1 className="mt-1 font-display text-[40px] font-bold leading-none tracking-[-1.5px] text-white">
               {firstName}
             </h1>
 
             {/* Fase badge */}
             <div
-              className="mt-3 inline-flex items-center gap-2 rounded-full px-3 py-1.5"
-              style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.22)', backdropFilter: 'blur(8px)' }}
+              className="mt-3 inline-flex items-center gap-2 rounded-full px-3.5 py-1.5"
+              style={{ background: 'rgba(255,255,255,0.13)', border: '1px solid rgba(255,255,255,0.20)', backdropFilter: 'blur(10px)' }}
             >
               <span className="h-1.5 w-1.5 flex-none rounded-full bg-gold animate-pulse" />
-              <p className="font-display text-[10px] uppercase tracking-wider text-white/80">
+              <p className="font-display text-[10px] uppercase tracking-wider text-white/85">
                 {faseLabelMobile[jamaah.fase] ?? jamaah.fase}
               </p>
             </div>
           </div>
+
+          {/* Arabic — top right */}
+          <p
+            className="absolute top-0 right-5 font-arab text-[15px] leading-none text-white/40"
+            style={{ top: 'max(1.2rem, env(safe-area-inset-top))' }}
+            dir="rtl"
+          >
+            السَّلَامُ عَلَيْكُمْ
+          </p>
         </header>
 
         {/* AKSES CEPAT */}
