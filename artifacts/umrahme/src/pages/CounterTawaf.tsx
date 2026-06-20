@@ -84,6 +84,7 @@ export default function CounterTawaf() {
     if (selesai) return;
     setCount((c) => Math.min(TOTAL, c + 1));
     if (navigator.vibrate) navigator.vibrate(35);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function reset() {
