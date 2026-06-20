@@ -19,6 +19,18 @@ function IconNavigator({ className }: { className?: string }) {
   );
 }
 
+function IconScissors({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <circle cx="6" cy="6" r="3" />
+      <circle cx="6" cy="18" r="3" />
+      <line x1="20" y1="4" x2="8.12" y2="15.88" />
+      <line x1="14.47" y1="14.48" x2="20" y2="20" />
+      <line x1="8.12" y1="8.12" x2="12" y2="12" />
+    </svg>
+  );
+}
+
 function IconSai({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
@@ -120,6 +132,13 @@ export default function Ibadah() {
             cta="Mulai Sa'i"
           />
           <ActionCard
+            to="/ibadah/tahallul"
+            title="Tahallul"
+            desc="Langkah terakhir umrah — potong rambut, keluar dari ihram, rangkaian umrah sempurna."
+            icon={<IconScissors className="h-7 w-7" />}
+            cta="Panduan Tahallul"
+          />
+          <ActionCard
             to="/ibadah/jadwal-sholat"
             title="Jadwal Sholat"
             desc="Waktu sholat 5 waktu dengan gauge jam dan pengingat adzan."
@@ -165,8 +184,8 @@ export default function Ibadah() {
           />
         </div>
 
-        {/* 3-col grid for counters */}
-        <div className="grid grid-cols-3 gap-4 mb-8">
+        {/* 2-col grid for counters (4 items) */}
+        <div className="grid grid-cols-2 gap-4 mb-8">
           <ActionCard
             to="/ibadah/tawaf"
             title="Counter Tawaf"
@@ -180,6 +199,13 @@ export default function Ibadah() {
             desc="Hitung 7 lintasan Shafa–Marwah. Arah & doa per lintasan tampil otomatis."
             icon={<IconSai className="h-7 w-7" />}
             cta="Mulai Sa'i"
+          />
+          <ActionCard
+            to="/ibadah/tahallul"
+            title="Tahallul"
+            desc="Langkah terakhir umrah — potong rambut, keluar dari ihram, rangkaian umrah sempurna."
+            icon={<IconScissors className="h-7 w-7" />}
+            cta="Panduan Tahallul"
           />
           <ActionCard
             to="/ibadah/jadwal-sholat"

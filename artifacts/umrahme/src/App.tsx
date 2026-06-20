@@ -22,6 +22,7 @@ import ManasikInteraktif from './pages/ManasikInteraktif';
 import ManasikModulDetail from './pages/ManasikModulDetail';
 import Jurnal from './pages/Jurnal';
 import RitualNavigator from './pages/RitualNavigator';
+import Tahallul from './pages/Tahallul';
 
 export default function App() {
   return (
@@ -49,6 +50,7 @@ export default function App() {
         <Route path="/ibadah/navigator" element={<RitualNavigator />} />
         <Route path="/ibadah/tawaf" element={<CounterTawaf />} />
         <Route path="/ibadah/sai" element={<CounterSai />} />
+        <Route path="/ibadah/tahallul" element={<Tahallul />} />
         <Route path="/ibadah/jadwal-sholat" element={<JadwalSholat />} />
 
         {/* Slot: Doa */}

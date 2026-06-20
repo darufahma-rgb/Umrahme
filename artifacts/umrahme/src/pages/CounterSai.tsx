@@ -85,10 +85,10 @@ export default function CounterSai() {
             </p>
 
             <Link
-              to="/panduan/ihram"
+              to="/ibadah/tahallul"
               className="mt-8 flex min-h-[52px] w-full max-w-xs items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-on-primary active:scale-[0.99]"
             >
-              Panduan Tahallul <IconChevron className="h-5 w-5" />
+              Lanjut ke Tahallul <IconChevron className="h-5 w-5" />
             </Link>
             <button
               type="button"
