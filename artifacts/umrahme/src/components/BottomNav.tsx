@@ -22,18 +22,20 @@ export default function BottomNav() {
       >
         {slots.map(({ to, label, Icon, center }) =>
           center ? (
-            <li key={to} className="flex -translate-y-4 flex-col items-center">
-              <NavLink to={to} aria-label={label} className="flex flex-col items-center gap-1">
+            <li key={to} className="flex -translate-y-6 flex-col items-center">
+              <NavLink to={to} aria-label={label} className="flex flex-col items-center gap-1.5">
                 {({ isActive }) => (
                   <>
                     <span
-                      className={`flex h-[58px] w-[58px] items-center justify-center rounded-full border-2 transition-all ${
-                        isActive
-                          ? 'border-primary/30 bg-primary text-on-primary shadow-glow-primary'
-                          : 'border-hairline bg-surface-dark text-on-dark shadow-drop-lifted'
-                      }`}
+                      className="flex h-[68px] w-[68px] items-center justify-center rounded-full transition-all active:scale-95"
+                      style={{
+                        background: '#C2185B',
+                        boxShadow: isActive
+                          ? '0 0 0 3px rgba(194,24,91,0.18), 0 0 28px rgba(233,30,140,0.55), 0 6px 20px rgba(194,24,91,0.40)'
+                          : '0 0 0 3px rgba(194,24,91,0.12), 0 0 20px rgba(233,30,140,0.35), 0 4px 16px rgba(0,0,0,0.20)',
+                      }}
                     >
-                      <Icon className="h-6 w-6" />
+                      <Icon className="h-[28px] w-[28px]" style={{ color: '#fdf8f5' }} />
                     </span>
                     <span
                       className={`font-mono text-[10px] uppercase tracking-wider transition-colors ${
