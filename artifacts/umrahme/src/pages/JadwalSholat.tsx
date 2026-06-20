@@ -181,24 +181,32 @@ function PrayerTimeline({
   );
 }
 
-// ── Toggle notifikasi — semua default ON ────────────────────
+// ── Checkbox notifikasi — semua default ON ──────────────────
 function ToggleNotif() {
   const [on, setOn] = useState(true);
   return (
     <button
       type="button"
-      role="switch"
+      role="checkbox"
       aria-checked={on}
       onClick={() => setOn((v) => !v)}
-      className={`relative h-6 w-11 flex-none rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-        on ? 'bg-primary' : 'bg-surface-bone border border-hairline'
+      className={`flex h-5 w-5 flex-none items-center justify-center rounded-md border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+        on
+          ? 'border-primary bg-primary'
+          : 'border-hairline bg-surface-bone'
       }`}
     >
-      <span
-        className={`absolute top-0.5 h-5 w-5 rounded-full bg-canvas shadow transition-transform ${
-          on ? 'translate-x-0' : 'translate-x-5'
-        }`}
-      />
+      {on && (
+        <svg viewBox="0 0 12 12" fill="none" className="h-3 w-3">
+          <path
+            d="M2 6l3 3 5-5"
+            stroke="white"
+            strokeWidth={1.8}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      )}
     </button>
   );
 }
