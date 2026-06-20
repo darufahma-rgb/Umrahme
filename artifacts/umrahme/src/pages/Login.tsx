@@ -55,33 +55,21 @@ export default function Login() {
             minHeight: '200px',
           }}
         >
-          {/* Hero photo — desaturated base for double exposure */}
+          {/* Hero photo — natural, no color grading */}
           <img
             src={heroBg}
             alt=""
-            className="absolute inset-0 w-full h-full object-cover object-top"
-            style={{ filter: 'grayscale(0.55) contrast(1.10) brightness(0.92)' }}
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ objectPosition: 'center 30%' }}
             aria-hidden
           />
 
-          {/* Double-exposure red color layer */}
+          {/* Light top scrim so text stays readable */}
           <div
             className="pointer-events-none absolute inset-0"
             style={{
               background:
-                'linear-gradient(155deg, #6b0000 0%, #c01f00 30%, #ea2804 60%, #ff6b35 85%, #ffb347 100%)',
-              mixBlendMode: 'multiply',
-              opacity: 0.82,
-            }}
-          />
-
-          {/* Fade to white at the bottom for smooth card transition */}
-          <div
-            className="pointer-events-none absolute inset-0"
-            style={{
-              background:
-                'linear-gradient(to bottom, transparent 55%, rgba(255,255,255,0.75) 100%)',
-              mixBlendMode: 'normal',
+                'linear-gradient(to bottom, rgba(0,0,0,0.38) 0%, rgba(0,0,0,0.10) 45%, transparent 65%, rgba(255,255,255,0.80) 100%)',
             }}
           />
 
