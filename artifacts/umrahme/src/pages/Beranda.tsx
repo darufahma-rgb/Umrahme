@@ -183,16 +183,6 @@ export default function Beranda() {
               {firstName}
             </h1>
 
-            {/* Fase badge */}
-            <div
-              className="mt-3 inline-flex items-center gap-2 rounded-full px-3.5 py-1.5"
-              style={{ background: 'rgba(255,255,255,0.13)', border: '1px solid rgba(255,255,255,0.20)', backdropFilter: 'blur(10px)' }}
-            >
-              <span className="h-1.5 w-1.5 flex-none rounded-full bg-gold animate-pulse" />
-              <p className="font-display text-[10px] uppercase tracking-wider text-white/85">
-                {faseLabelMobile[jamaah.fase] ?? jamaah.fase}
-              </p>
-            </div>
           </div>
 
           {/* Arabic — top right */}
@@ -205,43 +195,98 @@ export default function Beranda() {
           </p>
         </header>
 
-        {/* AKSES CEPAT */}
-        <div className="mt-5 flex gap-3.5 overflow-x-auto px-5 pb-1 no-scrollbar" role="navigation" aria-label="Akses cepat">
-          <QuickIcon to="/doa"                   label="Doa"    colorKey="doa"    icon={<IconDoa    className="h-6 w-6" />} />
-          <QuickIcon to="/panduan/ihram"          label="Ihram"  colorKey="ihram"  icon={<IconIhram  className="h-6 w-6" />} />
-          <QuickIcon to="/ibadah/tawaf"           label="Tawaf"  colorKey="tawaf"  icon={<IconTawaf  className="h-6 w-6" />} />
-          <QuickIcon to="/ibadah/sai"             label="Sa'i"   colorKey="sai"    icon={<IconSai    className="h-6 w-6" />} />
-          <QuickIcon to="/peta"                   label="Peta"   colorKey="peta"   icon={<IconPeta   className="h-6 w-6" />} />
-          <QuickIcon to="/ibadah/jadwal-sholat"   label="Sholat" colorKey="sholat" icon={<IconMoon   className="h-6 w-6" />} />
+        {/* ── CHIP FILTER MENGAMBANG — overlap hero bawah & card atas ─── */}
+        <div
+          className="relative z-10 -mt-5 flex gap-2.5 overflow-x-auto no-scrollbar px-5 pb-4"
+          role="navigation"
+          aria-label="Akses cepat"
+        >
+          {[
+            { to: '/doa',                 label: 'Doa',    icon: <IconDoa   className="h-4 w-4" />, aktif: true  },
+            { to: '/panduan/ihram',       label: 'Ihram',  icon: <IconIhram className="h-4 w-4" />, aktif: false },
+            { to: '/ibadah/tawaf',        label: 'Tawaf',  icon: <IconTawaf className="h-4 w-4" />, aktif: false },
+            { to: '/ibadah/sai',          label: "Sa'i",   icon: <IconSai   className="h-4 w-4" />, aktif: false },
+            { to: '/peta',                label: 'Peta',   icon: <IconPeta  className="h-4 w-4" />, aktif: false },
+            { to: '/ibadah/jadwal-sholat',label: 'Sholat', icon: <IconMoon  className="h-4 w-4" />, aktif: false },
+          ].map(({ to, label, icon, aktif }) => (
+            <Link
+              key={to}
+              to={to}
+              className={`flex-none inline-flex items-center gap-2 rounded-full px-4 py-2 text-[12px] font-semibold transition-all active:scale-[0.96] ${
+                aktif
+                  ? 'bg-primary text-on-primary'
+                  : 'bg-white border border-hairline text-charcoal shadow-drop-lifted'
+              }`}
+            >
+              {icon}
+              {label}
+            </Link>
+          ))}
         </div>
 
-        {/* KARTU FASE — dark gradient hero card */}
-        <section className="mt-5 px-5">
-          <div
-            className="relative overflow-hidden rounded-2xl shadow-drop-lifted"
-            style={{ background: 'linear-gradient(135deg, #2d1e0a 0%, #1a1208 100%)' }}
-          >
-            {/* Dot pattern inside card */}
-            <div className="pointer-events-none absolute inset-0 bg-dot-gold-dense opacity-40" />
-            {/* Gold glow bottom-right */}
-            <div
-              className="pointer-events-none absolute inset-0"
-              style={{ background: 'radial-gradient(ellipse 70% 60% at 100% 110%, rgba(212,162,78,0.20) 0%, transparent 70%)' }}
-            />
+        {/* ── KARTU FASE — putih, 3 kotak pilihan ─────────────────── */}
+        <section className="px-5">
+          <div className="rounded-2xl bg-white p-5 shadow-drop-lifted">
 
-            <div className="relative p-5">
-              <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-gold/70">
+            {/* Baris atas: label + badge fase */}
+            <div className="flex items-center justify-between gap-2">
+              <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-mute">
                 Fase Perjalanan
               </p>
-              <h2 className="mt-1.5 font-display text-[26px] font-bold leading-tight text-on-dark">
+              <span className="rounded-full bg-primary/10 px-3 py-1 font-mono text-[10px] text-primary">
                 {faseAktif?.label ?? 'Persiapan'}
-              </h2>
-              <p className="mt-2 text-[13px] leading-relaxed text-on-dark-mute">
-                {faseDesc[jamaah.fase] ?? 'Ikuti panduan dan doa yang telah disiapkan.'}
-              </p>
+              </span>
+            </div>
+
+            {/* Judul besar */}
+            <h2 className="mt-2 font-display text-[24px] font-bold leading-tight text-ink">
+              {faseAktif?.label ?? 'Persiapan'}
+            </h2>
+
+            {/* 3 kotak fase */}
+            <div className="mt-4 grid grid-cols-3 gap-2">
+              {urutanFase.map((fase) => {
+                const aktif = fase.id === jamaah.fase;
+                const ikonFase: Record<string, React.ReactNode> = {
+                  persiapan:   <IconCheck      className="h-5 w-5" />,
+                  'tanah-suci': <IconTawaf     className="h-5 w-5" />,
+                  selesai:     <IconSertifikat className="h-5 w-5" />,
+                };
+                const labelPendek: Record<string, string> = {
+                  persiapan:    'Siap',
+                  'tanah-suci': 'Ibadah',
+                  selesai:      'Selesai',
+                };
+                return (
+                  <div
+                    key={fase.id}
+                    className={`flex flex-col items-center gap-2 rounded-xl border px-2 py-3 text-center transition-colors ${
+                      aktif
+                        ? 'border-primary bg-primary/5'
+                        : 'border-hairline bg-surface-bone'
+                    }`}
+                  >
+                    <span className={aktif ? 'text-primary' : 'text-ash'}>
+                      {ikonFase[fase.id]}
+                    </span>
+                    <span className={`font-mono text-[10px] font-semibold leading-tight ${aktif ? 'text-primary' : 'text-mute'}`}>
+                      {labelPendek[fase.id] ?? fase.label}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Deskripsi fase */}
+            <p className="mt-3.5 text-[13px] leading-relaxed text-charcoal">
+              {faseDesc[jamaah.fase] ?? 'Ikuti panduan dan doa yang telah disiapkan.'}
+            </p>
+
+            {/* CTA hitam — rata kanan */}
+            <div className="mt-4 flex justify-end">
               <Link
                 to={heroCta.to}
-                className="mt-4 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-[13px] font-bold text-on-primary shadow-glow-primary transition-all active:scale-[0.97]"
+                className="inline-flex items-center gap-2 rounded-full bg-ink px-5 py-3 text-[13px] font-bold text-white shadow-drop-lifted transition-all active:scale-[0.97]"
               >
                 {heroCta.label} <IconChevron className="h-3.5 w-3.5" />
               </Link>
