@@ -61,7 +61,7 @@ export default function Login() {
             src={heroBg}
             alt=""
             className="absolute inset-0 w-full h-full object-cover"
-            style={{ objectPosition: 'center 30%' }}
+            style={{ objectPosition: 'center 15%' }}
             aria-hidden
           />
 
