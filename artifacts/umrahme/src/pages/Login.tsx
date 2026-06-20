@@ -2,7 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { validasiKode, KODE_DEMO } from '../data/jamaah';
-import heroBg from '@assets/photo-1605976528013-638e49b6599f_1781968547515.avif';
+import heroBg from '@assets/photo-1635829576353-1a14caec2f6f_1781969073425.avif';
 
 export default function Login() {
   const { login } = useAuth();
