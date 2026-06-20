@@ -43,9 +43,9 @@ export default function Login() {
         <div
           className="relative w-full overflow-hidden"
           style={{
-            height: '60vw',
-            maxHeight: '300px',
-            minHeight: '220px',
+            height: '72vw',
+            maxHeight: '360px',
+            minHeight: '260px',
           }}
         >
           {/* Hero photo — natural, no color grading */}
