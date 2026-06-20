@@ -72,15 +72,15 @@ function PrayerTimeline({
       aria-hidden="true"
     >
       {/* Track latar */}
-      <rect x={padL} y={lineY - 1} width={trackW} height={2} rx={1} fill="#ded9ce" />
+      <rect x={padL} y={lineY - 2} width={trackW} height={4} rx={2} fill="#ded9ce" />
 
       {/* Progress terisi */}
       <rect
         x={padL}
-        y={lineY - 1}
+        y={lineY - 2}
         width={Math.max(0, progressX - padL)}
-        height={2}
-        rx={1}
+        height={4}
+        rx={2}
         fill="#2563eb"
         opacity="0.65"
       />
