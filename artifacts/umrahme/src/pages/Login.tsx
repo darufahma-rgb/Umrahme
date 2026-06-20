@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { validasiKode, KODE_DEMO } from '../data/jamaah';
+import heroBg from '@assets/photo-1605976528013-638e49b6599f_1781968547515.avif';
 
 export default function Login() {
   const { login } = useAuth();
@@ -54,62 +55,21 @@ export default function Login() {
             minHeight: '200px',
           }}
         >
-          {/* Base gradient: warm golden sunrise → deep sky blue */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background: 'linear-gradient(180deg, #f5a623 0%, #e8720c 18%, #c0392b 32%, #7b5ea7 52%, #3a7bd5 72%, #a8d8ea 90%, #f0f8ff 100%)',
-            }}
+          {/* Hero photo */}
+          <img
+            src={heroBg}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover object-center"
+            aria-hidden
           />
 
-          {/* Soft radial light bloom at top center (sun glow) */}
-          <div
-            className="pointer-events-none absolute"
-            style={{
-              top: '-20%',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              width: '140%',
-              height: '80%',
-              background: 'radial-gradient(ellipse at 50% 30%, rgba(255,220,100,0.55) 0%, rgba(255,140,50,0.25) 40%, transparent 70%)',
-            }}
-          />
-
-          {/* Atmospheric haze in the middle */}
+          {/* Subtle dark overlay so text stays readable */}
           <div
             className="pointer-events-none absolute inset-0"
-            style={{
-              background: 'linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.22) 80%, rgba(255,255,255,0.55) 100%)',
-            }}
+            style={{ background: 'rgba(0,0,0,0.28)' }}
           />
 
-          {/* Subtle cloud wisps */}
-          <div
-            className="pointer-events-none absolute"
-            style={{
-              top: '38%',
-              left: '-10%',
-              width: '55%',
-              height: '22%',
-              background: 'radial-gradient(ellipse, rgba(255,255,255,0.35) 0%, transparent 70%)',
-              borderRadius: '50%',
-              filter: 'blur(8px)',
-            }}
-          />
-          <div
-            className="pointer-events-none absolute"
-            style={{
-              top: '30%',
-              right: '-5%',
-              width: '45%',
-              height: '18%',
-              background: 'radial-gradient(ellipse, rgba(255,255,255,0.28) 0%, transparent 70%)',
-              borderRadius: '50%',
-              filter: 'blur(10px)',
-            }}
-          />
-
-          {/* Arabic calligraphy over gradient */}
+          {/* Arabic calligraphy over image */}
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-6"
             style={{ paddingBottom: '12px' }}
           >
