@@ -25,7 +25,7 @@ export const kategoriDoaMeta: { id: KategoriDoa; judul: string; deskripsi: strin
 ];
 
 // ============================================================================
-// BAGIAN 1 — PERSIAPAN & PERJALANAN (sumber: PDF Tunas Tours)
+// BAGIAN 1 — PERSIAPAN & PERJALANAN 
 // ============================================================================
 
 export const doaPersiapan: Doa[] = [
@@ -37,7 +37,7 @@ export const doaPersiapan: Doa[] = [
     latin: "Usholli sunnatas-safari rok'ataini mustaqbilal-qiblati adaa-an lillahi ta'ala",
     terjemahan: "Niat saya shalat sunnah safar dua rakaat karena Allah Ta'ala.",
     arti: 'Niat melaksanakan shalat sunnah dua rakaat sebelum memulai perjalanan, memohon keselamatan kepada Allah.',
-    dalil: 'Niat shalat sunnah safar. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+    dalil: 'Niat shalat sunnah safar. Sumber: Panduan Manasik Umrah.',
     cara: 'Dibaca sebagai niat shalat sunnah dua rakaat sebelum berangkat safar.',
     waktu: 'Sebelum memulai perjalanan (safar).',
   },
@@ -49,7 +49,7 @@ export const doaPersiapan: Doa[] = [
     latin: "Bismillaahi tawakkaltu 'alallaahi laa hawla wa laa quwwata illaa billaahil-'aliyyil-'azhiim",
     terjemahan: 'Dengan nama Allah, aku berserah diri kepada Allah. Tiada daya upaya dan tiada kekuatan melainkan atas izin Allah Yang Maha Luhur lagi Maha Agung.',
     arti: 'Doa berserah diri kepada Allah saat meninggalkan rumah untuk memulai perjalanan ibadah.',
-    dalil: 'Doa keluar rumah. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+    dalil: 'Doa keluar rumah. Sumber: Panduan Manasik Umrah.',
     cara: 'Dibaca ketika melangkah keluar dari rumah.',
     waktu: 'Saat keluar rumah, sebelum berangkat.',
   },
@@ -61,7 +61,7 @@ export const doaPersiapan: Doa[] = [
     latin: "Bismillaahir-rahmaanir-rahiim. Allaahu akbar, Allaahu akbar, Allaahu akbar. Subhaanalladzii sakhkhoro lanaa haadza wa maa kunnaa lahuu muqriniin. Wa innaa ilaa robbinaa lamunqolibuun. Allaahumma innaa nas'aluka fii safarinaa haadzal-birro wattaqwaa wa minal-'amali maa tardhaa. Allaahumma hawwin 'alainaa safaranaa haadza wa athwi 'annaa bu'dah. Allaahumma antash-shaahibu fis-safari wal-khaliifatu fil-ahli. Allaahumma innii a'uudzubika min wa'tsaa'is-safari wa ka'aabatil-manzhori wa suu'il-munqolabi fil-maali wal-ahli wal-waladi",
     terjemahan: 'Dengan menyebut nama Allah Yang Maha Pengasih lagi Maha Penyayang. Allah Maha Besar (3x). Maha suci Allah yang telah menggerakkan untuk kami kendaraan ini, padahal kami tiada kuasa menggerakkannya. Dan sesungguhnya hanya kepada Tuhan, kami pasti akan kembali. Ya Allah, kami mohon kepada-Mu dalam bepergian kami ini bakti, taat dan takwa serta amal perbuatan yang Engkau ridhai. Ya Allah, mudahkanlah bepergian kami ini dan singkatkan kejauhannya. Ya Allah, Engkau adalah kawan dalam bepergian dan pengganti dalam keluarga yang ditinggalkan. Ya Allah, sesungguhnya aku berlindung kepada-Mu dari kesukaran dalam bepergian dan pemandangan yang menyedihkan serta tidak membawa kebaikan, baik mengenai harta benda, keluarga maupun anak-anak.',
     arti: 'Doa yang dibaca saat kendaraan mulai bergerak, memohon keselamatan, kemudahan, dan perlindungan selama perjalanan.',
-    dalil: 'Doa ketika kendaraan mulai bergerak (berdasarkan QS. Az-Zukhruf: 13-14 dan hadis safar). Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+    dalil: 'Doa ketika kendaraan mulai bergerak (berdasarkan QS. Az-Zukhruf: 13-14 dan hadis safar). Sumber: Panduan Manasik Umrah.',
     cara: 'Dibaca ketika kendaraan (pesawat/bus) mulai bergerak meninggalkan tempat.',
     waktu: 'Saat kendaraan mulai berjalan di awal perjalanan.',
   },
@@ -73,14 +73,14 @@ export const doaPersiapan: Doa[] = [
     latin: "Allaahumma innii as'aluka khoirohaa wa khoiro ahlihaa wa khoiro maa fiihaa wa a'udzu bika min syarrihaa wa syarri ahlihaa wa syarri maa fiihaa",
     terjemahan: 'Ya Allah, saya mohon kepada-Mu kebaikan negeri ini dan kebaikan penduduknya serta kebaikan yang ada di dalamnya. Saya berlindung kepada-Mu dari kejahatan negeri ini dan kejahatan penduduknya serta kejahatan yang ada di dalamnya.',
     arti: 'Doa memohon kebaikan dan perlindungan saat tiba di suatu tempat/negeri tujuan.',
-    dalil: 'Doa setelah tiba di tempat tujuan. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+    dalil: 'Doa setelah tiba di tempat tujuan. Sumber: Panduan Manasik Umrah.',
     cara: 'Dibaca setelah sampai di tempat tujuan perjalanan.',
     waktu: 'Saat tiba di tempat tujuan.',
   },
 ];
 
 // ============================================================================
-// BAGIAN 2 — MADINAH & ZIARAH (sumber: PDF Tunas Tours)
+// BAGIAN 2 — MADINAH & ZIARAH 
 // ============================================================================
 
 export const doaMadinah: Doa[] = [
@@ -92,7 +92,7 @@ export const doaMadinah: Doa[] = [
     latin: "Allaahumma haadzaa haromu rosuulika faj'alhu wiqooyatan minannaari wa amaanatan minal-'adzaabi wa suu'il-hisaab",
     terjemahan: 'Ya Allah, negeri ini adalah tanah haram Rasul-Mu, Muhammad SAW, maka jadikanlah penjaga bagiku dari neraka, aman dari siksa dan buruknya hisab (perhitungan di hari kiamat).',
     arti: 'Doa saat memasuki kota Madinah, tanah haram Rasulullah, memohon perlindungan dan keselamatan.',
-    dalil: 'Doa ketika tiba di kota Madinah. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+    dalil: 'Doa ketika tiba di kota Madinah. Sumber: Panduan Manasik Umrah.',
     cara: 'Dibaca ketika tiba/memasuki kota Madinah.',
     waktu: 'Saat tiba di kota Madinah.',
   },
@@ -104,7 +104,7 @@ export const doaMadinah: Doa[] = [
     latin: "Bismillaahi wa 'alaa millati rosuulillah, robbi adkhilnii mudkhola shidqin wa akhrijnii mukhroja shidqin waj'al lii min ladunka sulthoonan nashiiroo. Allaahumma sholli 'alaa sayyidinaa muhammadin wa 'alaa aali sayyidinaa muhammad, waghfir lii dzunuubii waftah lii abwaaba rohmatika wa adkhilnii fiihaa yaa arhamar-roohimiin",
     terjemahan: 'Dengan menyebut nama Allah, dan atas agama Rasulullah. Ya Tuhan, masukkanlah aku dengan masuk yang benar dan keluarkanlah pula aku dengan keluar yang benar dan berikanlah padaku dari sisi-Mu kekuasaan yang menolong. Ya Allah, sampaikanlah shalawat kepada junjungan kami Muhammad dan atas keluarganya, dan ampunilah dosaku, bukakanlah pintu rahmat-Mu bagiku dan masukkanlah aku ke dalamnya, Wahai Tuhan Yang Maha Pengasih dari segenap pengasih.',
     arti: 'Doa saat memasuki Masjid Nabawi, sebaiknya melalui pintu Babussalam dengan kaki kanan.',
-    dalil: 'Doa masuk Masjid Nabawi melalui Babussalam. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+    dalil: 'Doa masuk Masjid Nabawi melalui Babussalam. Sumber: Panduan Manasik Umrah.',
     cara: 'Dibaca saat masuk Masjid Nabawi, dahulukan kaki kanan, dianjurkan lewat Babussalam.',
     waktu: 'Saat memasuki Masjid Nabawi di Madinah.',
   },
@@ -116,7 +116,7 @@ export const doaMadinah: Doa[] = [
     latin: "Assalaamu 'alaika yaa rosuulallaahi wa rohmatullaahi wa barokaatuhu. Assalaamu 'alaika yaa nabiyyallaahi. Assalaamu 'alaika yaa shofwatallaahi. Assalaamu 'alaika yaa habiiballaahi. Asyhadu an laa ilaaha illallaahu wahdahu laa syariika lahu wa annaka 'abdahu wa rosuuluhu, wa asyhadu annaka ballaghtar-risaalata wa addaital-amaanata wa nashahtal-ummata wa jaahadta fii sabiilillaahi fashollallaahu 'alaika sholaatan daa-imatan ilaa yaumid-diin",
     terjemahan: 'Salam sejahtera atasmu wahai Rasulullah, rahmat Allah dan berkah-Nya untukmu. Salam sejahtera atasmu wahai Nabiyullah. Salam sejahtera atasmu wahai makhluk pilihan Allah. Salam sejahtera atasmu wahai kekasih Allah. Aku bersaksi bahwa tiada Tuhan yang berhak disembah selain Allah satu-satunya, tiada sekutu bagi-Nya, dan sesungguhnya engkau hamba dan utusan-Nya. Dan aku bersaksi bahwa engkau telah menyampaikan risalah, menunaikan amanat, memberi nasihat kepada umat, dan berjihad di jalan Allah. Maka shalawat yang abadi untukmu sampai hari kiamat.',
     arti: 'Salam dan kesaksian saat berziarah ke makam Rasulullah SAW di Masjid Nabawi.',
-    dalil: 'Doa dan salam ziarah di makam Rasulullah SAW. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+    dalil: 'Doa dan salam ziarah di makam Rasulullah SAW. Sumber: Panduan Manasik Umrah.',
     cara: 'Dibaca dengan adab dan suara lembut saat menghadap makam Rasulullah SAW.',
     waktu: 'Saat ziarah ke makam Rasulullah SAW di Madinah.',
   },
@@ -128,7 +128,7 @@ export const doaMadinah: Doa[] = [
     latin: "Assalaamu 'alaika yaa kholiifata rosuulillaahi, assalaamu 'alaika yaa shoohiba rosuulillaahi fil-ghoori, jazaakallaahu 'an ummati rosuulillaahi khoirol-jazaa-i, fassalaamu 'alaika wa rohmatullaahi wa barokaatuhu",
     terjemahan: 'Salam sejahtera atasmu wahai khalifah Rasulullah. Salam sejahtera atasmu wahai sahabat Rasulullah di dalam gua. Semoga Allah membalasmu dari umat Rasulullah dengan sebaik-baik balasan. Maka salam sejahtera, rahmat Allah dan berkah-Nya untukmu.',
     arti: 'Salam saat berziarah ke makam Abu Bakar Ash-Shiddiq RA yang bersebelahan dengan makam Rasulullah.',
-    dalil: 'Doa dan salam ziarah di makam Abu Bakar Ash-Shiddiq RA. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+    dalil: 'Doa dan salam ziarah di makam Abu Bakar Ash-Shiddiq RA. Sumber: Panduan Manasik Umrah.',
     cara: 'Dibaca saat menghadap makam Abu Bakar RA.',
     waktu: 'Saat ziarah makam Abu Bakar RA di Madinah.',
   },
@@ -140,7 +140,7 @@ export const doaMadinah: Doa[] = [
     latin: "Assalaamu 'alaika yaa muzhhirol-islaami, assalaamu 'alaika yaa faaruuqu, assalaamu 'alaika yaa man nathaqat bish-shawaabi wa kafaltal-aytaama wa washaltal-arhaama wa qawiya bikal-islaamu. Assalaamu 'alaika wa rohmatullaahi",
     terjemahan: 'Salam sejahtera atasmu wahai penyebar Islam. Salam sejahtera atasmu wahai Al-Faruq (pembeda antara hak dan batil). Salam sejahtera atasmu wahai orang yang senantiasa berkata benar, menjamin anak yatim, menyambung silaturahmi, dan dengan dirimu Islam menjadi kuat. Salam sejahtera dan rahmat Allah atasmu.',
     arti: 'Salam saat berziarah ke makam Umar bin Khattab RA.',
-    dalil: 'Doa dan salam ziarah di makam Umar bin Khattab RA. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+    dalil: 'Doa dan salam ziarah di makam Umar bin Khattab RA. Sumber: Panduan Manasik Umrah.',
     cara: 'Dibaca saat menghadap makam Umar bin Khattab RA.',
     waktu: 'Saat ziarah makam Umar bin Khattab RA di Madinah.',
   },
@@ -152,7 +152,7 @@ export const doaMadinah: Doa[] = [
     latin: "Assalaamu 'alaikum daara qaumim mu'miniina, wa ataakum maa tuu'aduuna ghadan mu'ajjaliina wa innaa in syaa-allaahu bikum laahiquun. Allaahummaghfir li-ahli baqii'il-gharqadi",
     terjemahan: "Salam sejahtera atas kamu wahai (penghuni) tempat kaum yang beriman. Apa yang dijanjikan kepadamu yang masih ditangguhkan besok, pasti akan datang kepadamu, dan kami Insya Allah akan menyusulmu. Ya Allah, ampunilah ahli Baqi' al-Gharqad.",
     arti: "Salam saat berziarah ke pemakaman Baqi', tempat dimakamkannya banyak sahabat dan keluarga Nabi.",
-    dalil: "Doa salam ziarah di pemakaman Baqi'. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.",
+    dalil: "Doa salam ziarah di pemakaman Baqi'. Sumber: Panduan Manasik Umrah.",
     cara: "Dibaca saat menghadap pemakaman Baqi'.",
     waktu: "Saat ziarah ke pemakaman Baqi' di Madinah.",
   },
@@ -164,7 +164,7 @@ export const doaMadinah: Doa[] = [
     latin: "Assalaamu 'alaikum yaa syuhadaa-i uhudin. Allaahummajzihim 'anil-islaami wa ahlahu afdholal-jazaa-i warfa' darajaatihim wa akrim maqaamahum bifadhlika wa karomika yaa akromal-akromiin",
     terjemahan: 'Salam sejahtera atasmu wahai para syuhada Uhud. Ya Allah, berilah mereka semua ganjaran karena Islam dan para pemeluknya dengan ganjaran yang paling utama, dan tinggikanlah derajat mereka dan muliakanlah kedudukan mereka dengan keagungan-Mu dan kemurahan-Mu, wahai Tuhan Yang Paling Pemurah.',
     arti: 'Salam dan doa untuk para syuhada Perang Uhud, termasuk Hamzah bin Abdul Muthalib RA.',
-    dalil: 'Doa dan salam kepada para syuhada Uhud. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+    dalil: 'Doa dan salam kepada para syuhada Uhud. Sumber: Panduan Manasik Umrah.',
     cara: 'Dibaca saat ziarah ke makam para syuhada di Uhud.',
     waktu: 'Saat ziarah ke Jabal Uhud / makam syuhada Uhud.',
   },
@@ -176,14 +176,14 @@ export const doaMadinah: Doa[] = [
     latin: "Allaahumma sholli 'alaa muhammadin wa 'alaa aali muhammadin wa laa taj'alhu aakhirol-'ahdi binabiyyika, wa huththo awzaarii biziyaaratihi wa ash-hibnii fii safaris-salaamata wa yassir rujuu'ii ilaa ahlii wa wathonii saaliman yaa arhamar-roohimiin",
     terjemahan: 'Ya Allah, sampaikanlah shalawat kepada Muhammad dan keluarganya, dan jangan Engkau jadikan ini akhir kesempatan (berziarah) kepada Nabi-Mu, dan hapuskanlah dosa-dosaku dengan ziarah ini, dan sertailah keselamatan dalam perjalananku dan mudahkanlah kepulanganku kepada keluarga dan tanah airku dengan selamat, wahai Tuhan Yang Maha Pengasih dari segenap pengasih.',
     arti: 'Doa saat hendak meninggalkan kota Madinah, memohon agar bukan ziarah terakhir dan keselamatan perjalanan.',
-    dalil: 'Doa meninggalkan kota Madinah. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+    dalil: 'Doa meninggalkan kota Madinah. Sumber: Panduan Manasik Umrah.',
     cara: 'Dibaca ketika hendak meninggalkan Madinah menuju Makkah.',
     waktu: 'Saat akan meninggalkan kota Madinah.',
   },
 ];
 
 // ============================================================================
-// BAGIAN 3 — IHRAM (sumber: PDF Tunas Tours)
+// BAGIAN 3 — IHRAM 
 // ============================================================================
 
 export const doaIhram: Doa[] = [
@@ -195,7 +195,7 @@ export const doaIhram: Doa[] = [
     latin: "Nawaitu ghuslal-ihroomi lillaahi ta'aalaa",
     terjemahan: "Aku niat mandi untuk ihram karena Allah Ta'ala.",
     arti: 'Niat mandi sunnah sebelum mengenakan pakaian ihram dan berniat umrah.',
-    dalil: 'Niat mandi sunnah untuk ihram. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+    dalil: 'Niat mandi sunnah untuk ihram. Sumber: Panduan Manasik Umrah.',
     cara: 'Dibaca sebagai niat sebelum mandi sunnah ihram di miqat.',
     waktu: 'Sebelum mengenakan pakaian ihram di miqat.',
   },
@@ -207,7 +207,7 @@ export const doaIhram: Doa[] = [
     latin: "Allaahumma uharrimu sya'rii wa basyarii wa jasadii wa jamii'a jawaarihii min kulli syai-in harromtahu 'alal-muhrimi abtaghii bidzaalika wajhakal-kariima yaa robbal-'aalamiin",
     terjemahan: 'Ya Allah aku haramkan rambut, kulit, tubuh dan seluruh anggota tubuhku dari semua yang Kau haramkan bagi seorang yang sedang berihram, demi mengharapkan dari-Mu semata, wahai Tuhan pemelihara alam semesta.',
     arti: 'Doa setelah mengenakan pakaian ihram, menegaskan komitmen menjauhi larangan ihram.',
-    dalil: 'Doa sesudah memakai pakaian ihram. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+    dalil: 'Doa sesudah memakai pakaian ihram. Sumber: Panduan Manasik Umrah.',
     cara: 'Dibaca setelah mengenakan pakaian ihram.',
     waktu: 'Setelah memakai pakaian ihram, sebelum niat umrah.',
   },
@@ -219,7 +219,7 @@ export const doaIhram: Doa[] = [
     latin: "Usholli sunnatal-ihroomi rok'ataini lillaahi ta'aalaa. Allaahu akbar",
     terjemahan: "Aku niat shalat sunnah ihram dua rakaat karena Allah Ta'ala.",
     arti: 'Niat shalat sunnah dua rakaat sebelum berihram untuk umrah.',
-    dalil: 'Niat shalat sunnah ihram. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+    dalil: 'Niat shalat sunnah ihram. Sumber: Panduan Manasik Umrah.',
     cara: 'Dibaca sebagai niat shalat sunnah dua rakaat ihram.',
     waktu: 'Sebelum berniat ihram umrah di miqat.',
   },
@@ -231,7 +231,7 @@ export const doaIhram: Doa[] = [
     latin: "Labbaikallaahumma 'umrotan",
     terjemahan: 'Aku sambut panggilan-Mu ya Allah untuk umrah.',
     arti: 'Niat memulai ibadah umrah, menandai dimulainya rangkaian ihram untuk umrah.',
-    dalil: "Niat umrah (Labbaikallaahumma umratan). Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.",
+    dalil: "Niat umrah (Labbaikallaahumma umratan). Sumber: Panduan Manasik Umrah.",
     cara: "Diucapkan saat berniat memulai umrah di miqat. Boleh juga dengan lafaz: \"Nawaitul-'umrota wa ahromtu bihaa lillaahi ta'aalaa\".",
     waktu: 'Di miqat, saat memulai ihram untuk umrah.',
   },
@@ -243,7 +243,7 @@ export const doaIhram: Doa[] = [
     latin: "Labbaikallaahumma labbaik, labbaika laa syariika laka labbaik, innal-hamda wanni'mata laka wal-mulka laa syariika lak",
     terjemahan: 'Aku datang memenuhi panggilan-Mu Ya Allah, aku datang memenuhi panggilan-Mu, aku datang memenuhi panggilan-Mu, tidak ada sekutu bagi-Mu, aku datang memenuhi panggilan-Mu. Sesungguhnya pujian, kemuliaan dan segenap kekuasaan adalah milik-Mu, tidak ada sekutu bagi-Mu.',
     arti: 'Seruan penyerahan diri kepada Allah yang diucapkan terus-menerus selama ihram.',
-    dalil: 'Bacaan talbiyah (muttafaq alaih, dari hadis Ibnu Umar RA). Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+    dalil: 'Bacaan talbiyah (muttafaq alaih, dari hadis Ibnu Umar RA). Sumber: Panduan Manasik Umrah.',
     cara: 'Diperbanyak sejak berihram hingga menjelang tawaf, dengan suara lantang bagi laki-laki.',
     waktu: 'Sejak niat ihram hingga sebelum memulai tawaf.',
   },
@@ -255,14 +255,14 @@ export const doaIhram: Doa[] = [
     latin: "Allaahumma sholli 'alaa muhammadin wa 'alaa aali muhammad",
     terjemahan: 'Ya Allah, berilah karunia kesejahteraan atas Nabi Muhammad, dan juga atas keluarga Nabi Muhammad.',
     arti: 'Shalawat ringkas yang dianjurkan diperbanyak, terutama setelah talbiyah.',
-    dalil: 'Shalawat Nabi. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+    dalil: 'Shalawat Nabi. Sumber: Panduan Manasik Umrah.',
     cara: 'Dibaca memperbanyak shalawat, dianjurkan setelah talbiyah.',
     waktu: 'Kapan saja, dianjurkan diperbanyak selama perjalanan ibadah.',
   },
 ];
 
 // ============================================================================
-// BAGIAN 4 — MAKKAH & MASJIDIL HARAM (sumber: PDF Tunas Tours)
+// BAGIAN 4 — MAKKAH & MASJIDIL HARAM 
 // ============================================================================
 
 export const doaMakkah: Doa[] = [
@@ -274,7 +274,7 @@ export const doaMakkah: Doa[] = [
     latin: "Allaahumma haadzaa haromuka wa amnuka faharrim lahmii wa damii wa sya'rii wa basyarii 'alannaari wa aaminnii min 'adzaabika yauma tab'atsu 'ibaadaka waj'alnii min auliyaa-ika wa ahli thoo'atika",
     terjemahan: 'Ya Allah, kota ini adalah kota haram-Mu dan tempat aman-Mu, maka hindarkanlah daging, darah, rambut dan kulitku dari api neraka. Dan selamatkanlah diriku dari siksa-Mu pada hari Engkau membangkitkan hamba-hamba-Mu, dan jadikanlah aku termasuk orang-orang yang selalu dekat (menjadi wali-Mu) dan taat kepada-Mu.',
     arti: 'Doa saat memasuki kota Makkah, memohon perlindungan dari neraka dan dijadikan hamba yang taat.',
-    dalil: 'Doa ketika masuk kota Makkah. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+    dalil: 'Doa ketika masuk kota Makkah. Sumber: Panduan Manasik Umrah.',
     cara: 'Dibaca ketika memasuki kota Makkah.',
     waktu: 'Saat tiba/memasuki kota Makkah.',
   },
@@ -286,7 +286,7 @@ export const doaMakkah: Doa[] = [
     latin: "Allaahumma antas-salaamu wa minkas-salaamu wa ilaika ya'uudus-salaamu fahayyinaa robbanaa bis-salaami wa adkhilnal-jannata daaros-salaami tabaarokta robbanaa wa ta'aalaita yaa dzal-jalaali wal-ikroom. Allaahummaftah lii abwaaba rohmatika. Bismillaahi wal-hamdu lillaahi wash-sholaatu was-salaamu 'alaa rosuulillaah",
     terjemahan: 'Ya Allah, Engkau sumber keselamatan dan dari pada-Mulah datangnya keselamatan dan kepada-Mu kembalinya keselamatan. Maka hidupkanlah kami wahai Tuhan, dengan selamat sejahtera dan masukkanlah ke dalam surga negeri keselamatan. Maha banyak anugerah-Mu dan Maha Tinggi Engkau, Wahai Tuhan yang memiliki keagungan dan kehormatan. Ya Allah bukakanlah untukku pintu rahmat-Mu. Dengan nama Allah disertai dengan segala puji bagi Allah serta shalawat dan salam untuk Rasulullah.',
     arti: 'Doa saat memasuki Masjidil Haram, dahulukan kaki kanan.',
-    dalil: 'Doa masuk Masjidil Haram. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+    dalil: 'Doa masuk Masjidil Haram. Sumber: Panduan Manasik Umrah.',
     cara: 'Dibaca saat masuk Masjidil Haram, dengan mendahulukan kaki kanan.',
     waktu: 'Saat memasuki Masjidil Haram.',
   },
@@ -298,7 +298,7 @@ export const doaMakkah: Doa[] = [
     latin: "Allaahumma zid haadzal-baita tasyriifan wa ta'zhiiman wa takriiman wa mahaabatan wa zid man syarrofahu wa 'azhzhomahu mimman hajjahu awi'tamarohu tasyriifan wa ta'zhiiman wa takriiman wa birron",
     terjemahan: "Ya Allah, tambahkanlah kemuliaan, keagungan, kehormatan dan wibawa pada Bait (Ka'bah) ini. Dan tambahkanlah pula pada orang-orang yang memuliakan, mengagungkan dan menghormatinya di antara mereka yang berhaji atau yang berumrah dengan kemuliaan, keagungan, kehormatan dan kebaikan.",
     arti: "Doa saat pertama kali melihat Ka'bah, momen mustajab untuk berdoa.",
-    dalil: "Doa ketika melihat Ka'bah. Sebagian riwayat doa ini diperselisihkan kesahihan sanadnya, namun lafaznya masyhur diamalkan. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.",
+    dalil: "Doa ketika melihat Ka'bah. Sebagian riwayat doa ini diperselisihkan kesahihan sanadnya, namun lafaznya masyhur diamalkan. Sumber: Panduan Manasik Umrah.",
     cara: "Dibaca saat pandangan pertama tertuju pada Ka'bah; perbanyak doa pribadi karena ini waktu mustajab.",
     waktu: "Saat pertama kali melihat Ka'bah.",
     perluVerifikasi: true,
@@ -311,14 +311,14 @@ export const doaMakkah: Doa[] = [
     latin: "Robbi adkhilnii mudkhola shidqin wa akhrijnii mukhroja shidqin waj'al lii min ladunka sulthoonan nashiiroo. Wa qul jaa-al-haqqu wa zahaqol-baathilu innal-baathila kaana zahuuqoo",
     terjemahan: 'Ya Tuhanku, masukkanlah aku dengan cara masuk yang benar dan keluarkanlah aku dengan cara keluar yang benar, dan berikanlah kepadaku dari sisi-Mu kekuasaan yang menolong. Dan katakanlah: Yang benar telah datang dan yang batil telah lenyap. Sesungguhnya yang batil itu pasti lenyap.',
     arti: 'Doa saat melewati Maqam Ibrahim (berdasarkan QS. Al-Isra: 80-81).',
-    dalil: 'Doa ketika melintasi Maqam Ibrahim. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+    dalil: 'Doa ketika melintasi Maqam Ibrahim. Sumber: Panduan Manasik Umrah.',
     cara: 'Dibaca ketika melintasi/mendekati Maqam Ibrahim.',
     waktu: 'Saat melintasi Maqam Ibrahim.',
   },
 ];
 
 // ============================================================================
-// BAGIAN 5 — TAWAF (sumber: PDF Tunas Tours)
+// BAGIAN 5 — TAWAF 
 // Doa per putaran dibaca dari Hajar Aswad sampai Rukun Yamani. Di antara Rukun
 // Yamani dan Hajar Aswad dibaca doa "Rabbana atina..." (lihat tawaf-rabbana-atina).
 // ============================================================================
@@ -332,7 +332,7 @@ export const doaTawaf: Doa[] = [
     latin: 'Bismillaahi, Allaahu akbar',
     terjemahan: 'Dengan nama Allah, Allah Maha Besar.',
     arti: "Bacaan saat memulai tawaf, menghadap Hajar Aswad sambil mengangkat tangan, lalu bergerak dengan posisi Ka'bah di sebelah kiri.",
-    dalil: 'Bacaan memulai tawaf di Hajar Aswad. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+    dalil: 'Bacaan memulai tawaf di Hajar Aswad. Sumber: Panduan Manasik Umrah.',
     cara: "Berdiri menghadap Hajar Aswad, angkat tangan, ucapkan 'Bismillaahi Allaahu akbar', lalu mulai tawaf dengan Ka'bah di sebelah kiri.",
     waktu: 'Saat memulai setiap putaran dari titik Hajar Aswad.',
   },
@@ -344,7 +344,7 @@ export const doaTawaf: Doa[] = [
     latin: "Subhaanallaahi wal-hamdu lillaahi wa laa ilaaha illallaahu wallaahu akbar wa laa hawla wa laa quwwata illaa billaahil-'aliyyil-'azhiim. Wash-sholaatu was-salaamu 'alaa rosuulillaahi shollallaahu 'alaihi wasallam. Allaahumma iimaanan bika wa tashdiiqon bikitaabika wa wafaa-an bi'ahdika wattibaa'an lisunnati nabiyyika wa habiibika muhammadin shollallaahu 'alaihi wasallam",
     terjemahan: 'Maha suci Allah, segala puji bagi Allah, tiada Tuhan selain Allah, Allah Maha Besar, tiada daya dan kekuatan selain dengan kuasa Allah Yang Maha Tinggi lagi Maha Agung. Shalawat dan salam atas Rasulullah SAW. Ya Allah, (aku bertawaf) karena beriman kepada-Mu, membenarkan kitab-Mu, memenuhi janji-Mu dan mengikuti sunnah nabi-Mu, Muhammad SAW.',
     arti: 'Doa putaran pertama tawaf, menegaskan tauhid dan niat mengikuti sunnah Nabi.',
-    dalil: 'Bacaan tawaf putaran ke-1, dibaca dari Hajar Aswad sampai Rukun Yamani. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+    dalil: 'Bacaan tawaf putaran ke-1, dibaca dari Hajar Aswad sampai Rukun Yamani. Sumber: Panduan Manasik Umrah.',
     cara: "Dibaca sambil mengelilingi Ka'bah dari Hajar Aswad menuju Rukun Yamani.",
     waktu: 'Tawaf, putaran ke-1.',
   },
@@ -356,7 +356,7 @@ export const doaTawaf: Doa[] = [
     latin: "Allaahumma inna haadzal-baita baituka wal-haroma haromuka wal-amna amnuka wal-'abda 'abduka wa anaa 'abduka wabnu 'abdika wa haadzaa maqaamul-'aa-idzi bika minannaari faharrim luhuumanaa wa basyarotanaa 'alannaar. Allaahumma habbib ilainal-iimaana wa zayyinhu fii quluubinaa wa karrih ilainal-kufro wal-fusuuqo wal-'ishyaana waj'alnaa minar-roosyidiin",
     terjemahan: "Ya Allah, sesungguhnya bait ini adalah rumah-Mu, tanah mulia ini adalah tanah haram-Mu, negeri yang aman ini adalah negeri-Mu, hamba ini adalah hamba-Mu, aku hamba-Mu dan anak hamba-Mu, dan tempat ini adalah tempat orang berlindung pada-Mu dari api neraka. Maka haramkanlah daging dan kulit kami dari api neraka. Ya Allah, cintakanlah kami pada iman dan hiaskanlah ia di hati kami, dan bencikanlah kami pada kekufuran, kefasikan dan kemaksiatan, serta jadikanlah kami termasuk orang-orang yang mendapat petunjuk.",
     arti: "Doa putaran kedua, mengakui Ka'bah sebagai rumah Allah dan memohon dijauhkan dari neraka.",
-    dalil: 'Bacaan tawaf putaran ke-2, dibaca dari Hajar Aswad sampai Rukun Yamani. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+    dalil: 'Bacaan tawaf putaran ke-2, dibaca dari Hajar Aswad sampai Rukun Yamani. Sumber: Panduan Manasik Umrah.',
     cara: "Dibaca sambil mengelilingi Ka'bah dari Hajar Aswad menuju Rukun Yamani.",
     waktu: 'Tawaf, putaran ke-2.',
   },
@@ -368,7 +368,7 @@ export const doaTawaf: Doa[] = [
     latin: "Allaahumma innii a'uudzu bika minasy-syakki wasy-syirki wasy-syiqooqi wan-nifaaqi wa suu-il-akhlaaqi wa suu-il-manzhori wal-munqolabi fil-maali wal-ahli wal-walad. Allaahumma innii as-aluka ridhooka wal-jannata wa a'uudzu bika min sakhothika wannaar. Allaahumma innii a'uudzu bika min fitnatil-qobri wa a'uudzu bika min fitnatil-mahyaa wal-mamaat",
     terjemahan: 'Ya Allah, sesungguhnya aku berlindung kepada-Mu dari keraguan, syirik, cerai-berai, kemunafikan, buruk budi pekerti, buruk penampilan dan salah urus terhadap harta benda, keluarga dan anak. Ya Allah, sesungguhnya aku mohon kepada-Mu ridha-Mu dan surga, dan aku berlindung kepada-Mu dari murka-Mu dan api neraka. Ya Allah, sesungguhnya aku berlindung kepada-Mu dari fitnah kubur dan aku berlindung kepada-Mu dari fitnah kehidupan dan kematian.',
     arti: 'Doa putaran ketiga, memohon perlindungan dari berbagai keburukan dan fitnah dunia-akhirat.',
-    dalil: 'Bacaan tawaf putaran ke-3, dibaca dari Hajar Aswad sampai Rukun Yamani. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+    dalil: 'Bacaan tawaf putaran ke-3, dibaca dari Hajar Aswad sampai Rukun Yamani. Sumber: Panduan Manasik Umrah.',
     cara: "Dibaca sambil mengelilingi Ka'bah dari Hajar Aswad menuju Rukun Yamani.",
     waktu: 'Tawaf, putaran ke-3.',
   },
@@ -380,7 +380,7 @@ export const doaTawaf: Doa[] = [
     latin: "Allaahummaj'alhu hajjan mabruuron wa sa'yan masykuuron wa dzanban maghfuuron wa 'amalan shoolihan maqbuulan wa tijaarotan lan tabuur. Yaa 'aalima maa fish-shuduuri akhrijnii yaallaahu minazh-zhulumaati ilan-nuur. Allaahumma innii as-aluka muujibaati rohmatika wa 'azaa-ima maghfirotika was-salaamata min kulli itsmin wal-ghoniimata min kulli birrin wal-fauza bil-jannati wannajaata minannaar",
     terjemahan: "Ya Allah, jadikanlah ibadah ini haji yang mabrur, sa'i yang diterima, dosa yang diampuni, amal shaleh yang diterima dan usaha yang tidak akan merugi. Wahai Tuhan Yang Maha Mengetahui apa yang ada dalam hati, keluarkanlah aku ya Allah dari kegelapan menuju cahaya. Ya Allah, aku mohon kepada-Mu segala yang mendatangkan rahmat-Mu, keteguhan ampunan-Mu, selamat dari segala dosa, beruntung dengan segala kebaikan, beruntung memperoleh surga dan selamat dari neraka.",
     arti: 'Doa putaran keempat, memohon ibadah yang mabrur dan keberuntungan dunia-akhirat.',
-    dalil: 'Bacaan tawaf putaran ke-4, dibaca dari Hajar Aswad sampai Rukun Yamani. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+    dalil: 'Bacaan tawaf putaran ke-4, dibaca dari Hajar Aswad sampai Rukun Yamani. Sumber: Panduan Manasik Umrah.',
     cara: "Dibaca sambil mengelilingi Ka'bah dari Hajar Aswad menuju Rukun Yamani.",
     waktu: 'Tawaf, putaran ke-4.',
   },
@@ -392,7 +392,7 @@ export const doaTawaf: Doa[] = [
     latin: "Allaahumma azhillanii tahta zhilli 'arsyika yauma laa zhilla illaa zhilluka wa laa baaqiya illaa wajhuka wasqinii min haudhi nabiyyika sayyidinaa muhammadin shollallaahu 'alaihi wasallama syarbatan hanii-atan marii-atan laa azhma-u ba'dahaa abadaa",
     terjemahan: "Ya Allah, lindungilah aku di bawah naungan 'Arsy-Mu pada hari yang tidak ada naungan selain naungan-Mu, dan tidak ada yang kekal selain wajah-Mu. Dan berilah aku minum dari telaga Nabi-Mu, junjungan kami Muhammad SAW, dengan suatu minuman yang lezat, segar dan nyaman, yang setelah itu aku tidak akan haus selamanya.",
     arti: "Doa putaran kelima, memohon naungan 'Arsy di hari kiamat dan minum dari telaga Nabi.",
-    dalil: 'Bacaan tawaf putaran ke-5, dibaca dari Hajar Aswad sampai Rukun Yamani. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+    dalil: 'Bacaan tawaf putaran ke-5, dibaca dari Hajar Aswad sampai Rukun Yamani. Sumber: Panduan Manasik Umrah.',
     cara: "Dibaca sambil mengelilingi Ka'bah dari Hajar Aswad menuju Rukun Yamani.",
     waktu: 'Tawaf, putaran ke-5.',
   },
@@ -404,7 +404,7 @@ export const doaTawaf: Doa[] = [
     latin: "Allaahumma inna laka 'alayya huquuqon katsiirotan fiimaa bainii wa bainaka wa huquuqon katsiirotan fiimaa bainii wa baina kholqika. Allaahumma maa kaana laka minhaa faghfirhu lii wa maa kaana likholqika fatahammalhu 'annii wa aghninii bihalaalika 'an haroomika wa bithoo'atika 'an ma'shiyatika wa bifadhlika 'amman siwaaka yaa waasi'al-maghfiroh",
     terjemahan: 'Ya Allah, sesungguhnya Engkau memiliki banyak hak atas diriku dalam hubungan antara aku dengan-Mu, dan banyak hak dalam hubungan antara aku dengan makhluk-Mu. Ya Allah, apa yang menjadi hak-Mu maka ampunilah, dan apa yang menjadi hak makhluk-Mu maka tanggunglah ia dariku. Cukupkanlah aku dengan yang halal sehingga tidak butuh yang haram, dengan taat kepada-Mu sehingga tidak bermaksiat, dan dengan karunia-Mu sehingga tidak butuh selain-Mu, wahai Yang Maha Luas ampunan-Nya.',
     arti: 'Doa putaran keenam, memohon ampunan atas hak Allah dan keringanan atas hak sesama makhluk.',
-    dalil: 'Bacaan tawaf putaran ke-6, dibaca dari Hajar Aswad sampai Rukun Yamani. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+    dalil: 'Bacaan tawaf putaran ke-6, dibaca dari Hajar Aswad sampai Rukun Yamani. Sumber: Panduan Manasik Umrah.',
     cara: "Dibaca sambil mengelilingi Ka'bah dari Hajar Aswad menuju Rukun Yamani.",
     waktu: 'Tawaf, putaran ke-6.',
   },
@@ -416,7 +416,7 @@ export const doaTawaf: Doa[] = [
     latin: "Allaahumma innii as-aluka iimaanan kaamilan wa yaqiinan shoodiqon wa qolban khoosyi'an wa lisaanan dzaakiron wa rizqon waasi'an wa halaalan thoyyiban wa taubatan nashuuhan wa taubatan qoblal-mauti wa rohmatan 'indal-mauti wa maghfirotan ba'dal-mauti wal-'afwa 'indal-hisaabi wal-fauza bil-jannati wannajaata minannaari birohmatika yaa 'aziizu yaa ghoffaar. Robbi zidnii 'ilman wa alhiqnii bish-shoolihiin",
     terjemahan: 'Ya Allah, aku mohon kepada-Mu iman yang sempurna, keyakinan yang benar, hati yang khusyuk, lidah yang berdzikir, rizki yang luas, yang halal lagi baik, taubat yang diterima dan taubat sebelum mati, rahmat ketika mati, ampunan setelah mati, maaf ketika dihisab, keberuntungan memperoleh surga dan selamat dari neraka dengan rahmat-Mu, wahai Yang Maha Perkasa lagi Maha Pengampun. Tuhanku, tambahkanlah ilmu kepadaku dan masukkanlah aku ke dalam golongan orang-orang shaleh.',
     arti: 'Doa putaran ketujuh (terakhir), memohon kesempurnaan iman dan kebaikan hingga akhir hayat.',
-    dalil: 'Bacaan tawaf putaran ke-7, dibaca dari Hajar Aswad sampai Rukun Yamani. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+    dalil: 'Bacaan tawaf putaran ke-7, dibaca dari Hajar Aswad sampai Rukun Yamani. Sumber: Panduan Manasik Umrah.',
     cara: "Dibaca sambil mengelilingi Ka'bah dari Hajar Aswad menuju Rukun Yamani.",
     waktu: 'Tawaf, putaran ke-7 (terakhir).',
   },
@@ -428,14 +428,14 @@ export const doaTawaf: Doa[] = [
     latin: "Robbanaa aatinaa fid-dunyaa hasanah wa fil-aakhiroti hasanah wa qinaa 'adzaabannaar. Wa adkhilnal-jannata ma'al-abroor. Yaa 'aziizu yaa ghoffaaru yaa robbal-'aalamiin",
     terjemahan: 'Ya Tuhan kami, karuniakanlah kepada kami kebaikan di dunia dan kebaikan di akhirat, dan hindarkanlah kami dari siksa neraka. Dan masukkanlah kami ke dalam surga bersama orang-orang yang berbuat baik. Wahai Yang Maha Perkasa, Yang Maha Pengampun, wahai Tuhan semesta alam.',
     arti: 'Doa yang dibaca di antara Rukun Yamani dan Hajar Aswad pada setiap putaran (berdasarkan QS. Al-Baqarah: 201).',
-    dalil: 'Doa antara Rukun Yamani dan Hajar Aswad (QS. Al-Baqarah: 201). Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+    dalil: 'Doa antara Rukun Yamani dan Hajar Aswad (QS. Al-Baqarah: 201). Sumber: Panduan Manasik Umrah.',
     cara: 'Dibaca di antara Rukun Yamani dan Hajar Aswad, di akhir setiap putaran.',
     waktu: 'Di antara Rukun Yamani dan Hajar Aswad, pada setiap putaran tawaf (1-7).',
   },
 ];
 
 // ============================================================================
-// BAGIAN 6 — SA'I (sumber: PDF Tunas Tours)
+// BAGIAN 6 — SA'I 
 // Sa'i dibaca bolak-balik: lintasan ganjil (1,3,5,7) Shafa->Marwah, lintasan
 // genap (2,4,6) Marwah->Shafa. Di antara dua lampu hijau dibaca doa khusus.
 // ============================================================================
@@ -449,7 +449,7 @@ export const doaSai: Doa[] = [
     latin: "Innash-shofaa wal-marwata min sya'aa-irillaah, faman hajjal-baita awi'tamaro falaa junaaha 'alaihi an yaththowwafa bihimaa wa man tathowwa'a khoiron fa-innallaaha syaakirun 'aliim",
     terjemahan: "Sesungguhnya Shafa dan Marwah adalah sebagian dari syiar-syiar (tanda kebesaran) Allah. Maka barangsiapa yang berhaji ke Baitullah atau berumrah, tidak ada dosa baginya mengerjakan sa'i antara keduanya. Dan barangsiapa mengerjakan suatu kebajikan dengan kerelaan hati, maka sesungguhnya Allah Maha Mensyukuri lagi Maha Mengetahui.",
     arti: "Bacaan saat menaiki/mendekati Bukit Shafa sebelum memulai sa'i (QS. Al-Baqarah: 158).",
-    dalil: "Bacaan di Bukit Shafa sebelum sa'i (QS. Al-Baqarah: 158). Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.",
+    dalil: "Bacaan di Bukit Shafa sebelum sa'i (QS. Al-Baqarah: 158). Sumber: Panduan Manasik Umrah.",
     cara: "Dibaca ketika mendekati/menaiki Bukit Shafa, menghadap Ka'bah, sebelum memulai lintasan pertama.",
     waktu: "Di Bukit Shafa, sebelum memulai sa'i.",
   },
@@ -461,7 +461,7 @@ export const doaSai: Doa[] = [
     latin: "Allaahu akbar, Allaahu akbar, Allaahu akbar, Allaahu akbar kabiiron wal-hamdu lillaahi katsiiron wa subhaanallaahil-'azhiimi wa bihamdihi bukrotan wa ashiilaa",
     terjemahan: 'Allah Maha Besar (4x) dengan segala kebesaran-Nya. Segala puji bagi Allah dengan pujian yang banyak. Maha suci Allah Yang Maha Agung, dan segala puji bagi-Nya di waktu pagi dan petang.',
     arti: 'Bacaan takbir dan tahmid pada lintasan pertama dari Shafa menuju Marwah.',
-    dalil: "Bacaan sa'i lintasan ke-1, dibaca dari bukit Shafa menuju Marwah. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.",
+    dalil: "Bacaan sa'i lintasan ke-1, dibaca dari bukit Shafa menuju Marwah. Sumber: Panduan Manasik Umrah.",
     cara: 'Dibaca sambil berjalan dari Shafa menuju Marwah.',
     waktu: "Sa'i, lintasan ke-1 (Shafa → Marwah).",
   },
@@ -473,7 +473,7 @@ export const doaSai: Doa[] = [
     latin: "Allaahu akbar, Allaahu akbar, Allaahu akbar, walillaahil-hamd. Allaahumma innii as-aluka min khoiri maa ta'lamu wa a'uudzu bika min syarri maa ta'lamu wa astaghfiruka min kulli maa ta'lamu innaka anta 'allaamul-ghuyuub. Laa ilaaha illallaahul-malikul-haqqul-mubiin, muhammadur-rosuulullaahi shoodiqul-wa'dil-amiin",
     terjemahan: 'Allah Maha Besar (3x) dan bagi-Nya segala pujian. Ya Allah, aku mohon kepada-Mu kebaikan yang Engkau ketahui, aku berlindung kepada-Mu dari kejahatan yang Engkau ketahui, dan aku mohon ampun kepada-Mu dari segala yang Engkau ketahui. Sesungguhnya Engkau Maha Mengetahui yang ghaib. Tiada Tuhan selain Allah, Maha Raja yang sebenar-benarnya. Muhammad utusan Allah yang menepati janji lagi terpercaya.',
     arti: 'Bacaan lintasan kedua dari Marwah kembali menuju Shafa.',
-    dalil: "Bacaan sa'i lintasan ke-2, dibaca dari bukit Marwah menuju Shafa. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.",
+    dalil: "Bacaan sa'i lintasan ke-2, dibaca dari bukit Marwah menuju Shafa. Sumber: Panduan Manasik Umrah.",
     cara: 'Dibaca sambil berjalan dari Marwah menuju Shafa.',
     waktu: "Sa'i, lintasan ke-2 (Marwah → Shafa).",
   },
@@ -485,7 +485,7 @@ export const doaSai: Doa[] = [
     latin: "Allaahu akbar, Allaahu akbar, Allaahu akbar, walillaahil-hamd. Robbanaa atmim lanaa nuuronaa waghfir lanaa innaka 'alaa kulli syai-in qodiir. Allaahumma innii as-alukal-khoiro kullahu 'aajilahu wa aajilahu wa astaghfiruka lidzanbii wa as-aluka rohmataka yaa arhamar-roohimiin",
     terjemahan: 'Allah Maha Besar (3x) dan bagi-Nya segala pujian. Ya Tuhan kami, sempurnakanlah cahaya kami dan ampunilah kami, sesungguhnya Engkau Maha Kuasa atas segala sesuatu. Ya Allah, aku mohon kepada-Mu segala kebaikan yang segera maupun yang akan datang, aku mohon ampun atas dosaku dan aku mohon rahmat-Mu, wahai Yang Maha Pengasih dari segenap pengasih.',
     arti: 'Bacaan lintasan ketiga dari Shafa menuju Marwah.',
-    dalil: "Bacaan sa'i lintasan ke-3, dibaca dari bukit Shafa menuju Marwah. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.",
+    dalil: "Bacaan sa'i lintasan ke-3, dibaca dari bukit Shafa menuju Marwah. Sumber: Panduan Manasik Umrah.",
     cara: 'Dibaca sambil berjalan dari Shafa menuju Marwah.',
     waktu: "Sa'i, lintasan ke-3 (Shafa → Marwah).",
   },
@@ -497,7 +497,7 @@ export const doaSai: Doa[] = [
     latin: "Allaahu akbar, Allaahu akbar, Allaahu akbar, walillaahil-hamd. Allaahumma innii as-aluka maa ta'lamu wa a'uudzu bika min syarri maa ta'lamu wa astaghfiruka min kulli maa ta'lamu innaka anta 'allaamul-ghuyuub. Laa ilaaha illallaahul-malikul-haqqul-mubiin, muhammadur-rosuulullaahi shoodiqul-wa'dil-amiin",
     terjemahan: 'Allah Maha Besar (3x) dan bagi-Nya segala pujian. Ya Allah, aku mohon kepada-Mu kebaikan yang Engkau ketahui, aku berlindung kepada-Mu dari kejahatan yang Engkau ketahui, dan aku mohon ampun kepada-Mu dari segala yang Engkau ketahui. Sesungguhnya Engkau Maha Mengetahui yang ghaib. Tiada Tuhan selain Allah, Maha Raja yang sebenarnya. Muhammad utusan Allah yang menepati janji lagi terpercaya.',
     arti: 'Bacaan lintasan keempat dari Marwah menuju Shafa.',
-    dalil: "Bacaan sa'i lintasan ke-4, dibaca dari bukit Marwah menuju Shafa. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.",
+    dalil: "Bacaan sa'i lintasan ke-4, dibaca dari bukit Marwah menuju Shafa. Sumber: Panduan Manasik Umrah.",
     cara: 'Dibaca sambil berjalan dari Marwah menuju Shafa.',
     waktu: "Sa'i, lintasan ke-4 (Marwah → Shafa).",
   },
@@ -509,7 +509,7 @@ export const doaSai: Doa[] = [
     latin: "Allaahu akbar, Allaahu akbar, Allaahu akbar, walillaahil-hamd. Subhaanaka maa syakarnaaka haqqo syukrika yaallaahu, subhaanaka maa a'laa sya'naka yaallaah. Allaahumma habbib ilainal-iimaana wa zayyinhu fii quluubinaa wa karrih ilainal-kufro wal-fusuuqo wal-'ishyaana waj'alnaa minar-roosyidiin",
     terjemahan: 'Allah Maha Besar (3x) dan bagi-Nya segala pujian. Maha suci Engkau, kami belum bersyukur kepada-Mu dengan syukur yang semestinya wahai Allah. Maha suci Engkau, alangkah tinggi keagungan-Mu wahai Allah. Ya Allah, cintakanlah kami pada iman dan hiaskanlah ia di hati kami, bencikanlah kami pada kekufuran, kefasikan dan kemaksiatan, dan jadikanlah kami termasuk orang-orang yang mendapat petunjuk.',
     arti: 'Bacaan lintasan kelima dari Shafa menuju Marwah.',
-    dalil: "Bacaan sa'i lintasan ke-5, dibaca dari bukit Shafa menuju Marwah. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.",
+    dalil: "Bacaan sa'i lintasan ke-5, dibaca dari bukit Shafa menuju Marwah. Sumber: Panduan Manasik Umrah.",
     cara: 'Dibaca sambil berjalan dari Shafa menuju Marwah.',
     waktu: "Sa'i, lintasan ke-5 (Shafa → Marwah).",
   },
@@ -521,7 +521,7 @@ export const doaSai: Doa[] = [
     latin: "Allaahu akbar, Allaahu akbar, Allaahu akbar, walillaahil-hamd. Allaahumma innii a'uudzu bika min wasaawisish-shodri wa syataatil-amri wa fitnatil-qobri. Allaahumma innii a'uudzu bika min syarri maa yaliju fil-laili wa syarri maa yaliju fin-nahaari wa min syarri maa tahubbu bihir-riyaahu yaa arhamar-roohimiin",
     terjemahan: 'Allah Maha Besar (3x) dan bagi-Nya segala pujian. Ya Allah, aku berlindung kepada-Mu dari godaan bisikan hati, kekacauan urusan dan fitnah kubur. Ya Allah, aku berlindung kepada-Mu dari kejahatan yang masuk di waktu malam dan kejahatan yang masuk di waktu siang, serta dari kejahatan yang dibawa oleh angin, wahai Yang Maha Pengasih dari segenap pengasih.',
     arti: 'Bacaan lintasan keenam dari Marwah menuju Shafa.',
-    dalil: "Bacaan sa'i lintasan ke-6, dibaca dari bukit Marwah menuju Shafa. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.",
+    dalil: "Bacaan sa'i lintasan ke-6, dibaca dari bukit Marwah menuju Shafa. Sumber: Panduan Manasik Umrah.",
     cara: 'Dibaca sambil berjalan dari Marwah menuju Shafa.',
     waktu: "Sa'i, lintasan ke-6 (Marwah → Shafa).",
   },
@@ -533,7 +533,7 @@ export const doaSai: Doa[] = [
     latin: "Allaahu akbar, Allaahu akbar, Allaahu akbar kabiiron wal-hamdu lillaahi katsiiron. Allaahumma habbib ilayyal-iimaana wa zayyinhu fii qolbii wa karrih ilayyal-kufro wal-fusuuqo wal-'ishyaana waj'alnii minar-roosyidiin",
     terjemahan: 'Allah Maha Besar (3x) dengan segala kebesaran-Nya, dan segala puji bagi Allah dengan pujian yang banyak. Ya Allah, cintakanlah aku pada iman dan hiaskanlah ia di hatiku, bencikanlah aku pada kekufuran, kefasikan dan kemaksiatan, dan jadikanlah aku termasuk orang-orang yang mendapat petunjuk.',
     arti: "Bacaan lintasan ketujuh (terakhir) dari Shafa menuju Marwah, mengakhiri rangkaian sa'i.",
-    dalil: "Bacaan sa'i lintasan ke-7, dibaca dari bukit Shafa menuju Marwah. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.",
+    dalil: "Bacaan sa'i lintasan ke-7, dibaca dari bukit Shafa menuju Marwah. Sumber: Panduan Manasik Umrah.",
     cara: 'Dibaca sambil berjalan dari Shafa menuju Marwah pada lintasan terakhir.',
     waktu: "Sa'i, lintasan ke-7 (Shafa → Marwah, terakhir).",
   },
@@ -545,14 +545,14 @@ export const doaSai: Doa[] = [
     latin: "Robbighfir warham wa'fu wa takarrom wa tajaawaz 'ammaa ta'lamu innaka ta'lamu maa laa na'lamu innaka antallaahul-a'azzul-akrom",
     terjemahan: 'Ya Tuhanku, ampunilah, sayangilah, maafkanlah, bermurah hatilah, dan hapuskanlah apa-apa yang Engkau ketahui. Sesungguhnya Engkau Maha Mengetahui apa yang tidak kami ketahui. Sesungguhnya Engkau ya Allah Maha Mulia dan Maha Pemurah.',
     arti: 'Doa yang dibaca di area antara dua lampu/pilar hijau, tempat laki-laki dianjurkan berlari-lari kecil.',
-    dalil: 'Doa di antara dua lampu hijau. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+    dalil: 'Doa di antara dua lampu hijau. Sumber: Panduan Manasik Umrah.',
     cara: 'Dibaca di sepanjang area antara dua lampu hijau, setiap kali melintasinya (laki-laki berlari-lari kecil di sini).',
     waktu: "Setiap melintasi area dua lampu hijau dalam tiap lintasan sa'i.",
   },
 ];
 
 // ============================================================================
-// BAGIAN 7 — TAHALLUL, WADA', PULANG (sumber: PDF Tunas Tours)
+// BAGIAN 7 — TAHALLUL, WADA', PULANG 
 // ============================================================================
 
 export const doaTahallulWada: Doa[] = [
@@ -564,7 +564,7 @@ export const doaTahallulWada: Doa[] = [
     latin: "Allaahummaj'al likulli sya'rotin nuuron yaumal-qiyaamah",
     terjemahan: 'Ya Allah, jadikanlah untuk setiap helai rambut (yang aku gunting) cahaya pada hari kiamat.',
     arti: 'Doa saat tahallul (menggunting/mencukur rambut), menandai selesainya rangkaian umrah.',
-    dalil: 'Doa tahallul (menggunting rambut). Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+    dalil: 'Doa tahallul (menggunting rambut). Sumber: Panduan Manasik Umrah.',
     cara: "Dibaca saat menggunting/mencukur rambut. Laki-laki disunnahkan mencukur habis atau minimal 3 helai; perempuan memotong ujung rambut minimal 3 helai.",
     waktu: "Saat tahallul, setelah selesai sa'i (mengakhiri umrah).",
   },
@@ -576,7 +576,7 @@ export const doaTahallulWada: Doa[] = [
     latin: "Allaahumma innal-baita baituka wal-'abda 'abduka wabnu 'abdika wabnu amatika, hamaltanii 'alaa maa sakhkhorta lii min kholqika hattaa sayyartanii ilaa baladika wa ballaghtanii bini'matika hattaa a'antanii 'alaa qodhoo-i manaasikika, fa-in kunta rodhiita 'annii fazdad 'annii ridhoo",
     terjemahan: 'Ya Allah, sesungguhnya rumah ini adalah rumah-Mu, hamba ini adalah hamba-Mu, anak hamba-Mu (laki-laki) dan anak hamba-Mu (perempuan). Engkau membawaku di atas apa yang Engkau mudahkan untukku dari makhluk-Mu, hingga Engkau perjalankan aku ke negeri-Mu dan Engkau sampaikan aku dengan nikmat-Mu hingga Engkau menolongku menunaikan manasik-Mu. Maka jika Engkau telah ridha kepadaku, tambahkanlah keridhaan-Mu kepadaku.',
     arti: "Doa thawaf wada' (perpisahan) yang dibaca saat hendak meninggalkan Makkah.",
-    dalil: "Doa thawaf wada'. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.",
+    dalil: "Doa thawaf wada'. Sumber: Panduan Manasik Umrah.",
     cara: "Dibaca saat melakukan thawaf wada' sebelum meninggalkan kota Makkah.",
     waktu: "Saat thawaf wada', sebelum meninggalkan Makkah.",
   },
@@ -588,7 +588,7 @@ export const doaTahallulWada: Doa[] = [
     latin: "Allaahummaj'al hajjanaa mabruuron wa sa'yan masykuuron wa dzanban maghfuuron wa 'amalan shoolihan maqbuulan wa tijaarotan lan tabuur. Robbanaa aatinaa fid-dunyaa hasanah wa fil-aakhiroti hasanah wa qinaa 'adzaabannaar",
     terjemahan: "Ya Allah, jadikanlah haji/umrah kami mabrur, sa'i yang diterima, dosa yang diampuni, amal shaleh yang diterima dan usaha yang tidak akan merugi. Ya Tuhan kami, karuniakanlah kepada kami kebaikan di dunia dan kebaikan di akhirat, dan hindarkanlah kami dari siksa neraka.",
     arti: 'Doa syukur setelah pulang dari umrah, dibaca untuk diri sendiri dan tamu yang meminta didoakan.',
-    dalil: 'Doa sesudah pulang haji/umrah untuk diri dan tamu. Sumber: Panduan Singkat Manasik Umrah, Tunas Tours.',
+    dalil: 'Doa sesudah pulang haji/umrah untuk diri dan tamu. Sumber: Panduan Manasik Umrah.',
     cara: 'Dibaca setelah kembali dari umrah, juga saat mendoakan tamu yang datang.',
     waktu: 'Setelah pulang dari umrah.',
   },
