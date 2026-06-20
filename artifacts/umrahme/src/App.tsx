@@ -21,6 +21,7 @@ import Sertifikat from './pages/Sertifikat';
 import ManasikInteraktif from './pages/ManasikInteraktif';
 import ManasikModulDetail from './pages/ManasikModulDetail';
 import Jurnal from './pages/Jurnal';
+import RitualNavigator from './pages/RitualNavigator';
 
 export default function App() {
   return (
@@ -45,6 +46,7 @@ export default function App() {
 
         {/* Slot: Ibadah (Mode B — pintu cepat) */}
         <Route path="/ibadah" element={<Ibadah />} />
+        <Route path="/ibadah/navigator" element={<RitualNavigator />} />
         <Route path="/ibadah/tawaf" element={<CounterTawaf />} />
         <Route path="/ibadah/sai" element={<CounterSai />} />
         <Route path="/ibadah/jadwal-sholat" element={<JadwalSholat />} />

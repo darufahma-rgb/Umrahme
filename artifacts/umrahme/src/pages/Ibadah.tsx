@@ -10,6 +10,17 @@ function IconMoon({ className = '' }: { className?: string }) {
   );
 }
 
+// Ikon Navigator — kompas/langkah
+function IconNavigator({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="9" />
+      <polygon points="12,6 14.5,14 12,12.5 9.5,14" />
+      <polygon points="12,18 9.5,10 12,11.5 14.5,10" className="opacity-40" />
+    </svg>
+  );
+}
+
 // Ikon Sa'i — dua garis horisontal bolak-balik (Shafa ↔ Marwah)
 function IconSai({ className }: { className?: string }) {
   return (
@@ -38,8 +49,37 @@ export default function Ibadah() {
         </p>
       </header>
 
+      {/* Navigator — fitur utama hari-H */}
+      <section className="mt-5 px-5">
+        <Link to="/ibadah/navigator" className="block active:scale-[0.99]">
+          <MihrabCard fill="#1A080F" bodyClassName="px-5 pb-6 pt-2">
+            <div className="flex items-start gap-4">
+              <span className="flex h-14 w-14 flex-none items-center justify-center rounded-2xl bg-rose-600 text-parchment-100">
+                <IconNavigator className="h-7 w-7" />
+              </span>
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                  <h2 className="font-display text-2xl font-semibold text-parchment-100">
+                    Ritual Navigator
+                  </h2>
+                  <span className="rounded-full border border-gold-400/30 bg-gold-400/10 px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-gold-400">
+                    Hari-H
+                  </span>
+                </div>
+                <p className="mt-1 text-sm leading-relaxed text-mute-500">
+                  Panduan langkah-demi-langkah seluruh rangkaian umrah. Ikuti satu tahap dalam satu waktu, simpan progres otomatis.
+                </p>
+              </div>
+            </div>
+            <span className="mt-4 inline-flex items-center gap-1 font-medium text-rose-400">
+              Mulai Navigator <IconChevron className="h-4 w-4" />
+            </span>
+          </MihrabCard>
+        </Link>
+      </section>
+
       {/* Dua aksi utama — setara secara visual */}
-      <section className="mt-5 px-5 space-y-3">
+      <section className="mt-3 px-5 space-y-3">
         <Link to="/ibadah/tawaf" className="block active:scale-[0.99]">
           <MihrabCard fill="#261019" bodyClassName="px-5 pb-6 pt-2">
             <div className="flex items-start gap-4">
