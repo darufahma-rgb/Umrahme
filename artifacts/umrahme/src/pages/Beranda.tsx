@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import heroBg from '@assets/photo-1635829576353-1a14caec2f6f_1781969073425.avif';
 import PhaseIndicator from '../components/PhaseIndicator';
 import { urutanFase } from '../data/jamaah';
 import { checklistItems } from '../data/checklist';
@@ -145,22 +146,32 @@ export default function Beranda() {
       {/* ==================== MOBILE (< lg) ==================== */}
       <div className="lg:hidden">
 
-        {/* HEADER BAND — dark atmospheric */}
+        {/* HEADER BAND — mosque photo */}
         <header
           className="relative overflow-hidden"
           style={{
-            background: 'linear-gradient(160deg, #1a1208 0%, #2a1a08 55%, #1c1005 100%)',
             paddingTop: 'max(2.5rem, env(safe-area-inset-top))',
-            paddingBottom: '28px',
+            paddingBottom: '44px',
           }}
         >
+          {/* Mosque photo */}
+          <img
+            src={heroBg}
+            alt=""
+            aria-hidden
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ objectPosition: 'center 40%', transform: 'scale(1.35)', transformOrigin: 'center 40%' }}
+          />
+          {/* Dark overlay so text stays readable */}
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{ background: 'linear-gradient(160deg, rgba(10,8,4,0.72) 0%, rgba(20,13,4,0.60) 55%, rgba(10,8,4,0.50) 100%)' }}
+          />
           {/* Gold glow at bottom */}
           <div
             className="pointer-events-none absolute inset-0"
-            style={{ background: 'radial-gradient(ellipse 80% 50% at 50% 110%, rgba(212,162,78,0.22) 0%, transparent 70%)' }}
+            style={{ background: 'radial-gradient(ellipse 80% 50% at 50% 110%, rgba(212,162,78,0.18) 0%, transparent 70%)' }}
           />
-          {/* Dot pattern */}
-          <div className="pointer-events-none absolute inset-0 bg-dot-gold-dense opacity-60" />
 
           <div className="relative px-5">
             {/* Greeting row */}
