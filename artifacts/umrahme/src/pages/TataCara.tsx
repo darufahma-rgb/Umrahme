@@ -8,29 +8,29 @@ export default function TataCara() {
     <div>
       <PageHeader title="Tata Cara Umrah" eyebrow="Panduan" backTo="/panduan" />
 
-      <div className="px-5 pt-5 lg:px-8 lg:max-w-4xl lg:mx-auto">
-        <p className="mb-5 text-pretty text-sm leading-relaxed text-mute-500">
+      <div className="px-5 pt-5 pb-8 lg:px-8 lg:max-w-4xl lg:mx-auto">
+        <p className="mb-5 text-pretty text-sm leading-relaxed text-charcoal">
           Enam tahap berurutan. Ikuti dari atas ke bawah — beberapa langkah tertaut langsung ke
           fitur yang Anda butuhkan saat itu.
         </p>
 
-        {/* Mobile: timeline vertikal klasik */}
+        {/* Mobile: timeline vertikal */}
         <ol className="relative space-y-5 pl-2 lg:hidden">
-          <span className="absolute bottom-4 left-[22px] top-4 w-px bg-ink-800" aria-hidden />
+          <span className="absolute bottom-4 left-[22px] top-4 w-px bg-hairline" aria-hidden />
           {tataCaraSteps.map((step) => (
             <li key={step.nomor} className="relative flex gap-4">
-              <span className="z-10 flex h-11 w-11 flex-none items-center justify-center rounded-full border border-rose-400/40 bg-ink-900 font-mono text-sm font-medium text-rose-400">
+              <span className="z-10 flex h-11 w-11 flex-none items-center justify-center rounded-full border border-primary/40 bg-primary/10 font-mono text-sm font-semibold text-primary">
                 {String(step.nomor).padStart(2, '0')}
               </span>
-              <div className="flex-1 rounded-2xl border border-ink-800/70 bg-ink-900/50 px-4 py-3.5">
-                <h2 className="font-display text-lg font-semibold leading-tight text-parchment-100">
+              <div className="flex-1 rounded-md border border-hairline bg-surface-card px-4 py-3.5 shadow-drop-card">
+                <h2 className="font-display text-lg font-bold leading-tight text-ink">
                   {step.judul}
                 </h2>
-                <p className="mt-1 text-sm leading-relaxed text-mute-500">{step.deskripsi}</p>
+                <p className="mt-1 text-sm leading-relaxed text-charcoal">{step.deskripsi}</p>
                 {step.tautan ? (
                   <Link
                     to={step.tautan}
-                    className="mt-3 inline-flex items-center gap-1 font-mono text-[11px] uppercase tracking-wider text-rose-400"
+                    className="mt-3 inline-flex items-center gap-1 font-mono text-[11px] uppercase tracking-wider text-primary"
                   >
                     {step.tautanLabel} <IconChevron className="h-3.5 w-3.5" />
                   </Link>
@@ -45,28 +45,25 @@ export default function TataCara() {
           {tataCaraSteps.map((step) => (
             <li
               key={step.nomor}
-              className="grid grid-cols-[80px_1fr] gap-5 rounded-2xl border border-ink-800/70 bg-ink-900/50 p-5 transition-colors hover:border-ink-700"
+              className="grid grid-cols-[80px_1fr] gap-5 rounded-md border border-hairline bg-surface-card p-5 shadow-drop-card transition-shadow hover:shadow-drop-soft"
             >
-              {/* Nomor besar */}
               <div className="flex flex-col items-center justify-start pt-0.5">
-                <span className="font-display text-4xl font-semibold text-rose-400/30 leading-none">
+                <span className="font-display text-4xl font-bold text-primary/25 leading-none">
                   {String(step.nomor).padStart(2, '0')}
                 </span>
                 {step.nomor < tataCaraSteps.length && (
-                  <div className="mt-3 flex-1 w-px bg-ink-800/60" />
+                  <div className="mt-3 flex-1 w-px bg-hairline" />
                 )}
               </div>
-
-              {/* Konten */}
               <div>
-                <h2 className="font-display text-xl font-semibold leading-tight text-parchment-100">
+                <h2 className="font-display text-xl font-bold leading-tight text-ink">
                   {step.judul}
                 </h2>
-                <p className="mt-2 text-[15px] leading-relaxed text-mute-500">{step.deskripsi}</p>
+                <p className="mt-2 text-[15px] leading-relaxed text-charcoal">{step.deskripsi}</p>
                 {step.tautan ? (
                   <Link
                     to={step.tautan}
-                    className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-rose-400/30 bg-rose-600/10 px-3.5 py-2 font-mono text-[11px] uppercase tracking-wider text-rose-400 hover:bg-rose-600/15 transition-colors"
+                    className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-primary hover:bg-primary/10 transition-colors"
                   >
                     {step.tautanLabel} <IconChevron className="h-3.5 w-3.5" />
                   </Link>

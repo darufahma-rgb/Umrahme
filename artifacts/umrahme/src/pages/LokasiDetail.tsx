@@ -29,20 +29,20 @@ export default function LokasiDetail() {
         backTo="/peta"
       />
 
-      <div className="px-5 pt-4">
-        {/* Placeholder peta lokasi — TODO(maps): embed Google Maps via lat/lng */}
-        <div className="relative mb-4 flex h-40 items-center justify-center overflow-hidden rounded-2xl border border-ink-800/70 bg-ink-900/60">
+      <div className="px-5 pt-4 pb-8">
+        {/* Placeholder peta lokasi */}
+        <div className="relative mb-4 flex h-40 items-center justify-center overflow-hidden rounded-md border border-hairline bg-surface-bone">
           <div
-            className="absolute inset-0 opacity-[0.15]"
+            className="absolute inset-0 opacity-[0.25]"
             style={{
               backgroundImage:
-                'repeating-linear-gradient(45deg, #C2185B 0 1px, transparent 1px 14px)',
+                'repeating-linear-gradient(45deg, #ea2804 0 1px, transparent 1px 14px)',
             }}
             aria-hidden
           />
           <div className="relative text-center">
-            <IconPeta className="mx-auto h-7 w-7 text-rose-400" />
-            <p className="mt-1.5 font-mono text-[11px] uppercase tracking-wider text-mute-500">
+            <IconPeta className="mx-auto h-7 w-7 text-primary" />
+            <p className="mt-1.5 font-mono text-[11px] uppercase tracking-wider text-mute">
               {lokasi.kota} · {lokasi.jarakKm} km dari hotel
             </p>
           </div>
@@ -50,24 +50,24 @@ export default function LokasiDetail() {
 
         {/* Metadata */}
         <div className="mb-4 grid grid-cols-2 gap-3">
-          <div className="rounded-2xl border border-ink-800/70 bg-ink-900/50 px-4 py-3">
-            <p className="font-mono text-[10px] uppercase tracking-widest text-mute-500">Jarak</p>
-            <p className="mt-1 font-mono text-lg text-parchment-100">{lokasi.jarakKm} km</p>
+          <div className="rounded-md border border-hairline bg-surface-card px-4 py-3 shadow-drop-card">
+            <p className="font-mono text-[10px] uppercase tracking-widest text-mute">Jarak</p>
+            <p className="mt-1 font-mono text-lg text-ink">{lokasi.jarakKm} km</p>
           </div>
-          <div className="rounded-2xl border border-ink-800/70 bg-ink-900/50 px-4 py-3">
-            <p className="font-mono text-[10px] uppercase tracking-widest text-mute-500">
+          <div className="rounded-md border border-hairline bg-surface-card px-4 py-3 shadow-drop-card">
+            <p className="font-mono text-[10px] uppercase tracking-widest text-mute">
               Kunjungan
             </p>
-            <p className="mt-1 text-sm leading-tight text-parchment-100">{lokasi.jamKunjungan}</p>
+            <p className="mt-1 text-sm leading-tight text-ink">{lokasi.jamKunjungan}</p>
           </div>
         </div>
 
         {/* Sejarah */}
-        <div className="rounded-2xl border border-ink-800/70 bg-ink-900/40 px-5 py-5">
-          <h2 className="mb-2 font-display text-lg font-semibold text-parchment-100">
+        <div className="rounded-md border border-hairline bg-surface-card px-5 py-5 shadow-drop-card">
+          <h2 className="mb-2 font-display text-lg font-bold text-ink">
             Sejarah Singkat
           </h2>
-          <p className="text-pretty text-[15px] leading-relaxed text-parchment-100/90">
+          <p className="text-pretty text-[15px] leading-relaxed text-body">
             {lokasi.sejarah}
           </p>
         </div>

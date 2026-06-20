@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import MihrabCard from '../components/MihrabCard';
 import { IconIbadah, IconDoa, IconChevron } from '../components/icons';
 
 function IconMoon({ className = '' }: { className?: string }) {
@@ -10,7 +9,6 @@ function IconMoon({ className = '' }: { className?: string }) {
   );
 }
 
-// Ikon Navigator — kompas/langkah
 function IconNavigator({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
@@ -21,13 +19,51 @@ function IconNavigator({ className }: { className?: string }) {
   );
 }
 
-// Ikon Sa'i — dua garis horisontal bolak-balik (Shafa ↔ Marwah)
 function IconSai({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
       <path d="M4 8h16M20 8l-3-3M20 8l-3 3" />
       <path d="M20 16H4M4 16l3-3M4 16l3 3" />
     </svg>
+  );
+}
+
+function ActionCard({
+  to,
+  title,
+  desc,
+  icon,
+  cta,
+  primary = false,
+}: {
+  to: string;
+  title: string;
+  desc: string;
+  icon: React.ReactNode;
+  cta: string;
+  primary?: boolean;
+}) {
+  return (
+    <Link to={to} className="block active:scale-[0.99]">
+      <div className={`rounded-md border p-5 transition-shadow hover:shadow-drop-soft ${primary ? 'border-primary/20 bg-primary/5' : 'border-hairline bg-surface-card'}`}>
+        <div className="flex items-start gap-4">
+          <span className={`flex h-14 w-14 flex-none items-center justify-center rounded-full ${primary ? 'bg-primary text-on-primary' : 'border border-hairline bg-surface-bone text-charcoal'}`}>
+            {icon}
+          </span>
+          <div className="flex-1">
+            <h2 className="font-display text-2xl font-bold leading-tight text-ink">
+              {title}
+            </h2>
+            <p className="mt-1 text-sm leading-relaxed text-charcoal">
+              {desc}
+            </p>
+          </div>
+        </div>
+        <span className="mt-4 inline-flex items-center gap-1 font-medium text-primary">
+          {cta} <IconChevron className="h-4 w-4" />
+        </span>
+      </div>
+    </Link>
   );
 }
 
@@ -38,138 +74,73 @@ export default function Ibadah() {
         className="px-5 pb-1 pt-8"
         style={{ paddingTop: 'max(2rem, env(safe-area-inset-top))' }}
       >
-        <p className="font-mono text-[11px] uppercase tracking-widest text-rose-400">
+        <p className="font-mono text-[11px] uppercase tracking-widest text-primary">
           Saat di Tanah Suci
         </p>
-        <h1 className="mt-1 font-display text-3xl font-semibold text-parchment-100">
+        <h1 className="mt-1 font-display text-3xl font-bold leading-tight text-ink">
           Ibadah
         </h1>
-        <p className="mt-1 text-sm text-mute-500">
+        <p className="mt-1 text-sm text-charcoal">
           Buka cepat saat sedang beribadah. Satu layar, satu fokus.
         </p>
       </header>
 
-      {/* Navigator — fitur utama hari-H */}
       <section className="mt-5 px-5">
-        <Link to="/ibadah/navigator" className="block active:scale-[0.99]">
-          <MihrabCard fill="#1A080F" bodyClassName="px-5 pb-6 pt-2">
-            <div className="flex items-start gap-4">
-              <span className="flex h-14 w-14 flex-none items-center justify-center rounded-2xl bg-rose-600 text-parchment-100">
-                <IconNavigator className="h-7 w-7" />
-              </span>
-              <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <h2 className="font-display text-2xl font-semibold text-parchment-100">
-                    Ritual Navigator
-                  </h2>
-                  <span className="rounded-full border border-gold-400/30 bg-gold-400/10 px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-gold-400">
-                    Hari-H
-                  </span>
-                </div>
-                <p className="mt-1 text-sm leading-relaxed text-mute-500">
-                  Panduan langkah-demi-langkah seluruh rangkaian umrah. Ikuti satu tahap dalam satu waktu, simpan progres otomatis.
-                </p>
-              </div>
-            </div>
-            <span className="mt-4 inline-flex items-center gap-1 font-medium text-rose-400">
-              Mulai Navigator <IconChevron className="h-4 w-4" />
-            </span>
-          </MihrabCard>
-        </Link>
+        <ActionCard
+          to="/ibadah/navigator"
+          title="Ritual Navigator"
+          desc="Panduan langkah-demi-langkah seluruh rangkaian umrah. Ikuti satu tahap dalam satu waktu, simpan progres otomatis."
+          icon={<IconNavigator className="h-7 w-7" />}
+          cta="Mulai Navigator"
+          primary
+        />
       </section>
 
-      {/* Dua aksi utama — setara secara visual */}
       <section className="mt-3 px-5 space-y-3">
-        <Link to="/ibadah/tawaf" className="block active:scale-[0.99]">
-          <MihrabCard fill="#261019" bodyClassName="px-5 pb-6 pt-2">
-            <div className="flex items-start gap-4">
-              <span className="flex h-14 w-14 flex-none items-center justify-center rounded-2xl bg-rose-600 text-parchment-100 shadow-glow">
-                <IconIbadah className="h-7 w-7" />
-              </span>
-              <div className="flex-1">
-                <h2 className="font-display text-2xl font-semibold text-parchment-100">
-                  Counter Tawaf
-                </h2>
-                <p className="mt-1 text-sm leading-relaxed text-mute-500">
-                  Tombol besar, hitung 7 putaran dengan satu tap. Doa muncul otomatis
-                  tanpa pindah halaman.
-                </p>
-              </div>
-            </div>
-            <span className="mt-4 inline-flex items-center gap-1 font-medium text-rose-400">
-              Mulai Tawaf <IconChevron className="h-4 w-4" />
-            </span>
-          </MihrabCard>
-        </Link>
-
-        <Link to="/ibadah/sai" className="block active:scale-[0.99]">
-          <MihrabCard fill="#261019" bodyClassName="px-5 pb-6 pt-2">
-            <div className="flex items-start gap-4">
-              <span className="flex h-14 w-14 flex-none items-center justify-center rounded-2xl bg-rose-600 text-parchment-100 shadow-glow">
-                <IconSai className="h-7 w-7" />
-              </span>
-              <div className="flex-1">
-                <h2 className="font-display text-2xl font-semibold text-parchment-100">
-                  Counter Sa'i
-                </h2>
-                <p className="mt-1 text-sm leading-relaxed text-mute-500">
-                  Hitung 7 lintasan Shafa–Marwah. Arah & doa per lintasan tampil otomatis.
-                </p>
-              </div>
-            </div>
-            <span className="mt-4 inline-flex items-center gap-1 font-medium text-rose-400">
-              Mulai Sa'i <IconChevron className="h-4 w-4" />
-            </span>
-          </MihrabCard>
-        </Link>
+        <ActionCard
+          to="/ibadah/tawaf"
+          title="Counter Tawaf"
+          desc="Tombol besar, hitung 7 putaran dengan satu tap. Doa muncul otomatis tanpa pindah halaman."
+          icon={<IconIbadah className="h-7 w-7" />}
+          cta="Mulai Tawaf"
+        />
+        <ActionCard
+          to="/ibadah/sai"
+          title="Counter Sa'i"
+          desc="Hitung 7 lintasan Shafa–Marwah. Arah & doa per lintasan tampil otomatis."
+          icon={<IconSai className="h-7 w-7" />}
+          cta="Mulai Sa'i"
+        />
+        <ActionCard
+          to="/ibadah/jadwal-sholat"
+          title="Jadwal Sholat"
+          desc="Waktu sholat 5 waktu dengan gauge jam dan pengingat adzan."
+          icon={<IconMoon className="h-7 w-7" />}
+          cta="Lihat Jadwal"
+        />
       </section>
 
-      {/* Jadwal Sholat */}
-      <section className="mt-3 px-5">
-        <Link to="/ibadah/jadwal-sholat" className="block active:scale-[0.99]">
-          <MihrabCard fill="#18090F" bodyClassName="px-5 pb-5 pt-2">
-            <div className="flex items-start gap-4">
-              <span className="flex h-14 w-14 flex-none items-center justify-center rounded-2xl border border-ink-800/60 bg-ink-900/80 text-mute-500">
-                <IconMoon className="h-7 w-7" />
-              </span>
-              <div className="flex-1">
-                <h2 className="font-display text-2xl font-semibold text-parchment-100">
-                  Jadwal Sholat
-                </h2>
-                <p className="mt-1 text-sm leading-relaxed text-mute-500">
-                  Waktu sholat 5 waktu dengan gauge jam dan pengingat adzan.
-                </p>
-              </div>
-            </div>
-            <span className="mt-4 inline-flex items-center gap-1 font-medium text-rose-400">
-              Lihat Jadwal <IconChevron className="h-4 w-4" />
-            </span>
-          </MihrabCard>
-        </Link>
-      </section>
-
-      {/* Sekunder — doa terkait */}
-      <section className="mt-7 px-5">
-        <h3 className="mb-3 font-mono text-[11px] uppercase tracking-widest text-mute-500">
+      <section className="mt-7 px-5 pb-6">
+        <h3 className="mb-3 font-mono text-[11px] uppercase tracking-widest text-mute">
           Doa Saat Ibadah
         </h3>
         <div className="space-y-3">
           {[
-            { to: '/doa?kategori=tawaf', label: 'Doa Tawaf', desc: 'Bacaan saat mengelilingi Ka\u2019bah' },
+            { to: '/doa?kategori=tawaf', label: 'Doa Tawaf', desc: "Bacaan saat mengelilingi Ka'bah" },
             { to: '/doa?kategori=sai', label: "Doa Sa'i", desc: 'Antara Shafa & Marwah' },
             { to: '/doa?kategori=tahallul', label: 'Doa Tahallul', desc: 'Mencukur / memotong rambut' },
           ].map((it) => (
             <Link
               key={it.to}
               to={it.to}
-              className="flex items-center gap-3 rounded-2xl border border-ink-800/70 bg-ink-900/50 px-4 py-3.5 active:scale-[0.99]"
+              className="flex items-center gap-3 rounded-md border border-hairline bg-surface-card px-4 py-3.5 active:scale-[0.99] transition-shadow hover:shadow-drop-soft"
             >
-              <IconDoa className="h-5 w-5 flex-none text-gold-400" />
+              <IconDoa className="h-5 w-5 flex-none text-gold" />
               <div className="min-w-0 flex-1">
-                <p className="text-[15px] font-medium text-parchment-100">{it.label}</p>
-                <p className="truncate text-xs text-mute-500">{it.desc}</p>
+                <p className="text-[15px] font-medium text-ink">{it.label}</p>
+                <p className="truncate text-xs text-charcoal">{it.desc}</p>
               </div>
-              <IconChevron className="h-4 w-4 flex-none text-mute-500" />
+              <IconChevron className="h-4 w-4 flex-none text-ash" />
             </Link>
           ))}
         </div>

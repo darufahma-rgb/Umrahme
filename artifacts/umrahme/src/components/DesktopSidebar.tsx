@@ -25,28 +25,20 @@ export default function DesktopSidebar() {
 
   return (
     <aside
-      className="hidden lg:flex w-[270px] flex-none flex-col h-screen sticky top-0 border-r border-ink-800/70 overflow-y-auto z-20"
-      style={{
-        background: 'linear-gradient(180deg, #1A0A10 0%, #0D0509 100%)',
-      }}
+      className="hidden lg:flex w-[270px] flex-none flex-col h-screen sticky top-0 border-r border-hairline bg-canvas overflow-y-auto z-20"
     >
       {/* Brand + jamaah info */}
-      <div className="px-6 pt-8 pb-5 border-b border-ink-800/50">
-        <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-rose-400 mb-0.5">
+      <div className="px-6 pt-8 pb-5 border-b border-hairline">
+        <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-primary mb-0.5">
           Pendamping Umrah
         </p>
-        <h1 className="font-display text-[22px] font-semibold text-parchment-100">Umrahme</h1>
+        <h1 className="font-display text-[22px] font-semibold text-ink leading-tight">Umrahme</h1>
 
-        <div
-          className="mt-4 rounded-xl border border-ink-800/80 px-3.5 py-3"
-          style={{
-            background: 'linear-gradient(135deg, #1E0C14 0%, #0D0509 100%)',
-          }}
-        >
-          <p className="text-[14px] font-semibold leading-tight text-parchment-100">{jamaah.nama}</p>
-          <p className="mt-0.5 font-mono text-[11px] text-mute-500">{jamaah.nomorJamaah}</p>
-          <p className="mt-1.5 text-[12px] text-mute-500">
-            via <span className="text-parchment-100/80">{jamaah.travel}</span>
+        <div className="mt-4 rounded-md border border-hairline bg-surface-bone px-3.5 py-3">
+          <p className="text-[14px] font-semibold leading-tight text-ink">{jamaah.nama}</p>
+          <p className="mt-0.5 font-mono text-[11px] text-mute">{jamaah.nomorJamaah}</p>
+          <p className="mt-1.5 text-[12px] text-mute">
+            via <span className="text-body">{jamaah.travel}</span>
           </p>
         </div>
       </div>
@@ -56,23 +48,18 @@ export default function DesktopSidebar() {
         <ul className="space-y-0.5">
           {navItems.map(({ to, label, Icon, isIbadah }) => (
             <li key={to}>
-              {isIbadah && <div className="my-2 border-t border-ink-800/40" aria-hidden />}
+              {isIbadah && <div className="my-2 border-t border-hairline" aria-hidden />}
 
               <NavLink
                 to={to}
                 className={({ isActive }) =>
-                  `group flex items-center gap-3 rounded-xl px-3.5 py-2.5 transition-colors ${
+                  `group flex items-center gap-3 rounded-full px-3.5 py-2.5 transition-colors ${
                     isActive
                       ? isIbadah
-                        ? 'border border-gold-400/15 text-parchment-100'
-                        : 'bg-ink-800/70 text-parchment-100'
-                      : 'text-mute-500 hover:bg-ink-800/40 hover:text-parchment-100/80'
+                        ? 'bg-primary text-on-primary'
+                        : 'bg-surface-bone text-ink'
+                      : 'text-mute hover:bg-surface-bone hover:text-body'
                   }`
-                }
-                style={({ isActive }) =>
-                  isActive && isIbadah
-                    ? { background: 'linear-gradient(135deg, rgba(194,24,91,0.12) 0%, rgba(13,5,9,0.6) 100%)' }
-                    : {}
                 }
               >
                 {({ isActive }) => (
@@ -80,13 +67,15 @@ export default function DesktopSidebar() {
                     <Icon
                       className={`h-5 w-5 flex-none transition-colors ${
                         isActive
-                          ? 'text-rose-400'
-                          : 'text-mute-500 group-hover:text-parchment-100/60'
+                          ? isIbadah
+                            ? 'text-on-primary'
+                            : 'text-primary'
+                          : 'text-mute group-hover:text-body'
                       }`}
                     />
                     <span className="flex-1 text-[14px] font-medium">{label}</span>
                     {isIbadah && (
-                      <span className="font-mono text-[9px] uppercase tracking-wider text-gold-400/60">
+                      <span className={`font-mono text-[9px] uppercase tracking-wider ${isActive ? 'text-on-primary/70' : 'text-mute'}`}>
                         Mode B
                       </span>
                     )}
@@ -94,18 +83,15 @@ export default function DesktopSidebar() {
                 )}
               </NavLink>
 
-              {isIbadah && <div className="my-2 border-t border-ink-800/40" aria-hidden />}
+              {isIbadah && <div className="my-2 border-t border-hairline" aria-hidden />}
             </li>
           ))}
         </ul>
       </nav>
 
       {/* Fase + logout */}
-      <div
-        className="px-5 py-5 border-t border-ink-800/50"
-        style={{ background: 'linear-gradient(0deg, rgba(13,5,9,0.8) 0%, transparent 100%)' }}
-      >
-        <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-mute-500">
+      <div className="px-5 py-5 border-t border-hairline">
+        <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-mute">
           Fase Perjalanan
         </p>
         <div className="space-y-2">
@@ -116,18 +102,18 @@ export default function DesktopSidebar() {
               <div key={f.id} className="flex items-center gap-2.5">
                 <span
                   className={`h-1.5 w-1.5 flex-none rounded-full ${
-                    active ? 'bg-rose-400' : done ? 'bg-rose-600/50' : 'bg-ink-800'
+                    active ? 'bg-primary' : done ? 'bg-primary/40' : 'bg-stone'
                   }`}
                 />
                 <span
                   className={`font-mono text-[11px] tracking-wider ${
-                    active ? 'text-parchment-100' : done ? 'text-mute-500/60' : 'text-mute-500/40'
+                    active ? 'text-ink font-semibold' : done ? 'text-mute' : 'text-stone'
                   }`}
                 >
                   {f.label}
                 </span>
                 {active && (
-                  <span className="ml-auto h-1.5 w-1.5 flex-none rounded-full bg-rose-400 animate-pulse" />
+                  <span className="ml-auto h-1.5 w-1.5 flex-none rounded-full bg-primary animate-pulse" />
                 )}
               </div>
             );
@@ -137,8 +123,7 @@ export default function DesktopSidebar() {
         <button
           type="button"
           onClick={logout}
-          className="mt-5 w-full rounded-xl border border-ink-800/70 px-4 py-2.5 text-left font-mono text-[11px] uppercase tracking-wider text-mute-500 transition-colors hover:border-ink-700 hover:text-parchment-100"
-          style={{ background: 'transparent' }}
+          className="mt-5 w-full rounded-full border border-hairline-strong px-4 py-2.5 text-left font-mono text-[11px] uppercase tracking-wider text-mute transition-colors hover:bg-surface-bone hover:text-ink"
         >
           Keluar
         </button>

@@ -5,37 +5,63 @@ export default {
   theme: {
     extend: {
       colors: {
-        ink: {
-          950: '#0D0509', // background utama (hitam undertone maroon)
-          900: '#18090F', // surface / card
-          800: '#261019', // surface elevated / border subtle
-        },
-        rose: {
-          600: '#C2185B', // aksen utama (CTA)
-          400: '#E91E8C', // aksen terang (highlight / glow / active)
-        },
-        gold: {
-          400: '#D4A24E', // KHUSUS Arab, dalil, elemen sakral
-        },
-        parchment: {
-          100: '#F5EDE4', // teks utama di atas background gelap
-        },
-        mute: {
-          500: '#9C8089', // teks sekunder, dusty rose-grey
-        },
+        primary: '#ea2804',
+        'primary-deep': '#c01f00',
+        'on-primary': '#ffffff',
+        ink: '#202020',
+        body: '#3a3a3a',
+        charcoal: '#575757',
+        mute: '#646464',
+        ash: '#8d8d8d',
+        stone: '#bbbbbb',
+        'on-dark': '#fcfcfc',
+        'on-dark-mute': 'rgba(252,252,252,0.72)',
+        canvas: '#f9f7f3',
+        'surface-bone': '#f3f0e8',
+        'surface-card': '#ffffff',
+        'surface-dark': '#202020',
+        'surface-deep': '#000000',
+        hairline: 'rgba(32,32,32,0.12)',
+        'hairline-strong': '#202020',
+        'divider-dark': 'rgba(255,255,255,0.2)',
+        'hero-warm': '#ea2804',
+        'hero-glow': '#ff6a3d',
+        'hero-pink': '#f4a8a0',
+        'badge-success': '#2b9a66',
+        gold: '#d4a24e',
       },
       fontFamily: {
-        display: ['Fraunces', 'Georgia', 'serif'],
-        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+        display: ['"Bricolage Grotesque"', 'Georgia', 'serif'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
         arab: ['Amiri', '"Noto Naskh Arabic"', 'serif'],
-        mono: ['"IBM Plex Mono"', 'ui-monospace', 'monospace'],
+        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+      },
+      borderRadius: {
+        xs: '4px',
+        sm: '6px',
+        md: '10px',
+        lg: '16px',
+        full: '9999px',
       },
       boxShadow: {
-        glow: '0 0 0 1px rgba(233,30,140,0.25), 0 0 32px -8px rgba(233,30,140,0.45)',
-        'glow-soft': '0 0 40px -12px rgba(233,30,140,0.35)',
+        'drop-soft': '0 8px 24px rgba(32,32,32,0.08)',
+        'drop-card': '0 2px 8px rgba(32,32,32,0.06)',
       },
       maxWidth: {
         app: '460px',
+        content: '1280px',
+      },
+      spacing: {
+        xxs: '2px',
+        xs: '4px',
+        sm: '8px',
+        md: '12px',
+        lg: '16px',
+        xl: '24px',
+        xxl: '32px',
+        xxxl: '48px',
+        section: '96px',
+        band: '160px',
       },
       keyframes: {
         'fade-up': {

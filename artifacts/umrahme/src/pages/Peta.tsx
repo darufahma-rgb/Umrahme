@@ -18,34 +18,34 @@ export default function Peta() {
     <div>
       <PageHeader title="Peta Lokasi" eyebrow="Panduan" backTo="/panduan" />
 
-      <div className="px-5 pt-4 lg:px-8 lg:max-w-5xl lg:mx-auto">
+      <div className="px-5 pt-4 pb-8 lg:px-8 lg:max-w-5xl lg:mx-auto">
         {/* Placeholder peta */}
-        <div className="relative mb-4 flex h-32 lg:h-44 items-center justify-center overflow-hidden rounded-2xl border border-ink-800/70 bg-ink-900/60">
+        <div className="relative mb-4 flex h-32 lg:h-44 items-center justify-center overflow-hidden rounded-md border border-hairline bg-surface-bone">
           <div
-            className="absolute inset-0 opacity-[0.15]"
+            className="absolute inset-0 opacity-[0.25]"
             style={{
               backgroundImage:
-                'repeating-linear-gradient(45deg, #C2185B 0 1px, transparent 1px 14px)',
+                'repeating-linear-gradient(45deg, #ea2804 0 1px, transparent 1px 14px)',
             }}
             aria-hidden
           />
           <div className="relative text-center">
-            <IconPeta className="mx-auto h-6 w-6 text-rose-400" />
-            <p className="mt-1.5 font-mono text-[11px] uppercase tracking-wider text-mute-500">
+            <IconPeta className="mx-auto h-6 w-6 text-primary" />
+            <p className="mt-1.5 font-mono text-[11px] uppercase tracking-wider text-mute">
               Peta interaktif — segera hadir
             </p>
           </div>
         </div>
 
         {/* Tab kategori */}
-        <div className="mb-4 flex gap-1.5 rounded-xl border border-ink-800 bg-ink-900/60 p-1">
+        <div className="mb-4 flex gap-1.5 rounded-full border border-hairline bg-surface-bone p-1">
           {tabs.map((t) => (
             <button
               key={t.id}
               type="button"
               onClick={() => setTab(t.id)}
-              className={`min-h-[40px] flex-1 rounded-lg px-2 text-[13px] font-medium transition ${
-                tab === t.id ? 'bg-rose-600 text-parchment-100' : 'text-mute-500 active:bg-ink-800'
+              className={`min-h-[36px] flex-1 rounded-full px-2 text-[13px] font-medium transition ${
+                tab === t.id ? 'bg-primary text-on-primary' : 'text-mute active:bg-surface-card hover:text-body'
               }`}
             >
               {t.label}
@@ -53,23 +53,23 @@ export default function Peta() {
           ))}
         </div>
 
-        {/* List mobile — tidak berubah */}
+        {/* List mobile */}
         <div className="space-y-3 lg:hidden">
           {lokasi.map((l) => (
             <Link
               key={l.id}
               to={`/peta/${l.id}`}
-              className="flex items-center gap-3 rounded-2xl border border-ink-800/70 bg-ink-900/50 px-4 py-4 active:scale-[0.99]"
+              className="flex items-center gap-3 rounded-md border border-hairline bg-surface-card px-4 py-4 active:scale-[0.99] hover:shadow-drop-soft transition-shadow"
             >
               <div className="min-w-0 flex-1">
                 <div className="flex items-center justify-between gap-2">
-                  <h2 className="truncate text-[15px] font-semibold text-parchment-100">{l.nama}</h2>
-                  <IconChevron className="h-4 w-4 flex-none text-mute-500" />
+                  <h2 className="truncate text-[15px] font-semibold text-ink">{l.nama}</h2>
+                  <IconChevron className="h-4 w-4 flex-none text-ash" />
                 </div>
-                <p className="mt-0.5 truncate text-xs text-mute-500">{l.ringkas}</p>
-                <div className="mt-2 flex items-center gap-3 font-mono text-[11px] text-gold-400/90">
+                <p className="mt-0.5 truncate text-xs text-charcoal">{l.ringkas}</p>
+                <div className="mt-2 flex items-center gap-3 font-mono text-[11px] text-gold">
                   <span>{l.kota}</span>
-                  <span className="text-mute-500">·</span>
+                  <span className="text-ash">·</span>
                   <span>{l.jarakKm} km</span>
                 </div>
               </div>
@@ -77,7 +77,7 @@ export default function Peta() {
           ))}
         </div>
 
-        {/* Grid desktop — bento asimetris, lokasi utama lebih besar */}
+        {/* Grid desktop */}
         <div className="hidden lg:grid lg:grid-cols-3 lg:gap-3">
           {lokasi.map((l) => {
             const isFeatured = l.id === 'masjidil-haram' || l.id === 'masjid-nabawi';
@@ -85,24 +85,18 @@ export default function Peta() {
               <Link
                 key={l.id}
                 to={`/peta/${l.id}`}
-                className={`group relative overflow-hidden rounded-2xl border transition-colors hover:border-ink-700 ${
-                  isFeatured ? 'lg:col-span-2' : 'lg:col-span-1'
-                } ${isFeatured ? 'border-ink-800/80' : 'border-ink-800/60'}`}
-                style={{
-                  background: isFeatured
-                    ? 'radial-gradient(ellipse at 90% 10%, rgba(194,24,91,0.07) 0%, transparent 50%), linear-gradient(155deg, #18090F 0%, #0D0509 100%)'
-                    : 'linear-gradient(155deg, #18090F 0%, #0D0509 100%)',
-                }}
+                className={`group relative overflow-hidden rounded-md border transition-shadow hover:shadow-drop-soft ${
+                  isFeatured ? 'lg:col-span-2 border-hairline-strong bg-surface-card' : 'lg:col-span-1 border-hairline bg-surface-card'
+                }`}
               >
-                {/* Mihrab arc signature — hanya pada kartu featured */}
                 {isFeatured && (
                   <svg viewBox="0 0 100 10" preserveAspectRatio="none" className="block w-full h-[14px]" aria-hidden>
                     <path
                       d="M0,10 L0,6 C0,2 24,0.3 50,0.3 C76,0.3 100,2 100,6 L100,10"
                       fill="transparent"
-                      stroke="#D4A24E"
+                      stroke="#d4a24e"
                       strokeWidth="1"
-                      strokeOpacity="0.45"
+                      strokeOpacity="0.5"
                       vectorEffect="non-scaling-stroke"
                     />
                   </svg>
@@ -110,30 +104,30 @@ export default function Peta() {
 
                 <div className={`flex flex-col gap-2 ${isFeatured ? 'px-5 pb-5 pt-2' : 'px-4 py-4'}`}>
                   {isFeatured && (
-                    <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-rose-400/70">
+                    <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-primary/70">
                       Lokasi Utama
                     </span>
                   )}
                   <div className="flex items-start justify-between gap-2">
                     <h2
-                      className={`font-semibold leading-tight text-parchment-100 ${
+                      className={`font-semibold leading-tight text-ink ${
                         isFeatured ? 'text-[18px]' : 'text-[14px]'
                       }`}
                     >
                       {l.nama}
                     </h2>
-                    <IconChevron className="h-4 w-4 flex-none text-mute-500 mt-0.5 group-hover:text-parchment-100/50 transition-colors" />
+                    <IconChevron className="h-4 w-4 flex-none text-ash mt-0.5 group-hover:text-charcoal transition-colors" />
                   </div>
                   <p
-                    className={`leading-relaxed text-mute-500 ${
+                    className={`leading-relaxed text-charcoal ${
                       isFeatured ? 'text-[13px] line-clamp-2' : 'text-[12px] line-clamp-1'
                     }`}
                   >
                     {l.ringkas}
                   </p>
-                  <div className="flex items-center gap-3 font-mono text-[11px] text-gold-400/80 mt-1">
+                  <div className="flex items-center gap-3 font-mono text-[11px] text-gold mt-1">
                     <span>{l.kota}</span>
-                    <span className="text-mute-500">·</span>
+                    <span className="text-ash">·</span>
                     <span>{l.jarakKm} km</span>
                   </div>
                 </div>

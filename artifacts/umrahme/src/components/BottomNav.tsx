@@ -1,12 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { IconBeranda, IconPanduan, IconIbadah, IconDoa, IconProfil } from './icons';
 
-// =============================================================
-// BottomNav — 5 slot, disusun berdasar KAPAN dipakai.
-// Slot tengah "Ibadah" elevated (lebih besar) karena paling
-// sering dibuka saat Mode B (di Tanah Suci).
-// =============================================================
-
 const slots = [
   { to: '/beranda', label: 'Beranda', Icon: IconBeranda, center: false },
   { to: '/panduan', label: 'Panduan', Icon: IconPanduan, center: false },
@@ -18,7 +12,7 @@ const slots = [
 export default function BottomNav() {
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-40 mx-auto max-w-app border-t border-ink-800/80 bg-ink-950/90 backdrop-blur-md"
+      className="fixed inset-x-0 bottom-0 z-40 mx-auto max-w-app border-t border-hairline bg-canvas/95 backdrop-blur-md"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       aria-label="Navigasi utama"
     >
@@ -36,15 +30,15 @@ export default function BottomNav() {
                     <span
                       className={`flex h-16 w-16 items-center justify-center rounded-full border transition-all ${
                         isActive
-                          ? 'border-rose-400/60 bg-rose-600 text-parchment-100 shadow-glow'
-                          : 'border-ink-800 bg-ink-900 text-rose-400 shadow-glow-soft'
+                          ? 'border-primary/40 bg-primary text-on-primary shadow-drop-soft'
+                          : 'border-hairline-strong bg-surface-dark text-on-dark'
                       }`}
                     >
                       <Icon className="h-7 w-7" />
                     </span>
                     <span
                       className={`mt-1 font-mono text-[10px] uppercase tracking-wider ${
-                        isActive ? 'text-rose-400' : 'text-mute-500'
+                        isActive ? 'text-primary' : 'text-mute'
                       }`}
                     >
                       {label}
@@ -64,12 +58,12 @@ export default function BottomNav() {
                   <>
                     <Icon
                       className={`h-6 w-6 transition-colors ${
-                        isActive ? 'text-rose-400' : 'text-mute-500'
+                        isActive ? 'text-primary' : 'text-mute'
                       }`}
                     />
                     <span
                       className={`font-mono text-[10px] uppercase tracking-wider transition-colors ${
-                        isActive ? 'text-parchment-100' : 'text-mute-500'
+                        isActive ? 'text-ink' : 'text-mute'
                       }`}
                     >
                       {label}

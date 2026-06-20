@@ -15,36 +15,31 @@ function saveStep(n: number) {
   localStorage.setItem(STORAGE, String(n));
 }
 
-// ── Doa inline ────────────────────────────────
 function DoaInline({ doaId }: { doaId: string }) {
   const doa = doaById(doaId);
   if (!doa) return null;
   return (
-    <div className="rounded-2xl border border-ink-800/60 bg-ink-900/60 px-4 py-4">
+    <div className="rounded-md border border-hairline bg-surface-card px-4 py-4 shadow-drop-card">
       {doa.perluVerifikasi ? (
-        <div className="mb-2.5 flex items-center gap-1.5 rounded-xl border border-gold-400/20 bg-gold-400/5 px-3 py-2">
-          <span className="text-[10px] leading-relaxed text-gold-400/80">
+        <div className="mb-2.5 flex items-center gap-1.5 rounded-md border border-gold/20 bg-gold/5 px-3 py-2">
+          <span className="text-[10px] leading-relaxed text-gold">
             ⚠ Konten ini perlu verifikasi ulama sebelum digunakan secara resmi.
           </span>
         </div>
       ) : null}
-      <p className="font-mono text-[10px] uppercase tracking-widest text-gold-400">
+      <p className="font-mono text-[10px] uppercase tracking-widest text-gold">
         {doa.judul}
       </p>
       {doa.waktu ? (
-        <p className="mt-0.5 text-[11px] leading-relaxed text-mute-500">{doa.waktu}</p>
+        <p className="mt-0.5 text-[11px] leading-relaxed text-charcoal">{doa.waktu}</p>
       ) : null}
-      <p
-        className="mt-3 font-arab text-2xl leading-loose text-gold-400"
-        dir="rtl"
-        lang="ar"
-      >
+      <p className="mt-3 font-arab text-2xl leading-loose text-gold" dir="rtl" lang="ar">
         {doa.arab}
       </p>
-      <p className="mt-2 text-[13px] italic leading-relaxed text-mute-500">{doa.latin}</p>
+      <p className="mt-2 text-[13px] italic leading-relaxed text-charcoal">{doa.latin}</p>
       <Link
         to={`/doa/${doa.id}`}
-        className="mt-2.5 flex items-center gap-1 text-[12px] font-medium text-rose-400/80 hover:text-rose-400"
+        className="mt-2.5 flex items-center gap-1 text-[12px] font-medium text-primary hover:text-primary/80"
       >
         Baca artinya & dalil <IconChevron className="h-3 w-3" />
       </Link>
@@ -52,7 +47,6 @@ function DoaInline({ doaId }: { doaId: string }) {
   );
 }
 
-// ── Overlay peta semua tahap ──────────────────
 function PetaOverlay({
   currentIdx,
   onClose,
@@ -64,16 +58,16 @@ function PetaOverlay({
 }) {
   const selesai = currentIdx >= TOTAL_STEPS;
   return (
-    <div className="fixed inset-0 z-50 flex items-end bg-ink-950/70 backdrop-blur-sm lg:items-center lg:justify-center">
-      <div className="w-full max-h-[85vh] overflow-y-auto rounded-t-3xl border-t border-ink-800 bg-ink-900 px-5 pb-10 pt-5 motion-safe:animate-fade-up lg:max-w-md lg:rounded-3xl lg:border lg:border-ink-800">
+    <div className="fixed inset-0 z-50 flex items-end bg-ink/30 backdrop-blur-sm lg:items-center lg:justify-center">
+      <div className="w-full max-h-[85vh] overflow-y-auto rounded-t-2xl border-t border-hairline bg-surface-card px-5 pb-10 pt-5 motion-safe:animate-fade-up shadow-drop-soft lg:max-w-md lg:rounded-2xl lg:border">
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="font-display text-lg font-semibold text-parchment-100">
+          <h3 className="font-display text-lg font-bold text-ink">
             Semua Tahap Umrah
           </h3>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-full border border-ink-800 px-3 py-1 text-xs text-mute-500 active:bg-ink-800"
+            className="rounded-full border border-hairline px-3 py-1 text-xs text-mute active:bg-surface-bone"
           >
             Tutup
           </button>
@@ -89,42 +83,36 @@ function PetaOverlay({
                 type="button"
                 onClick={() => !locked && onJump(idx)}
                 disabled={locked}
-                className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition ${
+                className={`flex w-full items-center gap-3 rounded-md px-3 py-3 text-left transition ${
                   active
-                    ? 'border border-rose-600/40 bg-rose-600/10'
+                    ? 'border border-primary/20 bg-primary/5'
                     : done
-                      ? 'opacity-60 hover:opacity-100 hover:bg-ink-800/30'
+                      ? 'opacity-60 hover:opacity-100 hover:bg-surface-bone'
                       : 'opacity-30 cursor-not-allowed'
                 }`}
               >
                 <span
                   className={`flex h-7 w-7 flex-none items-center justify-center rounded-full border text-[11px] font-mono ${
                     done
-                      ? 'border-gold-400/50 bg-gold-400/10 text-gold-400'
+                      ? 'border-gold/50 bg-gold/10 text-gold'
                       : active
-                        ? 'border-rose-600/60 bg-rose-600/20 text-rose-400'
-                        : 'border-ink-800 text-mute-500'
+                        ? 'border-primary/50 bg-primary/10 text-primary'
+                        : 'border-hairline text-mute'
                   }`}
                 >
                   {done ? <IconCheck className="h-3.5 w-3.5" /> : step.urutan}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p
-                    className={`text-[14px] font-medium leading-snug ${
-                      active ? 'text-parchment-100' : done ? 'text-parchment-100' : 'text-mute-500'
-                    }`}
-                  >
+                  <p className={`text-[14px] font-medium leading-snug ${active || done ? 'text-ink' : 'text-mute'}`}>
                     {step.judul}
                   </p>
                   {active ? (
-                    <p className="mt-0.5 font-mono text-[9px] uppercase tracking-widest text-rose-400">
+                    <p className="mt-0.5 font-mono text-[9px] uppercase tracking-widest text-primary">
                       Sedang berjalan
                     </p>
                   ) : null}
                 </div>
-                {done ? (
-                  <IconChevron className="h-3.5 w-3.5 flex-none -rotate-90 text-mute-500/50" />
-                ) : null}
+                {done ? <IconChevron className="h-3.5 w-3.5 flex-none -rotate-90 text-ash" /> : null}
               </button>
             );
           })}
@@ -134,35 +122,26 @@ function PetaOverlay({
   );
 }
 
-// ── Konfirmasi reset ──────────────────────────
-function ResetOverlay({
-  onConfirm,
-  onCancel,
-}: {
-  onConfirm: () => void;
-  onCancel: () => void;
-}) {
+function ResetOverlay({ onConfirm, onCancel }: { onConfirm: () => void; onCancel: () => void }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-end bg-ink-950/70 backdrop-blur-sm lg:items-center lg:justify-center">
-      <div className="w-full rounded-t-3xl border-t border-ink-800 bg-ink-900 p-6 pb-8 motion-safe:animate-fade-up lg:max-w-sm lg:rounded-3xl lg:border">
-        <h3 className="font-display text-xl font-semibold text-parchment-100">
-          Reset Navigator?
-        </h3>
-        <p className="mt-1.5 text-sm leading-relaxed text-mute-500">
+    <div className="fixed inset-0 z-50 flex items-end bg-ink/30 backdrop-blur-sm lg:items-center lg:justify-center">
+      <div className="w-full rounded-t-2xl border-t border-hairline bg-surface-card p-6 pb-8 motion-safe:animate-fade-up shadow-drop-soft lg:max-w-sm lg:rounded-2xl lg:border">
+        <h3 className="font-display text-xl font-bold text-ink">Reset Navigator?</h3>
+        <p className="mt-1.5 text-sm leading-relaxed text-charcoal">
           Semua progres akan dihapus dan kembali ke tahap pertama. Gunakan jika ingin memulai umrah dari awal (mis. umrah sunnah kedua).
         </p>
         <div className="mt-5 flex gap-3">
           <button
             type="button"
             onClick={onCancel}
-            className="min-h-[48px] flex-1 rounded-xl border border-ink-800 font-medium text-parchment-100 active:scale-[0.99]"
+            className="min-h-[44px] flex-1 rounded-full border border-hairline-strong font-medium text-ink active:scale-[0.99]"
           >
             Batal
           </button>
           <button
             type="button"
             onClick={onConfirm}
-            className="min-h-[48px] flex-1 rounded-xl bg-rose-600 font-semibold text-parchment-100 active:scale-[0.99]"
+            className="min-h-[44px] flex-1 rounded-full bg-primary font-semibold text-on-primary active:scale-[0.99]"
           >
             Ya, reset
           </button>
@@ -172,9 +151,6 @@ function ResetOverlay({
   );
 }
 
-// ════════════════════════════════════════════════
-// Halaman utama: Ritual Navigator
-// ════════════════════════════════════════════════
 export default function RitualNavigator() {
   const navigate = useNavigate();
   const [stepIdx, setStepIdx] = useState<number>(() => loadStep());
@@ -212,12 +188,10 @@ export default function RitualNavigator() {
     }
   }
 
-  // ── Layar selesai ────────────────────────────
   if (selesai) {
     return (
-      <div className="flex min-h-[calc(100vh-7rem)] flex-col lg:min-h-screen lg:items-center lg:justify-center">
+      <div className="flex min-h-[calc(100vh-7rem)] flex-col bg-canvas lg:min-h-screen lg:items-center lg:justify-center">
         <div className="w-full lg:max-w-sm">
-          {/* Chrome */}
           <div
             className="flex items-center justify-between px-4 pt-4"
             style={{ paddingTop: 'max(1rem, env(safe-area-inset-top))' }}
@@ -226,64 +200,57 @@ export default function RitualNavigator() {
               type="button"
               onClick={() => navigate(-1)}
               aria-label="Kembali"
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-ink-800 bg-ink-900 text-parchment-100 active:scale-95"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-hairline bg-surface-card text-ink active:scale-95 shadow-drop-card"
             >
               <IconBack className="h-5 w-5" />
             </button>
             <span />
           </div>
 
-          {/* Konten selesai */}
           <div className="flex flex-1 flex-col items-center justify-center px-6 py-12 text-center motion-safe:animate-fade-up">
-            <div className="flex h-24 w-24 items-center justify-center rounded-full border border-gold-400/50 bg-ink-900 text-gold-400">
+            <div className="flex h-24 w-24 items-center justify-center rounded-full border border-badge-success/30 bg-badge-success/10 text-badge-success">
               <IconCheck className="h-12 w-12" />
             </div>
-            <p className="mt-6 font-mono text-xs uppercase tracking-widest text-gold-400">
+            <p className="mt-6 font-mono text-xs uppercase tracking-widest text-badge-success">
               10 dari 10 tahap selesai
             </p>
-            <h1 className="mt-2 font-display text-4xl font-semibold text-parchment-100">
+            <h1 className="mt-2 font-display text-4xl font-bold text-ink">
               Umrah Selesai
             </h1>
-            <p className="mt-3 max-w-[30ch] text-pretty text-[15px] leading-relaxed text-mute-500">
+            <p className="mt-3 max-w-[30ch] text-pretty text-[15px] leading-relaxed text-charcoal">
               Alhamdulillah — semoga ibadah Anda diterima Allah dan menjadi umrah yang mabrur.
             </p>
 
             <Link
               to="/profil/sertifikat"
-              className="mt-8 flex min-h-[64px] w-full max-w-xs items-center justify-center gap-2 rounded-2xl bg-rose-600 text-[17px] font-semibold text-parchment-100 active:scale-[0.99]"
+              className="mt-8 flex min-h-[52px] w-full max-w-xs items-center justify-center gap-2 rounded-full bg-primary text-[17px] font-semibold text-on-primary active:scale-[0.99]"
             >
               Lihat Sertifikat Digital <IconChevron className="h-5 w-5" />
             </Link>
-
             <Link
               to="/ibadah"
-              className="mt-3 flex min-h-[48px] w-full max-w-xs items-center justify-center rounded-xl border border-ink-800 text-sm text-mute-500 active:scale-[0.99]"
+              className="mt-3 flex min-h-[44px] w-full max-w-xs items-center justify-center rounded-full border border-hairline text-sm text-mute active:scale-[0.99] hover:bg-surface-bone"
             >
               Kembali ke Ibadah
             </Link>
-
             <button
               type="button"
               onClick={() => setShowReset(true)}
-              className="mt-5 font-mono text-xs uppercase tracking-wider text-mute-500/60 underline-offset-4 hover:underline"
+              className="mt-5 font-mono text-xs uppercase tracking-wider text-ash underline-offset-4 hover:underline"
             >
               Mulai ulang (umrah sunnah)
             </button>
           </div>
         </div>
 
-        {showReset ? (
-          <ResetOverlay onConfirm={reset} onCancel={() => setShowReset(false)} />
-        ) : null}
+        {showReset ? <ResetOverlay onConfirm={reset} onCancel={() => setShowReset(false)} /> : null}
       </div>
     );
   }
 
-  // ── Layar tahap aktif ────────────────────────
   return (
-    <div className="flex min-h-[calc(100vh-7rem)] flex-col lg:min-h-screen lg:items-center lg:justify-start">
+    <div className="flex min-h-[calc(100vh-7rem)] flex-col bg-canvas lg:min-h-screen lg:items-center lg:justify-start">
       <div className="w-full lg:max-w-lg">
-        {/* Chrome atas */}
         <div
           className="flex items-center justify-between px-4 pt-4"
           style={{ paddingTop: 'max(1rem, env(safe-area-inset-top))' }}
@@ -292,7 +259,7 @@ export default function RitualNavigator() {
             type="button"
             onClick={() => navigate(-1)}
             aria-label="Kembali ke Ibadah"
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-ink-800 bg-ink-900 text-parchment-100 active:scale-95"
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-hairline bg-surface-card text-ink active:scale-95 shadow-drop-card"
           >
             <IconBack className="h-5 w-5" />
           </button>
@@ -301,7 +268,7 @@ export default function RitualNavigator() {
             <button
               type="button"
               onClick={() => setShowPeta(true)}
-              className="rounded-full border border-ink-800 px-3 py-2 font-mono text-[11px] uppercase tracking-wider text-mute-500 active:scale-95"
+              className="rounded-full border border-hairline bg-surface-card px-3 py-2 font-mono text-[11px] uppercase tracking-wider text-mute active:scale-95"
             >
               Lihat semua
             </button>
@@ -309,81 +276,74 @@ export default function RitualNavigator() {
               type="button"
               onClick={() => setShowReset(true)}
               aria-label="Reset Navigator"
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-ink-800 text-mute-500 active:scale-95"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-hairline bg-surface-card text-mute active:scale-95"
             >
               <IconReset className="h-4 w-4" />
             </button>
           </div>
         </div>
 
-        {/* Konten tahap */}
         <div className="px-5 pb-6 pt-4 lg:px-8">
-          {/* Progress */}
           <div className="mb-5">
             <div className="mb-2 flex items-center justify-between">
-              <p className="font-mono text-[11px] uppercase tracking-widest text-rose-400">
+              <p className="font-mono text-[11px] uppercase tracking-widest text-primary">
                 Tahap {step!.urutan} dari {TOTAL_STEPS}
               </p>
-              <p className="font-mono text-[11px] text-mute-500">
+              <p className="font-mono text-[11px] text-mute">
                 {TOTAL_STEPS - step!.urutan} lagi
               </p>
             </div>
-            <div className="h-1.5 overflow-hidden rounded-full bg-ink-800">
+            <div className="h-1.5 overflow-hidden rounded-full bg-surface-bone">
               <div
-                className="h-full rounded-full bg-rose-600 transition-all duration-500"
-                style={{ width: `${((stepIdx) / TOTAL_STEPS) * 100}%` }}
+                className="h-full rounded-full bg-primary transition-all duration-500"
+                style={{ width: `${(stepIdx / TOTAL_STEPS) * 100}%` }}
               />
             </div>
 
-            {/* Dot indikator */}
             <div className="mt-2.5 flex items-center gap-1.5">
               {ritualSteps.map((_, i) => (
                 <span
                   key={i}
                   className={`h-1.5 flex-1 rounded-full transition-colors ${
                     i < stepIdx
-                      ? 'bg-rose-400/60'
+                      ? 'bg-primary/50'
                       : i === stepIdx
-                        ? 'bg-rose-400'
-                        : 'bg-ink-800'
+                        ? 'bg-primary'
+                        : 'bg-surface-bone border border-hairline'
                   }`}
                 />
               ))}
             </div>
           </div>
 
-          {/* Kartu tahap aktif */}
-          <div className="rounded-2xl border border-ink-800/60 bg-ink-900/50 px-5 py-5">
-            <h1 className="font-display text-3xl font-semibold leading-tight text-parchment-100">
+          <div className="rounded-md border border-hairline bg-surface-card px-5 py-5 shadow-drop-card">
+            <h1 className="font-display text-3xl font-bold leading-tight text-ink">
               {step!.judul}
             </h1>
-            <p className="mt-3 text-[15px] leading-relaxed text-parchment-100/80">
+            <p className="mt-3 text-[15px] leading-relaxed text-charcoal">
               {step!.deskripsiSingkat}
             </p>
 
-            {/* Catatan penting */}
             {step!.catatanPenting ? (
-              <div className="mt-4 flex items-start gap-2.5 rounded-xl border border-gold-400/20 bg-gold-400/5 px-3.5 py-3">
-                <span className="mt-0.5 text-[14px] text-gold-400">⚑</span>
-                <p className="text-[13px] leading-relaxed text-gold-400/90">
+              <div className="mt-4 flex items-start gap-2.5 rounded-md border border-gold/20 bg-gold/5 px-3.5 py-3">
+                <span className="mt-0.5 text-[14px] text-gold">⚑</span>
+                <p className="text-[13px] leading-relaxed text-gold">
                   {step!.catatanPenting}
                 </p>
               </div>
             ) : null}
           </div>
 
-          {/* Doa terkait */}
           {step!.doaTerkaitId ? (
             <div className="mt-3">
               <DoaInline doaId={step!.doaTerkaitId} />
             </div>
           ) : null}
 
-          {/* Tombol buka fitur terkait */}
           {step!.linkKeFitur ? (
             <Link
               to={step!.linkKeFitur}
-              className="mt-3 flex min-h-[52px] w-full items-center justify-between rounded-xl border border-rose-600/30 bg-rose-600/8 px-5 text-[15px] font-medium text-rose-400 active:scale-[0.99]"
+              className="mt-3 flex min-h-[52px] w-full items-center justify-between rounded-full border border-primary/30 bg-primary/5 px-5 text-[15px] font-medium text-primary active:scale-[0.99]"
             >
               <span>{step!.linkKeFiturLabel ?? 'Buka fitur terkait'}</span>
               <IconChevron className="h-4 w-4 flex-none" />
@@ -391,15 +351,14 @@ export default function RitualNavigator() {
           ) : null}
         </div>
 
-        {/* Tombol navigasi — sticky bawah */}
         <div
-          className="sticky bottom-0 border-t border-ink-800/50 bg-ink-950/95 px-5 py-4 backdrop-blur-sm"
+          className="sticky bottom-0 border-t border-hairline bg-canvas/95 px-5 py-4 backdrop-blur-md"
           style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}
         >
           <button
             type="button"
             onClick={maju}
-            className="flex min-h-[64px] w-full items-center justify-center gap-2 rounded-2xl bg-rose-600 text-[17px] font-semibold text-parchment-100 active:scale-[0.99]"
+            className="flex min-h-[56px] w-full items-center justify-center gap-2 rounded-full bg-primary text-[17px] font-semibold text-on-primary active:scale-[0.99]"
           >
             {isLast ? 'Selesaikan Umrah' : 'Tahap Selanjutnya'}
             <IconChevron className="h-5 w-5" />
@@ -409,7 +368,7 @@ export default function RitualNavigator() {
             <button
               type="button"
               onClick={mundur}
-              className="mt-2.5 flex w-full items-center justify-center gap-1.5 py-2 font-mono text-[11px] uppercase tracking-wider text-mute-500 active:text-parchment-100"
+              className="mt-2.5 flex w-full items-center justify-center gap-1.5 py-2 font-mono text-[11px] uppercase tracking-wider text-mute active:text-body"
             >
               <IconChevron className="h-3.5 w-3.5 rotate-180" /> Kembali ke tahap sebelumnya
             </button>
@@ -417,19 +376,10 @@ export default function RitualNavigator() {
         </div>
       </div>
 
-      {/* Overlay peta semua tahap */}
       {showPeta ? (
-        <PetaOverlay
-          currentIdx={stepIdx}
-          onClose={() => setShowPeta(false)}
-          onJump={jumpTo}
-        />
+        <PetaOverlay currentIdx={stepIdx} onClose={() => setShowPeta(false)} onJump={jumpTo} />
       ) : null}
-
-      {/* Overlay konfirmasi reset */}
-      {showReset ? (
-        <ResetOverlay onConfirm={reset} onCancel={() => setShowReset(false)} />
-      ) : null}
+      {showReset ? <ResetOverlay onConfirm={reset} onCancel={() => setShowReset(false)} /> : null}
     </div>
   );
 }

@@ -2,12 +2,8 @@ import { useState, useEffect } from 'react';
 import PageHeader from '../components/PageHeader';
 import { jadwalMakkah, type WaktuSholat } from '../data/jadwalSholat';
 
-// -----------------------------------------------------------------------
-// Ikon waktu sholat — inline SVG minimal
-// -----------------------------------------------------------------------
 function IconWaktu({ tipe, className = '' }: { tipe: WaktuSholat['ikonTipe']; className?: string }) {
   if (tipe === 'subuh' || tipe === 'isya') {
-    // Bulan sabit
     return (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" className={className}>
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
@@ -15,7 +11,6 @@ function IconWaktu({ tipe, className = '' }: { tipe: WaktuSholat['ikonTipe']; cl
     );
   }
   if (tipe === 'maghrib') {
-    // Matahari terbenam di cakrawala
     return (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" className={className}>
         <path d="M17 18a5 5 0 0 0-10 0" />
@@ -27,7 +22,6 @@ function IconWaktu({ tipe, className = '' }: { tipe: WaktuSholat['ikonTipe']; cl
     );
   }
   if (tipe === 'ashar') {
-    // Matahari miring / sebagian
     return (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" className={className}>
         <circle cx="12" cy="12" r="4" />
@@ -35,7 +29,6 @@ function IconWaktu({ tipe, className = '' }: { tipe: WaktuSholat['ikonTipe']; cl
       </svg>
     );
   }
-  // Dzuhur — matahari penuh
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" className={className}>
       <circle cx="12" cy="12" r="4" />
@@ -44,20 +37,11 @@ function IconWaktu({ tipe, className = '' }: { tipe: WaktuSholat['ikonTipe']; cl
   );
 }
 
-// -----------------------------------------------------------------------
-// Gauge arc — setengah lingkaran progress hari
-// -----------------------------------------------------------------------
 function GaugeArc({ progressMenit }: { progressMenit: number }) {
   const totalMenit = 1440;
   const progress = Math.min(1, Math.max(0, progressMenit / totalMenit));
-
-  // SVG dimensions
   const w = 300, h = 162, cx = 150, cy = 150, r = 120, sw = 14;
-
-  // Track path (full semicircle, counterclockwise on screen = upper arc)
   const trackPath = `M ${cx - r} ${cy} A ${r} ${r} 0 0 0 ${cx + r} ${cy}`;
-
-  // Progress endpoint: angle dari π ke 0 saat progress 0→1
   const angle = Math.PI * (1 - progress);
   const px = cx + r * Math.cos(angle);
   const py = cy - r * Math.sin(angle);
@@ -66,70 +50,27 @@ function GaugeArc({ progressMenit }: { progressMenit: number }) {
     : null;
 
   return (
-    <svg
-      width={w}
-      height={h}
-      viewBox={`0 0 ${w} ${h}`}
-      className="mx-auto"
-      aria-hidden
-    >
+    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="mx-auto" aria-hidden>
       <defs>
         <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#C2185B" />
-          <stop offset="60%" stopColor="#C2185B" />
-          <stop offset="100%" stopColor="#D4A24E" />
+          <stop offset="0%" stopColor="#ea2804" />
+          <stop offset="60%" stopColor="#ea2804" />
+          <stop offset="100%" stopColor="#d4a24e" />
         </linearGradient>
-        {/* Glow filter untuk progress arc */}
-        <filter id="gaugeGlow">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
-          <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-        </filter>
       </defs>
-
-      {/* Track arc */}
-      <path
-        d={trackPath}
-        fill="none"
-        stroke="#261019"
-        strokeWidth={sw}
-        strokeLinecap="round"
-      />
-
-      {/* Progress arc */}
+      <path d={trackPath} fill="none" stroke="#f3f0e8" strokeWidth={sw} strokeLinecap="round" />
       {progressPath && (
-        <path
-          d={progressPath}
-          fill="none"
-          stroke="url(#gaugeGrad)"
-          strokeWidth={sw}
-          strokeLinecap="round"
-          filter="url(#gaugeGlow)"
-        />
+        <path d={progressPath} fill="none" stroke="url(#gaugeGrad)" strokeWidth={sw} strokeLinecap="round" />
       )}
-
-      {/* Dot di ujung progress */}
       {progress > 0.01 && (
-        <circle
-          cx={px}
-          cy={py}
-          r="6"
-          fill="#D4A24E"
-          opacity="0.9"
-          filter="url(#gaugeGlow)"
-        />
+        <circle cx={px} cy={py} r="6" fill="#d4a24e" opacity="0.9" />
       )}
-
-      {/* Titik awal (kiri) */}
-      <circle cx={cx - r} cy={cy} r="5" fill="#261019" stroke="#C2185B" strokeWidth="1.5" opacity="0.6" />
-      {/* Titik akhir (kanan) */}
-      <circle cx={cx + r} cy={cy} r="5" fill="#261019" stroke="#D4A24E" strokeWidth="1.5" opacity="0.6" />
+      <circle cx={cx - r} cy={cy} r="5" fill="#f9f7f3" stroke="#ea2804" strokeWidth="1.5" opacity="0.6" />
+      <circle cx={cx + r} cy={cy} r="5" fill="#f9f7f3" stroke="#d4a24e" strokeWidth="1.5" opacity="0.6" />
     </svg>
   );
 }
 
-// -----------------------------------------------------------------------
-// Toggle notifikasi (UI-only untuk MVP)
-// -----------------------------------------------------------------------
 function ToggleNotif({ defaultOn = true }: { defaultOn?: boolean }) {
   const [on, setOn] = useState(defaultOn);
   return (
@@ -138,12 +79,12 @@ function ToggleNotif({ defaultOn = true }: { defaultOn?: boolean }) {
       role="switch"
       aria-checked={on}
       onClick={() => setOn((v) => !v)}
-      className={`relative h-6 w-11 flex-none rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 ${
-        on ? 'bg-rose-600' : 'bg-ink-800'
+      className={`relative h-6 w-11 flex-none rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+        on ? 'bg-primary' : 'bg-surface-bone border border-hairline'
       }`}
     >
       <span
-        className={`absolute top-0.5 h-5 w-5 rounded-full bg-parchment-100 shadow transition-transform ${
+        className={`absolute top-0.5 h-5 w-5 rounded-full bg-canvas shadow transition-transform ${
           on ? 'translate-x-5' : 'translate-x-0.5'
         }`}
       />
@@ -151,13 +92,8 @@ function ToggleNotif({ defaultOn = true }: { defaultOn?: boolean }) {
   );
 }
 
-// -----------------------------------------------------------------------
-// Halaman utama
-// -----------------------------------------------------------------------
 export default function JadwalSholat() {
   const jadwal = jadwalMakkah;
-
-  // Jam real-time — update tiap detik
   const [now, setNow] = useState(() => new Date());
   useEffect(() => {
     const timer = setInterval(() => setNow(new Date()), 1000);
@@ -169,7 +105,6 @@ export default function JadwalSholat() {
   const detik = now.getSeconds().toString().padStart(2, '0');
   const progressMenit = now.getHours() * 60 + now.getMinutes();
 
-  // Sholat berikutnya (berdasarkan waktu saat ini)
   const sholatBerikutnya = jadwal.waktuList.find((w) => {
     const [h, m] = w.jamMulai.split(':').map(Number);
     return h * 60 + m > progressMenit;
@@ -179,62 +114,48 @@ export default function JadwalSholat() {
     <div className="pb-24">
       <PageHeader title="Jadwal Sholat" eyebrow="Ibadah" backTo="/ibadah" />
 
-      {/* ── Gauge & waktu ── */}
+      {/* Gauge & waktu */}
       <div className="relative mt-5 px-5">
-        {/* Background glow halus */}
-        <div
-          className="pointer-events-none absolute inset-x-0 top-0 h-48 opacity-[0.06]"
-          style={{ background: 'radial-gradient(ellipse at 50% 30%, #C2185B 0%, transparent 70%)' }}
-          aria-hidden
-        />
-
-        {/* Nama kota */}
-        <p className="relative text-center font-mono text-[11px] uppercase tracking-[0.25em] text-mute-500">
+        <p className="relative text-center font-mono text-[11px] uppercase tracking-[0.25em] text-mute">
           {jadwal.kota}
         </p>
 
-        {/* SVG Arc */}
         <div className="relative mt-1">
           <GaugeArc progressMenit={progressMenit} />
-
-          {/* Jam di tengah arc */}
           <div className="absolute inset-x-0 bottom-4 flex flex-col items-center">
-            <p className="font-display text-5xl font-semibold tabular-nums leading-none text-parchment-100">
+            <p className="font-display text-5xl font-bold tabular-nums leading-none text-ink">
               {jam}:{menit}
             </p>
-            <p className="mt-1 font-mono text-[13px] text-mute-500 tabular-nums">{detik}</p>
+            <p className="mt-1 font-mono text-[13px] text-mute tabular-nums">{detik}</p>
           </div>
         </div>
 
-        {/* Subuh & Isya di kiri-kanan arc */}
         <div className="relative mt-1 flex items-start justify-between px-2">
           <div>
-            <p className="font-mono text-[9px] uppercase tracking-widest text-mute-500">Subuh</p>
-            <p className="mt-0.5 font-mono text-[14px] font-semibold text-parchment-100">{jadwal.jamSubuh}</p>
+            <p className="font-mono text-[9px] uppercase tracking-widest text-mute">Subuh</p>
+            <p className="mt-0.5 font-mono text-[14px] font-semibold text-ink">{jadwal.jamSubuh}</p>
           </div>
           {sholatBerikutnya && (
             <div className="text-center">
-              <p className="font-mono text-[9px] uppercase tracking-widest text-rose-400/80">Berikutnya</p>
-              <p className="mt-0.5 font-mono text-[13px] font-semibold text-rose-400">{sholatBerikutnya.nama}</p>
-              <p className="font-mono text-[11px] text-mute-500">{sholatBerikutnya.jamMulai}</p>
+              <p className="font-mono text-[9px] uppercase tracking-widest text-primary/80">Berikutnya</p>
+              <p className="mt-0.5 font-mono text-[13px] font-semibold text-primary">{sholatBerikutnya.nama}</p>
+              <p className="font-mono text-[11px] text-mute">{sholatBerikutnya.jamMulai}</p>
             </div>
           )}
           <div className="text-right">
-            <p className="font-mono text-[9px] uppercase tracking-widest text-mute-500">Isya</p>
-            <p className="mt-0.5 font-mono text-[14px] font-semibold text-parchment-100">{jadwal.jamIsya}</p>
+            <p className="font-mono text-[9px] uppercase tracking-widest text-mute">Isya</p>
+            <p className="mt-0.5 font-mono text-[14px] font-semibold text-ink">{jadwal.jamIsya}</p>
           </div>
         </div>
       </div>
 
-      {/* ── List 5 waktu sholat ── */}
+      {/* List 5 waktu sholat */}
       <section className="mt-6 px-5">
-        <h2 className="mb-3 font-mono text-[11px] uppercase tracking-widest text-mute-500">
+        <h2 className="mb-3 font-mono text-[11px] uppercase tracking-widest text-mute">
           Waktu Sholat
         </h2>
 
-        <div className="overflow-hidden rounded-2xl border border-ink-800/70"
-          style={{ background: 'linear-gradient(160deg, #18090F 0%, #0D0509 100%)' }}
-        >
+        <div className="overflow-hidden rounded-md border border-hairline bg-surface-card shadow-drop-card">
           {jadwal.waktuList.map((w, i) => {
             const [h, m] = w.jamMulai.split(':').map(Number);
             const isSekarang = (() => {
@@ -249,45 +170,42 @@ export default function JadwalSholat() {
               <div
                 key={w.id}
                 className={`flex min-h-[64px] items-center gap-4 px-4 py-3.5 ${
-                  i < jadwal.waktuList.length - 1 ? 'border-b border-ink-800/50' : ''
-                } ${isSekarang ? 'bg-rose-600/8' : ''}`}
+                  i < jadwal.waktuList.length - 1 ? 'border-b border-hairline' : ''
+                } ${isSekarang ? 'bg-primary/5' : ''}`}
               >
-                {/* Ikon waktu */}
                 <div
-                  className={`flex h-10 w-10 flex-none items-center justify-center rounded-xl border ${
+                  className={`flex h-10 w-10 flex-none items-center justify-center rounded-md border ${
                     isSekarang
-                      ? 'border-rose-400/40 bg-rose-600/15 text-rose-400'
+                      ? 'border-primary/30 bg-primary/10 text-primary'
                       : sudahLewat
-                        ? 'border-ink-800/60 bg-ink-900/60 text-mute-500/50'
-                        : 'border-ink-800/60 bg-ink-900/60 text-mute-500'
+                        ? 'border-hairline bg-surface-bone text-ash'
+                        : 'border-hairline bg-surface-bone text-charcoal'
                   }`}
                 >
                   <IconWaktu tipe={w.ikonTipe} className="h-5 w-5" />
                 </div>
 
-                {/* Nama & waktu */}
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
                     <p
                       className={`text-[15px] font-semibold leading-tight ${
-                        isSekarang ? 'text-rose-400' : sudahLewat ? 'text-mute-500/60' : 'text-parchment-100'
+                        isSekarang ? 'text-primary' : sudahLewat ? 'text-ash' : 'text-ink'
                       }`}
                     >
                       {w.nama}
                     </p>
                     {isSekarang && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-rose-600/20 px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-rose-400">
-                        <span className="h-1 w-1 rounded-full bg-rose-400 animate-pulse" />
+                      <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-primary">
+                        <span className="h-1 w-1 rounded-full bg-primary animate-pulse" />
                         Sekarang
                       </span>
                     )}
                   </div>
-                  <p className={`mt-0.5 font-mono text-[12px] ${sudahLewat ? 'text-mute-500/50' : 'text-mute-500'}`}>
+                  <p className={`mt-0.5 font-mono text-[12px] ${sudahLewat ? 'text-ash' : 'text-mute'}`}>
                     {w.jamMulai} – {w.jamAkhir}
                   </p>
                 </div>
 
-                {/* Toggle notifikasi */}
                 <ToggleNotif defaultOn={!sudahLewat} />
               </div>
             );
@@ -295,8 +213,7 @@ export default function JadwalSholat() {
         </div>
       </section>
 
-      {/* ── Keterangan ── */}
-      <p className="mt-4 px-5 text-center text-[11px] leading-relaxed text-mute-500/70">
+      <p className="mt-4 px-5 text-center text-[11px] leading-relaxed text-ash">
         {jadwal.keterangan}
       </p>
     </div>

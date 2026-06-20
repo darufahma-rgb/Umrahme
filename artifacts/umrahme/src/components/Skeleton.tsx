@@ -1,11 +1,10 @@
-// Skeleton loading — placeholder berdenyut, bukan layar blank.
 export function SkeletonLine({ w = 'w-full', className = '' }: { w?: string; className?: string }) {
-  return <div className={`h-3.5 rounded-full bg-ink-800 ${w} ${className} animate-pulse`} />;
+  return <div className={`h-3.5 rounded-full bg-surface-bone ${w} ${className} animate-pulse`} />;
 }
 
 export function SkeletonCard() {
   return (
-    <div className="rounded-2xl border border-ink-800/60 bg-ink-900/60 p-5">
+    <div className="rounded-md border border-hairline bg-surface-card p-5">
       <div className="space-y-3">
         <SkeletonLine w="w-1/3" />
         <SkeletonLine w="w-full" />
