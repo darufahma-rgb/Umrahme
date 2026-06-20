@@ -121,8 +121,7 @@ export default function Login() {
             className="font-display font-bold leading-tight text-ink"
             style={{ fontSize: 'clamp(20px, 5vw, 26px)' }}
           >
-            Selamat datang di Umrahme,<br />
-            Pendamping perjalanan Anda!
+            Selamat Datang!
           </h2>
           <p className="mt-1.5 text-[13px] text-charcoal">
             Masukkan kode aktivasi dari biro travel Anda.
