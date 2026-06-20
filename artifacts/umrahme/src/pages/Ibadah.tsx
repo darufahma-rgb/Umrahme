@@ -1,44 +1,5 @@
 import { Link } from 'react-router-dom';
-import { IconIbadah, IconDoa, IconChevron } from '../components/icons';
-
-function IconMoon({ className = '' }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-    </svg>
-  );
-}
-
-function IconNavigator({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="9" />
-      <polygon points="12,6 14.5,14 12,12.5 9.5,14" />
-      <polygon points="12,18 9.5,10 12,11.5 14.5,10" className="opacity-40" />
-    </svg>
-  );
-}
-
-function IconScissors({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <circle cx="6" cy="6" r="3" />
-      <circle cx="6" cy="18" r="3" />
-      <line x1="20" y1="4" x2="8.12" y2="15.88" />
-      <line x1="14.47" y1="14.48" x2="20" y2="20" />
-      <line x1="8.12" y1="8.12" x2="12" y2="12" />
-    </svg>
-  );
-}
-
-function IconSai({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M4 8h16M20 8l-3-3M20 8l-3 3" />
-      <path d="M20 16H4M4 16l3-3M4 16l3 3" />
-    </svg>
-  );
-}
+import { IconTawaf, IconSai, IconNavigator, IconScissors, IconMoon, IconDoa, IconChevron } from '../components/icons';
 
 function ActionCard({
   to,
@@ -121,7 +82,7 @@ export default function Ibadah() {
             to="/ibadah/tawaf"
             title="Counter Tawaf"
             desc="Tombol besar, hitung 7 putaran dengan satu tap. Doa muncul otomatis tanpa pindah halaman."
-            icon={<IconIbadah className="h-7 w-7" />}
+            icon={<IconTawaf className="h-7 w-7" />}
             cta="Mulai Tawaf"
           />
           <ActionCard
@@ -190,7 +151,7 @@ export default function Ibadah() {
             to="/ibadah/tawaf"
             title="Counter Tawaf"
             desc="Tombol besar, hitung 7 putaran dengan satu tap. Doa muncul otomatis tanpa pindah halaman."
-            icon={<IconIbadah className="h-7 w-7" />}
+            icon={<IconTawaf className="h-7 w-7" />}
             cta="Mulai Tawaf"
           />
           <ActionCard

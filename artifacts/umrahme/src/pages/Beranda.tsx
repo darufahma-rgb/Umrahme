@@ -8,29 +8,15 @@ import {
   IconDoa,
   IconPanduan,
   IconIbadah,
+  IconTawaf,
+  IconSai,
+  IconMoon,
+  IconIhram,
   IconPeta,
   IconCheck,
   IconSertifikat,
   IconChevron,
 } from '../components/icons';
-
-function IconSai({ className = '' }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M7 16l-4-4 4-4" />
-      <path d="M3 12h18" />
-      <path d="M17 8l4 4-4 4" />
-    </svg>
-  );
-}
-
-function IconMoon({ className = '' }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-    </svg>
-  );
-}
 
 function MiniRing({ progress = 0, total = 7 }: { progress?: number; total?: number }) {
   const r = 20;
@@ -181,8 +167,8 @@ export default function Beranda() {
           aria-label="Akses cepat"
         >
           <QuickIcon to="/doa" label="Doa" icon={<IconDoa className="h-6 w-6 text-primary" />} />
-          <QuickIcon to="/panduan/ihram" label="Ihram" icon={<IconPanduan className="h-6 w-6 text-primary" />} />
-          <QuickIcon to="/ibadah/tawaf" label="Tawaf" icon={<IconIbadah className="h-6 w-6 text-primary" />} />
+          <QuickIcon to="/panduan/ihram" label="Ihram" icon={<IconIhram className="h-6 w-6 text-primary" />} />
+          <QuickIcon to="/ibadah/tawaf" label="Tawaf" icon={<IconTawaf className="h-6 w-6 text-primary" />} />
           <QuickIcon to="/ibadah/sai" label="Sa'i" icon={<IconSai className="h-6 w-6 text-primary" />} />
           <QuickIcon to="/peta" label="Peta" icon={<IconPeta className="h-6 w-6 text-primary" />} />
           <QuickIcon to="/ibadah/jadwal-sholat" label="Sholat" icon={<IconMoon className="h-6 w-6 text-primary" />} />
@@ -253,7 +239,7 @@ export default function Beranda() {
           <div className="grid grid-cols-3 gap-2.5">
             {[
               { to: '/panduan/tata-cara', label: 'Tata Cara', Icon: IconPanduan },
-              { to: '/panduan/ihram', label: 'Ihram', Icon: IconPanduan },
+              { to: '/panduan/ihram', label: 'Ihram', Icon: IconIhram },
               { to: '/peta', label: 'Peta', Icon: IconPeta },
             ].map(({ to, label, Icon }) => (
               <Link
@@ -408,7 +394,7 @@ export default function Beranda() {
           {/* ROW 3: Kartu fitur */}
           <FeatureCard to="/doa" label="Kumpulan Doa" desc="Talbiyah, tawaf, sa'i & lebih" icon={<IconDoa className="h-5 w-5" />} />
           <FeatureCard to="/panduan/tata-cara" label="Tata Cara" desc="Urutan 6 langkah umrah berurutan" icon={<IconPanduan className="h-5 w-5" />} />
-          <FeatureCard to="/panduan/ihram" label="Panduan Ihram" desc="Niat, larangan & cara memakai kain" icon={<IconPanduan className="h-5 w-5" />} />
+          <FeatureCard to="/panduan/ihram" label="Panduan Ihram" desc="Niat, larangan & cara memakai kain" icon={<IconIhram className="h-5 w-5" />} />
 
           <SmallCard to="/peta" label="Peta Lokasi" icon={<IconPeta className="h-5 w-5" />} />
 

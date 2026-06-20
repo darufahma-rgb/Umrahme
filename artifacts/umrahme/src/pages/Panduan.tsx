@@ -1,17 +1,5 @@
 import { Link } from 'react-router-dom';
-import { IconPanduan, IconChevron, IconPeta } from '../components/icons';
-
-function IconManasikInteraktif({ className = '' }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-      <path d="M9 8h2l1 2-1 2H9" />
-      <circle cx="16" cy="12" r="2.5" />
-      <path d="M18 14l1.5 1.5" />
-    </svg>
-  );
-}
+import { IconPanduan, IconChevron, IconPeta, IconManasikInteraktif } from '../components/icons';
 
 export default function Panduan() {
   const items: { to: string; label: string; desc: string; Icon: React.FC<{ className?: string }>; highlight?: boolean }[] = [

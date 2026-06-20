@@ -5,34 +5,34 @@ import { jadwalMakkah, type WaktuSholat } from '../data/jadwalSholat';
 function IconWaktu({ tipe, className = '' }: { tipe: WaktuSholat['ikonTipe']; className?: string }) {
   if (tipe === 'subuh' || tipe === 'isya') {
     return (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" className={className}>
-        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}>
+        <path d="M21 12.79 A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79 Z" />
       </svg>
     );
   }
   if (tipe === 'maghrib') {
     return (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" className={className}>
-        <path d="M17 18a5 5 0 0 0-10 0" />
-        <path d="M12 9V2" />
-        <path d="M4.22 10.22 5.64 11.64" />
-        <path d="M1 18h3M20 18h3" />
-        <path d="M18.36 11.64 19.78 10.22" />
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}>
+        <path d="M17 18 a5 5 0 0 0-10 0" />
+        <path d="M12 9 V2" />
+        <path d="M4.22 10.22 L5.64 11.64" />
+        <path d="M1 18 h3 M20 18 h3" />
+        <path d="M18.36 11.64 L19.78 10.22" />
       </svg>
     );
   }
   if (tipe === 'ashar') {
     return (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}>
         <circle cx="12" cy="12" r="4" />
-        <path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12" />
+        <path d="M12 2 v3 M12 19 v3 M4.22 4.22 l2.12 2.12 M17.66 17.66 l2.12 2.12 M2 12 h3 M19 12 h3 M4.22 19.78 l2.12-2.12" />
       </svg>
     );
   }
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}>
       <circle cx="12" cy="12" r="4" />
-      <path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12" />
+      <path d="M12 2 v3 M12 19 v3 M4.22 4.22 l2.12 2.12 M17.66 17.66 l2.12 2.12 M2 12 h3 M19 12 h3 M4.22 19.78 l2.12-2.12 M17.66 6.34 l2.12-2.12" />
     </svg>
   );
 }
