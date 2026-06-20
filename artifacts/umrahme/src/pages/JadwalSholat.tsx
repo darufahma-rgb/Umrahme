@@ -3,7 +3,7 @@ import PageHeader from '../components/PageHeader';
 import { IconMoon } from '../components/icons';
 import { jadwalMakkah, type WaktuSholat } from '../data/jadwalSholat';
 
-// Ikon waktu per tipe sholat — garis stroke konsisten 1.5
+// ── Ikon per tipe waktu sholat ──────────────────────────────
 function IconWaktu({ tipe, className = '' }: { tipe: WaktuSholat['ikonTipe']; className?: string }) {
   if (tipe === 'subuh' || tipe === 'isya') {
     return (
@@ -39,7 +39,7 @@ function IconWaktu({ tipe, className = '' }: { tipe: WaktuSholat['ikonTipe']; cl
   );
 }
 
-// Bintang 5 sudut — penanda waktu malam (Isya)
+// Bintang 5 sudut — penanda malam/Isya
 function IconStar({ className = '' }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -48,43 +48,116 @@ function IconStar({ className = '' }: { className?: string }) {
   );
 }
 
-// Gauge setengah lingkaran — menunjukkan posisi waktu saat ini dalam hari
-function GaugeArc({ progressMenit }: { progressMenit: number }) {
-  const totalMenit = 1440;
-  const progress = Math.min(1, Math.max(0, progressMenit / totalMenit));
-  const w = 300, h = 162, cx = 150, cy = 150, r = 120, sw = 14;
-  const trackPath = `M ${cx - r} ${cy} A ${r} ${r} 0 0 0 ${cx + r} ${cy}`;
-  const angle = Math.PI * (1 - progress);
-  const px = cx + r * Math.cos(angle);
-  const py = cy - r * Math.sin(angle);
-  const progressPath = progress > 0.005
-    ? `M ${cx - r} ${cy} A ${r} ${r} 0 0 0 ${px.toFixed(2)} ${py.toFixed(2)}`
-    : null;
+// ── Timeline horizontal — 5 titik doa pada garis waktu 24 jam ──
+function PrayerTimeline({
+  waktuList,
+  progressMenit,
+}: {
+  waktuList: WaktuSholat[];
+  progressMenit: number;
+}) {
+  const W = 300, H = 58, padL = 18, padR = 18;
+  const trackW = W - padL - padR;
+  const lineY = 29;
+
+  const toX = (menit: number) => padL + (menit / 1440) * trackW;
+  const progressX = Math.min(toX(progressMenit), padL + trackW);
 
   return (
-    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="mx-auto" aria-hidden>
-      <defs>
-        <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#ea2804" />
-          <stop offset="60%" stopColor="#ea2804" />
-          <stop offset="100%" stopColor="#d4a24e" />
-        </linearGradient>
-      </defs>
-      {/* Track: jalur abu-abu latar */}
-      <path d={trackPath} fill="none" stroke="#f3f0e8" strokeWidth={sw} strokeLinecap="round" />
-      {/* Progress: jalur berwarna sesuai waktu */}
-      {progressPath && (
-        <path d={progressPath} fill="none" stroke="url(#gaugeGrad)" strokeWidth={sw} strokeLinecap="round" />
-      )}
-      {/* Titik posisi sekarang */}
-      {progress > 0.01 && (
-        <circle cx={px} cy={py} r="7" fill="#d4a24e" opacity="0.95" />
-      )}
+    <svg
+      width={W}
+      height={H}
+      viewBox={`0 0 ${W} ${H}`}
+      className="w-full"
+      aria-hidden="true"
+    >
+      {/* Track latar */}
+      <rect x={padL} y={lineY - 1} width={trackW} height={2} rx={1} fill="#ded9ce" />
+
+      {/* Progress terisi */}
+      <rect
+        x={padL}
+        y={lineY - 1}
+        width={Math.max(0, progressX - padL)}
+        height={2}
+        rx={1}
+        fill="#ea2804"
+        opacity="0.65"
+      />
+
+      {waktuList.map((prayer) => {
+        const [ph, pm] = prayer.jamMulai.split(':').map(Number);
+        const pMin = ph * 60 + pm;
+        const [ah, am] = prayer.jamAkhir.split(':').map(Number);
+        const aMin = ah * 60 + am;
+        const x = toX(pMin);
+
+        const isSekarang = progressMenit >= pMin && progressMenit < aMin;
+        const passed = pMin <= progressMenit && !isSekarang;
+
+        return (
+          <g key={prayer.id}>
+            {/* Lingkaran halo untuk sholat aktif */}
+            {isSekarang && (
+              <circle cx={x} cy={lineY} r={11} fill="#ea2804" opacity="0.08" />
+            )}
+
+            {/* Titik sholat */}
+            <circle
+              cx={x}
+              cy={lineY}
+              r={isSekarang ? 5.5 : 4}
+              fill={isSekarang ? '#ea2804' : passed ? '#ea2804' : '#f6f3ec'}
+              stroke={isSekarang ? 'none' : passed ? '#ea2804' : '#c8c3b8'}
+              strokeWidth={1.5}
+              opacity={passed && !isSekarang ? 0.55 : 1}
+            />
+
+            {/* Jam di atas titik */}
+            <text
+              x={x}
+              y={lineY - 13}
+              textAnchor="middle"
+              fontSize={6.5}
+              fontFamily="monospace"
+              fill={isSekarang ? '#ea2804' : '#9a9590'}
+              fontWeight={isSekarang ? '600' : '400'}
+            >
+              {prayer.jamMulai}
+            </text>
+
+            {/* Nama di bawah titik */}
+            <text
+              x={x}
+              y={lineY + 16}
+              textAnchor="middle"
+              fontSize={6.5}
+              fontFamily="monospace"
+              fill={isSekarang ? '#ea2804' : '#9a9590'}
+              fontWeight={isSekarang ? '600' : '400'}
+            >
+              {prayer.nama.toUpperCase()}
+            </text>
+          </g>
+        );
+      })}
+
+      {/* Penanda posisi saat ini — garis vertikal tipis */}
+      <line
+        x1={progressX}
+        y1={lineY - 8}
+        x2={progressX}
+        y2={lineY + 8}
+        stroke="#ea2804"
+        strokeWidth={1.5}
+        strokeLinecap="round"
+        opacity={0.4}
+      />
     </svg>
   );
 }
 
-// Toggle notifikasi — semua default ON saat halaman pertama dibuka
+// ── Toggle notifikasi — semua default ON ────────────────────
 function ToggleNotif() {
   const [on, setOn] = useState(true);
   return (
@@ -106,20 +179,27 @@ function ToggleNotif() {
   );
 }
 
+// ── Konstanta tanggal ───────────────────────────────────────
+const HARI = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+const BULAN = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+
+// ── Halaman utama ───────────────────────────────────────────
 export default function JadwalSholat() {
   const jadwal = jadwalMakkah;
   const [now, setNow] = useState(() => new Date());
+
   useEffect(() => {
-    const timer = setInterval(() => setNow(new Date()), 1000);
-    return () => clearInterval(timer);
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
   }, []);
 
-  const jam = now.getHours().toString().padStart(2, '0');
-  const menit = now.getMinutes().toString().padStart(2, '0');
-  const detik = now.getSeconds().toString().padStart(2, '0');
+  const jam    = now.getHours().toString().padStart(2, '0');
+  const menit  = now.getMinutes().toString().padStart(2, '0');
+  const detik  = now.getSeconds().toString().padStart(2, '0');
   const progressMenit = now.getHours() * 60 + now.getMinutes();
 
-  // Waktu sholat berikutnya = yang START-nya lebih dari sekarang
+  const tanggal = `${HARI[now.getDay()]}, ${now.getDate()} ${BULAN[now.getMonth()]} ${now.getFullYear()}`;
+
   const sholatBerikutnya = jadwal.waktuList.find((w) => {
     const [h, m] = w.jamMulai.split(':').map(Number);
     return h * 60 + m > progressMenit;
@@ -129,91 +209,122 @@ export default function JadwalSholat() {
     <div className="pb-24">
       <PageHeader title="Jadwal Sholat" eyebrow="Ibadah" backTo="/ibadah" />
 
-      {/* ── Gauge & jam ── */}
-      <div className="relative mt-5 px-5">
-        <p className="relative text-center font-mono text-[11px] uppercase tracking-[0.25em] text-mute">
-          {jadwal.kota}
-        </p>
+      {/* ═══════════════════════════════════════════════════
+          HERO CARD — jam + timeline
+      ═══════════════════════════════════════════════════ */}
+      <div className="mt-4 px-5">
+        <div className="overflow-hidden rounded-2xl border border-hairline bg-surface-card shadow-drop-card">
 
-        <div className="relative mt-1">
-          <GaugeArc progressMenit={progressMenit} />
-
-          {/* Jam besar di tengah bawah gauge */}
-          <div className="absolute inset-x-0 bottom-4 flex flex-col items-center">
-            <div className="flex items-baseline gap-0.5">
-              <p className="font-display text-5xl font-bold tabular-nums leading-none text-ink">
-                {jam}:{menit}
-              </p>
-              <p className="font-mono text-[17px] font-semibold tabular-nums text-mute leading-none">
-                :{detik}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Label Subuh ← tengah → Isya, dengan ikon penanda waktu */}
-        <div className="relative mt-1 flex items-start justify-between px-1">
-          {/* Subuh — kiri */}
-          <div className="flex items-center gap-1.5">
-            <IconMoon className="h-4 w-4 text-mute flex-none" />
+          {/* Baris atas: kota + tanggal */}
+          <div className="flex items-center justify-between border-b border-hairline px-5 pb-3 pt-4">
             <div>
-              <p className="font-mono text-[9px] uppercase tracking-widest text-mute">Subuh</p>
-              <p className="mt-0.5 font-mono text-[14px] font-semibold text-ink">{jadwal.jamSubuh}</p>
+              <p className="font-mono text-[9px] uppercase tracking-[0.22em] text-mute">
+                {jadwal.kota}
+              </p>
+              <p className="mt-0.5 font-mono text-[11px] text-ash">{tanggal}</p>
+            </div>
+            <div className="flex h-6 items-center rounded-full border border-hairline bg-surface-bone px-2.5">
+              <span className="font-mono text-[8.5px] uppercase tracking-wider text-ash">Data statis</span>
             </div>
           </div>
 
-          {/* Waktu berikutnya — tengah */}
-          {sholatBerikutnya && (
-            <div className="text-center">
-              <p className="font-mono text-[9px] uppercase tracking-widest text-primary/80">Berikutnya</p>
-              <p className="mt-0.5 font-mono text-[13px] font-semibold text-primary">{sholatBerikutnya.nama}</p>
-              <p className="font-mono text-[11px] text-mute">{sholatBerikutnya.jamMulai}</p>
-            </div>
-          )}
-
-          {/* Isya — kanan */}
-          <div className="flex items-center gap-1.5">
-            <div className="text-right">
-              <p className="font-mono text-[9px] uppercase tracking-widest text-mute">Isya</p>
-              <p className="mt-0.5 font-mono text-[14px] font-semibold text-ink">{jadwal.jamIsya}</p>
-            </div>
-            <IconStar className="h-4 w-4 text-mute flex-none" />
+          {/* Jam besar */}
+          <div className="flex items-end justify-center gap-1.5 px-5 py-6">
+            <span className="font-display text-[68px] font-bold tabular-nums leading-none tracking-tight text-ink">
+              {jam}:{menit}
+            </span>
+            <span className="mb-[3px] font-mono text-[20px] font-semibold tabular-nums leading-none text-mute">
+              :{detik}
+            </span>
           </div>
+
+          {/* Timeline */}
+          <div className="px-3 pb-1">
+            <PrayerTimeline waktuList={jadwal.waktuList} progressMenit={progressMenit} />
+          </div>
+
+          {/* Baris bawah: Subuh — berikutnya — Isya */}
+          <div className="flex items-start justify-between border-t border-hairline px-5 py-3.5">
+            {/* Subuh */}
+            <div className="flex items-center gap-1.5">
+              <IconMoon className="h-3.5 w-3.5 flex-none text-mute" />
+              <div>
+                <p className="font-mono text-[8px] uppercase tracking-widest text-mute">Subuh</p>
+                <p className="mt-0.5 font-mono text-[13px] font-semibold text-ink">{jadwal.jamSubuh}</p>
+              </div>
+            </div>
+
+            {/* Sholat berikutnya (tengah) */}
+            {sholatBerikutnya ? (
+              <div className="text-center">
+                <p className="font-mono text-[8px] uppercase tracking-widest text-primary/70">Berikutnya</p>
+                <p className="mt-0.5 font-mono text-[13px] font-semibold text-primary">
+                  {sholatBerikutnya.nama}
+                </p>
+                <p className="font-mono text-[10px] text-mute">{sholatBerikutnya.jamMulai}</p>
+              </div>
+            ) : (
+              <div className="text-center">
+                <p className="font-mono text-[8px] uppercase tracking-widest text-mute">Hari ini</p>
+                <p className="mt-0.5 font-mono text-[11px] text-ash">Selesai ✓</p>
+              </div>
+            )}
+
+            {/* Isya */}
+            <div className="flex items-center gap-1.5">
+              <div className="text-right">
+                <p className="font-mono text-[8px] uppercase tracking-widest text-mute">Isya</p>
+                <p className="mt-0.5 font-mono text-[13px] font-semibold text-ink">{jadwal.jamIsya}</p>
+              </div>
+              <IconStar className="h-3.5 w-3.5 flex-none text-mute" />
+            </div>
+          </div>
+
         </div>
       </div>
 
-      {/* ── List 5 waktu sholat ── */}
-      <section className="mt-6 px-5">
+      {/* ═══════════════════════════════════════════════════
+          LIST — 5 waktu sholat
+      ═══════════════════════════════════════════════════ */}
+      <section className="mt-5 px-5">
         <h2 className="mb-3 font-mono text-[11px] uppercase tracking-widest text-mute">
           Waktu Sholat
         </h2>
 
-        <div className="overflow-hidden rounded-md border border-hairline bg-surface-card shadow-drop-card">
+        <div className="overflow-hidden rounded-2xl border border-hairline bg-surface-card shadow-drop-card">
           {jadwal.waktuList.map((w, i) => {
             const [h, m] = w.jamMulai.split(':').map(Number);
             const mulaiMenit = h * 60 + m;
+            const [ah, am] = w.jamAkhir.split(':').map(Number);
+            const akhirMenit = ah * 60 + am;
 
-            const isSekarang = (() => {
-              const [ah, am] = w.jamAkhir.split(':').map(Number);
-              const akhirMenit = ah * 60 + am;
-              return progressMenit >= mulaiMenit && progressMenit < akhirMenit;
-            })();
-
+            const isSekarang = progressMenit >= mulaiMenit && progressMenit < akhirMenit;
             const sudahLewat = mulaiMenit < progressMenit && !isSekarang;
             const isBerikutnya = sholatBerikutnya?.id === w.id && !isSekarang;
 
             return (
               <div
                 key={w.id}
-                className={`flex min-h-[64px] items-center gap-4 px-4 py-3.5 ${
-                  i < jadwal.waktuList.length - 1 ? 'border-b border-hairline' : ''
-                } ${isSekarang ? 'bg-primary/5' : isBerikutnya ? 'bg-gold/5' : ''}`}
+                className={[
+                  'relative flex min-h-[64px] items-center gap-4 px-4 py-3',
+                  i < jadwal.waktuList.length - 1 ? 'border-b border-hairline' : '',
+                  isSekarang ? 'bg-primary/[0.035]' : isBerikutnya ? 'bg-gold/[0.04]' : '',
+                ].join(' ')}
               >
-                {/* Ikon tipe sholat */}
+                {/* Aksen vertikal kiri */}
+                {(isSekarang || isBerikutnya) && (
+                  <div
+                    className={`absolute inset-y-0 left-0 w-[3px] ${
+                      isSekarang ? 'bg-primary' : 'bg-gold'
+                    }`}
+                  />
+                )}
+
+                {/* Ikon tipe */}
                 <div
-                  className={`flex h-10 w-10 flex-none items-center justify-center rounded-md border ${
+                  className={`flex h-10 w-10 flex-none items-center justify-center rounded-xl border ${
                     isSekarang
-                      ? 'border-primary/30 bg-primary/10 text-primary'
+                      ? 'border-primary/25 bg-primary/10 text-primary'
                       : isBerikutnya
                         ? 'border-gold/30 bg-gold/10 text-gold'
                         : sudahLewat
@@ -224,29 +335,33 @@ export default function JadwalSholat() {
                   <IconWaktu tipe={w.ikonTipe} className="h-5 w-5" />
                 </div>
 
-                {/* Nama & jam */}
+                {/* Nama & rentang jam */}
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2 flex-wrap">
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
                     <p
                       className={`text-[15px] font-semibold leading-tight ${
-                        isSekarang ? 'text-primary' : isBerikutnya ? 'text-gold' : sudahLewat ? 'text-ash' : 'text-ink'
+                        isSekarang
+                          ? 'text-primary'
+                          : isBerikutnya
+                            ? 'text-gold'
+                            : sudahLewat
+                              ? 'text-ash'
+                              : 'text-ink'
                       }`}
                     >
                       {w.nama}
                     </p>
 
-                    {/* Badge "Sekarang" */}
                     {isSekarang && (
                       <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-primary">
-                        <span className="h-1 w-1 rounded-full bg-primary animate-pulse" />
+                        <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
                         Sekarang
                       </span>
                     )}
 
-                    {/* Badge "Berikutnya" */}
                     {isBerikutnya && (
                       <span className="inline-flex items-center gap-1 rounded-full bg-gold/15 px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-gold">
-                        <span className="h-1 w-1 rounded-full bg-gold" />
+                        <span className="h-1.5 w-1.5 rounded-full bg-gold" />
                         Berikutnya
                       </span>
                     )}
@@ -265,7 +380,8 @@ export default function JadwalSholat() {
         </div>
       </section>
 
-      <p className="mt-4 px-5 text-center text-[11px] leading-relaxed text-ash">
+      {/* Keterangan bawah */}
+      <p className="mt-5 px-5 text-center font-mono text-[10px] leading-relaxed text-ash">
         {jadwal.keterangan}
       </p>
     </div>
