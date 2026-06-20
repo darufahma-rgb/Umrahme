@@ -42,12 +42,12 @@ function MiniRing({ progress = 0, total = 7 }: { progress?: number; total?: numb
 }
 
 const quickIconColors: Record<string, { bg: string; icon: string; border: string }> = {
-  doa:    { bg: '#fff8f0', icon: '#c8792a', border: 'rgba(200,121,42,0.22)' },
-  ihram:  { bg: '#f0f4ff', icon: '#3d6fd4', border: 'rgba(61,111,212,0.22)' },
-  tawaf:  { bg: '#fff0ee', icon: '#ea2804', border: 'rgba(234,40,4,0.22)' },
-  sai:    { bg: '#f0faf4', icon: '#1e9a56', border: 'rgba(30,154,86,0.22)' },
-  peta:   { bg: '#f5f0ff', icon: '#7c3aed', border: 'rgba(124,58,237,0.22)' },
-  sholat: { bg: '#fffbf0', icon: '#b08a1e', border: 'rgba(176,138,30,0.22)' },
+  doa:    { bg: '#ffffff', icon: '#3a3a3a', border: 'rgba(0,0,0,0.10)' },
+  ihram:  { bg: '#ffffff', icon: '#3a3a3a', border: 'rgba(0,0,0,0.10)' },
+  tawaf:  { bg: '#ffffff', icon: '#3a3a3a', border: 'rgba(0,0,0,0.10)' },
+  sai:    { bg: '#ffffff', icon: '#3a3a3a', border: 'rgba(0,0,0,0.10)' },
+  peta:   { bg: '#ffffff', icon: '#3a3a3a', border: 'rgba(0,0,0,0.10)' },
+  sholat: { bg: '#ffffff', icon: '#3a3a3a', border: 'rgba(0,0,0,0.10)' },
 };
 
 function QuickIcon({ to, label, icon, colorKey }: { to: string; label: string; icon: ReactNode; colorKey: string }) {
