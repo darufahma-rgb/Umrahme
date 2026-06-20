@@ -5,8 +5,8 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#ea2804',
-        'primary-deep': '#c01f00',
+        primary: '#0ea5e9',
+        'primary-deep': '#0284c7',
         'on-primary': '#ffffff',
         ink: '#202020',
         body: '#3a3a3a',
@@ -48,7 +48,7 @@ export default {
         'drop-card': '0 2px 8px rgba(32,32,32,0.05)',
         'drop-lifted': '0 4px 16px rgba(32,32,32,0.10), 0 1px 4px rgba(32,32,32,0.06)',
         'nav-float': '0 -1px 0 0 rgba(0,0,0,0.04), 0 20px 48px -8px rgba(0,0,0,0.14)',
-        'glow-primary': '0 4px 20px rgba(234,40,4,0.30)',
+        'glow-primary': '0 4px 20px rgba(14,165,233,0.30)',
         'glow-gold': '0 4px 20px rgba(212,162,78,0.25)',
       },
       maxWidth: {

@@ -93,7 +93,7 @@ function PrayerTimeline({
         width={Math.max(0, progressX - padL)}
         height={4}
         rx={2}
-        fill="#2563eb"
+        fill="#0ea5e9"
         opacity="0.65"
       />
 
@@ -118,20 +118,20 @@ function PrayerTimeline({
 
           const isSekarang = progressMenit >= pMin && progressMenit < aMin;
           const passed = pMin <= progressMenit && !isSekarang;
-          const color = isSekarang ? '#2563eb' : '#9a9590';
+          const color = isSekarang ? '#0ea5e9' : '#9a9590';
 
           return (
             <g key={prayer.id}>
               {isSekarang && (
-                <circle cx={x} cy={lineY} r={11} fill="#2563eb" opacity="0.08" />
+                <circle cx={x} cy={lineY} r={11} fill="#0ea5e9" opacity="0.08" />
               )}
 
               <circle
                 cx={x}
                 cy={lineY}
                 r={isSekarang ? 5.5 : 4}
-                fill={isSekarang ? '#2563eb' : passed ? '#2563eb' : '#f6f3ec'}
-                stroke={isSekarang ? 'none' : passed ? '#2563eb' : '#c8c3b8'}
+                fill={isSekarang ? '#0ea5e9' : passed ? '#0ea5e9' : '#f6f3ec'}
+                stroke={isSekarang ? 'none' : passed ? '#0ea5e9' : '#c8c3b8'}
                 strokeWidth={1.5}
                 opacity={passed && !isSekarang ? 0.55 : 1}
               />
@@ -172,7 +172,7 @@ function PrayerTimeline({
         y1={lineY - 8}
         x2={progressX}
         y2={lineY + 8}
-        stroke="#2563eb"
+        stroke="#0ea5e9"
         strokeWidth={1.5}
         strokeLinecap="round"
         opacity={0.4}

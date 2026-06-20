@@ -30,12 +30,12 @@
   }
 
   ::selection {
-    background: rgba(37, 99, 235, 0.14);
+    background: rgba(14, 165, 233, 0.14);
     color: #202020;
   }
 
   :focus-visible {
-    outline: 2px solid rgba(37, 99, 235, 0.6);
+    outline: 2px solid rgba(14, 165, 233, 0.6);
     outline-offset: 2px;
   }
 
@@ -95,7 +95,7 @@
   .bg-hero-dark {
     background:
       radial-gradient(ellipse 80% 60% at 50% 100%, rgba(212, 162, 78, 0.22) 0%, transparent 70%),
-      radial-gradient(ellipse 60% 50% at 80% 20%, rgba(37, 99, 235, 0.10) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 80% 20%, rgba(14, 165, 233, 0.10) 0%, transparent 60%),
       linear-gradient(160deg, #1a1208 0%, #2d1e0a 40%, #1c1005 100%);
   }
 
@@ -135,7 +135,7 @@
   }
 
   .card-primary-tint {
-    background: linear-gradient(135deg, #fff8f7 0%, #fff0ee 100%);
+    background: linear-gradient(135deg, #f3fbfe 0%, #e7f6fd 100%);
   }
 }
 

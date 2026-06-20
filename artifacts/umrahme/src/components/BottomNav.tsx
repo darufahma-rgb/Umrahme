@@ -43,11 +43,11 @@ export default function BottomNav() {
                       style={{
                         marginTop: '-38px',
                         background: isActive
-                          ? 'linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%)'
-                          : 'linear-gradient(145deg, #ff3d1a 0%, #d42200 100%)',
+                          ? 'linear-gradient(145deg, #0ea5e9 0%, #0284c7 100%)'
+                          : 'linear-gradient(145deg, #38bdf8 0%, #0ea5e9 100%)',
                         boxShadow: isActive
-                          ? '0 0 0 3px rgba(234,40,4,0.18), 0 8px 24px rgba(234,40,4,0.42), 0 2px 6px rgba(0,0,0,0.25)'
-                          : '0 0 0 3px rgba(234,40,4,0.10), 0 6px 18px rgba(234,40,4,0.30), 0 2px 6px rgba(0,0,0,0.20)',
+                          ? '0 0 0 3px rgba(14,165,233,0.18), 0 8px 24px rgba(14,165,233,0.42), 0 2px 6px rgba(0,0,0,0.25)'
+                          : '0 0 0 3px rgba(14,165,233,0.10), 0 6px 18px rgba(14,165,233,0.30), 0 2px 6px rgba(0,0,0,0.20)',
                       }}
                     >
                       <Icon

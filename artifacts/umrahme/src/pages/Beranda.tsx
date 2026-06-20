@@ -257,7 +257,7 @@ export default function Beranda() {
                 <div className="flex items-center gap-3">
                   <div
                     className="flex h-10 w-10 flex-none items-center justify-center rounded-xl"
-                    style={{ background: 'linear-gradient(135deg, #fff0ee 0%, #ffe6e2 100%)', border: '1.5px solid rgba(234,40,4,0.18)' }}
+                    style={{ background: 'linear-gradient(135deg, #fff0ee 0%, #ffe6e2 100%)', border: '1.5px solid rgba(14,165,233,0.18)' }}
                   >
                     <IconCheck className="h-4 w-4 text-primary" />
                   </div>
@@ -278,8 +278,8 @@ export default function Beranda() {
                   className="h-full rounded-full transition-all duration-700"
                   style={{
                     width: `${persiapanPersen}%`,
-                    background: 'linear-gradient(90deg, #2563eb 0%, #60a5fa 100%)',
-                    boxShadow: '0 0 8px rgba(234,40,4,0.35)',
+                    background: 'linear-gradient(90deg, #0ea5e9 0%, #38bdf8 100%)',
+                    boxShadow: '0 0 8px rgba(14,165,233,0.35)',
                   }}
                 />
               </div>

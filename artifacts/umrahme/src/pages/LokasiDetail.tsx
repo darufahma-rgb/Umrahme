@@ -36,7 +36,7 @@ export default function LokasiDetail() {
             className="absolute inset-0 opacity-[0.25]"
             style={{
               backgroundImage:
-                'repeating-linear-gradient(45deg, #2563eb 0 1px, transparent 1px 14px)',
+                'repeating-linear-gradient(45deg, #0ea5e9 0 1px, transparent 1px 14px)',
             }}
             aria-hidden
           />

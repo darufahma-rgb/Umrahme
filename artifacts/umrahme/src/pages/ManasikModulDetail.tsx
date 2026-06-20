@@ -39,7 +39,7 @@ function IlustrasiManasik({ tipe }: { tipe: ManasikKartu['ilustrasiTipe'] }) {
   /* shared colors */
   const bg = '#f3f0e8';
   const gold = '#d4a24e';
-  const red = '#2563eb';
+  const red = '#0ea5e9';
 
   switch (tipe) {
     case 'miqat':
@@ -217,7 +217,7 @@ function TahapIndicator({ tahap }: { tahap: Tahap }) {
             <div className="flex flex-col items-center gap-0.5">
               <div
                 className={`flex h-8 w-8 items-center justify-center rounded-full border font-mono text-sm font-semibold transition-all
-                  ${active ? 'border-primary bg-primary text-on-primary shadow-[0_0_12px_rgba(234,40,4,0.3)]' : ''}
+                  ${active ? 'border-primary bg-primary text-on-primary shadow-[0_0_12px_rgba(14,165,233,0.3)]' : ''}
                   ${done ? 'border-primary/60 bg-primary/10 text-primary' : ''}
                   ${!active && !done ? 'border-hairline bg-surface-bone text-mute' : ''}
                 `}
