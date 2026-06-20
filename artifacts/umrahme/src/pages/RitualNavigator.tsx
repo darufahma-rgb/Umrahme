@@ -352,7 +352,7 @@ export default function RitualNavigator() {
         </div>
 
         <div
-          className="sticky bottom-0 border-t border-hairline bg-canvas/95 px-5 py-4 backdrop-blur-md"
+          className="sticky bottom-28 lg:bottom-0 border-t border-hairline bg-canvas/95 px-5 py-4 backdrop-blur-md"
           style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}
         >
           <button
