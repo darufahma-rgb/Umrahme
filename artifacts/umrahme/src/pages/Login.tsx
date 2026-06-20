@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { validasiKode, KODE_DEMO } from '../data/jamaah';
 import heroBg from '@assets/photo-1635829576353-1a14caec2f6f_1781969073425.avif';
+import { KeyRound } from 'lucide-react';
 
 export default function Login() {
   const { login } = useAuth();
@@ -132,10 +133,10 @@ export default function Login() {
             >
               {/* Icon badge */}
               <div
-                className="flex-none flex h-10 w-10 items-center justify-center rounded-xl text-[18px]"
-                style={{ background: 'linear-gradient(135deg, #2d1e0a 0%, #1a1208 100%)' }}
+                className="flex-none flex h-10 w-10 items-center justify-center rounded-xl"
+                style={{ background: 'linear-gradient(135deg, #c8e8f5 0%, #a0d4ec 100%)' }}
               >
-                <span className="font-arab text-gold text-[14px]">ك</span>
+                <KeyRound className="h-4.5 w-4.5" style={{ color: '#2d7da8', strokeWidth: 2 }} />
               </div>
               {/* Input */}
               <div className="flex-1 min-w-0">
