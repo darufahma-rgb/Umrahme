@@ -26,7 +26,7 @@ export default function PageHeader({
       } border-b border-hairline bg-canvas/95 px-4 pb-3 pt-4 backdrop-blur-md`}
       style={{ paddingTop: 'max(1rem, env(safe-area-inset-top))' }}
     >
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-4">
         <button
           type="button"
           onClick={() => (backTo ? navigate(backTo) : navigate(-1))}

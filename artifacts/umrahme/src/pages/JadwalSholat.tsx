@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import PageHeader from '../components/PageHeader';
+import { IconMoon } from '../components/icons';
 import { jadwalMakkah, type WaktuSholat } from '../data/jadwalSholat';
 
+// Ikon waktu per tipe sholat — garis stroke konsisten 1.5
 function IconWaktu({ tipe, className = '' }: { tipe: WaktuSholat['ikonTipe']; className?: string }) {
   if (tipe === 'subuh' || tipe === 'isya') {
     return (
@@ -37,6 +39,16 @@ function IconWaktu({ tipe, className = '' }: { tipe: WaktuSholat['ikonTipe']; cl
   );
 }
 
+// Bintang 5 sudut — penanda waktu malam (Isya)
+function IconStar({ className = '' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M12 2.5 L14.3 9.5 H21.8 L15.9 13.8 L18.1 20.8 L12 16.5 L5.9 20.8 L8.1 13.8 L2.2 9.5 H9.7 Z" />
+    </svg>
+  );
+}
+
+// Gauge setengah lingkaran — menunjukkan posisi waktu saat ini dalam hari
 function GaugeArc({ progressMenit }: { progressMenit: number }) {
   const totalMenit = 1440;
   const progress = Math.min(1, Math.max(0, progressMenit / totalMenit));
@@ -58,21 +70,23 @@ function GaugeArc({ progressMenit }: { progressMenit: number }) {
           <stop offset="100%" stopColor="#d4a24e" />
         </linearGradient>
       </defs>
+      {/* Track: jalur abu-abu latar */}
       <path d={trackPath} fill="none" stroke="#f3f0e8" strokeWidth={sw} strokeLinecap="round" />
+      {/* Progress: jalur berwarna sesuai waktu */}
       {progressPath && (
         <path d={progressPath} fill="none" stroke="url(#gaugeGrad)" strokeWidth={sw} strokeLinecap="round" />
       )}
+      {/* Titik posisi sekarang */}
       {progress > 0.01 && (
-        <circle cx={px} cy={py} r="6" fill="#d4a24e" opacity="0.9" />
+        <circle cx={px} cy={py} r="7" fill="#d4a24e" opacity="0.95" />
       )}
-      <circle cx={cx - r} cy={cy} r="5" fill="#f9f7f3" stroke="#ea2804" strokeWidth="1.5" opacity="0.6" />
-      <circle cx={cx + r} cy={cy} r="5" fill="#f9f7f3" stroke="#d4a24e" strokeWidth="1.5" opacity="0.6" />
     </svg>
   );
 }
 
-function ToggleNotif({ defaultOn = true }: { defaultOn?: boolean }) {
-  const [on, setOn] = useState(defaultOn);
+// Toggle notifikasi — semua default ON saat halaman pertama dibuka
+function ToggleNotif() {
+  const [on, setOn] = useState(true);
   return (
     <button
       type="button"
@@ -105,6 +119,7 @@ export default function JadwalSholat() {
   const detik = now.getSeconds().toString().padStart(2, '0');
   const progressMenit = now.getHours() * 60 + now.getMinutes();
 
+  // Waktu sholat berikutnya = yang START-nya lebih dari sekarang
   const sholatBerikutnya = jadwal.waktuList.find((w) => {
     const [h, m] = w.jamMulai.split(':').map(Number);
     return h * 60 + m > progressMenit;
@@ -114,7 +129,7 @@ export default function JadwalSholat() {
     <div className="pb-24">
       <PageHeader title="Jadwal Sholat" eyebrow="Ibadah" backTo="/ibadah" />
 
-      {/* Gauge & waktu */}
+      {/* ── Gauge & jam ── */}
       <div className="relative mt-5 px-5">
         <p className="relative text-center font-mono text-[11px] uppercase tracking-[0.25em] text-mute">
           {jadwal.kota}
@@ -122,19 +137,32 @@ export default function JadwalSholat() {
 
         <div className="relative mt-1">
           <GaugeArc progressMenit={progressMenit} />
+
+          {/* Jam besar di tengah bawah gauge */}
           <div className="absolute inset-x-0 bottom-4 flex flex-col items-center">
-            <p className="font-display text-5xl font-bold tabular-nums leading-none text-ink">
-              {jam}:{menit}
-            </p>
-            <p className="mt-1 font-mono text-[13px] text-mute tabular-nums">{detik}</p>
+            <div className="flex items-baseline gap-0.5">
+              <p className="font-display text-5xl font-bold tabular-nums leading-none text-ink">
+                {jam}:{menit}
+              </p>
+              <p className="font-mono text-[17px] font-semibold tabular-nums text-mute leading-none">
+                :{detik}
+              </p>
+            </div>
           </div>
         </div>
 
-        <div className="relative mt-1 flex items-start justify-between px-2">
-          <div>
-            <p className="font-mono text-[9px] uppercase tracking-widest text-mute">Subuh</p>
-            <p className="mt-0.5 font-mono text-[14px] font-semibold text-ink">{jadwal.jamSubuh}</p>
+        {/* Label Subuh ← tengah → Isya, dengan ikon penanda waktu */}
+        <div className="relative mt-1 flex items-start justify-between px-1">
+          {/* Subuh — kiri */}
+          <div className="flex items-center gap-1.5">
+            <IconMoon className="h-4 w-4 text-mute flex-none" />
+            <div>
+              <p className="font-mono text-[9px] uppercase tracking-widest text-mute">Subuh</p>
+              <p className="mt-0.5 font-mono text-[14px] font-semibold text-ink">{jadwal.jamSubuh}</p>
+            </div>
           </div>
+
+          {/* Waktu berikutnya — tengah */}
           {sholatBerikutnya && (
             <div className="text-center">
               <p className="font-mono text-[9px] uppercase tracking-widest text-primary/80">Berikutnya</p>
@@ -142,14 +170,19 @@ export default function JadwalSholat() {
               <p className="font-mono text-[11px] text-mute">{sholatBerikutnya.jamMulai}</p>
             </div>
           )}
-          <div className="text-right">
-            <p className="font-mono text-[9px] uppercase tracking-widest text-mute">Isya</p>
-            <p className="mt-0.5 font-mono text-[14px] font-semibold text-ink">{jadwal.jamIsya}</p>
+
+          {/* Isya — kanan */}
+          <div className="flex items-center gap-1.5">
+            <div className="text-right">
+              <p className="font-mono text-[9px] uppercase tracking-widest text-mute">Isya</p>
+              <p className="mt-0.5 font-mono text-[14px] font-semibold text-ink">{jadwal.jamIsya}</p>
+            </div>
+            <IconStar className="h-4 w-4 text-mute flex-none" />
           </div>
         </div>
       </div>
 
-      {/* List 5 waktu sholat */}
+      {/* ── List 5 waktu sholat ── */}
       <section className="mt-6 px-5">
         <h2 className="mb-3 font-mono text-[11px] uppercase tracking-widest text-mute">
           Waktu Sholat
@@ -158,55 +191,74 @@ export default function JadwalSholat() {
         <div className="overflow-hidden rounded-md border border-hairline bg-surface-card shadow-drop-card">
           {jadwal.waktuList.map((w, i) => {
             const [h, m] = w.jamMulai.split(':').map(Number);
+            const mulaiMenit = h * 60 + m;
+
             const isSekarang = (() => {
-              const mulaiMenit = h * 60 + m;
               const [ah, am] = w.jamAkhir.split(':').map(Number);
               const akhirMenit = ah * 60 + am;
               return progressMenit >= mulaiMenit && progressMenit < akhirMenit;
             })();
-            const sudahLewat = h * 60 + m < progressMenit && !isSekarang;
+
+            const sudahLewat = mulaiMenit < progressMenit && !isSekarang;
+            const isBerikutnya = sholatBerikutnya?.id === w.id && !isSekarang;
 
             return (
               <div
                 key={w.id}
                 className={`flex min-h-[64px] items-center gap-4 px-4 py-3.5 ${
                   i < jadwal.waktuList.length - 1 ? 'border-b border-hairline' : ''
-                } ${isSekarang ? 'bg-primary/5' : ''}`}
+                } ${isSekarang ? 'bg-primary/5' : isBerikutnya ? 'bg-gold/5' : ''}`}
               >
+                {/* Ikon tipe sholat */}
                 <div
                   className={`flex h-10 w-10 flex-none items-center justify-center rounded-md border ${
                     isSekarang
                       ? 'border-primary/30 bg-primary/10 text-primary'
-                      : sudahLewat
-                        ? 'border-hairline bg-surface-bone text-ash'
-                        : 'border-hairline bg-surface-bone text-charcoal'
+                      : isBerikutnya
+                        ? 'border-gold/30 bg-gold/10 text-gold'
+                        : sudahLewat
+                          ? 'border-hairline bg-surface-bone text-ash'
+                          : 'border-hairline bg-surface-bone text-charcoal'
                   }`}
                 >
                   <IconWaktu tipe={w.ikonTipe} className="h-5 w-5" />
                 </div>
 
+                {/* Nama & jam */}
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <p
                       className={`text-[15px] font-semibold leading-tight ${
-                        isSekarang ? 'text-primary' : sudahLewat ? 'text-ash' : 'text-ink'
+                        isSekarang ? 'text-primary' : isBerikutnya ? 'text-gold' : sudahLewat ? 'text-ash' : 'text-ink'
                       }`}
                     >
                       {w.nama}
                     </p>
+
+                    {/* Badge "Sekarang" */}
                     {isSekarang && (
                       <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-primary">
                         <span className="h-1 w-1 rounded-full bg-primary animate-pulse" />
                         Sekarang
                       </span>
                     )}
+
+                    {/* Badge "Berikutnya" */}
+                    {isBerikutnya && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-gold/15 px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-gold">
+                        <span className="h-1 w-1 rounded-full bg-gold" />
+                        Berikutnya
+                      </span>
+                    )}
                   </div>
+
                   <p className={`mt-0.5 font-mono text-[12px] ${sudahLewat ? 'text-ash' : 'text-mute'}`}>
                     {w.jamMulai} – {w.jamAkhir}
                   </p>
                 </div>
 
-                <ToggleNotif defaultOn={!sudahLewat} />
+                {/* Toggle notifikasi */}
+                <ToggleNotif />
               </div>
             );
           })}

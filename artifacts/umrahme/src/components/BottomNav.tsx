@@ -41,8 +41,8 @@ export default function BottomNav() {
                         marginTop: '-40px',
                         background: '#C2185B',
                         boxShadow: isActive
-                          ? '0 0 0 3px rgba(194,24,91,0.18), 0 0 28px rgba(233,30,140,0.55), 0 6px 20px rgba(194,24,91,0.40)'
-                          : '0 0 0 3px rgba(194,24,91,0.12), 0 0 20px rgba(233,30,140,0.35), 0 4px 16px rgba(0,0,0,0.22)',
+                          ? '0 0 0 3px rgba(194,24,91,0.14), 0 0 14px rgba(233,30,140,0.30), 0 4px 14px rgba(194,24,91,0.28)'
+                          : '0 0 0 3px rgba(194,24,91,0.08), 0 0 10px rgba(233,30,140,0.18), 0 4px 12px rgba(0,0,0,0.20)',
                       }}
                     >
                       <Icon
