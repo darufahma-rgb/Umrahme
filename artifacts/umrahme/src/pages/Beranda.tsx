@@ -285,7 +285,7 @@ export default function Beranda() {
       </div>
 
       {/* ==================== DESKTOP (≥ lg) — BENTO GRID ==================== */}
-      <div className="hidden lg:block px-8 py-8 max-w-content mx-auto">
+      <div className="hidden lg:block px-8 py-8">
 
         {/* Header */}
         <header className="mb-6">
