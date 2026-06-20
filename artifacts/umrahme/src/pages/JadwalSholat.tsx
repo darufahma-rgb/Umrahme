@@ -56,12 +56,24 @@ function PrayerTimeline({
   waktuList: WaktuSholat[];
   progressMenit: number;
 }) {
-  const W = 300, H = 72, padL = 18, padR = 18;
+  const W = 300, H = 72, padL = 10, padR = 10;
   const trackW = W - padL - padR;
   const lineY = 29;
 
-  const toX = (menit: number) => padL + (menit / 1440) * trackW;
-  const progressX = Math.min(toX(progressMenit), padL + trackW);
+  // Zoom ke rentang waktu sholat (bukan 24 jam penuh)
+  const MARGIN = 75; // menit margin sebelum/sesudah
+  const allMins = waktuList.flatMap((w) => {
+    const [h, m] = w.jamMulai.split(':').map(Number);
+    const [ah, am] = w.jamAkhir.split(':').map(Number);
+    return [h * 60 + m, ah * 60 + am];
+  });
+  const rangeStart = Math.max(0, Math.min(...allMins) - MARGIN);
+  const rangeEnd   = Math.min(1440, Math.max(...allMins) + MARGIN);
+  const rangeTotal = rangeEnd - rangeStart;
+
+  const toX = (menit: number) =>
+    padL + Math.max(0, Math.min(1, (menit - rangeStart) / rangeTotal)) * trackW;
+  const progressX = toX(Math.min(progressMenit, rangeEnd));
 
   return (
     <svg
@@ -251,7 +263,7 @@ export default function JadwalSholat() {
           </div>
 
           {/* Timeline */}
-          <div className="px-3 pb-1">
+          <div className="px-1 pb-1">
             <PrayerTimeline waktuList={jadwal.waktuList} progressMenit={progressMenit} />
           </div>
 
