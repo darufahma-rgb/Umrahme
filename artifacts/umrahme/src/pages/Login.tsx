@@ -108,7 +108,7 @@ export default function Login() {
           {/* Heading */}
           <h2
             className="font-display font-bold leading-tight text-ink text-center"
-            style={{ fontSize: 'clamp(20px, 5vw, 26px)' }}
+            style={{ fontSize: 'clamp(26px, 7vw, 34px)' }}
           >
             Selamat Datang!
           </h2>
