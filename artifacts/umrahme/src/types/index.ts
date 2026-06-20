@@ -70,6 +70,9 @@ export interface Lokasi {
 
 export type KategoriChecklist = 'dokumen' | 'kesehatan' | 'barang' | 'mental';
 
+/** Segmen jamaah untuk Smart Packing Checklist */
+export type KategoriJamaah = 'laki-laki' | 'perempuan' | 'lansia';
+
 export interface ChecklistItem {
   id: string;
   kategori: KategoriChecklist;
@@ -77,6 +80,11 @@ export interface ChecklistItem {
   catatan?: string;
   /** Window waktu indikatif, mis. "H-30" — ditampilkan sebagai metadata. */
   tenggat?: string;
+  /**
+   * Jika diisi, item hanya ditampilkan untuk segmen jamaah yang dipilih.
+   * Jika tidak diisi (undefined) = tampil untuk semua.
+   */
+  untukKategori?: KategoriJamaah[];
 }
 
 export interface KategoriChecklistMeta {
