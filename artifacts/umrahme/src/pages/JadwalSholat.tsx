@@ -82,40 +82,44 @@ function PrayerTimeline({
     return { prayer, x, isSekarang, passed, label, w };
   });
 
-  // Tentukan anchor per titik secara adaptif: default 'middle'.
-  // Jika label akan melewati tepi kiri → 'start', tepi kanan → 'end'.
-  const anchors = points.map((p) => {
-    const overflowLeft  = p.x - p.w < padL;
-    const overflowRight = p.x + p.w > padL + trackW;
-    let textAnchor: 'start' | 'middle' | 'end' = 'middle';
-    let textX = p.x;
-    if (overflowLeft) {
-      textAnchor = 'start';
-      textX = padL;
-    } else if (overflowRight) {
-      textAnchor = 'end';
-      textX = padL + trackW;
-    }
-    return { textAnchor, textX };
-  });
+  // ── Force-layout 1D: geser textX horizontal agar semua label 1 baris ──
+  // Titik (lingkaran) tetap di posisi x aslinya; hanya teks yang bergerak.
+  const LABEL_GAP = 2; // px minimum antar label
+  const textXArr = points.map((p) => p.x);
 
-  // Deteksi tabrakan antar label bertetangga: bila jarak x dua titik
-  // berurutan < jumlah setengah-lebar keduanya + 4px margin, geser label
-  // titik kedua ke baris bawah (vOffset +9px) secara berselang-seling.
-  const rowOffset = points.map(() => 0);
+  // Pass kiri→kanan: dorong ke kanan jika bertabrakan dengan label sebelumnya
   for (let i = 1; i < points.length; i++) {
-    const prev = points[i - 1];
-    const cur  = points[i];
-    const gap    = cur.x - prev.x;
-    const needed = prev.w + cur.w + 4;
-    if (
-      gap < needed &&
-      anchors[i].textAnchor === 'middle' &&
-      anchors[i - 1].textAnchor === 'middle'
-    ) {
-      rowOffset[i] = rowOffset[i - 1] === 0 ? 1 : 0;
+    const prevRight = textXArr[i - 1] + points[i - 1].w + LABEL_GAP;
+    const curLeft   = textXArr[i]     - points[i].w;
+    if (curLeft < prevRight) {
+      textXArr[i] = prevRight + points[i].w;
     }
   }
+
+  // Pass kanan→kiri: dorong ke kiri jika label akhir melewati batas kanan,
+  // atau jika pass sebelumnya menciptakan tabrakan baru ke arah kanan.
+  for (let i = points.length - 2; i >= 0; i--) {
+    const nextLeft  = textXArr[i + 1] - points[i + 1].w - LABEL_GAP;
+    const curRight  = textXArr[i]     + points[i].w;
+    if (curRight > nextLeft) {
+      textXArr[i] = nextLeft - points[i].w;
+    }
+  }
+
+  // Resolusi anchor + klem ke batas track
+  const anchors = textXArr.map((tx, i) => {
+    const hw = points[i].w;
+    let textX = tx;
+    let textAnchor: 'start' | 'middle' | 'end' = 'middle';
+    if (textX - hw < padL) {
+      textX = padL;
+      textAnchor = 'start';
+    } else if (textX + hw > padL + trackW) {
+      textX = padL + trackW;
+      textAnchor = 'end';
+    }
+    return { textX, textAnchor };
+  });
 
   return (
     <svg
@@ -142,7 +146,6 @@ function PrayerTimeline({
       {points.map((p, i) => {
         const { x, isSekarang, passed, label, prayer } = p;
         const { textAnchor, textX } = anchors[i];
-        const vOffset = rowOffset[i] * 9; // geser turun 9px jika baris kedua
 
         return (
           <g key={prayer.id}>
@@ -163,7 +166,7 @@ function PrayerTimeline({
             {/* Jam di atas titik */}
             <text
               x={textX}
-              y={lineY - 13 - vOffset}
+              y={lineY - 13}
               textAnchor={textAnchor}
               fontSize={fontSize}
               fontFamily="monospace"
@@ -176,7 +179,7 @@ function PrayerTimeline({
             {/* Nama di bawah titik */}
             <text
               x={textX}
-              y={lineY + 16 + vOffset}
+              y={lineY + 16}
               textAnchor={textAnchor}
               fontSize={fontSize}
               fontFamily="monospace"
