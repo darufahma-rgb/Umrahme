@@ -21,12 +21,9 @@ export default {
         'surface-card': '#ffffff',
         'surface-dark': '#202020',
         'surface-deep': '#000000',
-        hairline: 'rgba(32,32,32,0.12)',
-        'hairline-strong': '#202020',
+        hairline: 'rgba(32,32,32,0.10)',
+        'hairline-strong': 'rgba(32,32,32,0.22)',
         'divider-dark': 'rgba(255,255,255,0.2)',
-        'hero-warm': '#ea2804',
-        'hero-glow': '#ff6a3d',
-        'hero-pink': '#f4a8a0',
         'badge-success': '#2b9a66',
         gold: '#d4a24e',
       },
@@ -41,11 +38,18 @@ export default {
         sm: '6px',
         md: '10px',
         lg: '16px',
+        xl: '20px',
+        '2xl': '24px',
+        '3xl': '32px',
         full: '9999px',
       },
       boxShadow: {
         'drop-soft': '0 8px 24px rgba(32,32,32,0.08)',
-        'drop-card': '0 2px 8px rgba(32,32,32,0.06)',
+        'drop-card': '0 2px 8px rgba(32,32,32,0.05)',
+        'drop-lifted': '0 4px 16px rgba(32,32,32,0.10), 0 1px 4px rgba(32,32,32,0.06)',
+        'nav-float': '0 -1px 0 0 rgba(0,0,0,0.04), 0 20px 48px -8px rgba(0,0,0,0.14)',
+        'glow-primary': '0 4px 20px rgba(234,40,4,0.30)',
+        'glow-gold': '0 4px 20px rgba(212,162,78,0.25)',
       },
       maxWidth: {
         app: '460px',
@@ -65,8 +69,16 @@ export default {
       },
       keyframes: {
         'fade-up': {
-          '0%': { opacity: '0', transform: 'translateY(8px)' },
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        'fade-in': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        'scale-in': {
+          '0%': { opacity: '0', transform: 'scale(0.96)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
         },
         'pulse-ring': {
           '0%': { transform: 'scale(1)', opacity: '0.6' },
@@ -75,6 +87,8 @@ export default {
       },
       animation: {
         'fade-up': 'fade-up 0.4s ease-out both',
+        'fade-in': 'fade-in 0.3s ease-out both',
+        'scale-in': 'scale-in 0.35s ease-out both',
         'pulse-ring': 'pulse-ring 1.4s ease-out infinite',
       },
     },

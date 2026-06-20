@@ -1,13 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { urutanFase } from '../data/jamaah';
-import {
-  IconBeranda,
-  IconPanduan,
-  IconIbadah,
-  IconDoa,
-  IconProfil,
-} from './icons';
+import { IconBeranda, IconPanduan, IconIbadah, IconDoa, IconProfil } from './icons';
 
 const navItems = [
   { to: '/beranda', label: 'Beranda', Icon: IconBeranda, isIbadah: false },
@@ -24,27 +18,38 @@ export default function DesktopSidebar() {
   const idxFase = urutanFase.findIndex((f) => f.id === jamaah.fase);
 
   return (
-    <aside
-      className="hidden lg:flex w-[270px] flex-none flex-col h-screen sticky top-0 border-r border-hairline bg-canvas overflow-y-auto z-20"
-    >
-      {/* Brand + jamaah info */}
-      <div className="px-6 pt-8 pb-5 border-b border-hairline">
-        <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-primary mb-0.5">
+    <aside className="hidden lg:flex w-[260px] flex-none flex-col h-screen sticky top-0 border-r border-hairline bg-canvas overflow-y-auto z-20">
+
+      {/* Brand */}
+      <div className="px-5 pt-7 pb-5 border-b border-hairline">
+        <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-primary/80 mb-1">
           Pendamping Umrah
         </p>
-        <h1 className="font-display text-[22px] font-semibold text-ink leading-tight">Umrahme</h1>
+        <h1 className="font-display text-[20px] font-bold text-ink leading-tight tracking-[-0.5px]">
+          Umrahme
+        </h1>
 
-        <div className="mt-4 rounded-md border border-hairline bg-surface-bone px-3.5 py-3">
-          <p className="text-[14px] font-semibold leading-tight text-ink">{jamaah.nama}</p>
-          <p className="mt-0.5 font-mono text-[11px] text-mute">{jamaah.nomorJamaah}</p>
-          <p className="mt-1.5 text-[12px] text-mute">
-            via <span className="text-body">{jamaah.travel}</span>
+        {/* Jamaah card */}
+        <div className="mt-4 rounded-xl border border-hairline bg-surface-bone px-3.5 py-3">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-primary/10 border border-primary/20">
+              <span className="font-mono text-[12px] font-bold text-primary">
+                {jamaah.nama.charAt(0).toUpperCase()}
+              </span>
+            </div>
+            <div className="min-w-0">
+              <p className="truncate text-[13px] font-semibold leading-tight text-ink">{jamaah.nama}</p>
+              <p className="font-mono text-[10px] text-mute">{jamaah.nomorJamaah}</p>
+            </div>
+          </div>
+          <p className="mt-2 text-[11px] text-ash border-t border-hairline pt-2">
+            via <span className="text-charcoal font-medium">{jamaah.travel}</span>
           </p>
         </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-4" aria-label="Navigasi utama">
+      <nav className="flex-1 px-3 py-3" aria-label="Navigasi utama">
         <ul className="space-y-0.5">
           {navItems.map(({ to, label, Icon, isIbadah }) => (
             <li key={to}>
@@ -53,30 +58,34 @@ export default function DesktopSidebar() {
               <NavLink
                 to={to}
                 className={({ isActive }) =>
-                  `group flex items-center gap-3 rounded-full px-3.5 py-2.5 transition-colors ${
+                  `group flex items-center gap-3 rounded-xl px-3.5 py-2.5 transition-all ${
                     isActive
                       ? isIbadah
-                        ? 'bg-primary text-on-primary'
+                        ? 'bg-primary text-on-primary shadow-glow-primary'
                         : 'bg-surface-bone text-ink'
-                      : 'text-mute hover:bg-surface-bone hover:text-body'
+                      : 'text-ash hover:bg-surface-bone hover:text-body'
                   }`
                 }
               >
                 {({ isActive }) => (
                   <>
                     <Icon
-                      className={`h-5 w-5 flex-none transition-colors ${
+                      className={`h-[18px] w-[18px] flex-none transition-colors ${
                         isActive
                           ? isIbadah
                             ? 'text-on-primary'
                             : 'text-primary'
-                          : 'text-mute group-hover:text-body'
+                          : 'text-ash group-hover:text-charcoal'
                       }`}
                     />
                     <span className="flex-1 text-[14px] font-medium">{label}</span>
                     {isIbadah && (
-                      <span className={`font-mono text-[9px] uppercase tracking-wider ${isActive ? 'text-on-primary/70' : 'text-mute'}`}>
-                        Mode B
+                      <span
+                        className={`font-mono text-[9px] uppercase tracking-wider ${
+                          isActive ? 'text-on-primary/70' : 'text-mute'
+                        }`}
+                      >
+                        Aktif
                       </span>
                     )}
                   </>
@@ -91,29 +100,29 @@ export default function DesktopSidebar() {
 
       {/* Fase + logout */}
       <div className="px-5 py-5 border-t border-hairline">
-        <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-mute">
+        <p className="mb-3 font-mono text-[9px] uppercase tracking-[0.2em] text-mute">
           Fase Perjalanan
         </p>
-        <div className="space-y-2">
+        <div className="space-y-2.5">
           {urutanFase.map((f, i) => {
             const done = i < idxFase;
             const active = i === idxFase;
             return (
               <div key={f.id} className="flex items-center gap-2.5">
                 <span
-                  className={`h-1.5 w-1.5 flex-none rounded-full ${
-                    active ? 'bg-primary' : done ? 'bg-primary/40' : 'bg-stone'
+                  className={`h-1.5 w-1.5 flex-none rounded-full transition-colors ${
+                    active ? 'bg-primary' : done ? 'bg-primary/35' : 'bg-stone'
                   }`}
                 />
                 <span
-                  className={`font-mono text-[11px] tracking-wider ${
-                    active ? 'text-ink font-semibold' : done ? 'text-mute' : 'text-stone'
+                  className={`flex-1 font-mono text-[11px] tracking-wide transition-colors ${
+                    active ? 'font-semibold text-ink' : done ? 'text-mute' : 'text-stone'
                   }`}
                 >
                   {f.label}
                 </span>
                 {active && (
-                  <span className="ml-auto h-1.5 w-1.5 flex-none rounded-full bg-primary animate-pulse" />
+                  <span className="h-1.5 w-1.5 flex-none rounded-full bg-primary animate-pulse" />
                 )}
               </div>
             );
@@ -123,7 +132,7 @@ export default function DesktopSidebar() {
         <button
           type="button"
           onClick={logout}
-          className="mt-5 w-full rounded-full border border-hairline-strong px-4 py-2.5 text-left font-mono text-[11px] uppercase tracking-wider text-mute transition-colors hover:bg-surface-bone hover:text-ink"
+          className="mt-5 w-full rounded-full border border-hairline px-4 py-2.5 text-center font-mono text-[11px] uppercase tracking-wider text-ash transition-colors hover:border-hairline-strong hover:bg-surface-bone hover:text-ink"
         >
           Keluar
         </button>
