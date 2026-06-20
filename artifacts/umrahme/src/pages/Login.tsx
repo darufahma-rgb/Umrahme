@@ -73,33 +73,29 @@ export default function Login() {
             }}
           />
 
-          {/* Arabic calligraphy — white text with strong shadow */}
-          <div
-            className="absolute inset-x-0 top-0 flex flex-col items-center justify-center gap-2 px-6"
-            style={{ height: '62%' }}
-          >
+          {/* Arabic calligraphy — centered, smaller */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 px-6">
             <p
               className="font-arab text-center"
               style={{
-                fontSize: 'clamp(28px, 9vw, 42px)',
+                fontSize: 'clamp(18px, 5.5vw, 26px)',
                 direction: 'rtl',
                 color: '#ffffff',
-                textShadow:
-                  '0 2px 12px rgba(0,0,0,0.55), 0 1px 3px rgba(0,0,0,0.70)',
+                textShadow: '0 2px 10px rgba(0,0,0,0.55), 0 1px 3px rgba(0,0,0,0.70)',
                 lineHeight: 1.65,
               }}
             >
               لَبَّيْكَ اللّٰهُمَّ لَبَّيْكَ
             </p>
-            <div className="flex items-center gap-3">
-              <span className="h-px w-8" style={{ background: 'rgba(255,255,255,0.50)' }} />
+            <div className="flex items-center gap-2">
+              <span className="h-px w-5" style={{ background: 'rgba(255,255,255,0.45)' }} />
               <p
-                className="font-mono text-[10px] uppercase tracking-[0.3em]"
-                style={{ color: 'rgba(255,255,255,0.80)', textShadow: '0 1px 4px rgba(0,0,0,0.50)' }}
+                className="font-mono text-[9px] uppercase tracking-[0.28em]"
+                style={{ color: 'rgba(255,255,255,0.70)', textShadow: '0 1px 4px rgba(0,0,0,0.50)' }}
               >
                 Talbiyah
               </p>
-              <span className="h-px w-8" style={{ background: 'rgba(255,255,255,0.50)' }} />
+              <span className="h-px w-5" style={{ background: 'rgba(255,255,255,0.45)' }} />
             </div>
           </div>
 
