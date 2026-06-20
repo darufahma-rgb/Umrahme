@@ -63,36 +63,42 @@ export default function Login() {
             aria-hidden
           />
 
-          {/* Subtle dark overlay so text stays readable */}
+          {/* Gradient scrim — only top & bottom edges, centre stays clear */}
           <div
             className="pointer-events-none absolute inset-0"
-            style={{ background: 'rgba(0,0,0,0.28)' }}
+            style={{
+              background:
+                'linear-gradient(to bottom, rgba(0,0,0,0.32) 0%, transparent 35%, transparent 55%, rgba(255,255,255,0.70) 100%)',
+            }}
           />
 
-          {/* Arabic calligraphy over image */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-6"
-            style={{ paddingBottom: '12px' }}
+          {/* Arabic calligraphy — white text with strong shadow */}
+          <div
+            className="absolute inset-x-0 top-0 flex flex-col items-center justify-center gap-2 px-6"
+            style={{ height: '62%' }}
           >
             <p
-              className="font-arab text-center drop-shadow-sm"
+              className="font-arab text-center"
               style={{
-                fontSize: 'clamp(26px, 9vw, 40px)',
+                fontSize: 'clamp(28px, 9vw, 42px)',
                 direction: 'rtl',
-                color: '#1a0a00',
-                textShadow: '0 1px 12px rgba(255,220,80,0.50), 0 2px 4px rgba(0,0,0,0.15)',
+                color: '#ffffff',
+                textShadow:
+                  '0 2px 12px rgba(0,0,0,0.55), 0 1px 3px rgba(0,0,0,0.70)',
+                lineHeight: 1.65,
               }}
             >
               لَبَّيْكَ اللّٰهُمَّ لَبَّيْكَ
             </p>
             <div className="flex items-center gap-3">
-              <span className="h-px w-8" style={{ background: 'rgba(80,40,0,0.30)' }} />
+              <span className="h-px w-8" style={{ background: 'rgba(255,255,255,0.50)' }} />
               <p
                 className="font-mono text-[10px] uppercase tracking-[0.3em]"
-                style={{ color: 'rgba(80,40,0,0.60)' }}
+                style={{ color: 'rgba(255,255,255,0.80)', textShadow: '0 1px 4px rgba(0,0,0,0.50)' }}
               >
                 Talbiyah
               </p>
-              <span className="h-px w-8" style={{ background: 'rgba(80,40,0,0.30)' }} />
+              <span className="h-px w-8" style={{ background: 'rgba(255,255,255,0.50)' }} />
             </div>
           </div>
 
