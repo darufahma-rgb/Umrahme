@@ -51,9 +51,9 @@ export default function Login() {
         <div
           className="relative w-full overflow-hidden"
           style={{
-            height: '52vw',
-            maxHeight: '260px',
-            minHeight: '200px',
+            height: '60vw',
+            maxHeight: '300px',
+            minHeight: '220px',
           }}
         >
           {/* Hero photo — natural, no color grading */}
@@ -61,7 +61,7 @@ export default function Login() {
             src={heroBg}
             alt=""
             className="absolute inset-0 w-full h-full object-cover"
-            style={{ objectPosition: 'center 15%' }}
+            style={{ objectPosition: 'center 40%' }}
             aria-hidden
           />
 
