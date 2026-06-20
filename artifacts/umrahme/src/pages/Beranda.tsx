@@ -142,16 +142,21 @@ export default function Beranda() {
           />
 
           <div className="relative">
-            {/* Arabic greeting — top right */}
-            <p className="font-arab text-[22px] leading-loose text-gold" dir="rtl">
-              السَّلَامُ عَلَيْكُمْ
-            </p>
+            {/* Baris sapaan: Latin kiri ↔ Arab kanan — sejajar dalam satu komposisi */}
+            <div className="flex items-baseline justify-between gap-4">
+              <p className="font-mono text-[11px] uppercase tracking-widest text-primary">
+                Assalamu'alaikum,
+              </p>
+              <p className="font-arab text-[17px] leading-none text-gold flex-none" dir="rtl">
+                السَّلَامُ عَلَيْكُمْ
+              </p>
+            </div>
 
-            <h1 className="mt-0.5 font-display text-[32px] font-bold leading-none tracking-[-1px] text-ink">
+            <h1 className="mt-1.5 font-display text-[32px] font-bold leading-none tracking-[-1px] text-ink">
               {firstName}
             </h1>
 
-            <div className="mt-2.5 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-canvas/80 px-3 py-1">
+            <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-canvas/80 px-3 py-1">
               <span className="h-1.5 w-1.5 flex-none rounded-full bg-primary animate-pulse" />
               <p className="font-mono text-[10px] uppercase tracking-wider text-charcoal">
                 {faseLabelMobile[jamaah.fase] ?? jamaah.fase}
@@ -275,8 +280,16 @@ export default function Beranda() {
 
         {/* Header */}
         <header className="mb-6">
-          <p className="font-arab text-[26px] text-gold" dir="rtl">السَّلَامُ عَلَيْكُمْ</p>
-          <h1 className="mt-0.5 font-display text-[40px] font-bold leading-none tracking-[-1.5px] text-ink">
+          {/* Baris sapaan: Latin kiri ↔ Arab kanan */}
+          <div className="flex items-baseline justify-between gap-4">
+            <p className="font-mono text-[11px] uppercase tracking-widest text-primary">
+              Assalamu'alaikum,
+            </p>
+            <p className="font-arab text-[20px] leading-none text-gold flex-none" dir="rtl">
+              السَّلَامُ عَلَيْكُمْ
+            </p>
+          </div>
+          <h1 className="mt-2 font-display text-[40px] font-bold leading-none tracking-[-1.5px] text-ink">
             {firstName}
           </h1>
           <div className="mt-2.5 flex items-center gap-3">
