@@ -18,6 +18,8 @@ import LokasiDetail from './pages/LokasiDetail';
 import Profil from './pages/Profil';
 import Persiapan from './pages/Persiapan';
 import Sertifikat from './pages/Sertifikat';
+import ManasikInteraktif from './pages/ManasikInteraktif';
+import ManasikModulDetail from './pages/ManasikModulDetail';
 
 export default function App() {
   return (
@@ -37,6 +39,8 @@ export default function App() {
         <Route path="/panduan" element={<Panduan />} />
         <Route path="/panduan/tata-cara" element={<TataCara />} />
         <Route path="/panduan/ihram" element={<PanduanIhram />} />
+        <Route path="/panduan/manasik-interaktif" element={<ManasikInteraktif />} />
+        <Route path="/panduan/manasik-interaktif/:modulId" element={<ManasikModulDetail />} />
 
         {/* Slot: Ibadah (Mode B — pintu cepat) */}
         <Route path="/ibadah" element={<Ibadah />} />
