@@ -25,7 +25,7 @@ export const ritualSteps: RitualStep[] = [
     judul: 'Niat Ihram dari Miqat',
     deskripsiSingkat:
       'Di titik miqat, bersuci (mandi sunnah), lalu ucapkan niat umrah dalam hati. Sejak saat ini berlaku seluruh larangan ihram.',
-    doaTerkaitId: 'niat-ihram-umrah',
+    doaTerkaitId: 'ihram-niat-umrah',
     linkKeFitur: '/panduan/ihram',
     linkKeFiturLabel: 'Panduan Ihram',
     catatanPenting:
@@ -37,7 +37,7 @@ export const ritualSteps: RitualStep[] = [
     judul: 'Memakai Ihram & Membaca Talbiyah',
     deskripsiSingkat:
       'Kenakan kain ihram (laki-laki: 2 lembar tanpa jahitan; perempuan: pakaian menutup aurat tanpa penutup wajah & telapak tangan), lalu mulai membaca talbiyah.',
-    doaTerkaitId: 'talbiyah',
+    doaTerkaitId: 'ihram-talbiyah',
     catatanPenting:
       'Laki-laki mengeraskan talbiyah; perempuan melirihkan.',
   },
@@ -47,7 +47,7 @@ export const ritualSteps: RitualStep[] = [
     judul: 'Perjalanan Menuju Makkah',
     deskripsiSingkat:
       'Perbanyak bacaan talbiyah selama perjalanan — di kendaraan, di jalanan, di setiap kesempatan. Ini waktu yang baik untuk berdoa dan merenungkan niat.',
-    doaTerkaitId: 'talbiyah',
+    doaTerkaitId: 'ihram-talbiyah',
   },
   {
     id: 'masuk-masjidil-haram',
@@ -55,7 +55,7 @@ export const ritualSteps: RitualStep[] = [
     judul: 'Memasuki Masjidil Haram',
     deskripsiSingkat:
       'Masuk dengan kaki kanan, bacakan doa masuk masjid. Saat tiba di dalam, hentikan talbiyah ketika akan memulai tawaf.',
-    doaTerkaitId: 'doa-masuk-masjidil-haram',
+    doaTerkaitId: 'makkah-masuk-masjidil-haram',
     catatanPenting:
       'Hentikan talbiyah saat akan memulai tawaf — talbiyah tidak dibaca lagi hingga selesai umrah.',
   },
@@ -65,7 +65,7 @@ export const ritualSteps: RitualStep[] = [
     judul: "Melihat Ka'bah",
     deskripsiSingkat:
       "Saat pertama kali Ka'bah terlihat, berhentilah sejenak dan panjatkan doa. Momen ini sangat mustajab — sampaikan hajat dengan penuh harap dan ketulusan.",
-    doaTerkaitId: 'doa-melihat-kabah',
+    doaTerkaitId: 'makkah-melihat-kabah',
     catatanPenting:
       "Doa pertama kali melihat Ka'bah termasuk doa yang sangat dikabulkan. Jangan lewatkan.",
   },

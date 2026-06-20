@@ -17,14 +17,16 @@ export interface Jamaah {
   fase: Fase;
 }
 
-/** Kategori doa pada Kumpulan Doa. */
+/** Kategori doa pada Kumpulan Doa (9 tahapan ibadah umrah). */
 export type KategoriDoa =
   | 'persiapan'
+  | 'madinah'
   | 'ihram'
+  | 'makkah'
   | 'tawaf'
   | 'sai'
   | 'tahallul'
-  | 'ziarah'
+  | 'wada'
   | 'harian';
 
 export interface Doa {

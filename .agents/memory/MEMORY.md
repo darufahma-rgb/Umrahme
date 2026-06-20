@@ -1,0 +1,1 @@
+- [Doa data integration](doa-integration.md) — 45 doa / 9 kategori dari PDF Tunas Tours sudah diintegrasikan; ID skema & backward-compat exports tercatat di sini.
