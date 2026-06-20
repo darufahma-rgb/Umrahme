@@ -12,15 +12,15 @@ export const niatIhram: { id: string; judul: string; arab: string; latin: string
     id: 'niat-umrah',
     judul: 'Niat Umrah (Ifrad — umrah saja)',
     arab: 'لَبَّيْكَ اللّٰهُمَّ عُمْرَةً',
-    latin: "Labbaika Allāhumma ‘umratan",
+    latin: "Labbaika Allāhumma 'umratan",
     arti: 'Aku penuhi panggilan-Mu ya Allah untuk berumrah.',
   },
   {
-    id: 'niat-tamattu',
-    judul: "Niat Umrah Tamattu' (umrah lalu haji, di musim haji)",
-    arab: 'لَبَّيْكَ اللّٰهُمَّ عُمْرَةً مُتَمَتِّعًا بِهَا إِلَى الْحَجِّ',
-    latin: "Labbaika Allāhumma ‘umratan mutamatti‘an bihā ilal-ḥajj",
-    arti: 'Aku penuhi panggilan-Mu ya Allah untuk umrah yang aku jadikan tamattu’ menuju haji. (Hanya bagi yang berhaji tamattu’ di musim haji.)',
+    id: 'niat-badal',
+    judul: 'Niat Umrah Badal (mewakili orang lain)',
+    arab: 'لَبَّيْكَ اللّٰهُمَّ عُمْرَةً عَنْ فُلَانٍ',
+    latin: "Labbaika Allāhumma 'umratan 'an [nama]",
+    arti: 'Aku penuhi panggilan-Mu ya Allah untuk berumrah atas nama [nama orang yang diwakilkan]. Ganti "fulān" dengan nama lengkap orang tersebut saat melafalkan niat.',
   },
 ];
 
@@ -118,7 +118,7 @@ export const tataCaraMemakaiIhram: IhramSection[] = [
     id: 'memakai',
     judul: 'Memakai Kain Ihram (Laki-laki)',
     langkah: [
-      'Kenakan dua helai kain putih tak berjahit: izar (bawahan, dililitkan di pinggang) dan rida’ (atasan, disampirkan di bahu).',
+      "Kenakan dua helai kain putih tak berjahit: izar (bawahan, dililitkan di pinggang) dan rida' (atasan, disampirkan di bahu).",
       'Pastikan aurat tertutup sempurna saat ruku & sujud.',
       'Kepala dibiarkan terbuka; gunakan sandal yang menampakkan punggung kaki.',
     ],
@@ -137,7 +137,7 @@ export const tataCaraMemakaiIhram: IhramSection[] = [
     judul: 'Berniat di Miqat',
     langkah: [
       'Shalat sunnah dua rakaat bila memungkinkan.',
-      'Berniat ihram umrah: "Labbaika Allāhumma ‘umratan".',
+      "Berniat ihram umrah: \"Labbaika Allāhumma 'umratan\".",
       'Mulai memperbanyak talbiyah hingga tiba di Makkah.',
     ],
   },
