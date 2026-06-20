@@ -59,7 +59,7 @@ export default function Login() {
           <img
             src={heroBg}
             alt=""
-            className="absolute inset-0 w-full h-full object-cover object-center"
+            className="absolute inset-0 w-full h-full object-cover object-top"
             aria-hidden
           />
 
