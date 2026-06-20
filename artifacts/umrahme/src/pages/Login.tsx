@@ -134,9 +134,9 @@ export default function Login() {
               {/* Icon badge */}
               <div
                 className="flex-none flex h-10 w-10 items-center justify-center rounded-xl"
-                style={{ background: 'linear-gradient(135deg, #c8e8f5 0%, #a0d4ec 100%)' }}
+                style={{ background: '#111111' }}
               >
-                <KeyRound className="h-4.5 w-4.5" style={{ color: '#2d7da8', strokeWidth: 2 }} />
+                <KeyRound className="h-4.5 w-4.5" style={{ color: '#ffffff', strokeWidth: 2 }} />
               </div>
               {/* Input */}
               <div className="flex-1 min-w-0">
