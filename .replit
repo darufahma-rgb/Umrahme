@@ -33,7 +33,7 @@ args = "PORT=19579 BASE_PATH=/ pnpm --filter @workspace/umrahme run dev"
 waitForPort = 19579
 
 [agent]
-stack = "PNPM_WORKSPACE"
+stack = "BEST_EFFORT_FALLBACK"
 expertMode = true
 
 [postMerge]
