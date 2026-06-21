@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
+import AdminProtectedRoute from './components/admin/AdminProtectedRoute';
 
 import Login from './pages/Login';
 import Beranda from './pages/Beranda';
@@ -24,9 +25,14 @@ import Jurnal from './pages/Jurnal';
 import RitualNavigator from './pages/RitualNavigator';
 import Tahallul from './pages/Tahallul';
 
+import AdminLogin from './pages/admin/AdminLogin';
+import AdminTenantList from './pages/admin/AdminTenantList';
+import AdminTenantForm from './pages/admin/AdminTenantForm';
+
 export default function App() {
   return (
     <Routes>
+      {/* ── App jamaah ── */}
       <Route path="/login" element={<Login />} />
 
       <Route
@@ -37,36 +43,45 @@ export default function App() {
         }
       >
         <Route path="/beranda" element={<Beranda />} />
-
-        {/* Slot: Panduan (Mode A — belajar) */}
         <Route path="/panduan" element={<Panduan />} />
         <Route path="/panduan/tata-cara" element={<TataCara />} />
         <Route path="/panduan/ihram" element={<PanduanIhram />} />
         <Route path="/panduan/manasik-interaktif" element={<ManasikInteraktif />} />
         <Route path="/panduan/manasik-interaktif/:modulId" element={<ManasikModulDetail />} />
-
-        {/* Slot: Ibadah (Mode B — pintu cepat) */}
         <Route path="/ibadah" element={<Ibadah />} />
         <Route path="/ibadah/navigator" element={<RitualNavigator />} />
         <Route path="/ibadah/tawaf" element={<CounterTawaf />} />
         <Route path="/ibadah/sai" element={<CounterSai />} />
         <Route path="/ibadah/tahallul" element={<Tahallul />} />
         <Route path="/ibadah/jadwal-sholat" element={<JadwalSholat />} />
-
-        {/* Slot: Doa */}
         <Route path="/doa" element={<Doa />} />
         <Route path="/doa/:id" element={<DoaDetail />} />
-
-        {/* Peta — diakses dari Beranda & Panduan, bukan slot nav */}
         <Route path="/peta" element={<Peta />} />
         <Route path="/peta/:id" element={<LokasiDetail />} />
-
-        {/* Slot: Profil */}
         <Route path="/profil" element={<Profil />} />
         <Route path="/profil/persiapan" element={<Persiapan />} />
         <Route path="/profil/sertifikat" element={<Sertifikat />} />
         <Route path="/profil/jurnal" element={<Jurnal />} />
       </Route>
+
+      {/* ── Admin panel — terpisah dari app jamaah ── */}
+      <Route path="/admin/login" element={<AdminLogin />} />
+      <Route
+        path="/admin"
+        element={
+          <AdminProtectedRoute>
+            <AdminTenantList />
+          </AdminProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/tenants/:id"
+        element={
+          <AdminProtectedRoute>
+            <AdminTenantForm />
+          </AdminProtectedRoute>
+        }
+      />
 
       <Route path="/" element={<Navigate to="/beranda" replace />} />
       <Route path="*" element={<Navigate to="/beranda" replace />} />
