@@ -56,128 +56,48 @@ function PrayerTimeline({
   waktuList: WaktuSholat[];
   progressMenit: number;
 }) {
-  const W = 300, H = 64, padL = 18, padR = 18;
-  const trackW = W - padL - padR;
-  const lineY = 29;
-
-  const toX = (menit: number) => padL + (menit / 1440) * trackW;
-
-  // Estimasi lebar karakter pada font monospace fontSize 6.5 (≈0.6× fontSize).
-  // Dipakai untuk mendeteksi overflow ke tepi SVG dan tabrakan antar label.
-  const fontSize = 6.5;
-  const charW = fontSize * 0.6;
-  const halfWidth = (s: string) => (s.length * charW) / 2;
-
-  const points = waktuList.map((prayer) => {
-    const [ph, pm] = prayer.jamMulai.split(':').map(Number);
-    const pMin = ph * 60 + pm;
-    const [ah, am] = prayer.jamAkhir.split(':').map(Number);
-    const aMin = ah * 60 + am;
-    const x = toX(pMin);
-    const isSekarang = progressMenit >= pMin && progressMenit < aMin;
-    const passed = pMin <= progressMenit && !isSekarang;
-    const label = prayer.nama.toUpperCase();
-    const w = Math.max(halfWidth(label), halfWidth(prayer.jamMulai));
-    return { prayer, x, isSekarang, passed, label, w };
-  });
-
-  // ── Force-layout 1D: geser textX horizontal agar semua label 1 baris ──
-  // Titik (lingkaran) tetap di posisi x aslinya; hanya teks yang bergerak.
-  const LABEL_GAP = 2; // px minimum antar label
-  const textXArr = points.map((p) => p.x);
-
-  // Pass kiri→kanan: dorong ke kanan jika bertabrakan dengan label sebelumnya
-  for (let i = 1; i < points.length; i++) {
-    const prevRight = textXArr[i - 1] + points[i - 1].w + LABEL_GAP;
-    const curLeft   = textXArr[i]     - points[i].w;
-    if (curLeft < prevRight) {
-      textXArr[i] = prevRight + points[i].w;
-    }
-  }
-
-  // Pass kanan→kiri: dorong ke kiri jika label akhir melewati batas kanan,
-  // atau jika pass sebelumnya menciptakan tabrakan baru ke arah kanan.
-  for (let i = points.length - 2; i >= 0; i--) {
-    const nextLeft  = textXArr[i + 1] - points[i + 1].w - LABEL_GAP;
-    const curRight  = textXArr[i]     + points[i].w;
-    if (curRight > nextLeft) {
-      textXArr[i] = nextLeft - points[i].w;
-    }
-  }
-
-  // Resolusi anchor + klem ke batas track
-  const anchors = textXArr.map((tx, i) => {
-    const hw = points[i].w;
-    let textX = tx;
-    let textAnchor: 'start' | 'middle' | 'end' = 'middle';
-    if (textX - hw < padL) {
-      textX = padL;
-      textAnchor = 'start';
-    } else if (textX + hw > padL + trackW) {
-      textX = padL + trackW;
-      textAnchor = 'end';
-    }
-    return { textX, textAnchor };
-  });
-
   return (
-    <svg
-      width={W}
-      height={H}
-      viewBox={`0 0 ${W} ${H}`}
-      className="w-full"
-      aria-hidden="true"
-    >
-      {points.map((p, i) => {
-        const { x, isSekarang, passed, label, prayer } = p;
-        const { textAnchor, textX } = anchors[i];
+    <div className="grid grid-cols-5 px-3 pb-1">
+      {waktuList.map((prayer) => {
+        const [ph, pm] = prayer.jamMulai.split(':').map(Number);
+        const pMin = ph * 60 + pm;
+        const [ah, am] = prayer.jamAkhir.split(':').map(Number);
+        const aMin = ah * 60 + am;
+        const isSekarang = progressMenit >= pMin && progressMenit < aMin;
+        const passed = pMin < progressMenit && !isSekarang;
 
         return (
-          <g key={prayer.id}>
-            {isSekarang && (
-              <circle cx={x} cy={lineY} r={11} fill="#0ea5e9" opacity="0.08" />
-            )}
-
-            <circle
-              cx={x}
-              cy={lineY}
-              r={isSekarang ? 5.5 : 4}
-              fill={isSekarang ? '#0ea5e9' : passed ? '#0ea5e9' : '#f6f3ec'}
-              stroke={isSekarang ? 'none' : passed ? '#0ea5e9' : '#c8c3b8'}
-              strokeWidth={1.5}
-              opacity={passed && !isSekarang ? 0.55 : 1}
-            />
-
-            {/* Jam di atas titik */}
-            <text
-              x={textX}
-              y={lineY - 13}
-              textAnchor={textAnchor}
-              fontSize={fontSize}
-              fontFamily="monospace"
-              fill={isSekarang ? '#0ea5e9' : '#9a9590'}
-              fontWeight={isSekarang ? '600' : '400'}
+          <div key={prayer.id} className="flex flex-col items-center gap-1.5">
+            {/* Jam */}
+            <span
+              className="font-mono text-[9px] tabular-nums"
+              style={{ color: isSekarang ? '#0ea5e9' : '#9a9590', fontWeight: isSekarang ? 600 : 400 }}
             >
               {prayer.jamMulai}
-            </text>
+            </span>
 
-            {/* Nama di bawah titik */}
-            <text
-              x={textX}
-              y={lineY + 16}
-              textAnchor={textAnchor}
-              fontSize={fontSize}
-              fontFamily="monospace"
-              fill={isSekarang ? '#0ea5e9' : '#9a9590'}
-              fontWeight={isSekarang ? '600' : '400'}
+            {/* Dot */}
+            <span
+              className="flex h-5 w-5 items-center justify-center rounded-full transition-all"
+              style={isSekarang
+                ? { background: '#0ea5e9', boxShadow: '0 0 0 5px rgba(14,165,233,0.12)' }
+                : passed
+                  ? { background: 'rgba(14,165,233,0.35)', border: '1.5px solid rgba(14,165,233,0.5)' }
+                  : { background: '#f0ede6', border: '1.5px solid #c8c3b8' }
+              }
+            />
+
+            {/* Nama */}
+            <span
+              className="font-mono text-[8px] uppercase tracking-wider"
+              style={{ color: isSekarang ? '#0ea5e9' : '#9a9590', fontWeight: isSekarang ? 600 : 400 }}
             >
-              {label}
-            </text>
-          </g>
+              {prayer.nama}
+            </span>
+          </div>
         );
       })}
-
-    </svg>
+    </div>
   );
 }
 
