@@ -161,12 +161,6 @@ export default function Beranda() {
             style={{ objectPosition: 'center 38%', transform: 'scale(1.3)', transformOrigin: 'center 38%' }}
           />
 
-          {/* Blue double exposure overlay */}
-          <div
-            className="pointer-events-none absolute inset-0"
-            style={{ background: 'rgba(14, 80, 200, 0.45)', mixBlendMode: 'screen' }}
-          />
-
           {/* Top scrim — status bar area */}
           <div
             className="pointer-events-none absolute inset-x-0 top-0"
