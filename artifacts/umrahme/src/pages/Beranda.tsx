@@ -256,13 +256,11 @@ export default function Beranda() {
           </div>
         </div>
 
-        {/* ── SEARCH (floating at hero/sheet boundary) ─── */}
-        <div className="relative z-20 -mt-6">
-          <GlobalSearch />
-        </div>
+        {/* ── SHEET (melengkung ke atas) ───────────────── */}
+        <div className="relative z-10 -mt-10 rounded-t-[32px] bg-canvas px-4 pt-5 pb-12 space-y-4">
 
-        {/* ── SHEET ────────────────────────────────────── */}
-        <div className="relative z-10 -mt-1 bg-canvas px-4 pt-4 pb-12 space-y-4">
+          {/* Search bar di atas sheet */}
+          <GlobalSearch />
 
           {/* Kartu kondisional */}
           {showHitung && (
