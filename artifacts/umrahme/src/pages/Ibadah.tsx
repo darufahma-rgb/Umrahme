@@ -1,58 +1,73 @@
 import { Link } from 'react-router-dom';
 import { IconTawaf, IconSai, IconNavigator, IconScissors, IconMoon, IconDoa, IconChevron } from '../components/icons';
 
-// ── Ikon lokal ─────────────────────────────────────────────────
-function IconCompass({ className = '' }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M16.24 7.76 L14.12 14.12 L7.76 16.24 L9.88 9.88 Z" fill="currentColor" stroke="none" opacity="0.3"/>
-      <path d="M16.24 7.76 L14.12 14.12 L7.76 16.24 L9.88 9.88 Z" />
-    </svg>
-  );
-}
-
-// ── Hero Navigator Card ─────────────────────────────────────────
+// ── Navigator Hero ──────────────────────────────────────────────
 function NavigatorHero() {
   return (
-    <Link to="/ibadah/navigator" className="block active:scale-[0.99] transition-transform">
+    <Link to="/ibadah/navigator" className="block active:opacity-90 transition-opacity">
       <div
-        className="relative overflow-hidden rounded-3xl p-5 min-h-[160px] flex flex-col justify-between"
-        style={{ background: 'linear-gradient(135deg, #0c2340 0%, #0a3d62 55%, #0ea5e9 130%)' }}
+        className="relative overflow-hidden rounded-[28px]"
+        style={{
+          background: 'linear-gradient(145deg, #0d1f3c 0%, #0f3460 50%, #1a4a7a 100%)',
+          padding: '1px',
+        }}
       >
-        {/* Dekorasi */}
-        <div className="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/[0.05]" />
-        <div className="pointer-events-none absolute -bottom-10 right-10 h-32 w-32 rounded-full bg-sky-300/[0.08]" />
-        <div className="pointer-events-none absolute top-4 right-4 h-20 w-20 rounded-full bg-sky-400/[0.06]" />
+        <div
+          className="relative overflow-hidden rounded-[27px] p-6"
+          style={{ background: 'linear-gradient(145deg, #0d1f3c 0%, #0f3460 50%, #1a4a7a 100%)' }}
+        >
+          {/* Lingkaran dekorasi subtle */}
+          <div className="pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full"
+            style={{ background: 'radial-gradient(circle, rgba(14,165,233,0.12) 0%, transparent 70%)' }} />
+          <div className="pointer-events-none absolute -bottom-16 left-1/2 h-40 w-40 rounded-full"
+            style={{ background: 'radial-gradient(circle, rgba(99,179,237,0.08) 0%, transparent 70%)' }} />
 
-        {/* Badge */}
-        <div className="relative flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 backdrop-blur-sm">
-            <span className="h-1.5 w-1.5 rounded-full bg-sky-300 animate-pulse" />
-            <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/80">Panduan Utama</span>
-          </span>
-        </div>
+          {/* Badge */}
+          <div className="relative inline-flex items-center gap-2 mb-5">
+            <span className="h-1.5 w-1.5 rounded-full bg-sky-400 animate-pulse" />
+            <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-sky-300/70">Panduan Utama</span>
+          </div>
 
-        {/* Content */}
-        <div className="relative mt-4">
-          <div className="flex items-end justify-between gap-3">
-            <div>
-              <h2 className="font-display text-[26px] font-bold leading-tight text-white" style={{ letterSpacing: '-0.5px' }}>
+          {/* Body */}
+          <div className="relative flex items-end justify-between gap-4">
+            <div className="flex-1 min-w-0">
+              <h2
+                className="font-display font-bold text-white"
+                style={{ fontSize: 'clamp(24px, 6vw, 30px)', letterSpacing: '-0.5px', lineHeight: 1.1 }}
+              >
                 Ritual Navigator
               </h2>
-              <p className="mt-1 text-[12px] leading-relaxed text-white/65 max-w-[220px]">
+              <p className="mt-2 text-[12px] leading-relaxed text-white/50 max-w-[200px]">
                 Ikuti tiap tahap umrah langkah demi langkah — progres tersimpan otomatis.
               </p>
             </div>
+
+            {/* Ikon floated */}
             <div
-              className="flex-none flex h-12 w-12 items-center justify-center rounded-2xl"
-              style={{ background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.2)' }}
+              className="flex-none flex h-11 w-11 items-center justify-center rounded-2xl"
+              style={{
+                background: 'rgba(255,255,255,0.07)',
+                border: '1px solid rgba(255,255,255,0.12)',
+                backdropFilter: 'blur(8px)',
+              }}
             >
-              <IconCompass className="h-6 w-6 text-white" />
+              <IconNavigator className="h-5 w-5 text-sky-300" />
             </div>
           </div>
-          <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-[12px] font-bold text-primary shadow-[0_4px_12px_rgba(0,0,0,0.2)]">
-            Mulai Navigator <IconChevron className="h-3 w-3" />
+
+          {/* CTA */}
+          <div className="relative mt-5">
+            <span
+              className="inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-[12px] font-semibold"
+              style={{
+                background: 'rgba(255,255,255,0.10)',
+                border: '1px solid rgba(255,255,255,0.16)',
+                color: 'rgba(255,255,255,0.85)',
+                backdropFilter: 'blur(8px)',
+              }}
+            >
+              Mulai Navigator <IconChevron className="h-3 w-3" />
+            </span>
           </div>
         </div>
       </div>
@@ -60,105 +75,106 @@ function NavigatorHero() {
   );
 }
 
-// ── Counter Card (compact, 2-col) ───────────────────────────────
+// ── Counter Card ────────────────────────────────────────────────
 function CounterCard({
-  to, title, desc, icon, cta, color,
+  to, title, desc, icon, cta,
 }: {
-  to: string; title: string; desc: string;
-  icon: React.ReactNode; cta: string;
-  color: { bg: string; icon: string; text: string };
+  to: string; title: string; desc: string; icon: React.ReactNode; cta: string;
 }) {
   return (
     <Link to={to} className="block active:scale-[0.97] transition-transform">
-      <div className="h-full rounded-2xl border border-hairline bg-white p-4 shadow-drop-card flex flex-col gap-3">
+      <div className="h-full flex flex-col rounded-[20px] bg-white border border-[rgba(0,0,0,0.06)] p-4 shadow-[0_2px_12px_rgba(0,0,0,0.05)]">
         <div
-          className="flex h-11 w-11 items-center justify-center rounded-2xl"
-          style={{ background: color.bg }}
+          className="flex h-10 w-10 items-center justify-center rounded-[14px] mb-3 text-[#0c2340]"
+          style={{ background: 'rgba(12,35,64,0.06)' }}
         >
-          <span style={{ color: color.icon }}>{icon}</span>
+          {icon}
         </div>
-        <div className="flex-1">
-          <h3 className="text-[14px] font-bold leading-tight text-ink">{title}</h3>
-          <p className="mt-1 text-[11px] leading-relaxed text-charcoal">{desc}</p>
-        </div>
-        <span className="inline-flex items-center gap-1 font-mono text-[10px] font-semibold uppercase tracking-wider" style={{ color: color.text }}>
-          {cta} <IconChevron className="h-3 w-3" />
+        <h3 className="text-[13px] font-bold text-[#0c2340] leading-snug">{title}</h3>
+        <p className="mt-1 text-[11px] leading-relaxed text-[#6b7280] flex-1">{desc}</p>
+        <span className="mt-3 inline-flex items-center gap-1 font-mono text-[9px] font-semibold uppercase tracking-[0.2em] text-[#0ea5e9]">
+          {cta} <IconChevron className="h-2.5 w-2.5" />
         </span>
       </div>
     </Link>
   );
 }
 
-// ── Halaman ────────────────────────────────────────────────────
+// ── Halaman ─────────────────────────────────────────────────────
 export default function Ibadah() {
   const doaLinks = [
-    { to: '/doa?kategori=tawaf', label: 'Doa Tawaf', desc: "Saat mengelilingi Ka'bah" },
-    { to: '/doa?kategori=sai',   label: "Doa Sa'i",  desc: 'Antara Shafa & Marwah' },
+    { to: '/doa?kategori=tawaf',    label: 'Doa Tawaf',    desc: "Saat mengelilingi Ka'bah" },
+    { to: '/doa?kategori=sai',      label: "Doa Sa'i",     desc: 'Antara Shafa & Marwah' },
     { to: '/doa?kategori=tahallul', label: 'Doa Tahallul', desc: 'Mencukur / memotong rambut' },
   ];
 
   const counters = [
     {
-      to: '/ibadah/tawaf',
+      to:    '/ibadah/tawaf',
       title: 'Counter Tawaf',
-      desc: '7 putaran Ka\'bah — tap sekali, doa muncul otomatis.',
-      icon: <IconTawaf className="h-5 w-5" />,
-      cta: 'Mulai Tawaf',
-      color: { bg: 'rgba(14,165,233,0.10)', icon: '#0ea5e9', text: '#0ea5e9' },
+      desc:  '7 putaran dengan satu tap. Doa muncul otomatis.',
+      icon:  <IconTawaf className="h-5 w-5" />,
+      cta:   'Mulai Tawaf',
     },
     {
-      to: '/ibadah/sai',
+      to:    '/ibadah/sai',
       title: "Counter Sa'i",
-      desc: '7 lintasan Shafa–Marwah. Arah & doa per lintasan.',
-      icon: <IconSai className="h-5 w-5" />,
-      cta: "Mulai Sa'i",
-      color: { bg: 'rgba(16,185,129,0.10)', icon: '#10b981', text: '#10b981' },
+      desc:  '7 lintasan Shafa–Marwah. Arah & doa per lintasan.',
+      icon:  <IconSai className="h-5 w-5" />,
+      cta:   "Mulai Sa'i",
     },
     {
-      to: '/ibadah/tahallul',
+      to:    '/ibadah/tahallul',
       title: 'Tahallul',
-      desc: 'Langkah terakhir — potong rambut, keluar dari ihram.',
-      icon: <IconScissors className="h-5 w-5" />,
-      cta: 'Panduan',
-      color: { bg: 'rgba(212,162,78,0.12)', icon: '#a07828', text: '#a07828' },
+      desc:  'Langkah terakhir — potong rambut, keluar ihram.',
+      icon:  <IconScissors className="h-5 w-5" />,
+      cta:   'Panduan',
     },
     {
-      to: '/ibadah/jadwal-sholat',
+      to:    '/ibadah/jadwal-sholat',
       title: 'Jadwal Sholat',
-      desc: 'Waktu sholat 5 waktu + gauge jam & pengingat adzan.',
-      icon: <IconMoon className="h-5 w-5" />,
-      cta: 'Lihat Jadwal',
-      color: { bg: 'rgba(99,102,241,0.10)', icon: '#6366f1', text: '#6366f1' },
+      desc:  'Waktu 5 sholat + pengingat adzan real-time.',
+      icon:  <IconMoon className="h-5 w-5" />,
+      cta:   'Lihat Jadwal',
     },
   ];
 
   return (
-    <div className="min-h-screen bg-canvas">
+    <div className="min-h-screen" style={{ background: '#f5f4f0' }}>
 
       {/* ───── MOBILE ───── */}
       <div className="lg:hidden">
 
-        {/* Header */}
-        <header className="px-5 pt-8 pb-4" style={{ paddingTop: 'max(2rem, env(safe-area-inset-top))' }}>
-          <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-primary">Saat di Tanah Suci</p>
-          <h1 className="mt-1 font-display text-[32px] font-bold leading-none text-ink" style={{ letterSpacing: '-1px' }}>
+        {/* Header — dark strip */}
+        <header
+          className="px-5 pb-6"
+          style={{
+            paddingTop: 'max(2.5rem, env(safe-area-inset-top))',
+            background: 'linear-gradient(to bottom, #0d1f3c 0%, #0f3460 100%)',
+          }}
+        >
+          <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-sky-400/70 mb-1">
+            Saat di Tanah Suci
+          </p>
+          <h1
+            className="font-display font-bold text-white"
+            style={{ fontSize: 'clamp(28px, 8vw, 36px)', letterSpacing: '-1px', lineHeight: 1 }}
+          >
             Ibadah
           </h1>
-          <p className="mt-1.5 text-[12px] text-charcoal">Satu layar, satu fokus. Buka cepat saat beribadah.</p>
+          <p className="mt-1.5 text-[11px] text-white/40">
+            Satu layar, satu fokus — buka cepat saat beribadah.
+          </p>
         </header>
 
         {/* Navigator hero */}
-        <section className="px-5">
+        <section className="px-4 -mt-4 relative z-10">
           <NavigatorHero />
         </section>
 
-        {/* Section label */}
-        <div className="px-5 mt-5 mb-3">
-          <p className="font-mono text-[9px] uppercase tracking-[0.28em] text-mute">Panduan & Counter</p>
-        </div>
-
-        {/* Counter 2-col grid */}
-        <section className="px-5 pb-2">
+        {/* Counter grid */}
+        <section className="px-4 mt-4">
+          <p className="mb-3 font-mono text-[9px] uppercase tracking-[0.28em] text-[#9ca3af]">Panduan & Counter</p>
           <div className="grid grid-cols-2 gap-3">
             {counters.map((c) => (
               <CounterCard key={c.to} {...c} />
@@ -167,23 +183,23 @@ export default function Ibadah() {
         </section>
 
         {/* Doa section */}
-        <section className="px-5 mt-5 pb-8">
-          <p className="mb-3 font-mono text-[9px] uppercase tracking-[0.28em] text-mute">Doa Saat Ibadah</p>
-          <div className="overflow-hidden rounded-2xl border border-hairline bg-white shadow-drop-card divide-y divide-hairline">
+        <section className="px-4 mt-5 pb-8">
+          <p className="mb-3 font-mono text-[9px] uppercase tracking-[0.28em] text-[#9ca3af]">Doa Saat Ibadah</p>
+          <div className="overflow-hidden rounded-[20px] border border-[rgba(0,0,0,0.06)] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.05)] divide-y divide-[rgba(0,0,0,0.05)]">
             {doaLinks.map((it) => (
               <Link
                 key={it.to}
                 to={it.to}
-                className="flex items-center gap-3 px-4 py-3.5 active:bg-surface-bone transition-colors"
+                className="flex items-center gap-3 px-4 py-3.5 active:bg-[#fafaf8] transition-colors"
               >
-                <span className="flex h-8 w-8 flex-none items-center justify-center rounded-xl bg-surface-bone">
-                  <IconDoa className="h-4 w-4 text-gold" />
+                <span className="flex h-8 w-8 flex-none items-center justify-center rounded-xl" style={{ background: 'rgba(212,162,78,0.10)' }}>
+                  <IconDoa className="h-4 w-4 text-[#a07828]" />
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="text-[13px] font-semibold text-ink">{it.label}</p>
-                  <p className="text-[11px] text-charcoal">{it.desc}</p>
+                  <p className="text-[13px] font-semibold text-[#0c2340]">{it.label}</p>
+                  <p className="text-[11px] text-[#9ca3af]">{it.desc}</p>
                 </div>
-                <IconChevron className="h-3.5 w-3.5 flex-none text-ash" />
+                <IconChevron className="h-3.5 w-3.5 flex-none text-[#d1d5db]" />
               </Link>
             ))}
           </div>
@@ -191,38 +207,43 @@ export default function Ibadah() {
       </div>
 
       {/* ───── DESKTOP ───── */}
-      <div className="hidden lg:block px-10 pb-10">
-        <header className="pt-10 pb-6">
-          <p className="font-mono text-[11px] uppercase tracking-widest text-primary">Saat di Tanah Suci</p>
-          <h1 className="mt-1 font-display text-4xl font-bold leading-tight text-ink">Ibadah</h1>
-          <p className="mt-1 text-sm text-charcoal">Buka cepat saat sedang beribadah. Satu layar, satu fokus.</p>
+      <div className="hidden lg:block">
+        <header
+          className="px-10 pb-10 pt-10"
+          style={{
+            background: 'linear-gradient(to bottom, #0d1f3c 0%, #0f3460 100%)',
+          }}
+        >
+          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-sky-400/70 mb-1">Saat di Tanah Suci</p>
+          <h1 className="font-display text-4xl font-bold text-white" style={{ letterSpacing: '-1.5px' }}>Ibadah</h1>
+          <p className="mt-1 text-sm text-white/40">Buka cepat saat sedang beribadah. Satu layar, satu fokus.</p>
         </header>
 
-        <NavigatorHero />
+        <div className="px-10 -mt-5 relative z-10 pb-10">
+          <NavigatorHero />
 
-        <div className="mt-5 grid grid-cols-4 gap-4 mb-8">
-          {counters.map((c) => (
-            <CounterCard key={c.to} {...c} />
-          ))}
-        </div>
+          <div className="mt-4 grid grid-cols-4 gap-4 mb-8">
+            {counters.map((c) => (
+              <CounterCard key={c.to} {...c} />
+            ))}
+          </div>
 
-        <div>
-          <p className="mb-3 font-mono text-[11px] uppercase tracking-widest text-mute">Doa Saat Ibadah</p>
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-[#9ca3af]">Doa Saat Ibadah</p>
           <div className="grid grid-cols-3 gap-3">
             {doaLinks.map((it) => (
               <Link
                 key={it.to}
                 to={it.to}
-                className="flex items-center gap-3 rounded-2xl border border-hairline bg-white px-4 py-3.5 hover:bg-surface-bone transition-colors shadow-drop-card"
+                className="flex items-center gap-3 rounded-[20px] border border-[rgba(0,0,0,0.06)] bg-white px-4 py-3.5 hover:bg-[#fafaf8] transition-colors shadow-[0_2px_12px_rgba(0,0,0,0.05)]"
               >
-                <span className="flex h-8 w-8 flex-none items-center justify-center rounded-xl bg-surface-bone">
-                  <IconDoa className="h-4 w-4 text-gold" />
+                <span className="flex h-8 w-8 flex-none items-center justify-center rounded-xl" style={{ background: 'rgba(212,162,78,0.10)' }}>
+                  <IconDoa className="h-4 w-4 text-[#a07828]" />
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="text-[14px] font-semibold text-ink">{it.label}</p>
-                  <p className="text-xs text-charcoal">{it.desc}</p>
+                  <p className="text-[14px] font-semibold text-[#0c2340]">{it.label}</p>
+                  <p className="text-xs text-[#9ca3af]">{it.desc}</p>
                 </div>
-                <IconChevron className="h-4 w-4 flex-none text-ash" />
+                <IconChevron className="h-4 w-4 flex-none text-[#d1d5db]" />
               </Link>
             ))}
           </div>
