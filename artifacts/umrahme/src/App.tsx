@@ -26,6 +26,7 @@ import RitualNavigator from './pages/RitualNavigator';
 import Tahallul from './pages/Tahallul';
 import AgendaLengkap from './pages/AgendaLengkap';
 import KartuJamaah from './pages/KartuJamaah';
+import Pengumuman from './pages/Pengumuman';
 
 import AdminLogin from './pages/admin/AdminLogin';
 import AdminTenantList from './pages/admin/AdminTenantList';
@@ -66,6 +67,7 @@ export default function App() {
         <Route path="/profil/jurnal" element={<Jurnal />} />
         <Route path="/profil/agenda" element={<AgendaLengkap />} />
         <Route path="/profil/kartu" element={<KartuJamaah />} />
+        <Route path="/pengumuman" element={<Pengumuman />} />
       </Route>
 
       {/* ── Admin panel — terpisah dari app jamaah ── */}

@@ -147,8 +147,9 @@ export function TravelAnnouncementCard({ desktop = false, compact = false }: { d
 
   if (compact) {
     return (
-      <div
-        className="flex flex-col rounded-2xl p-3.5 h-full"
+      <Link
+        to="/pengumuman"
+        className="flex flex-col rounded-2xl p-3.5 h-full active:scale-[0.97] transition-transform"
         style={{
           background: announcement.important ? 'linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)' : '#ffffff',
           border: `1.5px solid ${announcement.important ? 'rgba(212,162,78,0.3)' : 'rgba(0,0,0,0.07)'}`,
@@ -170,7 +171,10 @@ export function TravelAnnouncementCard({ desktop = false, compact = false }: { d
         <p className="mt-1 text-[12px] font-semibold leading-snug text-ink line-clamp-2">
           {announcement.title}
         </p>
-      </div>
+        <span className="mt-auto pt-2 inline-flex items-center gap-1 font-mono text-[8px] font-semibold uppercase tracking-wider text-[#a07828]">
+          Lihat Semua <IconChevron className="h-2.5 w-2.5" />
+        </span>
+      </Link>
     );
   }
 

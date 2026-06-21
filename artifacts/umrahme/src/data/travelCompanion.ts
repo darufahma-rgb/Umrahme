@@ -46,6 +46,30 @@ const DEFAULT_ANNOUNCEMENTS: TravelAnnouncement[] = [
     important: true,
     publishedAt: new Date().toISOString(),
   },
+  {
+    id: 'announcement-2',
+    label: 'Info',
+    title: 'Jadwal keberangkatan ke Madinah',
+    content: 'Bus berangkat pukul 08.00 WAS dari lobby hotel. Pastikan jamaah sudah siap 30 menit sebelumnya dengan seluruh barang bawaan.',
+    important: false,
+    publishedAt: new Date(Date.now() - 1000 * 60 * 60 * 6).toISOString(),
+  },
+  {
+    id: 'announcement-3',
+    label: 'Penting',
+    title: 'Pengumpulan paspor untuk proses visa',
+    content: 'Mohon kumpulkan paspor kepada ketua rombongan masing-masing paling lambat malam ini pukul 21.00.',
+    important: true,
+    publishedAt: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
+  },
+  {
+    id: 'announcement-4',
+    label: 'Info',
+    title: 'Pembagian makan malam di hotel',
+    content: 'Makan malam tersedia di restoran lantai 2 mulai pukul 19.00 s/d 21.00. Tunjukkan gelang jamaah saat masuk.',
+    important: false,
+    publishedAt: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString(),
+  },
 ];
 
 export function getOperationalInfo(_tenantId?: string | null): TravelOperationalInfo {
@@ -54,6 +78,10 @@ export function getOperationalInfo(_tenantId?: string | null): TravelOperational
 
 export function getLatestAnnouncement(_tenantId?: string | null): TravelAnnouncement | null {
   return DEFAULT_ANNOUNCEMENTS[0] ?? null;
+}
+
+export function getAllAnnouncements(_tenantId?: string | null): TravelAnnouncement[] {
+  return DEFAULT_ANNOUNCEMENTS;
 }
 
 export function getFocusByFase(fase: Fase): {
