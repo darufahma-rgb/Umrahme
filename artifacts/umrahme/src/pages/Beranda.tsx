@@ -216,7 +216,7 @@ export default function Beranda() {
       <div className="lg:hidden min-h-screen bg-canvas overflow-x-hidden">
 
         {/* ── HERO ─────────────────────────────────────── */}
-        <div className="relative" style={{ height: 'clamp(320px, 72vw, 420px)' }}>
+        <div className="relative overflow-hidden" style={{ height: 'clamp(320px, 72vw, 420px)' }}>
           <img
             src={heroBg}
             alt=""
