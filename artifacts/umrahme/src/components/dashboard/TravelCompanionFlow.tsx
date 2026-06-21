@@ -52,9 +52,6 @@ export function TripIdentityCard({ desktop = false }: { desktop?: boolean }) {
   if (!jamaah) return null;
 
   const info = getOperationalInfo(tenant?.id);
-  const rombongan  = jamaah.rombongan  ?? info.groupCode;
-  const bus        = jamaah.nomorBus   ?? info.busNumber;
-  const kamar      = jamaah.nomorKamar ?? info.roomNumber;
   const hotelMakkah  = jamaah.hotelMakkah  ?? info.hotelMakkah;
   const hotelMadinah = jamaah.hotelMadinah ?? info.hotelMadinah;
   const firstName  = jamaah.nama.split(' ')[0];
@@ -80,20 +77,6 @@ export function TripIdentityCard({ desktop = false }: { desktop?: boolean }) {
             >
               Kartu →
             </Link>
-          </div>
-
-          {/* Chips rombongan/bus/kamar */}
-          <div className="mt-3 flex items-center gap-2">
-            {[
-              { l: 'Rombongan', v: rombongan },
-              { l: 'Bus', v: bus },
-              { l: 'Kamar', v: kamar },
-            ].map(({ l, v }) => (
-              <div key={l} className="flex-1 rounded-xl bg-surface-bone px-2.5 py-2 text-center">
-                <p className="font-mono text-[7px] uppercase tracking-[0.12em] text-ash">{l}</p>
-                <p className="mt-0.5 text-[12px] font-bold text-ink">{v}</p>
-              </div>
-            ))}
           </div>
 
           {/* Hotel */}
