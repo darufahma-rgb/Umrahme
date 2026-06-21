@@ -288,17 +288,16 @@ function KartuFase({
 
 // ── Grid fitur kecil (3 per baris) ───────────────────────────
 function GridItem({
-  to, label, bg, ic, br, children,
+  to, label, children,
 }: {
-  to: string; label: string; bg: string; ic: string; br: string; children: ReactNode;
+  to: string; label: string; bg?: string; ic?: string; br?: string; children: ReactNode;
 }) {
   return (
     <Link
       to={to}
-      className="flex min-h-[84px] flex-col items-center justify-center gap-2 rounded-2xl border px-2 py-3 text-center active:scale-[0.96] transition-all hover:shadow-drop-card"
-      style={{ background: bg, borderColor: br }}
+      className="flex min-h-[84px] flex-col items-center justify-center gap-2 rounded-2xl border border-hairline bg-white px-2 py-3 text-center active:scale-[0.96] transition-all hover:shadow-drop-card"
     >
-      <span style={{ color: ic }}>{children}</span>
+      <span className="text-charcoal">{children}</span>
       <span className="text-[11px] font-semibold leading-tight text-ink">{label}</span>
     </Link>
   );
@@ -372,16 +371,16 @@ export default function Beranda() {
   const showFaseFallback = !showHitung && !showAgenda;
 
   // Semua item grid fitur (unified)
-  const allFeatures: { to: string; label: string; bg: string; ic: string; br: string; icon: ReactNode }[] = [
-    { to: '/panduan/tata-cara',         label: 'Tata Cara',  bg: '#f0f4ff', ic: '#3d6fd4', br: 'rgba(61,111,212,0.20)',   icon: <IconPanduan className="h-5 w-5" /> },
-    { to: '/panduan/ihram',             label: 'Ihram',      bg: '#fff8f0', ic: '#c8792a', br: 'rgba(200,121,42,0.20)',   icon: <IconIhram   className="h-5 w-5" /> },
-    { to: '/panduan/manasik-interaktif',label: 'Manasik',    bg: '#f0fff4', ic: '#16a34a', br: 'rgba(22,163,74,0.20)',    icon: <IconPanduan className="h-5 w-5" /> },
-    { to: '/ibadah/navigator',          label: 'Navigator',  bg: '#fdf0ff', ic: '#9333ea', br: 'rgba(147,51,234,0.20)',   icon: <IconNavigator className="h-5 w-5" /> },
-    { to: '/ibadah/tahallul',           label: 'Tahallul',   bg: '#fffbf0', ic: '#d97706', br: 'rgba(217,119,6,0.20)',    icon: <IconTawaf   className="h-5 w-5" /> },
-    { to: '/profil/jurnal',             label: 'Jurnal',     bg: '#f0faff', ic: '#0284c7', br: 'rgba(2,132,199,0.20)',    icon: <IconJurnal  className="h-5 w-5" /> },
-    { to: '/peta',                      label: 'Peta',       bg: '#f5f0ff', ic: '#7c3aed', br: 'rgba(124,58,237,0.20)',   icon: <IconPeta    className="h-5 w-5" /> },
-    { to: '/profil/agenda',             label: 'Agenda',     bg: '#f0fff8', ic: '#059669', br: 'rgba(5,150,105,0.20)',    icon: <IconKalender className="h-5 w-5" /> },
-    { to: '/doa',                       label: 'Doa',        bg: '#fff0f8', ic: '#be185d', br: 'rgba(190,24,93,0.20)',    icon: <IconDoa     className="h-5 w-5" /> },
+  const allFeatures: { to: string; label: string; icon: ReactNode }[] = [
+    { to: '/panduan/tata-cara',          label: 'Tata Cara',  icon: <IconPanduan   className="h-5 w-5" /> },
+    { to: '/panduan/ihram',              label: 'Ihram',      icon: <IconIhram     className="h-5 w-5" /> },
+    { to: '/panduan/manasik-interaktif', label: 'Manasik',    icon: <IconPanduan   className="h-5 w-5" /> },
+    { to: '/ibadah/navigator',           label: 'Navigator',  icon: <IconNavigator className="h-5 w-5" /> },
+    { to: '/ibadah/tahallul',            label: 'Tahallul',   icon: <IconTawaf     className="h-5 w-5" /> },
+    { to: '/profil/jurnal',              label: 'Jurnal',     icon: <IconJurnal    className="h-5 w-5" /> },
+    { to: '/peta',                       label: 'Peta',       icon: <IconPeta      className="h-5 w-5" /> },
+    { to: '/profil/agenda',              label: 'Agenda',     icon: <IconKalender  className="h-5 w-5" /> },
+    { to: '/doa',                        label: 'Doa',        icon: <IconDoa       className="h-5 w-5" /> },
   ];
 
   return (
@@ -495,8 +494,8 @@ export default function Beranda() {
               Jelajahi Semua Fitur
             </p>
             <div className="grid grid-cols-3 gap-2.5">
-              {allFeatures.map(({ to, label, bg, ic, br, icon }) => (
-                <GridItem key={to} to={to} label={label} bg={bg} ic={ic} br={br}>
+              {allFeatures.map(({ to, label, icon }) => (
+                <GridItem key={to} to={to} label={label}>
                   {icon}
                 </GridItem>
               ))}
