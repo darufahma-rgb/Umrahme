@@ -123,7 +123,7 @@ export default function Pengumuman() {
               </p>
               <div className="grid grid-cols-2 gap-2.5">
                 {important.map((item, i) => (
-                  <AnnouncementCard key={item.id} item={item} defaultOpen={i === 0} travelName={tenant?.nama_travel ?? 'Travel'} />
+                  <AnnouncementCard key={item.id} item={item} travelName={tenant?.nama_travel ?? 'Travel'} />
                 ))}
               </div>
             </div>

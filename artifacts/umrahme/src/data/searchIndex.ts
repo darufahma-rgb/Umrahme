@@ -128,9 +128,9 @@ function buildIndex(): SearchItem[] {
       id: `manasik-${m.id}`,
       type: 'manasik',
       judul: `Manasik: ${m.judul}`,
-      sub: m.deskripsi,
-      to: `/manasik/${m.id}`,
-      keywords: `manasik ${m.judul} ${m.deskripsi}`.toLowerCase(),
+      sub: m.subjudul,
+      to: `/panduan/manasik-interaktif/${m.id}`,
+      keywords: `manasik ${m.judul} ${m.subjudul}`.toLowerCase(),
     })
   );
 
