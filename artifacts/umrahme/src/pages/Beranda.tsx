@@ -3,10 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import heroBg from '@assets/image_1782030121542.png';
 import PhaseIndicator from '../components/PhaseIndicator';
-import {
-  DashboardTravelCompanionCards,
-  DashboardTravelCompanionDesktopRow,
-} from '../components/dashboard/TravelCompanionCards';
+import { TravelCompanionFlow } from '../components/dashboard/TravelCompanionFlow';
 import { urutanFase } from '../data/jamaah';
 import { checklistItems } from '../data/checklist';
 import { supabase, type AgendaItemRow } from '../lib/supabase';
@@ -446,8 +443,8 @@ export default function Beranda() {
             )}
           </div>
 
-          {/* ── 2. LAPISAN TRAVEL COMPANION ──────────── */}
-          <DashboardTravelCompanionCards />
+          {/* ── 2. TRAVEL COMPANION FLOW ──────────── */}
+          <TravelCompanionFlow />
 
           {/* ── 2. CHIP AKSES CEPAT ──────────── */}
           <div className="flex gap-2.5 overflow-x-auto no-scrollbar px-5 pt-1 pb-4" role="navigation" aria-label="Akses cepat">
@@ -569,8 +566,8 @@ export default function Beranda() {
           ))}
         </div>
 
-        {/* Travel companion desktop cards */}
-        <DashboardTravelCompanionDesktopRow />
+        {/* Travel companion desktop flow */}
+        <TravelCompanionFlow desktop />
 
         {/* BENTO GRID */}
         <div className="grid grid-cols-4 gap-4">
