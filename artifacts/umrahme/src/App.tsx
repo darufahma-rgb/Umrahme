@@ -24,6 +24,7 @@ import ManasikModulDetail from './pages/ManasikModulDetail';
 import Jurnal from './pages/Jurnal';
 import RitualNavigator from './pages/RitualNavigator';
 import Tahallul from './pages/Tahallul';
+import AgendaLengkap from './pages/AgendaLengkap';
 
 import AdminLogin from './pages/admin/AdminLogin';
 import AdminTenantList from './pages/admin/AdminTenantList';
@@ -62,6 +63,7 @@ export default function App() {
         <Route path="/profil/persiapan" element={<Persiapan />} />
         <Route path="/profil/sertifikat" element={<Sertifikat />} />
         <Route path="/profil/jurnal" element={<Jurnal />} />
+        <Route path="/profil/agenda" element={<AgendaLengkap />} />
       </Route>
 
       {/* ── Admin panel — terpisah dari app jamaah ── */}
