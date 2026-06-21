@@ -291,112 +291,150 @@ function BagianAKenali({ kartuList, onSelesai }: { kartuList: ManasikKartu[]; on
 }
 
 // =============================================================================
-// Bagian B — Urutkan (tap-to-order)
+// Bagian B — Urutkan (drag via up/down buttons)
 // =============================================================================
 function BagianBUrutkan({
   items, shuffledItems, onSelesai,
 }: { items: ManasikUrutanItem[]; shuffledItems: ManasikUrutanItem[]; onSelesai: (benar: boolean) => void }) {
-  const [dipilih, setDipilih] = useState<string[]>([]);
-  const [feedback, setFeedback] = useState<{ benar: boolean; detail: boolean[] } | null>(null);
-  const shakeRef = useRef<HTMLDivElement>(null);
+  const [urutan, setUrutan] = useState<ManasikUrutanItem[]>(shuffledItems);
+  const [feedback, setFeedback] = useState<'benar' | 'salah' | null>(null);
 
-  const dipilihSet = new Set(dipilih);
-  const allSelected = dipilih.length === items.length;
+  const correctOrder = [...items].sort((a, b) => a.urutanBenar - b.urutanBenar);
 
-  const handleTap = (id: string) => {
+  const geser = (idx: number, arah: -1 | 1) => {
     if (feedback) return;
-    if (dipilihSet.has(id)) {
-      const pos = dipilih.indexOf(id);
-      setDipilih(dipilih.slice(0, pos));
-    } else {
-      setDipilih([...dipilih, id]);
-    }
+    const next = idx + arah;
+    if (next < 0 || next >= urutan.length) return;
+    const arr = [...urutan];
+    [arr[idx], arr[next]] = [arr[next], arr[idx]];
+    setUrutan(arr);
   };
 
   const cekUrutan = () => {
-    const correct = items.sort((a, b) => a.urutanBenar - b.urutanBenar).map((i) => i.id);
-    const detail = dipilih.map((id, i) => id === correct[i]);
-    const benar = detail.every(Boolean);
-    setFeedback({ benar, detail });
-    if (benar) { setTimeout(() => onSelesai(true), 1600); }
+    const benar = urutan.every((item, i) => item.id === correctOrder[i].id);
+    setFeedback(benar ? 'benar' : 'salah');
+    if (benar) setTimeout(() => onSelesai(true), 1400);
   };
 
-  const reset = () => { setDipilih([]); setFeedback(null); };
-  const correctOrder = [...items].sort((a, b) => a.urutanBenar - b.urutanBenar);
+  const reset = () => { setUrutan(shuffledItems); setFeedback(null); };
 
   return (
-    <div className="px-5" ref={shakeRef}>
+    <div className="px-5">
       <p className="mb-4 text-[13px] leading-relaxed text-charcoal">
-        Tap langkah-langkah di bawah <strong className="text-ink">sesuai urutan yang benar</strong>, dari pertama hingga terakhir.
+        Susun langkah-langkah di bawah <strong className="text-ink">sesuai urutan yang benar</strong> menggunakan tombol ↑↓.
       </p>
 
       <div className="space-y-2">
-        {shuffledItems.map((item) => {
-          const selected = dipilihSet.has(item.id);
-          const selIdx = dipilih.indexOf(item.id);
-          let feedbackColor = '';
-          if (feedback && selected) {
-            feedbackColor = feedback.detail[selIdx]
-              ? 'border-emerald-500/60 bg-emerald-500/5'
-              : 'border-red-500/60 bg-red-500/5';
-          }
+        {urutan.map((item, idx) => {
+          const isBenar = feedback === 'benar' || (feedback === 'salah' && item.id === correctOrder[idx].id);
+          const isSalah = feedback === 'salah' && item.id !== correctOrder[idx].id;
+
           return (
-            <button key={item.id} type="button" onClick={() => handleTap(item.id)} disabled={!!feedback}
-              className={`flex w-full items-center gap-3 rounded-md border px-4 py-3 text-left transition-all active:scale-[0.99]
-                ${selected && !feedback ? 'border-primary/50 bg-primary/8' : ''}
-                ${!selected && !feedback ? 'border-hairline bg-surface-card' : ''}
-                ${feedbackColor}
-                ${selected && !feedback ? '' : 'hover:border-hairline-strong'}
-              `}
+            <div
+              key={item.id}
+              className={`flex items-center gap-3 rounded-2xl border px-4 py-3 transition-all ${
+                feedback === 'benar'
+                  ? 'border-emerald-400/50 bg-emerald-50'
+                  : isSalah
+                  ? 'border-red-400/40 bg-red-50/60'
+                  : isBenar && feedback
+                  ? 'border-emerald-400/50 bg-emerald-50'
+                  : 'border-hairline bg-white'
+              }`}
             >
-              <span className={`flex h-6 w-6 flex-none items-center justify-center rounded-full border font-mono text-[11px] font-semibold transition-all
-                ${selected ? 'border-primary bg-primary text-on-primary' : 'border-hairline bg-surface-bone text-mute'}
-                ${feedback && selected && feedback.detail[selIdx] ? 'border-emerald-500 bg-emerald-500/20 text-emerald-600' : ''}
-                ${feedback && selected && !feedback.detail[selIdx] ? 'border-red-500 bg-red-500/20 text-red-500' : ''}
-              `}>
-                {selected ? (feedback ? (feedback.detail[selIdx] ? '✓' : '✗') : selIdx + 1) : '·'}
+              {/* Nomor urut */}
+              <span className={`flex h-7 w-7 flex-none items-center justify-center rounded-full font-mono text-[12px] font-bold transition-all ${
+                feedback === 'benar'
+                  ? 'bg-emerald-100 text-emerald-600'
+                  : isSalah
+                  ? 'bg-red-100 text-red-500'
+                  : isBenar && feedback
+                  ? 'bg-emerald-100 text-emerald-600'
+                  : 'bg-surface-bone text-charcoal'
+              }`}>
+                {feedback === 'benar' ? '✓' : isSalah ? '✗' : idx + 1}
               </span>
-              <span className={`text-[13px] leading-snug ${selected ? 'text-ink' : 'text-charcoal'}`}>
-                {item.teks}
-              </span>
-            </button>
+
+              {/* Teks */}
+              <span className="flex-1 text-[13px] leading-snug text-ink">{item.teks}</span>
+
+              {/* Tombol geser */}
+              {!feedback && (
+                <div className="flex flex-col gap-0.5">
+                  <button
+                    type="button"
+                    onClick={() => geser(idx, -1)}
+                    disabled={idx === 0}
+                    className={`flex h-7 w-7 items-center justify-center rounded-lg text-[13px] transition-all active:scale-90 ${
+                      idx === 0 ? 'text-ash/30' : 'bg-surface-bone text-charcoal hover:bg-primary/10 hover:text-primary'
+                    }`}
+                    aria-label="Geser ke atas"
+                  >
+                    ↑
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => geser(idx, 1)}
+                    disabled={idx === urutan.length - 1}
+                    className={`flex h-7 w-7 items-center justify-center rounded-lg text-[13px] transition-all active:scale-90 ${
+                      idx === urutan.length - 1 ? 'text-ash/30' : 'bg-surface-bone text-charcoal hover:bg-primary/10 hover:text-primary'
+                    }`}
+                    aria-label="Geser ke bawah"
+                  >
+                    ↓
+                  </button>
+                </div>
+              )}
+            </div>
           );
         })}
       </div>
 
-      {feedback && !feedback.benar && (
-        <div className="mt-4 rounded-md border border-red-500/30 bg-red-500/5 px-4 py-4">
-          <p className="mb-2 font-mono text-[11px] uppercase tracking-wider text-red-500">Urutan yang Benar:</p>
+      {/* Feedback salah — tampilkan urutan benar */}
+      {feedback === 'salah' && (
+        <div className="mt-4 rounded-2xl border border-red-400/30 bg-red-50 px-4 py-4">
+          <p className="mb-2 font-mono text-[10px] uppercase tracking-wider text-red-500">Urutan yang Benar:</p>
           <ol className="space-y-1.5">
             {correctOrder.map((item, i) => (
               <li key={item.id} className="flex items-start gap-2">
-                <span className="flex h-5 w-5 flex-none items-center justify-center rounded-full bg-emerald-500/15 font-mono text-[10px] text-emerald-600">
+                <span className="flex h-5 w-5 flex-none items-center justify-center rounded-full bg-emerald-500/15 font-mono text-[10px] font-bold text-emerald-600">
                   {i + 1}
                 </span>
-                <span className="text-[12px] leading-snug text-body">{item.teks}</span>
+                <span className="text-[12px] leading-snug text-ink">{item.teks}</span>
               </li>
             ))}
           </ol>
-          <button type="button" onClick={() => { reset(); setTimeout(() => onSelesai(false), 0); }}
-            className="mt-3 rounded-full bg-primary px-4 py-2.5 text-[13px] font-semibold text-on-primary active:scale-[0.98]">
-            Lanjut ke Uji Paham →
-          </button>
+          <div className="mt-4 flex gap-2">
+            <button type="button" onClick={reset}
+              className="rounded-full border border-hairline px-4 py-2.5 font-mono text-[11px] text-mute active:scale-[0.98]">
+              Coba Lagi
+            </button>
+            <button type="button" onClick={() => { reset(); setTimeout(() => onSelesai(false), 0); }}
+              className="flex-1 rounded-full bg-primary px-4 py-2.5 text-center text-[13px] font-semibold text-on-primary active:scale-[0.98]">
+              Lanjut ke Uji Paham →
+            </button>
+          </div>
         </div>
       )}
 
+      {/* Feedback benar */}
+      {feedback === 'benar' && (
+        <div className="mt-4 rounded-2xl border border-emerald-400/40 bg-emerald-50 px-4 py-3 flex items-center gap-3">
+          <span className="text-2xl">🎉</span>
+          <p className="text-[13px] font-semibold text-emerald-700">Urutan benar! Lanjut ke tahap berikutnya...</p>
+        </div>
+      )}
+
+      {/* Tombol cek */}
       {!feedback && (
         <div className="mt-4 flex gap-3">
-          {dipilih.length > 0 && (
-            <button type="button" onClick={reset}
-              className="rounded-full border border-hairline px-4 py-3 font-mono text-[12px] text-mute active:scale-[0.98]">
-              Reset
-            </button>
-          )}
-          <button type="button" disabled={!allSelected} onClick={cekUrutan}
-            className={`flex-1 rounded-full py-3 text-center font-semibold transition-all active:scale-[0.98]
-              ${allSelected ? 'bg-primary text-on-primary' : 'bg-surface-bone text-ash border border-hairline'}
-            `}>
-            {allSelected ? 'Cek Urutan →' : `Pilih ${items.length - dipilih.length} langkah lagi`}
+          <button type="button" onClick={reset}
+            className="rounded-full border border-hairline px-4 py-3 font-mono text-[12px] text-mute active:scale-[0.98]">
+            Reset
+          </button>
+          <button type="button" onClick={cekUrutan}
+            className="flex-1 rounded-full bg-primary py-3 text-center text-[13px] font-semibold text-on-primary active:scale-[0.98] transition-all">
+            Cek Urutan →
           </button>
         </div>
       )}
