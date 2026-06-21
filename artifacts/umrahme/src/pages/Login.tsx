@@ -37,16 +37,15 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center sm:p-4 bg-white sm:bg-[#f0efed]">
       {/* ── Card wrapper ── */}
       <div
-        className="w-full sm:max-w-[400px] overflow-hidden min-h-screen sm:min-h-0 flex flex-col sm:rounded-[28px] sm:shadow-[0_8px_48px_rgba(0,0,0,0.12),0_2px_8px_rgba(0,0,0,0.06)]"
+        className="w-full sm:max-w-[400px] overflow-hidden h-screen sm:h-auto sm:min-h-0 flex flex-col sm:rounded-[28px] sm:shadow-[0_8px_48px_rgba(0,0,0,0.12),0_2px_8px_rgba(0,0,0,0.06)]"
         style={{ background: '#ffffff' }}
       >
         {/* ── Hero image area ── */}
         <div
-          className="relative w-full overflow-hidden"
+          className="relative w-full overflow-hidden flex-1 sm:flex-none"
           style={{
-            height: '48vw',
-            maxHeight: '220px',
             minHeight: '160px',
+            maxHeight: '320px',
           }}
         >
           {/* Hero photo — natural, no color grading */}
