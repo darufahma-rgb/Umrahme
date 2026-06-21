@@ -1,6 +1,7 @@
 import type { TenantConfig } from '../tenant.types';
 import defaultTenant from './default';
 import barakahMulia from './barakah-mulia';
+import contohHijau from './contoh-hijau';
 
 // =============================================================
 // TENANT REGISTRY — daftarkan semua tenant di sini
@@ -13,6 +14,7 @@ import barakahMulia from './barakah-mulia';
 const registry: Record<string, TenantConfig> = {
   default: defaultTenant,
   'barakah-mulia': barakahMulia,
+  'contoh-hijau': contohHijau,
 };
 
 const tenantId = import.meta.env.VITE_TENANT_ID as string | undefined;

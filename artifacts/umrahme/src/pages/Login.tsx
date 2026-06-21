@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { validasiKode, KODE_DEMO } from '../data/jamaah';
 import heroBg from '@assets/photo-1635829576353-1a14caec2f6f_1781969073425.avif';
 import { KeyRound } from 'lucide-react';
+import { activeTenant } from '../config/tenants';
 
 export default function Login() {
   const { login } = useAuth();
@@ -104,6 +105,16 @@ export default function Login() {
 
         {/* ── Card body ── */}
         <div className="px-6 pt-6 pb-7">
+
+          {/* Logo tenant */}
+          <div className="flex justify-center mb-4">
+            <img
+              src={activeTenant.logoPath}
+              alt={activeTenant.namaTravel}
+              className="h-10 w-auto"
+              onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+            />
+          </div>
 
           {/* Heading */}
           <h2

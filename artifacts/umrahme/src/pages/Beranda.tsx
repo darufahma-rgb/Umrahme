@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import heroBg from '@assets/photo-1635829576353-1a14caec2f6f_1781969073425.avif';
 import PhaseIndicator from '../components/PhaseIndicator';
 import { urutanFase } from '../data/jamaah';
+import { activeTenant } from '../config/tenants';
 import { checklistItems } from '../data/checklist';
 import {
   IconDoa,
@@ -185,14 +186,25 @@ export default function Beranda() {
 
           </div>
 
-          {/* Arabic — top right */}
-          <p
-            className="absolute top-0 right-5 font-arab text-[15px] leading-none text-white/40"
+          {/* Logo + Arabic — top right */}
+          <div
+            className="absolute right-5 flex flex-col items-end gap-1"
             style={{ top: 'max(1.2rem, env(safe-area-inset-top))' }}
-            dir="rtl"
           >
-            السَّلَامُ عَلَيْكُمْ
-          </p>
+            <img
+              src={activeTenant.logoPath}
+              alt={activeTenant.namaTravel}
+              className="h-6 w-auto"
+              style={{ filter: 'brightness(0) invert(1)' }}
+              onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+            />
+            <p
+              className="font-arab text-[15px] leading-none text-white/40"
+              dir="rtl"
+            >
+              السَّلَامُ عَلَيْكُمْ
+            </p>
+          </div>
         </header>
 
         {/* ── SHEET PUTIH — slide up menutupi bagian bawah hero ──────── */}

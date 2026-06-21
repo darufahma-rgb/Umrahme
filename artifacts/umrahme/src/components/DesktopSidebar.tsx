@@ -23,6 +23,12 @@ export default function DesktopSidebar() {
 
       {/* Brand */}
       <div className="px-5 pt-7 pb-5 border-b border-hairline">
+        <img
+          src={activeTenant.logoPath}
+          alt={activeTenant.namaTravel}
+          className="h-8 w-auto mb-2"
+          onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+        />
         <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-primary/80 mb-1">
           Pendamping Umrah
         </p>
