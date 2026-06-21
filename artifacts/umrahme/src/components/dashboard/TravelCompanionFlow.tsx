@@ -140,10 +140,39 @@ export function TripFocusCard({ desktop = false }: { desktop?: boolean }) {
 // ── 3. Announcement Strip ─────────────────────────────────────
 // Bukan card penuh — strip ringkas dengan badge
 
-export function TravelAnnouncementCard({ desktop = false }: { desktop?: boolean }) {
+export function TravelAnnouncementCard({ desktop = false, compact = false }: { desktop?: boolean; compact?: boolean }) {
   const { tenant } = useAuth();
   const announcement = getLatestAnnouncement(tenant?.id);
   if (!announcement) return null;
+
+  if (compact) {
+    return (
+      <div
+        className="flex flex-col rounded-2xl p-3.5 h-full"
+        style={{
+          background: announcement.important ? 'linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)' : '#ffffff',
+          border: `1.5px solid ${announcement.important ? 'rgba(212,162,78,0.3)' : 'rgba(0,0,0,0.07)'}`,
+        }}
+      >
+        <div
+          className="flex h-8 w-8 flex-none items-center justify-center rounded-xl mb-2.5"
+          style={{ background: 'rgba(212,162,78,0.14)', border: '1px solid rgba(212,162,78,0.22)' }}
+        >
+          <IconBell className="h-3.5 w-3.5 text-gold" />
+        </div>
+        <span
+          className="mb-1 self-start rounded-full px-2 py-0.5 font-mono text-[7px] font-bold uppercase tracking-[0.15em]"
+          style={{ background: 'rgba(212,162,78,0.18)', color: '#a07828' }}
+        >
+          {announcement.label}
+        </span>
+        <p className="font-mono text-[7px] uppercase tracking-[0.12em] text-mute">Dari Travel</p>
+        <p className="mt-1 text-[12px] font-semibold leading-snug text-ink line-clamp-2">
+          {announcement.title}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -183,13 +212,36 @@ export function TravelAnnouncementCard({ desktop = false }: { desktop?: boolean 
 // ── 4. Emergency / Guide Contact ──────────────────────────────
 // Compact contact strip dengan tombol WA + Telepon
 
-export function EmergencyGuideCard({ desktop = false }: { desktop?: boolean }) {
+export function EmergencyGuideCard({ desktop = false, compact = false }: { desktop?: boolean; compact?: boolean }) {
   const { jamaah, tenant } = useAuth();
   if (!jamaah) return null;
 
   const info         = getOperationalInfo(tenant?.id);
   const pembimbing   = jamaah.pembimbingNama     ?? info.guideName;
   const pembimbingWa = jamaah.pembimbingWhatsapp ?? info.guideWhatsapp;
+
+  if (compact) {
+    return (
+      <div className="flex flex-col rounded-2xl border border-hairline bg-white shadow-drop-card p-3.5 h-full">
+        <div className="flex h-8 w-8 flex-none items-center justify-center rounded-xl bg-red-50 mb-2.5">
+          <IconPhone className="h-3.5 w-3.5 text-red-400" />
+        </div>
+        <p className="font-mono text-[7px] uppercase tracking-[0.2em] text-mute">Butuh Bantuan?</p>
+        <p className="mt-1 text-[12px] font-bold leading-snug text-ink">{pembimbing}</p>
+        <p className="mt-0.5 text-[10px] text-charcoal">{info.guideRole}</p>
+        <a
+          href={whatsappLink(pembimbingWa)}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-auto pt-3 flex items-center justify-center gap-1.5 rounded-xl py-2 text-[11px] font-bold text-white active:scale-[0.97] transition-all"
+          style={{ background: '#25D366' }}
+        >
+          <IconWhatsapp className="h-3.5 w-3.5" />
+          WA
+        </a>
+      </div>
+    );
+  }
 
   return (
     <div className={`rounded-2xl border border-hairline bg-white shadow-drop-card ${desktop ? 'p-4' : 'p-4'}`}>
@@ -247,8 +299,10 @@ export function TravelCompanionFlow({ desktop = false }: { desktop?: boolean }) 
       <p className="font-mono text-[9px] uppercase tracking-[0.28em] text-mute">Perjalanan Saya</p>
       <TripIdentityCard />
       <TripFocusCard />
-      <TravelAnnouncementCard />
-      <EmergencyGuideCard />
+      <div className="grid grid-cols-2 gap-3 items-stretch">
+        <TravelAnnouncementCard compact />
+        <EmergencyGuideCard compact />
+      </div>
     </div>
   );
 }
