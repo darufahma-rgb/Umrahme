@@ -213,7 +213,7 @@ export default function Beranda() {
   return (
     <>
       {/* ==================== MOBILE ==================== */}
-      <div className="lg:hidden min-h-screen bg-canvas">
+      <div className="lg:hidden min-h-screen bg-canvas overflow-x-hidden">
 
         {/* ── HERO ─────────────────────────────────────── */}
         <div className="relative" style={{ height: 'clamp(320px, 72vw, 420px)' }}>
