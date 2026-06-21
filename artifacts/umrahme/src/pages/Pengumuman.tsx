@@ -1,7 +1,7 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { getAllAnnouncements } from '../data/travelCompanion';
-import { IconChevron } from '../components/icons';
+import { getAllAnnouncements, type TravelAnnouncement } from '../data/travelCompanion';
 
 function IconBell({ className = '' }: { className?: string }) {
   return (
@@ -12,26 +12,108 @@ function IconBell({ className = '' }: { className?: string }) {
   );
 }
 
+function IconChevronDown({ className = '' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M6 9l6 6 6-6" />
+    </svg>
+  );
+}
+
 function formatRelativeTime(isoString: string): string {
   const diff = Date.now() - new Date(isoString).getTime();
   const minutes = Math.floor(diff / 60000);
   const hours = Math.floor(diff / 3600000);
   const days = Math.floor(diff / 86400000);
-  if (minutes < 60) return `${minutes} menit lalu`;
-  if (hours < 24) return `${hours} jam lalu`;
-  return `${days} hari lalu`;
+  if (minutes < 60) return `${minutes}m lalu`;
+  if (hours < 24) return `${hours}j lalu`;
+  return `${days}h lalu`;
 }
 
+// ── Card tunggal dengan expand ──────────────────────────────────
+function AnnouncementCard({ item, defaultOpen = false }: { item: TravelAnnouncement; defaultOpen?: boolean }) {
+  const [open, setOpen] = useState(defaultOpen);
+
+  const isImportant = item.important;
+
+  return (
+    <button
+      type="button"
+      onClick={() => setOpen((v) => !v)}
+      className="w-full text-left active:scale-[0.98] transition-all"
+    >
+      <div
+        className="overflow-hidden rounded-2xl border"
+        style={{
+          background: isImportant
+            ? 'linear-gradient(145deg, #fffbeb 0%, #fef3c7 100%)'
+            : '#ffffff',
+          borderColor: isImportant ? 'rgba(212,162,78,0.30)' : 'rgba(0,0,0,0.07)',
+          boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
+        }}
+      >
+        {/* Top section — always visible */}
+        <div className="p-3.5">
+          {/* Icon + badge + time */}
+          <div className="flex items-start justify-between gap-2 mb-2.5">
+            <div
+              className="flex h-8 w-8 flex-none items-center justify-center rounded-xl"
+              style={{
+                background: isImportant ? 'rgba(212,162,78,0.15)' : 'rgba(14,165,233,0.09)',
+                border: `1px solid ${isImportant ? 'rgba(212,162,78,0.25)' : 'rgba(14,165,233,0.15)'}`,
+              }}
+            >
+              <IconBell className={`h-3.5 w-3.5 ${isImportant ? 'text-[#a07828]' : 'text-primary'}`} />
+            </div>
+            <IconChevronDown
+              className={`h-4 w-4 flex-none text-ash transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+            />
+          </div>
+
+          {/* Badge + time */}
+          <div className="flex items-center gap-1.5 mb-1.5">
+            <span
+              className="rounded-full px-2 py-0.5 font-mono text-[7px] font-bold uppercase tracking-[0.15em]"
+              style={isImportant
+                ? { background: 'rgba(212,162,78,0.20)', color: '#a07828' }
+                : { background: 'rgba(14,165,233,0.12)', color: '#0284c7' }
+              }
+            >
+              {item.label}
+            </span>
+            <span className="font-mono text-[7px] text-mute">{formatRelativeTime(item.publishedAt)}</span>
+          </div>
+
+          {/* Title */}
+          <h3 className="text-[13px] font-bold leading-snug text-ink line-clamp-2">{item.title}</h3>
+        </div>
+
+        {/* Expandable content */}
+        {open && (
+          <div
+            className="px-3.5 pb-3.5 border-t"
+            style={{ borderColor: isImportant ? 'rgba(212,162,78,0.18)' : 'rgba(0,0,0,0.06)' }}
+          >
+            <p className="pt-3 text-[12px] leading-relaxed text-charcoal">{item.content}</p>
+          </div>
+        )}
+      </div>
+    </button>
+  );
+}
+
+// ── Halaman ─────────────────────────────────────────────────────
 export default function Pengumuman() {
   const { tenant } = useAuth();
   const announcements = getAllAnnouncements(tenant?.id);
+  const important = announcements.filter((a) => a.important);
+  const info = announcements.filter((a) => !a.important);
 
   return (
     <div className="min-h-screen bg-canvas">
 
       {/* ───── MOBILE ───── */}
       <div className="lg:hidden">
-        {/* Header */}
         <header
           className="px-5 pb-5"
           style={{ paddingTop: 'max(2.5rem, env(safe-area-inset-top))' }}
@@ -50,12 +132,11 @@ export default function Pengumuman() {
             Pengumuman
           </h1>
           <p className="mt-1.5 text-[11px] text-charcoal">
-            Informasi & arahan terbaru dari {tenant?.nama_travel ?? 'travel Anda'}.
+            Tap kartu untuk lihat isi lengkap dari {tenant?.nama_travel ?? 'travel Anda'}.
           </p>
         </header>
 
-        {/* List */}
-        <section className="px-4 pb-8 space-y-3">
+        <section className="px-4 pb-8 space-y-5">
           {announcements.length === 0 && (
             <div className="rounded-2xl border border-hairline bg-white p-8 text-center shadow-drop-card">
               <IconBell className="h-8 w-8 mx-auto text-ash mb-3" />
@@ -64,53 +145,33 @@ export default function Pengumuman() {
             </div>
           )}
 
-          {announcements.map((item) => (
-            <div
-              key={item.id}
-              className="overflow-hidden rounded-2xl border shadow-drop-card"
-              style={{
-                background: item.important ? 'linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)' : '#ffffff',
-                borderColor: item.important ? 'rgba(212,162,78,0.28)' : 'rgba(0,0,0,0.07)',
-              }}
-            >
-              <div className="p-4">
-                {/* Top row */}
-                <div className="flex items-start gap-3">
-                  <div
-                    className="flex h-9 w-9 flex-none items-center justify-center rounded-xl"
-                    style={{
-                      background: item.important ? 'rgba(212,162,78,0.15)' : 'rgba(14,165,233,0.08)',
-                      border: `1px solid ${item.important ? 'rgba(212,162,78,0.25)' : 'rgba(14,165,233,0.15)'}`,
-                    }}
-                  >
-                    <IconBell className={`h-4 w-4 ${item.important ? 'text-[#a07828]' : 'text-primary'}`} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span
-                        className="rounded-full px-2 py-0.5 font-mono text-[7.5px] font-bold uppercase tracking-[0.15em]"
-                        style={item.important
-                          ? { background: 'rgba(212,162,78,0.18)', color: '#a07828' }
-                          : { background: 'rgba(14,165,233,0.12)', color: '#0284c7' }
-                        }
-                      >
-                        {item.label}
-                      </span>
-                      <span className="font-mono text-[7.5px] uppercase tracking-[0.12em] text-mute">
-                        {formatRelativeTime(item.publishedAt)}
-                      </span>
-                    </div>
-                    <h3 className="mt-1.5 text-[14px] font-bold leading-snug text-ink">{item.title}</h3>
-                  </div>
-                </div>
-
-                {/* Content */}
-                <p className="mt-3 text-[12px] leading-relaxed text-charcoal pl-12">
-                  {item.content}
-                </p>
+          {/* Penting — 2 col grid */}
+          {important.length > 0 && (
+            <div>
+              <p className="mb-2.5 font-mono text-[9px] uppercase tracking-[0.28em] text-mute">
+                🔔 Penting
+              </p>
+              <div className="grid grid-cols-2 gap-2.5">
+                {important.map((item, i) => (
+                  <AnnouncementCard key={item.id} item={item} defaultOpen={i === 0} />
+                ))}
               </div>
             </div>
-          ))}
+          )}
+
+          {/* Info — 2 col grid */}
+          {info.length > 0 && (
+            <div>
+              <p className="mb-2.5 font-mono text-[9px] uppercase tracking-[0.28em] text-mute">
+                ℹ️ Info
+              </p>
+              <div className="grid grid-cols-2 gap-2.5">
+                {info.map((item) => (
+                  <AnnouncementCard key={item.id} item={item} />
+                ))}
+              </div>
+            </div>
+          )}
         </section>
       </div>
 
@@ -125,52 +186,30 @@ export default function Pengumuman() {
           </Link>
           <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-primary mb-1">Dari Travel</p>
           <h1 className="font-display text-4xl font-bold text-ink" style={{ letterSpacing: '-1px' }}>Pengumuman</h1>
-          <p className="mt-1 text-sm text-charcoal">Informasi & arahan terbaru dari {tenant?.nama_travel ?? 'travel Anda'}.</p>
+          <p className="mt-1 text-sm text-charcoal">Tap kartu untuk lihat isi lengkap — {tenant?.nama_travel ?? 'travel Anda'}.</p>
         </header>
 
-        <div className="max-w-2xl space-y-3">
-          {announcements.map((item) => (
-            <div
-              key={item.id}
-              className="overflow-hidden rounded-2xl border shadow-drop-card"
-              style={{
-                background: item.important ? 'linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)' : '#ffffff',
-                borderColor: item.important ? 'rgba(212,162,78,0.28)' : 'rgba(0,0,0,0.07)',
-              }}
-            >
-              <div className="p-5">
-                <div className="flex items-start gap-3">
-                  <div
-                    className="flex h-9 w-9 flex-none items-center justify-center rounded-xl"
-                    style={{
-                      background: item.important ? 'rgba(212,162,78,0.15)' : 'rgba(14,165,233,0.08)',
-                      border: `1px solid ${item.important ? 'rgba(212,162,78,0.25)' : 'rgba(14,165,233,0.15)'}`,
-                    }}
-                  >
-                    <IconBell className={`h-4 w-4 ${item.important ? 'text-[#a07828]' : 'text-primary'}`} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span
-                        className="rounded-full px-2 py-0.5 font-mono text-[7.5px] font-bold uppercase tracking-[0.15em]"
-                        style={item.important
-                          ? { background: 'rgba(212,162,78,0.18)', color: '#a07828' }
-                          : { background: 'rgba(14,165,233,0.12)', color: '#0284c7' }
-                        }
-                      >
-                        {item.label}
-                      </span>
-                      <span className="font-mono text-[7.5px] uppercase tracking-[0.12em] text-mute">
-                        {formatRelativeTime(item.publishedAt)}
-                      </span>
-                    </div>
-                    <h3 className="mt-1.5 text-[15px] font-bold leading-snug text-ink">{item.title}</h3>
-                    <p className="mt-2 text-[13px] leading-relaxed text-charcoal">{item.content}</p>
-                  </div>
-                </div>
+        <div className="space-y-6 max-w-3xl">
+          {important.length > 0 && (
+            <div>
+              <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-mute">🔔 Penting</p>
+              <div className="grid grid-cols-2 gap-3">
+                {important.map((item, i) => (
+                  <AnnouncementCard key={item.id} item={item} defaultOpen={i === 0} />
+                ))}
               </div>
             </div>
-          ))}
+          )}
+          {info.length > 0 && (
+            <div>
+              <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-mute">ℹ️ Info</p>
+              <div className="grid grid-cols-2 gap-3">
+                {info.map((item) => (
+                  <AnnouncementCard key={item.id} item={item} />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
