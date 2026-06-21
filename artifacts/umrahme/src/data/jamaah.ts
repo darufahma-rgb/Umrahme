@@ -43,6 +43,16 @@ export async function validasiKode(kode: string, nama: string): Promise<HasilVal
     travel: data.nama_travel,
     kodeAktivasi: k,
     fase: 'persiapan',
+
+    // Data demo operasional supaya dashboard terasa seperti app resmi travel.
+    // Nanti field ini bisa diganti dari database jamaah/travel.
+    rombongan: 'Rombongan A',
+    nomorBus: 'Bus 3',
+    nomorKamar: '804',
+    hotelMakkah: 'Hotel Makkah — diisi travel',
+    hotelMadinah: 'Hotel Madinah — diisi travel',
+    pembimbingNama: 'Ust. Pembimbing',
+    pembimbingWhatsapp: '6281234567890',
   };
 
   return { ok: true, jamaah, tenant: data };

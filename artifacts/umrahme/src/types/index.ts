@@ -15,6 +15,15 @@ export interface Jamaah {
   travel: string; // nama travel (white-label)
   kodeAktivasi: string;
   fase: Fase;
+
+  // Data operasional perjalanan — sementara optional untuk kompatibilitas data lama
+  rombongan?: string;
+  nomorBus?: string;
+  nomorKamar?: string;
+  hotelMakkah?: string;
+  hotelMadinah?: string;
+  pembimbingNama?: string;
+  pembimbingWhatsapp?: string;
 }
 
 /** Kategori doa pada Kumpulan Doa (9 tahapan ibadah umrah). */
