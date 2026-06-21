@@ -145,30 +145,27 @@ export default function Ibadah() {
       {/* ───── MOBILE ───── */}
       <div className="lg:hidden">
 
-        {/* Header — dark strip */}
+        {/* Header */}
         <header
-          className="px-5 pb-6"
-          style={{
-            paddingTop: 'max(2.5rem, env(safe-area-inset-top))',
-            background: 'linear-gradient(to bottom, #0d1f3c 0%, #0f3460 100%)',
-          }}
+          className="px-5 pb-5"
+          style={{ paddingTop: 'max(2.5rem, env(safe-area-inset-top))' }}
         >
-          <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-sky-400/70 mb-1">
+          <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-primary mb-1">
             Saat di Tanah Suci
           </p>
           <h1
-            className="font-display font-bold text-white"
+            className="font-display font-bold text-ink"
             style={{ fontSize: 'clamp(28px, 8vw, 36px)', letterSpacing: '-1px', lineHeight: 1 }}
           >
             Ibadah
           </h1>
-          <p className="mt-1.5 text-[11px] text-white/40">
+          <p className="mt-1.5 text-[11px] text-charcoal">
             Satu layar, satu fokus — buka cepat saat beribadah.
           </p>
         </header>
 
         {/* Navigator hero */}
-        <section className="px-4 -mt-4 relative z-10">
+        <section className="px-4">
           <NavigatorHero />
         </section>
 
@@ -208,18 +205,13 @@ export default function Ibadah() {
 
       {/* ───── DESKTOP ───── */}
       <div className="hidden lg:block">
-        <header
-          className="px-10 pb-10 pt-10"
-          style={{
-            background: 'linear-gradient(to bottom, #0d1f3c 0%, #0f3460 100%)',
-          }}
-        >
-          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-sky-400/70 mb-1">Saat di Tanah Suci</p>
-          <h1 className="font-display text-4xl font-bold text-white" style={{ letterSpacing: '-1.5px' }}>Ibadah</h1>
-          <p className="mt-1 text-sm text-white/40">Buka cepat saat sedang beribadah. Satu layar, satu fokus.</p>
+        <header className="px-10 pb-6 pt-10">
+          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-primary mb-1">Saat di Tanah Suci</p>
+          <h1 className="font-display text-4xl font-bold text-ink" style={{ letterSpacing: '-1.5px' }}>Ibadah</h1>
+          <p className="mt-1 text-sm text-charcoal">Buka cepat saat sedang beribadah. Satu layar, satu fokus.</p>
         </header>
 
-        <div className="px-10 -mt-5 relative z-10 pb-10">
+        <div className="px-10 pb-10">
           <NavigatorHero />
 
           <div className="mt-4 grid grid-cols-4 gap-4 mb-8">
