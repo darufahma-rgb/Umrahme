@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getAllAnnouncements, type TravelAnnouncement } from '../data/travelCompanion';
@@ -8,14 +7,6 @@ function IconBell({ className = '' }: { className?: string }) {
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" className={className}>
       <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 7h18s-3 0-3-7" />
       <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-    </svg>
-  );
-}
-
-function IconChevronDown({ className = '' }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M6 9l6 6 6-6" />
     </svg>
   );
 }
@@ -30,75 +21,54 @@ function formatRelativeTime(isoString: string): string {
   return `${days}h lalu`;
 }
 
-// ── Card tunggal dengan expand ──────────────────────────────────
-function AnnouncementCard({ item, defaultOpen = false, travelName = 'Travel' }: { item: TravelAnnouncement; defaultOpen?: boolean; travelName?: string }) {
-  const [open, setOpen] = useState(defaultOpen);
-
+// ── Card pengumuman — konten selalu tampil ──────────────────────
+function AnnouncementCard({ item, travelName = 'Travel' }: { item: TravelAnnouncement; travelName?: string }) {
   const isImportant = item.important;
 
   return (
-    <button
-      type="button"
-      onClick={() => setOpen((v) => !v)}
-      className="w-full text-left active:scale-[0.98] transition-all"
+    <div
+      className="overflow-hidden rounded-2xl border"
+      style={{
+        background: isImportant
+          ? 'linear-gradient(145deg, #fffbeb 0%, #fef3c7 100%)'
+          : '#ffffff',
+        borderColor: isImportant ? 'rgba(212,162,78,0.30)' : 'rgba(0,0,0,0.07)',
+        boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
+      }}
     >
-      <div
-        className="overflow-hidden rounded-2xl border"
-        style={{
-          background: isImportant
-            ? 'linear-gradient(145deg, #fffbeb 0%, #fef3c7 100%)'
-            : '#ffffff',
-          borderColor: isImportant ? 'rgba(212,162,78,0.30)' : 'rgba(0,0,0,0.07)',
-          boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
-        }}
-      >
-        {/* Top section — always visible */}
-        <div className="p-3.5">
-          {/* Icon + badge + time */}
-          <div className="flex items-start justify-between gap-2 mb-2.5">
-            <div
-              className="flex h-8 w-8 flex-none items-center justify-center rounded-xl"
-              style={{
-                background: isImportant ? 'rgba(212,162,78,0.15)' : 'rgba(14,165,233,0.09)',
-                border: `1px solid ${isImportant ? 'rgba(212,162,78,0.25)' : 'rgba(14,165,233,0.15)'}`,
-              }}
-            >
-              <IconBell className={`h-3.5 w-3.5 ${isImportant ? 'text-[#a07828]' : 'text-primary'}`} />
-            </div>
-            <IconChevronDown
-              className={`h-4 w-4 flex-none text-ash transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
-            />
-          </div>
-
-          {/* Badge + time */}
-          <div className="flex items-center gap-1.5 mb-1.5">
-            <span
-              className="rounded-full px-2 py-0.5 font-mono text-[7px] font-bold uppercase tracking-[0.15em]"
-              style={isImportant
-                ? { background: 'rgba(212,162,78,0.20)', color: '#a07828' }
-                : { background: 'rgba(14,165,233,0.12)', color: '#0284c7' }
-              }
-            >
-              {travelName}
-            </span>
-            <span className="font-mono text-[7px] text-mute">{formatRelativeTime(item.publishedAt)}</span>
-          </div>
-
-          {/* Title */}
-          <h3 className="text-[13px] font-bold leading-snug text-ink line-clamp-2">{item.title}</h3>
+      <div className="p-3.5">
+        {/* Icon */}
+        <div
+          className="flex h-8 w-8 items-center justify-center rounded-xl mb-2.5"
+          style={{
+            background: isImportant ? 'rgba(212,162,78,0.15)' : 'rgba(14,165,233,0.09)',
+            border: `1px solid ${isImportant ? 'rgba(212,162,78,0.25)' : 'rgba(14,165,233,0.15)'}`,
+          }}
+        >
+          <IconBell className={`h-3.5 w-3.5 ${isImportant ? 'text-[#a07828]' : 'text-primary'}`} />
         </div>
 
-        {/* Expandable content */}
-        {open && (
-          <div
-            className="px-3.5 pb-3.5 border-t"
-            style={{ borderColor: isImportant ? 'rgba(212,162,78,0.18)' : 'rgba(0,0,0,0.06)' }}
+        {/* Badge + time */}
+        <div className="flex items-center gap-1.5 mb-1.5">
+          <span
+            className="rounded-full px-2 py-0.5 font-mono text-[7px] font-bold uppercase tracking-[0.15em]"
+            style={isImportant
+              ? { background: 'rgba(212,162,78,0.20)', color: '#a07828' }
+              : { background: 'rgba(14,165,233,0.12)', color: '#0284c7' }
+            }
           >
-            <p className="pt-3 text-[12px] leading-relaxed text-charcoal">{item.content}</p>
-          </div>
-        )}
+            {travelName}
+          </span>
+          <span className="font-mono text-[7px] text-mute">{formatRelativeTime(item.publishedAt)}</span>
+        </div>
+
+        {/* Title */}
+        <h3 className="text-[13px] font-bold leading-snug text-ink mb-2">{item.title}</h3>
+
+        {/* Content — selalu tampil */}
+        <p className="text-[11.5px] leading-relaxed text-charcoal">{item.content}</p>
       </div>
-    </button>
+    </div>
   );
 }
 
@@ -132,7 +102,7 @@ export default function Pengumuman() {
             Pengumuman
           </h1>
           <p className="mt-1.5 text-[11px] text-charcoal">
-            Tap kartu untuk lihat isi lengkap dari {tenant?.nama_travel ?? 'travel Anda'}.
+            Informasi & arahan terbaru dari {tenant?.nama_travel ?? 'travel Anda'}.
           </p>
         </header>
 
@@ -186,7 +156,7 @@ export default function Pengumuman() {
           </Link>
           <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-primary mb-1">Dari Travel</p>
           <h1 className="font-display text-4xl font-bold text-ink" style={{ letterSpacing: '-1px' }}>Pengumuman</h1>
-          <p className="mt-1 text-sm text-charcoal">Tap kartu untuk lihat isi lengkap — {tenant?.nama_travel ?? 'travel Anda'}.</p>
+          <p className="mt-1 text-sm text-charcoal">Informasi & arahan terbaru dari {tenant?.nama_travel ?? 'travel Anda'}.</p>
         </header>
 
         <div className="space-y-6 max-w-3xl">
@@ -194,8 +164,8 @@ export default function Pengumuman() {
             <div>
               <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-mute">🔔 Penting</p>
               <div className="grid grid-cols-2 gap-3">
-                {important.map((item, i) => (
-                  <AnnouncementCard key={item.id} item={item} defaultOpen={i === 0} travelName={tenant?.nama_travel ?? 'Travel'} />
+                {important.map((item) => (
+                  <AnnouncementCard key={item.id} item={item} travelName={tenant?.nama_travel ?? 'Travel'} />
                 ))}
               </div>
             </div>
