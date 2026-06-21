@@ -257,7 +257,7 @@ export default function Beranda() {
         </div>
 
         {/* ── SEARCH (floating at hero/sheet boundary) ─── */}
-        <div className="relative z-20 -mt-6 px-4">
+        <div className="relative z-20 -mt-6">
           <GlobalSearch />
         </div>
 
