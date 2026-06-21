@@ -158,7 +158,7 @@ export default function Beranda() {
             alt=""
             aria-hidden
             className="absolute inset-0 w-full h-full object-cover"
-            style={{ objectPosition: 'center 38%', transform: 'scale(1.3)', transformOrigin: 'center 38%' }}
+            style={{ objectPosition: 'center 38%', transform: 'scale(1.7)', transformOrigin: 'center 38%' }}
           />
 
           {/* Top scrim — status bar area */}
