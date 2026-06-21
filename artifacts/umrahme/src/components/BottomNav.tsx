@@ -12,82 +12,57 @@ const slots = [
 export default function BottomNav() {
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-40 mx-auto max-w-app px-3"
-      style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}
+      className="fixed inset-x-0 bottom-0 z-40 mx-auto max-w-app px-4"
+      style={{ paddingBottom: 'max(0.875rem, env(safe-area-inset-bottom))' }}
       aria-label="Navigasi utama"
     >
       <ul
-        className="relative flex items-end justify-around rounded-[26px] overflow-visible px-2 pt-2.5 pb-1.5"
+        className="relative flex items-end justify-around rounded-[28px] overflow-visible px-2 pt-3 pb-2.5"
         style={{
-          background: 'rgba(252, 250, 247, 0.88)',
-          WebkitBackdropFilter: 'blur(28px) saturate(1.8)',
-          backdropFilter: 'blur(28px) saturate(1.8)',
+          background: 'rgba(252, 250, 247, 0.92)',
+          WebkitBackdropFilter: 'blur(32px) saturate(1.8)',
+          backdropFilter: 'blur(32px) saturate(1.8)',
           border: '1px solid rgba(32,32,32,0.07)',
           boxShadow:
-            '0 -1px 0 0 rgba(255,255,255,0.55) inset, 0 24px 48px -8px rgba(0,0,0,0.16), 0 4px 12px rgba(0,0,0,0.06)',
+            '0 -1px 0 0 rgba(255,255,255,0.6) inset, 0 20px 48px -8px rgba(0,0,0,0.14), 0 4px 12px rgba(0,0,0,0.05)',
         }}
       >
         {slots.map(({ to, label, Icon, center }) =>
           center ? (
-            /* ── FAB "Ibadah" — center elevated button ── */
+            /* ── FAB "Ibadah" ── */
             <li key={to}>
-              <NavLink
-                to={to}
-                aria-label={label}
-                className="flex flex-col items-center pb-1"
-              >
+              <NavLink to={to} aria-label={label} className="flex flex-col items-center">
                 {({ isActive }) => (
-                  <>
-                    <span
-                      className="flex h-[66px] w-[66px] items-center justify-center rounded-full transition-all duration-200 active:scale-90"
-                      style={{
-                        marginTop: '-38px',
-                        background: isActive
-                          ? 'linear-gradient(145deg, #0ea5e9 0%, #0284c7 100%)'
-                          : 'linear-gradient(145deg, #38bdf8 0%, #0ea5e9 100%)',
-                        boxShadow: isActive
-                          ? '0 0 0 3px rgba(14,165,233,0.18), 0 8px 24px rgba(14,165,233,0.42), 0 2px 6px rgba(0,0,0,0.25)'
-                          : '0 0 0 3px rgba(14,165,233,0.10), 0 6px 18px rgba(14,165,233,0.30), 0 2px 6px rgba(0,0,0,0.20)',
-                      }}
-                    >
-                      <Icon
-                        className="h-[26px] w-[26px]"
-                        style={{ color: '#ffffff' }}
-                      />
-                    </span>
-                    <span
-                      className={`mt-2 font-mono text-[10px] uppercase tracking-wider transition-colors ${
-                        isActive ? 'text-primary' : 'text-mute'
-                      }`}
-                    >
-                      {label}
-                    </span>
-                  </>
+                  <span
+                    className="flex h-[58px] w-[58px] items-center justify-center rounded-full transition-all duration-200 active:scale-90"
+                    style={{
+                      marginTop: '-32px',
+                      background: isActive
+                        ? 'linear-gradient(145deg, #0ea5e9 0%, #0284c7 100%)'
+                        : 'linear-gradient(145deg, #38bdf8 0%, #0ea5e9 100%)',
+                      boxShadow: isActive
+                        ? '0 0 0 3px rgba(14,165,233,0.18), 0 8px 22px rgba(14,165,233,0.40), 0 2px 6px rgba(0,0,0,0.22)'
+                        : '0 0 0 3px rgba(14,165,233,0.10), 0 6px 16px rgba(14,165,233,0.28), 0 2px 6px rgba(0,0,0,0.16)',
+                    }}
+                  >
+                    <Icon className="h-[22px] w-[22px]" style={{ color: '#ffffff' }} />
+                  </span>
                 )}
               </NavLink>
             </li>
           ) : (
-            /* ── Regular nav item ── */
+            /* ── Regular icon-only item ── */
             <li key={to} className="flex">
               <NavLink
                 to={to}
-                className="group flex min-h-[56px] flex-col items-center justify-end gap-1 px-3 pb-1"
                 aria-label={label}
+                className="group flex flex-col items-center justify-center gap-1.5 px-4 pb-0.5"
               >
                 {({ isActive }) => (
                   <>
-                    {/* Active indicator dot */}
                     <span
-                      className={`absolute top-1.5 h-1 w-1 rounded-full bg-primary transition-all duration-200 ${
-                        isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-0'
-                      }`}
-                    />
-                    {/* Icon with active pill bg */}
-                    <span
-                      className={`relative flex items-center justify-center rounded-full transition-all duration-200 ${
-                        isActive
-                          ? 'h-8 w-8 bg-primary/10'
-                          : 'h-8 w-8'
+                      className={`flex items-center justify-center rounded-full transition-all duration-200 ${
+                        isActive ? 'h-9 w-9 bg-primary/10' : 'h-9 w-9'
                       }`}
                     >
                       <Icon
@@ -96,13 +71,12 @@ export default function BottomNav() {
                         }`}
                       />
                     </span>
+                    {/* Active pip */}
                     <span
-                      className={`font-mono text-[10px] uppercase tracking-wider transition-colors duration-200 ${
-                        isActive ? 'text-ink font-semibold' : 'text-ash'
+                      className={`h-[3px] w-[3px] rounded-full bg-primary transition-all duration-200 ${
+                        isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-0'
                       }`}
-                    >
-                      {label}
-                    </span>
+                    />
                   </>
                 )}
               </NavLink>
