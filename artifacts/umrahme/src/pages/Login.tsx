@@ -44,9 +44,9 @@ export default function Login() {
         <div
           className="relative w-full overflow-hidden"
           style={{
-            height: '72vw',
-            maxHeight: '360px',
-            minHeight: '260px',
+            height: '48vw',
+            maxHeight: '220px',
+            minHeight: '160px',
           }}
         >
           {/* Hero photo — natural, no color grading */}
@@ -104,30 +104,20 @@ export default function Login() {
         </div>
 
         {/* ── Card body ── */}
-        <div className="px-6 pt-0 pb-7">
-
-          {/* Logo tenant */}
-          <div className="flex justify-center mb-1">
-            <img
-              src={activeTenant.logoPath}
-              alt={activeTenant.namaTravel}
-              className="h-10 w-auto"
-              onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
-            />
-          </div>
+        <div className="px-6 pt-0 pb-4">
 
           {/* Heading */}
           <h2
             className="font-display font-bold leading-tight text-ink text-center"
-            style={{ fontSize: 'clamp(26px, 7vw, 34px)' }}
+            style={{ fontSize: 'clamp(24px, 7vw, 32px)' }}
           >
             Selamat Datang!
           </h2>
-          <p className="mt-1.5 text-[13px] text-charcoal text-center">
+          <p className="mt-1 text-[13px] text-charcoal text-center">
             Masukkan kode aktivasi.
           </p>
 
-          <form onSubmit={handleSubmit} className="mt-5 space-y-3">
+          <form onSubmit={handleSubmit} className="mt-3 space-y-2">
 
             {/* Kode Aktivasi row — styled like the "photo + upload" row in reference */}
             <div
@@ -169,7 +159,7 @@ export default function Login() {
             </div>
 
             {/* Nama Jamaah — styled like "Display Name" field in reference */}
-            <div style={{ marginTop: '16px' }}>
+            <div style={{ marginTop: '8px' }}>
               <p className="font-display text-[11px] uppercase tracking-[0.15em] text-mute mb-1.5 px-1">
                 Nama Jamaah
               </p>
@@ -215,7 +205,7 @@ export default function Login() {
                 background: loading ? '#444' : '#111111',
                 color: '#ffffff',
                 boxShadow: loading ? 'none' : '0 4px 16px rgba(0,0,0,0.22)',
-                marginTop: '20px',
+                marginTop: '10px',
               }}
             >
               {loading ? (
