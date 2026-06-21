@@ -1,7 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { urutanFase } from '../data/jamaah';
-import { activeTenant } from '../config/tenants';
 import { IconBeranda, IconPanduan, IconIbadah, IconDoa, IconProfil } from './icons';
 
 const navItems = [
@@ -13,7 +12,7 @@ const navItems = [
 ];
 
 export default function DesktopSidebar() {
-  const { jamaah, logout } = useAuth();
+  const { jamaah, tenant, logout } = useAuth();
   if (!jamaah) return null;
 
   const idxFase = urutanFase.findIndex((f) => f.id === jamaah.fase);
@@ -23,17 +22,19 @@ export default function DesktopSidebar() {
 
       {/* Brand */}
       <div className="px-5 pt-7 pb-5 border-b border-hairline">
-        <img
-          src={activeTenant.logoPath}
-          alt={activeTenant.namaTravel}
-          className="h-8 w-auto mb-2"
-          onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
-        />
+        {tenant?.logo_url && (
+          <img
+            src={tenant.logo_url}
+            alt={tenant.nama_travel}
+            className="h-8 w-auto mb-2"
+            onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+          />
+        )}
         <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-primary/80 mb-1">
           Pendamping Umrah
         </p>
         <h1 className="font-display text-[20px] font-bold text-ink leading-tight tracking-[-0.5px]">
-          {activeTenant.namaTravel}
+          {tenant?.nama_travel ?? jamaah.travel}
         </h1>
 
         {/* Jamaah card */}

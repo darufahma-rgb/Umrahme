@@ -38,7 +38,11 @@ function resolveTenant(): TenantConfig {
   return found;
 }
 
-/** Tenant aktif untuk build ini — ditentukan oleh VITE_TENANT_ID saat build. */
+/**
+ * @deprecated Sejak migrasi ke validasi database, branding ditentukan oleh
+ * kode aktivasi yang divalidasi lewat tabel `tenants` di Supabase saat login,
+ * BUKAN lagi VITE_TENANT_ID saat build. Gunakan `tenant` dari `useAuth()`.
+ */
 export const activeTenant: TenantConfig = resolveTenant();
 
 export default registry;

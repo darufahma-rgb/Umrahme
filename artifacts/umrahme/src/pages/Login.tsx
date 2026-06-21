@@ -4,7 +4,6 @@ import { useAuth } from '../context/AuthContext';
 import { validasiKode, KODE_DEMO } from '../data/jamaah';
 import heroBg from '@assets/photo-1635829576353-1a14caec2f6f_1781969073425.avif';
 import { KeyRound } from 'lucide-react';
-import { activeTenant } from '../config/tenants';
 
 export default function Login() {
   const { login } = useAuth();
@@ -17,20 +16,23 @@ export default function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError('');
     setLoading(true);
-    setTimeout(() => {
-      const hasil = validasiKode(kode, nama);
-      if (hasil.ok && hasil.jamaah) {
-        login(hasil.jamaah);
+    try {
+      const hasil = await validasiKode(kode, nama);
+      if (hasil.ok && hasil.jamaah && hasil.tenant) {
+        login(hasil.jamaah, hasil.tenant);
         navigate(from, { replace: true });
       } else {
         setError(hasil.error ?? 'Terjadi kesalahan.');
         setLoading(false);
       }
-    }, 450);
+    } catch {
+      setError('Tidak dapat terhubung. Periksa koneksi internet Anda.');
+      setLoading(false);
+    }
   }
 
   return (
@@ -48,7 +50,7 @@ export default function Login() {
             maxHeight: '320px',
           }}
         >
-          {/* Hero photo — natural, no color grading */}
+          {/* Hero photo */}
           <img
             src={heroBg}
             alt=""
@@ -57,7 +59,7 @@ export default function Login() {
             aria-hidden
           />
 
-          {/* Light top scrim so text stays readable */}
+          {/* Light top scrim */}
           <div
             className="pointer-events-none absolute inset-0"
             style={{
@@ -66,7 +68,7 @@ export default function Login() {
             }}
           />
 
-          {/* Arabic calligraphy — centered, smaller */}
+          {/* Arabic calligraphy */}
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 px-6">
             <p
               className="font-arab text-center"
@@ -92,7 +94,7 @@ export default function Login() {
             </div>
           </div>
 
-          {/* Bottom fade into white card body */}
+          {/* Bottom fade */}
           <div
             className="absolute bottom-0 left-0 right-0 pointer-events-none"
             style={{
@@ -118,19 +120,17 @@ export default function Login() {
 
           <form onSubmit={handleSubmit} className="mt-3 space-y-2">
 
-            {/* Kode Aktivasi row — styled like the "photo + upload" row in reference */}
+            {/* Kode Aktivasi */}
             <div
               className="flex items-center gap-3 rounded-2xl border px-4 py-3"
               style={{ borderColor: 'rgba(32,32,32,0.10)', background: '#fafaf9' }}
             >
-              {/* Icon badge */}
               <div
                 className="flex-none flex h-10 w-10 items-center justify-center rounded-xl"
                 style={{ background: '#111111' }}
               >
                 <KeyRound className="h-4.5 w-4.5" style={{ color: '#ffffff', strokeWidth: 2 }} />
               </div>
-              {/* Input */}
               <div className="flex-1 min-w-0">
                 <p className="font-display text-[10px] uppercase tracking-[0.18em] text-mute mb-0.5">
                   Kode Aktivasi
@@ -146,7 +146,6 @@ export default function Login() {
                   className="w-full bg-transparent font-mono text-[17px] tracking-[0.35em] text-ink placeholder:text-stone/40 focus:outline-none"
                 />
               </div>
-              {/* Character counter */}
               {kode.length > 0 && (
                 <span
                   className="flex-none flex h-7 w-7 items-center justify-center rounded-full font-mono text-[11px] font-semibold text-primary"
@@ -157,7 +156,7 @@ export default function Login() {
               )}
             </div>
 
-            {/* Nama Jamaah — styled like "Display Name" field in reference */}
+            {/* Nama Jamaah */}
             <div style={{ marginTop: '8px' }}>
               <p className="font-display text-[11px] uppercase tracking-[0.15em] text-mute mb-1.5 px-1">
                 Nama Jamaah
@@ -195,7 +194,7 @@ export default function Login() {
               </div>
             ) : null}
 
-            {/* Submit — dark pill like reference "Continue" button */}
+            {/* Submit */}
             <button
               type="submit"
               disabled={loading}

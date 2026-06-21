@@ -1,18 +1,18 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import type { Fase, Jamaah } from '../types';
-
-// =============================================================
-// AuthContext — menyimpan state jamaah dummy setelah login.
-// Dipersist ke localStorage agar refresh tidak melempar ke login.
-// TODO(api): ganti dengan token/session sungguhan saat backend siap.
-// =============================================================
+import type { TenantRow } from '../lib/supabase';
 
 const STORAGE_KEY = 'umrahme.jamaah';
+const TENANT_STORAGE_KEY = 'umrahme.tenant';
+
+const DEFAULT_PRIMARY = '#0ea5e9';
+const DEFAULT_PRIMARY_DEEP = '#0284c7';
 
 interface AuthValue {
   jamaah: Jamaah | null;
+  tenant: TenantRow | null;
   isLoggedIn: boolean;
-  login: (j: Jamaah) => void;
+  login: (j: Jamaah, t: TenantRow) => void;
   logout: () => void;
   setFase: (f: Fase) => void;
 }
@@ -28,23 +28,47 @@ function bacaStorage(): Jamaah | null {
   }
 }
 
+function bacaTenant(): TenantRow | null {
+  try {
+    const raw = localStorage.getItem(TENANT_STORAGE_KEY);
+    return raw ? (JSON.parse(raw) as TenantRow) : null;
+  } catch {
+    return null;
+  }
+}
+
+function applyTenantTheme(tenant: TenantRow | null) {
+  const root = document.documentElement;
+  root.style.setProperty('--color-primary', tenant?.primary_color ?? DEFAULT_PRIMARY);
+  root.style.setProperty('--color-primary-deep', tenant?.primary_deep_color ?? DEFAULT_PRIMARY_DEEP);
+  document.title = tenant?.page_title ?? 'Pendamping Umrah';
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [jamaah, setJamaah] = useState<Jamaah | null>(() => bacaStorage());
+  const [tenant, setTenant] = useState<TenantRow | null>(() => bacaTenant());
 
   useEffect(() => {
     try {
       if (jamaah) localStorage.setItem(STORAGE_KEY, JSON.stringify(jamaah));
       else localStorage.removeItem(STORAGE_KEY);
-    } catch {
-      /* abaikan kuota / mode privat */
-    }
+    } catch { /* abaikan */ }
   }, [jamaah]);
+
+  useEffect(() => {
+    try {
+      if (tenant) localStorage.setItem(TENANT_STORAGE_KEY, JSON.stringify(tenant));
+      else localStorage.removeItem(TENANT_STORAGE_KEY);
+    } catch { /* abaikan */ }
+    applyTenantTheme(tenant);
+  }, [tenant]);
 
   const value: AuthValue = {
     jamaah,
+    tenant,
     isLoggedIn: !!jamaah,
-    login: (j) => setJamaah(j),
-    logout: () => setJamaah(null),
+    login: (j, t) => { setJamaah(j); setTenant(t); },
+    logout: () => { setJamaah(null); setTenant(null); },
     setFase: (f) => setJamaah((prev) => (prev ? { ...prev, fase: f } : prev)),
   };
 

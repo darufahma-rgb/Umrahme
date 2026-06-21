@@ -4,7 +4,6 @@ import { useAuth } from '../context/AuthContext';
 import heroBg from '@assets/image_1782030121542.png';
 import PhaseIndicator from '../components/PhaseIndicator';
 import { urutanFase } from '../data/jamaah';
-import { activeTenant } from '../config/tenants';
 import { checklistItems } from '../data/checklist';
 import {
   IconDoa,
@@ -99,7 +98,7 @@ function SmallCard({ to, label, icon }: { to: string; label: string; icon: React
 }
 
 export default function Beranda() {
-  const { jamaah } = useAuth();
+  const { jamaah, tenant } = useAuth();
 
   const totalPersiapan = checklistItems.length;
   const [persiapanDone] = useState<number>(() => {
@@ -192,8 +191,8 @@ export default function Beranda() {
             style={{ top: 'max(1.2rem, env(safe-area-inset-top))' }}
           >
             <img
-              src={activeTenant.logoPath}
-              alt={activeTenant.namaTravel}
+              src={tenant?.logo_url ?? ''}
+              alt={tenant?.nama_travel ?? ''}
               className="h-6 w-auto"
               style={{ filter: 'brightness(0) invert(1)' }}
               onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}

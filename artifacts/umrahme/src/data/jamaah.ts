@@ -1,35 +1,38 @@
 import type { Jamaah } from '../types';
-import { activeTenant } from '../config/tenants';
+import { supabase } from '../lib/supabase';
+import type { TenantRow } from '../lib/supabase';
 
 // =============================================================
-// MOCK AUTH — sistem kode aktivasi jamaah (UI only, belum backend)
-// -------------------------------------------------------------
-// Validasi dummy: kode "DEMO01" + nama apa pun = sukses login.
-// Kode lain → error "Kode tidak ditemukan, hubungi travel Anda".
-// TODO(api): ganti validasiKode() dengan POST /auth/activate.
+// AUTH — validasi kode aktivasi jamaah via tabel `tenants` di Supabase.
+// Kode diperiksa ke database setiap kali jamaah mencoba login.
 // =============================================================
-
-/** Nama travel dari tenant aktif — di-set via VITE_TENANT_ID saat build. */
-export const NAMA_TRAVEL = activeTenant.namaTravel;
 
 export const KODE_DEMO = 'DEMO01';
 
 export interface HasilValidasi {
   ok: boolean;
   jamaah?: Jamaah;
+  tenant?: TenantRow;
   error?: string;
 }
 
-let nomorUrut = 142; // dummy, untuk membentuk nomor jamaah unik
+let nomorUrut = 142;
 
-export function validasiKode(kode: string, nama: string): HasilValidasi {
+export async function validasiKode(kode: string, nama: string): Promise<HasilValidasi> {
   const k = kode.trim().toUpperCase();
   const n = nama.trim();
 
   if (!n) {
     return { ok: false, error: 'Nama jamaah wajib diisi.' };
   }
-  if (k !== KODE_DEMO) {
+
+  const { data, error } = await supabase
+    .from('tenants')
+    .select('*')
+    .eq('activation_code', k)
+    .maybeSingle();
+
+  if (error || !data) {
     return { ok: false, error: 'Kode tidak ditemukan, hubungi travel Anda.' };
   }
 
@@ -37,11 +40,12 @@ export function validasiKode(kode: string, nama: string): HasilValidasi {
   const jamaah: Jamaah = {
     nama: n,
     nomorJamaah: `UMR-${tahun}-${String(nomorUrut++).padStart(4, '0')}`,
-    travel: NAMA_TRAVEL,
+    travel: data.nama_travel,
     kodeAktivasi: k,
     fase: 'persiapan',
   };
-  return { ok: true, jamaah };
+
+  return { ok: true, jamaah, tenant: data };
 }
 
 /** Urutan fase untuk indikator visual. */
