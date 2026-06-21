@@ -31,7 +31,7 @@ function formatRelativeTime(isoString: string): string {
 }
 
 // ── Card tunggal dengan expand ──────────────────────────────────
-function AnnouncementCard({ item, defaultOpen = false }: { item: TravelAnnouncement; defaultOpen?: boolean }) {
+function AnnouncementCard({ item, defaultOpen = false, travelName = 'Travel' }: { item: TravelAnnouncement; defaultOpen?: boolean; travelName?: string }) {
   const [open, setOpen] = useState(defaultOpen);
 
   const isImportant = item.important;
@@ -79,7 +79,7 @@ function AnnouncementCard({ item, defaultOpen = false }: { item: TravelAnnouncem
                 : { background: 'rgba(14,165,233,0.12)', color: '#0284c7' }
               }
             >
-              {item.label}
+              {travelName}
             </span>
             <span className="font-mono text-[7px] text-mute">{formatRelativeTime(item.publishedAt)}</span>
           </div>
@@ -153,7 +153,7 @@ export default function Pengumuman() {
               </p>
               <div className="grid grid-cols-2 gap-2.5">
                 {important.map((item, i) => (
-                  <AnnouncementCard key={item.id} item={item} defaultOpen={i === 0} />
+                  <AnnouncementCard key={item.id} item={item} defaultOpen={i === 0} travelName={tenant?.nama_travel ?? 'Travel'} />
                 ))}
               </div>
             </div>
@@ -167,7 +167,7 @@ export default function Pengumuman() {
               </p>
               <div className="grid grid-cols-2 gap-2.5">
                 {info.map((item) => (
-                  <AnnouncementCard key={item.id} item={item} />
+                  <AnnouncementCard key={item.id} item={item} travelName={tenant?.nama_travel ?? 'Travel'} />
                 ))}
               </div>
             </div>
@@ -195,7 +195,7 @@ export default function Pengumuman() {
               <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-mute">🔔 Penting</p>
               <div className="grid grid-cols-2 gap-3">
                 {important.map((item, i) => (
-                  <AnnouncementCard key={item.id} item={item} defaultOpen={i === 0} />
+                  <AnnouncementCard key={item.id} item={item} defaultOpen={i === 0} travelName={tenant?.nama_travel ?? 'Travel'} />
                 ))}
               </div>
             </div>
@@ -205,7 +205,7 @@ export default function Pengumuman() {
               <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-mute">ℹ️ Info</p>
               <div className="grid grid-cols-2 gap-3">
                 {info.map((item) => (
-                  <AnnouncementCard key={item.id} item={item} />
+                  <AnnouncementCard key={item.id} item={item} travelName={tenant?.nama_travel ?? 'Travel'} />
                 ))}
               </div>
             </div>
