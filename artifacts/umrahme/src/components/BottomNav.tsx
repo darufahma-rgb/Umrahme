@@ -60,21 +60,9 @@ export default function BottomNav() {
               >
                 {({ isActive }) => (
                   <>
-                    <span
-                      className={`flex items-center justify-center rounded-full transition-all duration-200 ${
-                        isActive ? 'h-9 w-9 bg-primary/10' : 'h-9 w-9'
-                      }`}
-                    >
-                      <Icon
-                        className={`h-[20px] w-[20px] transition-colors duration-200 ${
-                          isActive ? 'text-primary' : 'text-ash group-hover:text-charcoal'
-                        }`}
-                      />
-                    </span>
-                    {/* Active pip */}
-                    <span
-                      className={`h-[3px] w-[3px] rounded-full bg-primary transition-all duration-200 ${
-                        isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-0'
+                    <Icon
+                      className={`h-[22px] w-[22px] transition-colors duration-200 ${
+                        isActive ? 'text-primary' : 'text-ash group-hover:text-charcoal'
                       }`}
                     />
                   </>
