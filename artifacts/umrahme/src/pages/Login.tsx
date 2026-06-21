@@ -104,10 +104,10 @@ export default function Login() {
         </div>
 
         {/* ── Card body ── */}
-        <div className="px-6 pt-6 pb-7">
+        <div className="px-6 pt-3 pb-7">
 
           {/* Logo tenant */}
-          <div className="flex justify-center mb-4">
+          <div className="flex justify-center mb-2">
             <img
               src={activeTenant.logoPath}
               alt={activeTenant.namaTravel}
