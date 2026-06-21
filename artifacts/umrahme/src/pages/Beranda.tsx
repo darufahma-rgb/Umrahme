@@ -193,7 +193,7 @@ export default function Beranda() {
   };
 
   const quickActions = [
-    { to: '/doa',                  label: 'Doa',       icon: <IconDoa      className="h-5 w-5" />, accent: true  },
+    { to: '/doa',                  label: 'Doa',       icon: <IconDoa      className="h-5 w-5" />, accent: false },
     { to: '/panduan/ihram',        label: 'Ihram',     icon: <IconIhram    className="h-5 w-5" />, accent: false },
     { to: '/ibadah/tawaf',         label: 'Tawaf',     icon: <IconTawaf    className="h-5 w-5" />, accent: false },
     { to: '/ibadah/sai',           label: "Sa'i",      icon: <IconSai      className="h-5 w-5" />, accent: false },
