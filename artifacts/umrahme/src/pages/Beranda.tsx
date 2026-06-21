@@ -240,7 +240,7 @@ export default function Beranda() {
           </div>
 
           {/* Nama + salam */}
-          <div className="absolute inset-x-0 bottom-0 px-5 pb-10">
+          <div className="absolute inset-x-0 bottom-0 px-5 pb-16">
             <p className="font-display text-[11px] uppercase tracking-[0.3em] text-white/45">
               Assalamu'alaikum
             </p>
