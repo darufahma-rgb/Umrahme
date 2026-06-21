@@ -227,66 +227,6 @@ function KartuAgendaHariIni({ items, total }: { items: AgendaItemRow[]; total: n
   );
 }
 
-// ── Kartu Fase (Kondisi C — fallback) ───────────────────────
-function KartuFase({
-  faseAktif,
-  jamaahFase,
-  faseDesc,
-  heroCta,
-}: {
-  faseAktif: (typeof urutanFase)[number] | undefined;
-  jamaahFase: string;
-  faseDesc: Record<string, string>;
-  heroCta: { label: string; to: string };
-}) {
-  return (
-    <section className="px-5">
-      <div className="rounded-2xl bg-white p-5 shadow-drop-lifted">
-        <div className="flex items-center justify-between gap-2">
-          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-mute">Fase Perjalanan</p>
-          <span className="rounded-full bg-primary/10 px-3 py-1 font-mono text-[10px] text-primary">
-            {faseAktif?.label ?? 'Persiapan'}
-          </span>
-        </div>
-        <h2 className="mt-2 font-display text-[24px] font-bold leading-tight text-ink">
-          {faseAktif?.label ?? 'Persiapan'}
-        </h2>
-        <div className="mt-4 grid grid-cols-3 gap-2">
-          {urutanFase.map((fase) => {
-            const aktif = fase.id === jamaahFase;
-            const ikonFase: Record<string, React.ReactNode> = {
-              persiapan:    <IconCheck      className="h-5 w-5" />,
-              'tanah-suci': <IconTawaf     className="h-5 w-5" />,
-              selesai:      <IconSertifikat className="h-5 w-5" />,
-            };
-            const labelPendek: Record<string, string> = {
-              persiapan:    'Siap',
-              'tanah-suci': 'Ibadah',
-              selesai:      'Selesai',
-            };
-            return (
-              <div key={fase.id} className={`flex flex-col items-center gap-2 rounded-xl border-2 px-2 py-3.5 text-center transition-all ${aktif ? 'border-primary bg-primary/10 shadow-[0_2px_8px_rgba(14,165,233,0.18)]' : 'border-transparent bg-surface-bone'}`}>
-                <span className={aktif ? 'text-primary' : 'text-ash'}>{ikonFase[fase.id]}</span>
-                <span className={`font-mono text-[10px] font-semibold leading-tight ${aktif ? 'text-primary' : 'text-mute'}`}>
-                  {labelPendek[fase.id] ?? fase.label}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-        <p className="mt-3.5 text-[13px] leading-relaxed text-charcoal">
-          {faseDesc[jamaahFase] ?? 'Ikuti panduan dan doa yang telah disiapkan.'}
-        </p>
-        <div className="mt-4 flex justify-end">
-          <Link to={heroCta.to} className="inline-flex items-center gap-2 rounded-full bg-ink px-5 py-3 text-[13px] font-bold text-white shadow-drop-lifted transition-all active:scale-[0.97]">
-            {heroCta.label} <IconChevron className="h-3.5 w-3.5" />
-          </Link>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 // ── Grid fitur kecil (3 per baris) ───────────────────────────
 function GridItem({
   to, label, children,
@@ -367,9 +307,8 @@ export default function Beranda() {
     ? hitungHariMenuju(tenant.tanggal_keberangkatan)
     : null;
 
-  const showHitung   = hariMenuju !== null && hariMenuju >= 1 && hariMenuju <= 30;
-  const showAgenda   = !showHitung && jamaah.fase === 'tanah-suci' && todayAgenda.length > 0;
-  const showFaseFallback = !showHitung && !showAgenda;
+  const showHitung = hariMenuju !== null && hariMenuju >= 1 && hariMenuju <= 30;
+  const showAgenda = !showHitung && jamaah.fase === 'tanah-suci' && todayAgenda.length > 0;
 
   // Semua item grid fitur (unified)
   const allFeatures: { to: string; label: string; icon: ReactNode }[] = [
@@ -432,15 +371,6 @@ export default function Beranda() {
               <KartuAgendaHariIni items={todayAgenda.slice(0, 3)} total={todayAgenda.length} />
             )}
 
-            {/* Kondisi C: Fallback kartu fase */}
-            {showFaseFallback && (
-              <KartuFase
-                faseAktif={faseAktif}
-                jamaahFase={jamaah.fase}
-                faseDesc={faseDesc}
-                heroCta={heroCta}
-              />
-            )}
           </div>
 
           {/* ── 2. TRAVEL COMPANION FLOW ──────────── */}
