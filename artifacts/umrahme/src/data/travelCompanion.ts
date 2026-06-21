@@ -19,6 +19,8 @@ export type TravelOperationalInfo = {
   guideName: string;
   guideRole: string;
   guideWhatsapp: string;
+  tourLeaderName: string;
+  tourLeaderWhatsapp: string;
   travelWhatsapp: string;
   emergencyNote: string;
 };
@@ -30,9 +32,11 @@ const DEFAULT_OPERATIONAL_INFO: TravelOperationalInfo = {
   hotelMakkah: 'Hotel Makkah — diisi travel',
   hotelMadinah: 'Hotel Madinah — diisi travel',
   meetingPoint: 'Lobby hotel / titik kumpul dari pembimbing',
-  guideName: 'Ust. Pembimbing',
-  guideRole: 'Pembimbing Rombongan',
+  guideName: 'Ust. Muthowwif',
+  guideRole: 'Muthowwif',
   guideWhatsapp: '6281234567890',
+  tourLeaderName: 'Bpk. Tour Leader',
+  tourLeaderWhatsapp: '6289876543210',
   travelWhatsapp: '6281234567890',
   emergencyNote: 'Jika tersesat, tetap tenang. Hubungi pembimbing dan tunjukkan Kartu Jamaah Digital.',
 };

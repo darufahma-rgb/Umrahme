@@ -220,9 +220,11 @@ export function EmergencyGuideCard({ desktop = false, compact = false }: { deskt
   const { jamaah, tenant } = useAuth();
   if (!jamaah) return null;
 
-  const info         = getOperationalInfo(tenant?.id);
-  const pembimbing   = jamaah.pembimbingNama     ?? info.guideName;
-  const pembimbingWa = jamaah.pembimbingWhatsapp ?? info.guideWhatsapp;
+  const info           = getOperationalInfo(tenant?.id);
+  const muthowwif      = jamaah.pembimbingNama     ?? info.guideName;
+  const muthowwifWa    = jamaah.pembimbingWhatsapp ?? info.guideWhatsapp;
+  const tourLeader     = info.tourLeaderName;
+  const tourLeaderWa   = info.tourLeaderWhatsapp;
 
   if (compact) {
     return (
@@ -231,52 +233,94 @@ export function EmergencyGuideCard({ desktop = false, compact = false }: { deskt
           <IconPhone className="h-3.5 w-3.5 text-red-400" />
         </div>
         <p className="font-mono text-[7px] uppercase tracking-[0.2em] text-mute">Butuh Bantuan?</p>
-        <p className="mt-1 text-[12px] font-bold leading-snug text-ink">{pembimbing}</p>
-        <p className="mt-0.5 text-[10px] text-charcoal">{info.guideRole}</p>
-        <a
-          href={whatsappLink(pembimbingWa)}
-          target="_blank"
-          rel="noreferrer"
-          className="mt-auto pt-3 flex items-center justify-center gap-1.5 rounded-xl py-2 text-[11px] font-bold text-white active:scale-[0.97] transition-all"
-          style={{ background: '#25D366' }}
-        >
-          <IconWhatsapp className="h-3.5 w-3.5" />
-          WA
-        </a>
+
+        {/* Muthowwif */}
+        <div className="mt-1.5">
+          <p className="text-[10px] font-mono uppercase tracking-wider text-charcoal">Muthowwif</p>
+          <p className="text-[11px] font-bold leading-tight text-ink">{muthowwif}</p>
+        </div>
+
+        {/* Tour Leader */}
+        <div className="mt-1.5">
+          <p className="text-[10px] font-mono uppercase tracking-wider text-charcoal">Tour Leader</p>
+          <p className="text-[11px] font-bold leading-tight text-ink">{tourLeader}</p>
+        </div>
+
+        {/* WA buttons */}
+        <div className="mt-auto pt-3 grid grid-cols-2 gap-1.5">
+          <a
+            href={whatsappLink(muthowwifWa)}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center justify-center gap-1 rounded-xl py-1.5 text-[9px] font-bold text-white active:scale-[0.97] transition-all"
+            style={{ background: '#25D366' }}
+          >
+            <IconWhatsapp className="h-3 w-3" />
+            Muthow.
+          </a>
+          <a
+            href={whatsappLink(tourLeaderWa)}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center justify-center gap-1 rounded-xl py-1.5 text-[9px] font-bold text-white active:scale-[0.97] transition-all"
+            style={{ background: '#25D366' }}
+          >
+            <IconWhatsapp className="h-3 w-3" />
+            TL
+          </a>
+        </div>
       </div>
     );
   }
 
   return (
     <div className={`rounded-2xl border border-hairline bg-white shadow-drop-card ${desktop ? 'p-4' : 'p-4'}`}>
-      <div className="flex items-center gap-3 mb-3">
-        <div className="flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-red-50">
-          <IconPhone className="h-4 w-4 text-red-400" />
+      <p className="font-mono text-[8.5px] uppercase tracking-[0.2em] text-mute mb-3">Butuh Bantuan?</p>
+
+      {/* Muthowwif row */}
+      <div className="flex items-center gap-3 mb-2">
+        <div className="flex h-9 w-9 flex-none items-center justify-center rounded-xl bg-red-50">
+          <IconPhone className="h-3.5 w-3.5 text-red-400" />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="font-mono text-[8.5px] uppercase tracking-[0.2em] text-mute">Butuh Bantuan?</p>
-          <p className={`mt-0.5 font-bold text-ink ${desktop ? 'text-[15px]' : 'text-[14px]'}`}>{pembimbing}</p>
-          <p className="text-[11px] text-charcoal">{info.guideRole}</p>
+          <p className="font-mono text-[8px] uppercase tracking-wider text-mute">Muthowwif</p>
+          <p className="text-[13px] font-bold text-ink leading-tight">{muthowwif}</p>
+        </div>
+        <div className="flex gap-1.5">
+          <a href={whatsappLink(muthowwifWa)} target="_blank" rel="noreferrer"
+            className="flex h-8 w-8 items-center justify-center rounded-xl text-white active:scale-[0.97] transition-all"
+            style={{ background: '#25D366' }}>
+            <IconWhatsapp className="h-4 w-4" />
+          </a>
+          <a href={`tel:${muthowwifWa}`}
+            className="flex h-8 w-8 items-center justify-center rounded-xl border border-hairline bg-surface-bone text-charcoal active:scale-[0.97] transition-all">
+            <IconPhone className="h-3.5 w-3.5" />
+          </a>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-2">
-        <a
-          href={whatsappLink(pembimbingWa)}
-          target="_blank"
-          rel="noreferrer"
-          className="flex items-center justify-center gap-2 rounded-xl py-2.5 text-[12px] font-bold text-white active:scale-[0.97] transition-all"
-          style={{ background: '#25D366' }}
-        >
-          <IconWhatsapp className="h-4 w-4" />
-          WhatsApp
-        </a>
-        <a
-          href={`tel:${pembimbingWa}`}
-          className="flex items-center justify-center gap-2 rounded-xl border border-hairline bg-surface-bone py-2.5 text-[12px] font-bold text-ink active:scale-[0.97] transition-all"
-        >
-          <IconPhone className="h-3.5 w-3.5" />
-          Telepon
-        </a>
+
+      <div className="h-px bg-hairline mb-2" />
+
+      {/* Tour Leader row */}
+      <div className="flex items-center gap-3">
+        <div className="flex h-9 w-9 flex-none items-center justify-center rounded-xl bg-primary/8">
+          <IconPhone className="h-3.5 w-3.5 text-primary" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="font-mono text-[8px] uppercase tracking-wider text-mute">Tour Leader</p>
+          <p className="text-[13px] font-bold text-ink leading-tight">{tourLeader}</p>
+        </div>
+        <div className="flex gap-1.5">
+          <a href={whatsappLink(tourLeaderWa)} target="_blank" rel="noreferrer"
+            className="flex h-8 w-8 items-center justify-center rounded-xl text-white active:scale-[0.97] transition-all"
+            style={{ background: '#25D366' }}>
+            <IconWhatsapp className="h-4 w-4" />
+          </a>
+          <a href={`tel:${tourLeaderWa}`}
+            className="flex h-8 w-8 items-center justify-center rounded-xl border border-hairline bg-surface-bone text-charcoal active:scale-[0.97] transition-all">
+            <IconPhone className="h-3.5 w-3.5" />
+          </a>
+        </div>
       </div>
     </div>
   );
