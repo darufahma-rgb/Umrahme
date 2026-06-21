@@ -16,5 +16,19 @@ export type TenantRow = {
   primary_deep_color: string;
   logo_url: string | null;
   page_title: string;
+  tanggal_keberangkatan: string | null;
+  tanggal_kepulangan: string | null;
+  created_at: string;
+};
+
+export type AgendaItemRow = {
+  id: string;
+  tenant_id: string;
+  tanggal: string;
+  jam_mulai: string | null;
+  judul: string;
+  deskripsi: string | null;
+  lokasi: string | null;
+  urutan: number;
   created_at: string;
 };
