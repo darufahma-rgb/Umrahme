@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import heroBg from '@assets/image_1782030121542.png';
 import PhaseIndicator from '../components/PhaseIndicator';
+import GlobalSearch from '../components/GlobalSearch';
 import { TravelCompanionFlow } from '../components/dashboard/TravelCompanionFlow';
 import { urutanFase } from '../data/jamaah';
 import { checklistItems } from '../data/checklist';
@@ -373,7 +374,12 @@ export default function Beranda() {
 
           </div>
 
-          {/* ── 2. TRAVEL COMPANION FLOW ──────────── */}
+          {/* ── 2. SEARCH BAR ────────────────────── */}
+          <div className="pb-3">
+            <GlobalSearch />
+          </div>
+
+          {/* ── 3. TRAVEL COMPANION FLOW ──────────── */}
           <TravelCompanionFlow />
 
           {/* ── 2. CHIP AKSES CEPAT ──────────── */}
