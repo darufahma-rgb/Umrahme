@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import heroBg from '@assets/photo-1635829576353-1a14caec2f6f_1781969073425.avif';
+import heroBg from '@assets/image_1782030121542.png';
 import PhaseIndicator from '../components/PhaseIndicator';
 import { urutanFase } from '../data/jamaah';
 import { activeTenant } from '../config/tenants';
