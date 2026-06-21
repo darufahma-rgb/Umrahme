@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { urutanFase } from '../data/jamaah';
+import { activeTenant } from '../config/tenants';
 import { IconBeranda, IconPanduan, IconIbadah, IconDoa, IconProfil } from './icons';
 
 const navItems = [
@@ -26,7 +27,7 @@ export default function DesktopSidebar() {
           Pendamping Umrah
         </p>
         <h1 className="font-display text-[20px] font-bold text-ink leading-tight tracking-[-0.5px]">
-          Umrahme
+          {activeTenant.namaTravel}
         </h1>
 
         {/* Jamaah card */}

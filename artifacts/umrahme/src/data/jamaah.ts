@@ -1,4 +1,5 @@
 import type { Jamaah } from '../types';
+import { activeTenant } from '../config/tenants';
 
 // =============================================================
 // MOCK AUTH — sistem kode aktivasi jamaah (UI only, belum backend)
@@ -8,8 +9,8 @@ import type { Jamaah } from '../types';
 // TODO(api): ganti validasiKode() dengan POST /auth/activate.
 // =============================================================
 
-/** Nama travel white-label. Ganti per-tenant saat integrasi. */
-export const NAMA_TRAVEL = 'Barakah Mulia Wisata';
+/** Nama travel dari tenant aktif — di-set via VITE_TENANT_ID saat build. */
+export const NAMA_TRAVEL = activeTenant.namaTravel;
 
 export const KODE_DEMO = 'DEMO01';
 
