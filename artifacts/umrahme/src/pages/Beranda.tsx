@@ -157,8 +157,8 @@ export default function Beranda() {
             src={heroBg}
             alt=""
             aria-hidden
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{ objectPosition: 'center 38%', transform: 'scale(1.7)', transformOrigin: 'center 38%' }}
+            className="absolute inset-0 w-full h-full object-cover animate-ken-burns"
+            style={{ objectPosition: 'center 38%' }}
           />
 
           {/* Top scrim — status bar area */}
@@ -176,11 +176,11 @@ export default function Beranda() {
           {/* Content pinned to bottom */}
           <div className="absolute inset-x-0 bottom-0 px-5" style={{ paddingBottom: '64px' }}>
             {/* Greeting */}
-            <p className="font-display text-[11px] uppercase tracking-[0.2em] text-white/55">
+            <p className="font-display text-[11px] uppercase tracking-[0.2em] text-white/55 animate-fade-up" style={{ animationDelay: '0.1s' }}>
               Assalamu'alaikum
             </p>
 
-            <h1 className="mt-1 font-display text-[40px] font-bold leading-none tracking-[-1.5px] text-white">
+            <h1 className="mt-1 font-display text-[40px] font-bold leading-none tracking-[-1.5px] text-white animate-fade-up" style={{ animationDelay: '0.22s' }}>
               {firstName}
             </h1>
 
@@ -208,7 +208,7 @@ export default function Beranda() {
         </header>
 
         {/* ── SHEET PUTIH — slide up menutupi bagian bawah hero ──────── */}
-        <div className="relative z-10 -mt-12 rounded-t-[28px] bg-canvas">
+        <div className="relative z-10 -mt-12 rounded-t-[28px] bg-canvas animate-slide-up-sheet" style={{ animationDelay: '0.35s' }}>
 
           {/* Chip filter mengambang — baris pertama di dalam sheet */}
           <div
