@@ -48,7 +48,7 @@ function Reveal({ children, delay = 0, className = '', from = 'bottom' }: {
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <p style={{
-      fontFamily: "'Plus Jakarta Sans', sans-serif",
+      fontFamily: "'Bricolage Grotesque', sans-serif",
       fontSize: 11, fontWeight: 700, letterSpacing: '0.14em',
       textTransform: 'uppercase', color: C.accent, marginBottom: 18,
     }}>• {children}</p>
@@ -64,7 +64,7 @@ function HeroCardCounter() {
       padding: '22px 26px', minWidth: 220,
       boxShadow: '0 32px 64px rgba(0,0,0,0.4)',
     }}>
-      <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 16 }}>Counter Tawaf</p>
+      <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 16 }}>Counter Tawaf</p>
       <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
         <div style={{
           width: 52, height: 52, borderRadius: '50%',
@@ -73,12 +73,12 @@ function HeroCardCounter() {
           boxShadow: `0 8px 24px rgba(201,168,76,0.4)`,
           flexShrink: 0,
         }}>
-          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 20, fontWeight: 800, color: '#fff', lineHeight: 1 }}>4</span>
-          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 8, color: 'rgba(255,255,255,0.65)' }}>/7</span>
+          <span style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 20, fontWeight: 800, color: '#fff', lineHeight: 1 }}>4</span>
+          <span style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 8, color: 'rgba(255,255,255,0.65)' }}>/7</span>
         </div>
         <div>
-          <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 3 }}>Putaran ke-4</p>
-          <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 12, color: 'rgba(255,255,255,0.45)' }}>Tawaf Qudum</p>
+          <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 3 }}>Putaran ke-4</p>
+          <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 12, color: 'rgba(255,255,255,0.45)' }}>Tawaf Qudum</p>
         </div>
       </div>
       <div style={{ marginTop: 16, height: 3, borderRadius: 99, background: 'rgba(255,255,255,0.1)' }}>
@@ -96,9 +96,9 @@ function HeroCardDoa() {
       padding: '22px 26px', minWidth: 260,
       boxShadow: '0 32px 64px rgba(0,0,0,0.35)',
     }}>
-      <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 10, fontWeight: 700, color: C.accent, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 12 }}>Doa Tawaf Putaran 4</p>
+      <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 10, fontWeight: 700, color: C.accent, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 12 }}>Doa Tawaf Putaran 4</p>
       <p style={{ fontFamily: "'Amiri', serif", fontSize: 17, color: '#1a2744', textAlign: 'right', lineHeight: 1.8, marginBottom: 10, direction: 'rtl' }}>رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً</p>
-      <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 11, color: '#888', lineHeight: 1.5 }}>Ya Rabb, berikanlah kami kebaikan di dunia dan akhirat…</p>
+      <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 11, color: '#888', lineHeight: 1.5 }}>Ya Rabb, berikanlah kami kebaikan di dunia dan akhirat…</p>
     </div>
   );
 }
@@ -114,12 +114,12 @@ function HeroCardAnnouncement() {
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
         <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#4ade80', boxShadow: '0 0 8px rgba(74,222,128,0.7)', flexShrink: 0 }} />
-        <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Pengumuman Travel</p>
+        <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Pengumuman Travel</p>
       </div>
-      <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 13, fontWeight: 500, color: '#fff', lineHeight: 1.6, marginBottom: 10 }}>
+      <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 13, fontWeight: 500, color: '#fff', lineHeight: 1.6, marginBottom: 10 }}>
         Bus ke Madinah berangkat pukul 08.00 WAS. Berkumpul 15 menit lebih awal di lobby.
       </p>
-      <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 10, color: 'rgba(255,255,255,0.3)' }}>2 menit lalu · Travel Barokah</p>
+      <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 10, color: 'rgba(255,255,255,0.3)' }}>2 menit lalu · Travel Barokah</p>
     </div>
   );
 }
@@ -148,7 +148,7 @@ function Marquee() {
               <span style={{ fontSize: 14 }}>🕌</span>
             </div>
             <span style={{
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
+              fontFamily: "'Bricolage Grotesque', sans-serif",
               fontSize: 14, fontWeight: 600, color: C.gray600,
               whiteSpace: 'nowrap',
             }}>{item}</span>
@@ -165,14 +165,14 @@ function FAQItem({ q, a }: { q: string; a: string }) {
   return (
     <div style={{ borderBottom: `1px solid ${C.gray200}`, cursor: 'pointer' }} onClick={() => setOpen(p => !p)}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '22px 0', gap: 16 }}>
-        <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 15, fontWeight: 600, color: C.gray900, lineHeight: 1.5 }}>{q}</p>
+        <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 15, fontWeight: 600, color: C.gray900, lineHeight: 1.5 }}>{q}</p>
         <span style={{ color: C.accent, fontSize: 22, flexShrink: 0, transition: 'transform 0.25s', transform: open ? 'rotate(45deg)' : 'none', fontWeight: 300 }}>+</span>
       </div>
       <AnimatePresence>
         {open && (
           <motion.p initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }}
-            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 14, color: C.gray600, lineHeight: 1.8, paddingBottom: 22, overflow: 'hidden' }}>
+            style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 14, color: C.gray600, lineHeight: 1.8, paddingBottom: 22, overflow: 'hidden' }}>
             {a}
           </motion.p>
         )}
@@ -225,9 +225,9 @@ export default function LandingPage() {
   ];
 
   return (
-    <div style={{ background: C.white, fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", overflowX: 'hidden' }}>
+    <div style={{ background: C.white, fontFamily: "'Inter', system-ui, sans-serif", overflowX: 'hidden' }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&family=Amiri:wght@400;700&display=swap');
+        /* Fonts loaded globally via index.css: Bricolage Grotesque, Inter, Amiri */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
 
@@ -244,7 +244,7 @@ export default function LandingPage() {
           background: linear-gradient(135deg, ${C.accent} 0%, ${C.accentDark} 100%);
           color: #fff; font-weight: 700; padding: 15px 28px;
           border-radius: 999px; font-size: 15px; text-decoration: none;
-          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-family: 'Bricolage Grotesque', sans-serif;
           transition: all 0.25s ease;
           box-shadow: 0 6px 28px rgba(201,168,76,0.38);
         }
@@ -261,7 +261,7 @@ export default function LandingPage() {
           border: 1.5px solid rgba(255,255,255,0.28); color: rgba(255,255,255,0.85);
           font-weight: 600; padding: 14px 28px; border-radius: 999px;
           font-size: 15px; text-decoration: none;
-          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-family: 'Bricolage Grotesque', sans-serif;
           transition: all 0.25s ease;
         }
         .btn-outline:hover { border-color: ${C.accent}; color: ${C.accent}; background: rgba(201,168,76,0.06); }
@@ -270,7 +270,7 @@ export default function LandingPage() {
           display: inline-flex; align-items: center; gap: 10px;
           background: ${C.gray900}; color: #fff; font-weight: 700;
           padding: 15px 28px; border-radius: 999px; font-size: 15px;
-          text-decoration: none; font-family: 'Plus Jakarta Sans', sans-serif;
+          text-decoration: none; font-family: 'Bricolage Grotesque', sans-serif;
           transition: all 0.25s ease;
         }
         .btn-dark:hover { background: #1a1a1a; transform: translateY(-2px); }
@@ -287,9 +287,9 @@ export default function LandingPage() {
         .feat-card:hover { box-shadow: 0 12px 40px rgba(0,0,0,0.07); transform: translateY(-4px); border-color: ${C.gray200}; }
 
         .pain-item { border-bottom: 1px solid ${C.gray200}; padding: 24px 0; display: flex; gap: 20px; align-items: flex-start; }
-        .nav-link { font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.65); text-decoration: none; transition: color 0.2s; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .nav-link { font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.65); text-decoration: none; transition: color 0.2s; font-family: 'Bricolage Grotesque', sans-serif; }
         .nav-link:hover { color: #fff; }
-        .nav-link-dark { font-size: 14px; font-weight: 500; color: ${C.gray600}; text-decoration: none; transition: color 0.2s; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .nav-link-dark { font-size: 14px; font-weight: 500; color: ${C.gray600}; text-decoration: none; transition: color 0.2s; font-family: 'Bricolage Grotesque', sans-serif; }
         .nav-link-dark:hover { color: ${C.gray900}; }
 
         @media (max-width: 900px) {
@@ -326,7 +326,7 @@ export default function LandingPage() {
             <div style={{ width: 34, height: 34, borderRadius: 10, background: `linear-gradient(135deg, ${C.accent}, ${C.accentDark})`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <span style={{ fontSize: 16 }}>🕌</span>
             </div>
-            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 20, fontWeight: 800, color: '#fff' }}>Umrahme</span>
+            <span style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 20, fontWeight: 800, color: '#fff' }}>Umrahme</span>
           </div>
           <div className="nav-menu" style={{ display: 'flex', gap: 36 }}>
             {[['#fitur', 'Fitur'], ['#harga', 'Harga'], ['#cara-kerja', 'Cara Kerja'], ['#kontak', 'Kontak']].map(([h, l]) => (
@@ -378,14 +378,14 @@ export default function LandingPage() {
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 16px', borderRadius: 99, background: 'rgba(201,168,76,0.12)', border: `1px solid rgba(201,168,76,0.3)`, marginBottom: 28 }}
               >
                 <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.accent, display: 'inline-block' }} />
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 12, fontWeight: 700, color: C.accent, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Untuk Pemilik Travel Umrah</span>
+                <span style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 12, fontWeight: 700, color: C.accent, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Untuk Pemilik Travel Umrah</span>
               </motion.div>
 
               <motion.h1
                 initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                 style={{
-                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  fontFamily: "'Bricolage Grotesque', sans-serif",
                   fontSize: 'clamp(2.8rem, 5.5vw, 4.4rem)',
                   fontWeight: 800, lineHeight: 1.1, letterSpacing: '-0.03em',
                   color: '#fff', marginBottom: 24,
@@ -401,7 +401,7 @@ export default function LandingPage() {
               <motion.p
                 initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.28, duration: 0.65 }}
-                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 17, color: 'rgba(255,255,255,0.55)', lineHeight: 1.8, marginBottom: 40, maxWidth: 460 }}
+                style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 17, color: 'rgba(255,255,255,0.55)', lineHeight: 1.8, marginBottom: 40, maxWidth: 460 }}
               >
                 Satu aplikasi lengkap pengganti buku doa, panduan ibadah, dan sistem komunikasi travel.
                 White-label, siap pakai,{' '}
@@ -428,7 +428,7 @@ export default function LandingPage() {
                       <div key={i} style={{ width: 30, height: 30, borderRadius: '50%', background: c, border: '2px solid rgba(7,17,30,0.8)', marginLeft: i > 0 ? -9 : 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12 }}>🕌</div>
                     ))}
                   </div>
-                  <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>Dipercaya travel agency di Indonesia</p>
+                  <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>Dipercaya travel agency di Indonesia</p>
                 </div>
               </motion.div>
             </div>
@@ -454,7 +454,7 @@ export default function LandingPage() {
                 }}>
                   <div style={{ textAlign: 'center' }}>
                     <p style={{ fontFamily: "'Amiri', serif", fontSize: 32, color: C.accent, marginBottom: 8 }}>بِسْمِ اللهِ</p>
-                    <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 11, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Umrahme</p>
+                    <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 11, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Umrahme</p>
                   </div>
                   {/* orbit dot */}
                   <div style={{ position: 'absolute', top: 10, right: 20, width: 10, height: 10, borderRadius: '50%', background: C.accent, boxShadow: `0 0 16px rgba(201,168,76,0.6)` }} />
@@ -488,7 +488,7 @@ export default function LandingPage() {
       <section style={{ background: C.gray50, paddingTop: 100, paddingBottom: 56, borderBottom: `1px solid ${C.gray200}` }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 32px', marginBottom: 36 }}>
           <Reveal>
-            <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 12, fontWeight: 600, color: C.gray600, textAlign: 'center', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+            <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 12, fontWeight: 600, color: C.gray600, textAlign: 'center', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
               Dipercaya oleh travel agency di Indonesia
             </p>
           </Reveal>
@@ -504,10 +504,10 @@ export default function LandingPage() {
           <Reveal>
             <SectionLabel>Mengapa Umrahme</SectionLabel>
             <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 24, marginBottom: 52 }}>
-              <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 800, letterSpacing: '-0.03em', color: C.gray900, lineHeight: 1.15, maxWidth: 480 }}>
+              <h2 style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 800, letterSpacing: '-0.03em', color: C.gray900, lineHeight: 1.15, maxWidth: 480 }}>
                 Solusi digital umrah paling terjangkau & lengkap
               </h2>
-              <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 15, color: C.gray600, maxWidth: 300, lineHeight: 1.75 }}>
+              <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 15, color: C.gray600, maxWidth: 300, lineHeight: 1.75 }}>
                 Dirancang khusus untuk travel agency Indonesia yang ingin tampil lebih profesional.
               </p>
             </div>
@@ -523,16 +523,16 @@ export default function LandingPage() {
                 borderRadius: 24, padding: '36px 36px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
                 minHeight: 300,
               }}>
-                <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Harga Per Jamaah</p>
+                <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Harga Per Jamaah</p>
                 <div>
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: 4 }}>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 18, fontWeight: 700, color: C.accent, paddingTop: 16 }}>SAR</span>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 96, fontWeight: 800, color: '#fff', lineHeight: 0.9, letterSpacing: '-0.04em' }}>10</span>
+                    <span style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 18, fontWeight: 700, color: C.accent, paddingTop: 16 }}>SAR</span>
+                    <span style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 96, fontWeight: 800, color: '#fff', lineHeight: 0.9, letterSpacing: '-0.04em' }}>10</span>
                   </div>
-                  <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 14, color: 'rgba(255,255,255,0.4)', marginTop: 12, marginBottom: 20 }}>per jamaah · per keberangkatan</p>
+                  <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 14, color: 'rgba(255,255,255,0.4)', marginTop: 12, marginBottom: 20 }}>per jamaah · per keberangkatan</p>
                   <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
                     {['Tanpa setup fee', 'Tanpa biaya bulanan'].map(t => (
-                      <span key={t} style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 11, fontWeight: 600, padding: '5px 12px', borderRadius: 99, background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.6)' }}>{t}</span>
+                      <span key={t} style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 11, fontWeight: 600, padding: '5px 12px', borderRadius: 99, background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.6)' }}>{t}</span>
                     ))}
                   </div>
                 </div>
@@ -547,10 +547,10 @@ export default function LandingPage() {
                 border: `1px solid rgba(201,168,76,0.2)`, borderRadius: 20, padding: '28px 24px',
                 display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 140,
               }}>
-                <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 11, fontWeight: 700, color: C.accentDark, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Doa Lengkap</p>
+                <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 11, fontWeight: 700, color: C.accentDark, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Doa Lengkap</p>
                 <div>
-                  <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 52, fontWeight: 800, color: C.accentDark, lineHeight: 0.9, letterSpacing: '-0.03em' }}>45<span style={{ fontSize: 28 }}>+</span></p>
-                  <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 12, color: '#7A6030', marginTop: 8 }}>Arab · Latin · Terjemahan</p>
+                  <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 52, fontWeight: 800, color: C.accentDark, lineHeight: 0.9, letterSpacing: '-0.03em' }}>45<span style={{ fontSize: 28 }}>+</span></p>
+                  <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 12, color: '#7A6030', marginTop: 8 }}>Arab · Latin · Terjemahan</p>
                 </div>
               </div>
             </Reveal>
@@ -562,10 +562,10 @@ export default function LandingPage() {
                 background: C.gray50, border: `1px solid ${C.gray200}`, borderRadius: 20, padding: '28px 24px',
                 display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 140,
               }}>
-                <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 11, fontWeight: 700, color: C.gray600, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Fitur Siap Pakai</p>
+                <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 11, fontWeight: 700, color: C.gray600, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Fitur Siap Pakai</p>
                 <div>
-                  <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 52, fontWeight: 800, color: C.gray900, lineHeight: 0.9, letterSpacing: '-0.03em' }}>12</p>
-                  <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 12, color: C.gray600, marginTop: 8 }}>Langsung aktif, tanpa konfigurasi</p>
+                  <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 52, fontWeight: 800, color: C.gray900, lineHeight: 0.9, letterSpacing: '-0.03em' }}>12</p>
+                  <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 12, color: C.gray600, marginTop: 8 }}>Langsung aktif, tanpa konfigurasi</p>
                 </div>
               </div>
             </Reveal>
@@ -577,10 +577,10 @@ export default function LandingPage() {
                 background: C.navy, borderRadius: 20, padding: '28px 24px',
                 display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 140,
               }}>
-                <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>White-label</p>
+                <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>White-label</p>
                 <div>
-                  <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 48, fontWeight: 800, color: '#fff', lineHeight: 0.9, letterSpacing: '-0.03em' }}>100%</p>
-                  <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 12, color: 'rgba(255,255,255,0.45)', marginTop: 8 }}>Brand travel Anda, bukan Umrahme</p>
+                  <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 48, fontWeight: 800, color: '#fff', lineHeight: 0.9, letterSpacing: '-0.03em' }}>100%</p>
+                  <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 12, color: 'rgba(255,255,255,0.45)', marginTop: 8 }}>Brand travel Anda, bukan Umrahme</p>
                 </div>
               </div>
             </Reveal>
@@ -592,10 +592,10 @@ export default function LandingPage() {
                 background: C.gray50, border: `1px solid ${C.gray200}`, borderRadius: 20, padding: '28px 24px',
                 display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 140,
               }}>
-                <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 11, fontWeight: 700, color: C.gray600, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Instalasi</p>
+                <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 11, fontWeight: 700, color: C.gray600, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Instalasi</p>
                 <div>
-                  <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 24, fontWeight: 800, color: C.gray900, lineHeight: 1.1, letterSpacing: '-0.02em' }}>Tanpa Install</p>
-                  <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 12, color: C.gray600, marginTop: 8 }}>Buka link, masukkan kode, langsung pakai</p>
+                  <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 24, fontWeight: 800, color: C.gray900, lineHeight: 1.1, letterSpacing: '-0.02em' }}>Tanpa Install</p>
+                  <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 12, color: C.gray600, marginTop: 8 }}>Buka link, masukkan kode, langsung pakai</p>
                 </div>
               </div>
             </Reveal>
@@ -611,10 +611,10 @@ export default function LandingPage() {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'start' }}>
             <Reveal from="left">
               <SectionLabel>Masalah yang Ada</SectionLabel>
-              <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(2rem, 3.5vw, 2.8rem)', fontWeight: 800, letterSpacing: '-0.03em', color: C.gray900, lineHeight: 1.15, marginBottom: 20 }}>
+              <h2 style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 'clamp(2rem, 3.5vw, 2.8rem)', fontWeight: 800, letterSpacing: '-0.03em', color: C.gray900, lineHeight: 1.15, marginBottom: 20 }}>
                 Masalah yang Sering Dihadapi Travel Agency
               </h2>
-              <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 15, color: C.gray600, lineHeight: 1.75 }}>
+              <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 15, color: C.gray600, lineHeight: 1.75 }}>
                 Masalah yang selama ini terasa wajar — padahal semuanya bisa diatasi dengan sistem yang tepat.
               </p>
             </Reveal>
@@ -631,8 +631,8 @@ export default function LandingPage() {
                   <div key={i} className="pain-item">
                     <span style={{ fontSize: 24, flexShrink: 0, marginTop: 2 }}>{p.icon}</span>
                     <div>
-                      <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 15, fontWeight: 700, color: C.gray900, marginBottom: 4 }}>{p.title}</p>
-                      <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 13, color: C.gray600, lineHeight: 1.6 }}>{p.desc}</p>
+                      <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 15, fontWeight: 700, color: C.gray900, marginBottom: 4 }}>{p.title}</p>
+                      <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 13, color: C.gray600, lineHeight: 1.6 }}>{p.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -650,11 +650,11 @@ export default function LandingPage() {
           <Reveal>
             <SectionLabel>Fitur</SectionLabel>
             <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 24, marginBottom: 56 }}>
-              <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(2rem, 3.5vw, 2.8rem)', fontWeight: 800, letterSpacing: '-0.03em', color: C.gray900, lineHeight: 1.15, maxWidth: 460 }}>
+              <h2 style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 'clamp(2rem, 3.5vw, 2.8rem)', fontWeight: 800, letterSpacing: '-0.03em', color: C.gray900, lineHeight: 1.15, maxWidth: 460 }}>
                 Semua yang Dibutuhkan Jamaah,{' '}
                 <span style={{ color: C.accent }}>dalam Satu App</span>
               </h2>
-              <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 15, color: C.gray600, maxWidth: 300, lineHeight: 1.75 }}>
+              <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 15, color: C.gray600, maxWidth: 300, lineHeight: 1.75 }}>
                 12 fitur siap pakai — tinggal aktifkan, tidak perlu konfigurasi teknis.
               </p>
             </div>
@@ -665,8 +665,8 @@ export default function LandingPage() {
               <Reveal key={i} delay={i * 0.035}>
                 <div className="feat-card" style={{ height: '100%' }}>
                   <span style={{ fontSize: 30, marginBottom: 16, display: 'block' }}>{f.icon}</span>
-                  <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 15, fontWeight: 700, color: C.gray900, marginBottom: 8 }}>{f.title}</p>
-                  <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 13, color: C.gray600, lineHeight: 1.7 }}>{f.desc}</p>
+                  <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 15, fontWeight: 700, color: C.gray900, marginBottom: 8 }}>{f.title}</p>
+                  <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 13, color: C.gray600, lineHeight: 1.7 }}>{f.desc}</p>
                 </div>
               </Reveal>
             ))}
@@ -681,10 +681,10 @@ export default function LandingPage() {
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <Reveal>
             <SectionLabel>Cara Kerja</SectionLabel>
-            <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(2rem, 3.5vw, 2.8rem)', fontWeight: 800, letterSpacing: '-0.03em', color: C.gray900, lineHeight: 1.15, marginBottom: 16, maxWidth: 420 }}>
+            <h2 style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 'clamp(2rem, 3.5vw, 2.8rem)', fontWeight: 800, letterSpacing: '-0.03em', color: C.gray900, lineHeight: 1.15, marginBottom: 16, maxWidth: 420 }}>
               3 Langkah, Langsung Jalan
             </h2>
-            <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 15, color: C.gray600, lineHeight: 1.75, marginBottom: 60, maxWidth: 400 }}>
+            <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 15, color: C.gray600, lineHeight: 1.75, marginBottom: 60, maxWidth: 400 }}>
               Tidak butuh tim IT. Tidak butuh waktu lama. Travel siap dalam hitungan jam.
             </p>
           </Reveal>
@@ -702,13 +702,13 @@ export default function LandingPage() {
                   borderRadius: 20, padding: '36px 32px',
                 }}>
                   <span style={{
-                    fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 13, fontWeight: 700,
+                    fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 13, fontWeight: 700,
                     color: s.accent ? C.accent : C.accent,
                     background: s.accent ? 'rgba(201,168,76,0.15)' : C.accentLight,
                     padding: '5px 12px', borderRadius: 99, display: 'inline-block', marginBottom: 24,
                   }}>{s.n}</span>
-                  <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 19, fontWeight: 800, color: s.accent ? '#fff' : C.gray900, marginBottom: 14, lineHeight: 1.3, letterSpacing: '-0.02em' }}>{s.title}</p>
-                  <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 14, color: s.accent ? 'rgba(255,255,255,0.55)' : C.gray600, lineHeight: 1.75 }}>{s.desc}</p>
+                  <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 19, fontWeight: 800, color: s.accent ? '#fff' : C.gray900, marginBottom: 14, lineHeight: 1.3, letterSpacing: '-0.02em' }}>{s.title}</p>
+                  <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 14, color: s.accent ? 'rgba(255,255,255,0.55)' : C.gray600, lineHeight: 1.75 }}>{s.desc}</p>
                 </div>
               </Reveal>
             ))}
@@ -725,11 +725,11 @@ export default function LandingPage() {
             <Reveal from="left" className="">
               <div style={{ flex: '1 1 380px', maxWidth: 480 }}>
                 <SectionLabel>White-label</SectionLabel>
-                <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(2rem, 3.5vw, 2.8rem)', fontWeight: 800, letterSpacing: '-0.03em', color: C.gray900, lineHeight: 1.15, marginBottom: 20 }}>
+                <h2 style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 'clamp(2rem, 3.5vw, 2.8rem)', fontWeight: 800, letterSpacing: '-0.03em', color: C.gray900, lineHeight: 1.15, marginBottom: 20 }}>
                   App Anda,{' '}
                   <span style={{ color: C.accent }}>Brand Anda</span>
                 </h2>
-                <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 15, color: C.gray600, lineHeight: 1.8, marginBottom: 32 }}>
+                <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 15, color: C.gray600, lineHeight: 1.8, marginBottom: 32 }}>
                   Jamaah tidak tahu ini Umrahme. Mereka pikir ini aplikasi milik travel mereka sendiri — karena memang itulah yang terlihat.
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -738,7 +738,7 @@ export default function LandingPage() {
                       <div style={{ width: 22, height: 22, borderRadius: '50%', background: C.accentLight, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
                         <span style={{ fontSize: 11, color: C.accentDark, fontWeight: 700 }}>✓</span>
                       </div>
-                      <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 14, color: C.gray600, lineHeight: 1.5 }}>{t}</p>
+                      <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 14, color: C.gray600, lineHeight: 1.5 }}>{t}</p>
                     </div>
                   ))}
                 </div>
@@ -760,24 +760,24 @@ export default function LandingPage() {
                   <div key={t.name} style={{ flex: 1, borderRadius: 18, overflow: 'hidden', border: `1px solid ${C.gray200}`, boxShadow: '0 12px 40px rgba(0,0,0,0.06)' }}>
                     <div style={{ background: t.bg, padding: '14px 12px', borderBottom: `2px solid ${t.accent}` }}>
                       <p style={{ fontFamily: "'Amiri', serif", fontSize: 13, color: t.accent, textAlign: 'center', marginBottom: 4 }}>بِسْمِ اللهِ</p>
-                      <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.65)', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{t.name}</p>
+                      <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.65)', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{t.name}</p>
                     </div>
                     <div style={{ background: '#F7F4EE', padding: 10 }}>
                       <div style={{ background: '#fff', borderRadius: 10, padding: 8, marginBottom: 8 }}>
-                        <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 8, fontWeight: 600, color: '#333', marginBottom: 6 }}>Counter Tawaf</p>
+                        <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 8, fontWeight: 600, color: '#333', marginBottom: 6 }}>Counter Tawaf</p>
                         <div style={{ width: 36, height: 36, borderRadius: '50%', background: t.bg, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 16, fontWeight: 800, color: t.accent }}>3</span>
+                          <span style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 16, fontWeight: 800, color: t.accent }}>3</span>
                         </div>
                       </div>
                       <div style={{ background: '#fff', borderRadius: 10, padding: 8 }}>
                         <p style={{ fontFamily: "'Amiri', serif", fontSize: 9, color: '#444', textAlign: 'right', direction: 'rtl', lineHeight: 1.5 }}>رَبَّنَا آتِنَا...</p>
                       </div>
                       <div style={{ marginTop: 6, padding: '6px 8px', background: `${t.accent}15`, borderRadius: 8, border: `1px solid ${t.accent}30` }}>
-                        <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 8, fontWeight: 600, color: t.bg }}>Ahmad Fauzi · Grup A</p>
+                        <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 8, fontWeight: 600, color: t.bg }}>Ahmad Fauzi · Grup A</p>
                       </div>
                     </div>
                     <div style={{ background: '#fff', padding: '6px 10px', borderTop: `1px solid ${C.gray200}` }}>
-                      <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 7, color: C.gray600, textAlign: 'center', letterSpacing: '0.05em' }}>{t.label}</p>
+                      <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 7, color: C.gray600, textAlign: 'center', letterSpacing: '0.05em' }}>{t.label}</p>
                     </div>
                   </div>
                 ))}
@@ -794,10 +794,10 @@ export default function LandingPage() {
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <Reveal>
             <SectionLabel>Harga</SectionLabel>
-            <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(2rem, 3.5vw, 2.8rem)', fontWeight: 800, letterSpacing: '-0.03em', color: C.gray900, lineHeight: 1.15, marginBottom: 16, maxWidth: 440 }}>
+            <h2 style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 'clamp(2rem, 3.5vw, 2.8rem)', fontWeight: 800, letterSpacing: '-0.03em', color: C.gray900, lineHeight: 1.15, marginBottom: 16, maxWidth: 440 }}>
               Transparan. Terjangkau. Tanpa Kejutan.
             </h2>
-            <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 15, color: C.gray600, lineHeight: 1.75, marginBottom: 56, maxWidth: 400 }}>
+            <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 15, color: C.gray600, lineHeight: 1.75, marginBottom: 56, maxWidth: 400 }}>
               Satu harga, semua fitur. Tidak ada biaya tersembunyi.
             </p>
           </Reveal>
@@ -811,10 +811,10 @@ export default function LandingPage() {
                 display: 'flex', flexDirection: 'column', height: '100%',
               }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 4, marginBottom: 12 }}>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 22, fontWeight: 700, color: C.accent, paddingTop: 18 }}>SAR</span>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 100, fontWeight: 800, color: '#fff', lineHeight: 0.9, letterSpacing: '-0.04em' }}>10</span>
+                  <span style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 22, fontWeight: 700, color: C.accent, paddingTop: 18 }}>SAR</span>
+                  <span style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 100, fontWeight: 800, color: '#fff', lineHeight: 0.9, letterSpacing: '-0.04em' }}>10</span>
                 </div>
-                <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 15, color: 'rgba(255,255,255,0.4)', marginBottom: 36 }}>per jamaah · per keberangkatan</p>
+                <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 15, color: 'rgba(255,255,255,0.4)', marginBottom: 36 }}>per jamaah · per keberangkatan</p>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 40, flex: 1 }}>
                   {['Tidak ada biaya setup', 'Tidak ada biaya bulanan', 'Bayar hanya untuk jamaah aktif', 'Semua 12 fitur sudah termasuk', 'Branding travel sepenuhnya'].map(t => (
@@ -822,7 +822,7 @@ export default function LandingPage() {
                       <div style={{ width: 20, height: 20, borderRadius: '50%', background: 'rgba(201,168,76,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                         <span style={{ fontSize: 10, color: C.accent, fontWeight: 700 }}>✓</span>
                       </div>
-                      <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 14, color: 'rgba(255,255,255,0.7)' }}>{t}</p>
+                      <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 14, color: 'rgba(255,255,255,0.7)' }}>{t}</p>
                     </div>
                   ))}
                 </div>
@@ -837,21 +837,21 @@ export default function LandingPage() {
             <div style={{ flex: '0 0 auto', display: 'flex', flexDirection: 'column', gap: 16, minWidth: 260 }}>
               <Reveal delay={0.1}>
                 <div style={{ background: C.accentLight, border: `1px solid rgba(201,168,76,0.25)`, borderRadius: 20, padding: '28px 28px' }}>
-                  <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 12, fontWeight: 700, color: C.accentDark, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>Contoh Estimasi</p>
-                  <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 28, fontWeight: 800, color: C.accentDark, letterSpacing: '-0.02em', marginBottom: 6 }}>400 SAR</p>
-                  <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 14, color: '#7A6030', lineHeight: 1.6 }}>untuk 40 jamaah per keberangkatan. Sekali bayar.</p>
+                  <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 12, fontWeight: 700, color: C.accentDark, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>Contoh Estimasi</p>
+                  <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 28, fontWeight: 800, color: C.accentDark, letterSpacing: '-0.02em', marginBottom: 6 }}>400 SAR</p>
+                  <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 14, color: '#7A6030', lineHeight: 1.6 }}>untuk 40 jamaah per keberangkatan. Sekali bayar.</p>
                 </div>
               </Reveal>
               <Reveal delay={0.15}>
                 <div style={{ background: C.white, border: `1px solid ${C.gray200}`, borderRadius: 20, padding: '28px 28px', flex: 1 }}>
-                  <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 12, fontWeight: 700, color: C.gray600, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 16 }}>Umrahme vs Buku Doa Cetak</p>
+                  <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 12, fontWeight: 700, color: C.gray600, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 16 }}>Umrahme vs Buku Doa Cetak</p>
                   {[['Buku Doa Cetak', '15-25 SAR/buku', '#ef4444'], ['Umrahme', '10 SAR/jamaah', '#22c55e']].map(([l, v, c]) => (
                     <div key={l} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-                      <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 13, color: C.gray900, fontWeight: 500 }}>{l}</p>
-                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 12, fontWeight: 700, color: c, background: c + '15', padding: '3px 10px', borderRadius: 99 }}>{v}</span>
+                      <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 13, color: C.gray900, fontWeight: 500 }}>{l}</p>
+                      <span style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 12, fontWeight: 700, color: c, background: c + '15', padding: '3px 10px', borderRadius: 99 }}>{v}</span>
                     </div>
                   ))}
-                  <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 12, color: C.gray600, lineHeight: 1.6, marginTop: 16, paddingTop: 16, borderTop: `1px solid ${C.gray200}` }}>
+                  <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 12, color: C.gray600, lineHeight: 1.6, marginTop: 16, paddingTop: 16, borderTop: `1px solid ${C.gray200}` }}>
                     Lebih murah, tidak hilang, dan nilai yang diterima jamaah jauh lebih besar.
                   </p>
                 </div>
@@ -868,7 +868,7 @@ export default function LandingPage() {
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <Reveal>
             <SectionLabel>Testimoni</SectionLabel>
-            <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(2rem, 3.5vw, 2.8rem)', fontWeight: 800, letterSpacing: '-0.03em', color: C.gray900, lineHeight: 1.15, marginBottom: 56, maxWidth: 420 }}>
+            <h2 style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 'clamp(2rem, 3.5vw, 2.8rem)', fontWeight: 800, letterSpacing: '-0.03em', color: C.gray900, lineHeight: 1.15, marginBottom: 56, maxWidth: 420 }}>
               Kata Mereka yang Sudah Pakai
             </h2>
           </Reveal>
@@ -879,10 +879,10 @@ export default function LandingPage() {
                   <div style={{ display: 'flex', gap: 3, marginBottom: 20 }}>
                     {Array(5).fill(0).map((_, j) => <span key={j} style={{ color: C.accent, fontSize: 14 }}>★</span>)}
                   </div>
-                  <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 15, color: C.gray900, lineHeight: 1.75, marginBottom: 24, fontWeight: 500 }}>"{t.text}"</p>
+                  <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 15, color: C.gray900, lineHeight: 1.75, marginBottom: 24, fontWeight: 500 }}>"{t.text}"</p>
                   <div style={{ borderTop: `1px solid ${C.gray200}`, paddingTop: 20 }}>
-                    <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 14, fontWeight: 700, color: C.gray900, marginBottom: 2 }}>{t.name}</p>
-                    <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 12, color: C.accent, fontWeight: 600 }}>{t.travel}</p>
+                    <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 14, fontWeight: 700, color: C.gray900, marginBottom: 2 }}>{t.name}</p>
+                    <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 12, color: C.accent, fontWeight: 600 }}>{t.travel}</p>
                   </div>
                 </div>
               </Reveal>
@@ -898,7 +898,7 @@ export default function LandingPage() {
         <div style={{ maxWidth: 820, margin: '0 auto' }}>
           <Reveal>
             <SectionLabel>FAQ</SectionLabel>
-            <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(2rem, 3.5vw, 2.4rem)', fontWeight: 800, letterSpacing: '-0.03em', color: C.gray900, lineHeight: 1.15, marginBottom: 48 }}>
+            <h2 style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 'clamp(2rem, 3.5vw, 2.4rem)', fontWeight: 800, letterSpacing: '-0.03em', color: C.gray900, lineHeight: 1.15, marginBottom: 48 }}>
               Pertanyaan yang Sering Ditanyakan
             </h2>
           </Reveal>
@@ -918,10 +918,10 @@ export default function LandingPage() {
             <div style={{ display: 'inline-block', padding: '8px 18px', borderRadius: 99, background: 'rgba(201,168,76,0.1)', border: `1px solid rgba(201,168,76,0.25)`, marginBottom: 28 }}>
               <span style={{ fontFamily: "'Amiri', serif", fontSize: 18, color: C.accent }}>بَارَكَ اللَّهُ فِيكُم</span>
             </div>
-            <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(2.2rem, 4vw, 3.2rem)', fontWeight: 800, letterSpacing: '-0.03em', color: '#fff', lineHeight: 1.15, marginBottom: 20 }}>
+            <h2 style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 'clamp(2.2rem, 4vw, 3.2rem)', fontWeight: 800, letterSpacing: '-0.03em', color: '#fff', lineHeight: 1.15, marginBottom: 20 }}>
               Siap Upgrade Layanan Travel Anda?
             </h2>
-            <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 17, color: 'rgba(255,255,255,0.5)', lineHeight: 1.8, marginBottom: 44, maxWidth: 480, margin: '0 auto 44px' }}>
+            <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 17, color: 'rgba(255,255,255,0.5)', lineHeight: 1.8, marginBottom: 44, maxWidth: 480, margin: '0 auto 44px' }}>
               Bergabung sekarang dan berikan pengalaman umrah terbaik untuk jamaah Anda. Demo gratis, tidak ada komitmen.
             </p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, justifyContent: 'center' }}>
@@ -947,14 +947,14 @@ export default function LandingPage() {
                 <div style={{ width: 30, height: 30, borderRadius: 8, background: `linear-gradient(135deg, ${C.accent}, ${C.accentDark})`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <span style={{ fontSize: 14 }}>🕌</span>
                 </div>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 18, fontWeight: 800, color: '#fff' }}>Umrahme</span>
+                <span style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 18, fontWeight: 800, color: '#fff' }}>Umrahme</span>
               </div>
-              <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 13, color: 'rgba(255,255,255,0.3)' }}>Pendamping umrah digital untuk travel modern</p>
+              <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 13, color: 'rgba(255,255,255,0.3)' }}>Pendamping umrah digital untuk travel modern</p>
             </div>
             <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap' }}>
               {[['#fitur', 'Fitur'], ['#harga', 'Harga'], ['#cara-kerja', 'Cara Kerja'], ['#kontak', 'Kontak'], [WA_LINK, 'WhatsApp']].map(([h, l]) => (
                 <a key={h} href={h} target={h.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer"
-                  style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 13, color: 'rgba(255,255,255,0.35)', textDecoration: 'none', transition: 'color 0.2s' }}
+                  style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 13, color: 'rgba(255,255,255,0.35)', textDecoration: 'none', transition: 'color 0.2s' }}
                   onMouseEnter={e => (e.currentTarget.style.color = C.accent)}
                   onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.35)')}
                 >{l}</a>
@@ -962,8 +962,8 @@ export default function LandingPage() {
             </div>
           </div>
           <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: 24, display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
-            <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 12, color: 'rgba(255,255,255,0.18)' }}>© {new Date().getFullYear()} Umrahme. All rights reserved.</p>
-            <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 12, color: 'rgba(255,255,255,0.18)' }}>Dibuat untuk travel umrah Indonesia 🇮🇩</p>
+            <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 12, color: 'rgba(255,255,255,0.18)' }}>© {new Date().getFullYear()} Umrahme. All rights reserved.</p>
+            <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 12, color: 'rgba(255,255,255,0.18)' }}>Dibuat untuk travel umrah Indonesia 🇮🇩</p>
           </div>
         </div>
       </footer>
