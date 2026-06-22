@@ -205,6 +205,27 @@ export function TripProgressCard() {
   );
 }
 
+// ── helpers untuk TodayInstructionCard ───────────────────────
+function isToday(tanggal: string): boolean {
+  return new Date().toISOString().split('T')[0] === tanggal;
+}
+
+function nowMinutes(): number {
+  const now = new Date();
+  return now.getHours() * 60 + now.getMinutes();
+}
+
+function jamToMinutes(jam: string): number {
+  const [h, m] = jam.split(':').map(Number);
+  return h * 60 + (m || 0);
+}
+
+function isPastItem(tanggal: string, jam_mulai: string | null): boolean {
+  if (!isToday(tanggal)) return new Date(tanggal) < new Date(new Date().toISOString().split('T')[0]);
+  if (!jam_mulai) return false;
+  return nowMinutes() > jamToMinutes(jam_mulai);
+}
+
 // ── 3. TodayInstructionCard ───────────────────────────────────
 
 export function TodayInstructionCard() {
@@ -259,27 +280,48 @@ export function TodayInstructionCard() {
       </div>
       <div className="h-px bg-hairline mx-4" />
       <div className="px-4 py-3 space-y-2.5">
-        {visible.map((item) => (
-          <div key={item.id} className="flex gap-3 items-start">
-            <span className="font-mono text-[10px] text-mute pt-0.5 whitespace-nowrap w-9 flex-none">
-              {item.jam_mulai ? item.jam_mulai.slice(0, 5) : '—'}
-            </span>
-            <div className="flex-1 min-w-0">
-              <p className="text-[12px] font-bold text-ink leading-snug">{item.judul}</p>
-              {item.lokasi && (
-                <p className="font-mono text-[10px] text-mute mt-0.5 flex items-center gap-1">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-2.5 w-2.5 flex-none">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+        {visible.map((item) => {
+          const past = isPastItem(item.tanggal, item.jam_mulai);
+          return (
+            <div key={item.id} className="flex gap-3 items-start">
+              {/* Kolom jam + centang */}
+              <div className="flex w-9 flex-none flex-col items-center gap-0.5 pt-0.5">
+                {past && (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2.5"
+                    strokeLinecap="round" strokeLinejoin="round" className="h-3 w-3">
+                    <polyline points="20 6 9 17 4 12" />
                   </svg>
-                  {item.lokasi}
+                )}
+                <span
+                  className="font-mono text-[10px] font-bold leading-none whitespace-nowrap"
+                  style={{ color: past ? '#9ca3af' : 'var(--color-primary)' }}
+                >
+                  {item.jam_mulai ? item.jam_mulai.slice(0, 5) : '-'}
+                </span>
+              </div>
+              {/* Konten */}
+              <div className="flex-1 min-w-0" style={{ opacity: past ? 0.6 : 1 }}>
+                <p className="text-[12px] font-bold leading-snug"
+                  style={{ color: past ? '#6b7280' : '#111827' }}>
+                  {item.judul}
                 </p>
-              )}
-              {item.deskripsi && (
-                <p className="text-[11px] text-mute italic mt-0.5 leading-snug">{item.deskripsi}</p>
-              )}
+                {item.lokasi && (
+                  <p className="font-mono text-[10px] text-mute mt-0.5 flex items-center gap-1">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}
+                      strokeLinecap="round" strokeLinejoin="round" className="h-2.5 w-2.5 flex-none">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                      <circle cx="12" cy="10" r="3"/>
+                    </svg>
+                    {item.lokasi}
+                  </p>
+                )}
+                {item.deskripsi && (
+                  <p className="text-[11px] text-mute italic mt-0.5 leading-snug">{item.deskripsi}</p>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
         {extra > 0 && (
           <p className="text-[11px] text-mute font-mono">+{extra} agenda lainnya</p>
         )}

@@ -31,6 +31,7 @@ export type TenantRow = {
   tour_leader_name: string | null;
   tour_leader_whatsapp: string | null;
   emergency_note: string | null;
+  fase_override: 'persiapan' | 'tanah-suci' | 'selesai' | null;
 };
 
 export type AgendaItemRow = {

@@ -53,7 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return {
         ...saved,
         fase: hitungFaseEfektif(
-          null,
+          savedTenant.fase_override ?? null,
           savedTenant.tanggal_keberangkatan,
           savedTenant.tanggal_kepulangan,
         ),
