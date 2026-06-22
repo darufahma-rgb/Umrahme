@@ -1,7 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import type { Fase } from '../types';
-import { urutanFase } from '../data/jamaah';
 import PhaseIndicator from '../components/PhaseIndicator';
 import { IconCheck, IconSertifikat, IconChevron, IconJurnal } from '../components/icons';
 
@@ -27,7 +25,7 @@ const menuItems = (inisial: string, nomorJamaah: string) => [
 ];
 
 export default function Profil() {
-  const { jamaah, logout, setFase } = useAuth();
+  const { jamaah, logout } = useAuth();
   const navigate = useNavigate();
   if (!jamaah) return null;
 
@@ -73,23 +71,16 @@ export default function Profil() {
           <div className="rounded-md border border-hairline bg-surface-card px-5 py-4 shadow-drop-card">
             <p className="mb-3 font-mono text-[11px] uppercase tracking-widest text-mute">Fase Perjalanan</p>
             <PhaseIndicator fase={jamaah.fase} />
-            <div className="mt-4 flex gap-1.5 rounded-full border border-hairline bg-surface-bone p-1">
-              {urutanFase.map((f) => (
-                <button
-                  key={f.id}
-                  type="button"
-                  onClick={() => setFase(f.id as Fase)}
-                  className={`min-h-[36px] flex-1 rounded-full px-1 text-[12px] font-medium transition ${
-                    jamaah.fase === f.id ? 'bg-primary text-on-primary' : 'text-mute hover:text-body active:bg-surface-card'
-                  }`}
-                >
-                  {f.label}
-                </button>
-              ))}
+            {/* Fase info — menggantikan toggle manual */}
+            <div className="mt-4 rounded-xl border border-hairline bg-surface-bone px-3.5 py-3 text-center">
+              <p className="font-mono text-[8px] uppercase tracking-[0.2em] text-mute mb-1">Fase Perjalanan</p>
+              <p className="text-[13px] font-semibold text-ink">
+                {jamaah.fase === 'persiapan' && 'Persiapan Keberangkatan'}
+                {jamaah.fase === 'tanah-suci' && 'Di Tanah Suci'}
+                {jamaah.fase === 'selesai' && 'Ibadah Selesai'}
+              </p>
+              <p className="text-[10px] text-mute mt-0.5">Diperbarui otomatis sesuai jadwal travel</p>
             </div>
-            <p className="mt-2 text-[11px] leading-relaxed text-mute">
-              Ganti fase manual untuk demo. Pada versi final, fase berubah otomatis mengikuti jadwal & progres ibadah.
-            </p>
           </div>
         </section>
 
@@ -165,23 +156,16 @@ export default function Profil() {
         <div className="rounded-xl border border-hairline bg-surface-card px-6 py-6 shadow-drop-card h-fit">
           <p className="mb-4 font-mono text-[11px] uppercase tracking-widest text-mute">Fase Perjalanan</p>
           <PhaseIndicator fase={jamaah.fase} />
-          <div className="mt-5 flex gap-1.5 rounded-full border border-hairline bg-surface-bone p-1">
-            {urutanFase.map((f) => (
-              <button
-                key={f.id}
-                type="button"
-                onClick={() => setFase(f.id as Fase)}
-                className={`min-h-[36px] flex-1 rounded-full px-1 text-[12px] font-medium transition ${
-                  jamaah.fase === f.id ? 'bg-primary text-on-primary' : 'text-mute hover:text-body active:bg-surface-card'
-                }`}
-              >
-                {f.label}
-              </button>
-            ))}
+          {/* Fase info — menggantikan toggle manual */}
+          <div className="mt-5 rounded-xl border border-hairline bg-surface-bone px-3.5 py-3 text-center">
+            <p className="font-mono text-[8px] uppercase tracking-[0.2em] text-mute mb-1">Fase Perjalanan</p>
+            <p className="text-[13px] font-semibold text-ink">
+              {jamaah.fase === 'persiapan' && 'Persiapan Keberangkatan'}
+              {jamaah.fase === 'tanah-suci' && 'Di Tanah Suci'}
+              {jamaah.fase === 'selesai' && 'Ibadah Selesai'}
+            </p>
+            <p className="text-[10px] text-mute mt-0.5">Diperbarui otomatis sesuai jadwal travel</p>
           </div>
-          <p className="mt-3 text-[11px] leading-relaxed text-mute">
-            Ganti fase manual untuk demo. Pada versi final, fase berubah otomatis mengikuti jadwal & progres ibadah.
-          </p>
         </div>
       </div>
     </div>

@@ -43,10 +43,6 @@ export default function Sertifikat() {
             </button>
           }
         />
-        <p className="px-8 text-center text-[11px] leading-relaxed text-mute">
-          (Tombol untuk demo. Pada versi final, sertifikat terbit otomatis setelah ibadah
-          terkonfirmasi selesai.)
-        </p>
       </div>
     );
   }

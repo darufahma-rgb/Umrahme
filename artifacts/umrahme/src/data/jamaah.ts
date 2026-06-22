@@ -5,6 +5,10 @@ import type { TenantRow } from '../lib/supabase';
 export const KODE_DEMO = 'DEMO01';
 
 /**
+ * UNTUK DEMO: pastikan tenant sudah diisi tanggal_keberangkatan dan tanggal_kepulangan
+ * di admin panel (/admin → edit tenant) agar fase berubah otomatis.
+ * Jika tanggal kosong, fase default ke 'persiapan'.
+ *
  * Hitung fase efektif: fase_override (manual admin) > otomatis dari tanggal > fallback 'persiapan'
  */
 export function hitungFaseEfektif(
