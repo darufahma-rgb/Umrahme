@@ -1,772 +1,729 @@
-import { useEffect, useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { useState, useRef, useEffect } from 'react';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
 
+/* ─── CONSTANTS ─── */
 const WA_NUMBER = '6281234567890';
 const WA_MSG = encodeURIComponent(
   "Assalamu'alaikum, saya pemilik travel umrah dan tertarik dengan Umrahme. Boleh minta info demo?"
 );
 const WA_LINK = `https://wa.me/${WA_NUMBER}?text=${WA_MSG}`;
 
-function Reveal({
-  children,
-  delay = 0,
-  className = '',
-  from = 'bottom',
-}: {
-  children: React.ReactNode;
-  delay?: number;
-  className?: string;
-  from?: 'bottom' | 'left' | 'right' | 'none';
+function Reveal({ children, delay = 0, className = '', from = 'bottom' }: {
+  children: React.ReactNode; delay?: number; className?: string; from?: 'bottom' | 'left' | 'right' | 'none';
 }) {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-60px' });
-  const initial =
-    from === 'bottom' ? { opacity: 0, y: 32 }
-    : from === 'left' ? { opacity: 0, x: -32 }
-    : from === 'right' ? { opacity: 0, x: 32 }
-    : { opacity: 0 };
+  const inView = useInView(ref, { once: true, margin: '-80px' });
+  const initial = from === 'bottom' ? { opacity: 0, y: 28 } : from === 'left' ? { opacity: 0, x: -28 } : from === 'right' ? { opacity: 0, x: 28 } : { opacity: 0 };
   return (
-    <motion.div
-      ref={ref}
-      initial={initial}
-      animate={inView ? { opacity: 1, x: 0, y: 0 } : {}}
-      transition={{ duration: 0.65, delay, ease: [0.22, 1, 0.36, 1] }}
-      className={className}
-    >
+    <motion.div ref={ref} initial={initial} animate={inView ? { opacity: 1, x: 0, y: 0 } : {}}
+      transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }} className={className}>
       {children}
     </motion.div>
   );
 }
 
-/* ─── Phone Mockup ─── */
-function PhoneMockup() {
+/* ─── FLOATING HERO CARDS ─── */
+function HeroCards() {
   return (
-    <div className="relative flex justify-center items-end" style={{ height: 520 }}>
-      {/* glow behind */}
-      <div className="absolute inset-0 pointer-events-none" style={{
-        background: 'radial-gradient(ellipse at 60% 70%, rgba(212,162,78,0.18) 0%, transparent 65%)',
-      }} />
-      {/* phone body */}
-      <div
-        className="relative"
+    <div style={{ position: 'relative', width: '100%', height: 520, maxWidth: 480 }}>
+      {/* Card 1 — Counter Tawaf */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         style={{
-          width: 240, height: 490,
-          borderRadius: 36,
-          background: 'linear-gradient(160deg, #1a2744 0%, #0c1526 100%)',
-          border: '5px solid #2a3a5e',
-          boxShadow: '0 32px 80px rgba(10,15,30,0.45), 0 0 0 1px rgba(212,162,78,0.12), inset 0 1px 0 rgba(255,255,255,0.05)',
+          position: 'absolute', top: 0, left: 0,
+          background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(16px)',
+          border: '1px solid rgba(255,255,255,0.14)', borderRadius: 20,
+          padding: '20px 24px', width: 200,
+          boxShadow: '0 24px 48px rgba(0,0,0,0.3)',
         }}
       >
-        {/* notch */}
-        <div style={{ position: 'absolute', top: 10, left: '50%', transform: 'translateX(-50%)', width: 64, height: 6, borderRadius: 6, background: '#2a3a5e' }} />
-        {/* screen */}
-        <div style={{ position: 'absolute', inset: 8, top: 24, borderRadius: 26, overflow: 'hidden', background: '#f5f0e8' }}>
-          {/* app header */}
-          <div style={{ background: 'linear-gradient(135deg, #1a2744 0%, #243560 100%)', padding: '12px 14px 10px' }}>
-            <p style={{ fontFamily: "'Amiri', serif", color: '#d4a24e', fontSize: 13, textAlign: 'center', marginBottom: 2 }}>بِسْمِ اللهِ الرَّحْمٰنِ</p>
-            <p style={{ fontFamily: 'Inter, sans-serif', color: 'rgba(255,255,255,0.65)', fontSize: 9, textAlign: 'center', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Travel Barokah Mandiri</p>
+        <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 14 }}>Counter Tawaf</p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div style={{
+            width: 56, height: 56, borderRadius: '50%',
+            background: 'linear-gradient(135deg, #d4a24e, #b8860b)',
+            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 8px 20px rgba(212,162,78,0.35)',
+          }}>
+            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 22, fontWeight: 800, color: '#fff', lineHeight: 1 }}>4</span>
+            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 8, color: 'rgba(255,255,255,0.7)' }}>/ 7</span>
           </div>
-          {/* greeting */}
-          <div style={{ padding: '10px 12px 6px' }}>
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 8, color: '#888', marginBottom: 2 }}>Ahlan, Jamaah!</p>
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 11, fontWeight: 600, color: '#1a2744' }}>Ahmad Fauzi</p>
-          </div>
-          {/* phase badge */}
-          <div style={{ margin: '0 12px 8px', background: 'linear-gradient(90deg, rgba(184,134,11,0.12), rgba(212,162,78,0.08))', border: '1px solid rgba(184,134,11,0.2)', borderRadius: 8, padding: '6px 8px', display: 'flex', alignItems: 'center', gap: 6 }}>
-            <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#b8860b', flexShrink: 0 }} />
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 8, color: '#7a5200', fontWeight: 500 }}>Fase: Di Tanah Suci</p>
-          </div>
-          {/* menu grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 6, padding: '0 12px 8px' }}>
-            {[
-              { label: 'Doa', num: '55+' },
-              { label: 'Counter', icon: '↻' },
-              { label: 'Jadwal', icon: '◷' },
-              { label: 'Peta', icon: '◎' },
-              { label: 'Kartu', icon: '☰' },
-              { label: 'Sertif.', icon: '✦' },
-            ].map((m) => (
-              <div key={m.label} style={{ background: '#fff', borderRadius: 8, padding: '7px 4px', textAlign: 'center', border: '1px solid rgba(212,162,78,0.15)' }}>
-                <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 11, color: '#b8860b', fontWeight: 700, lineHeight: 1 }}>{'num' in m ? m.num : m.icon}</p>
-                <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 7.5, color: '#555', marginTop: 3 }}>{m.label}</p>
-              </div>
-            ))}
-          </div>
-          {/* agenda card */}
-          <div style={{ margin: '0 12px', background: '#fff', border: '1px solid rgba(212,162,78,0.18)', borderRadius: 10, padding: '8px 10px' }}>
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 8, fontWeight: 600, color: '#b8860b', marginBottom: 5, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Agenda Hari Ini</p>
-            {['07:00 — Tawaf Qudum', '09:30 — Sa\'i', '13:00 — Istirahat Hotel'].map((a) => (
-              <p key={a} style={{ fontFamily: 'Inter, sans-serif', fontSize: 8, color: '#444', marginBottom: 3 }}>· {a}</p>
-            ))}
+          <div>
+            <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 13, fontWeight: 600, color: '#fff', marginBottom: 4 }}>Putaran ke-4</p>
+            <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 11, color: 'rgba(255,255,255,0.5)' }}>Tawaf Qudum</p>
           </div>
         </div>
-        {/* side button */}
-        <div style={{ position: 'absolute', right: -6, top: 100, width: 4, height: 40, borderRadius: '0 3px 3px 0', background: '#2a3a5e' }} />
-      </div>
-      {/* floating badge */}
-      <div style={{
-        position: 'absolute', top: 60, right: -20,
-        background: '#fff', borderRadius: 14, padding: '10px 14px',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.12), 0 0 0 1px rgba(212,162,78,0.15)',
-        minWidth: 130,
-      }}>
-        <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 8, color: '#888', marginBottom: 2 }}>Branding travel Anda</p>
-        <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 10, fontWeight: 600, color: '#1a2744' }}>Logo · Warna · Nama</p>
-        <div style={{ marginTop: 6, display: 'flex', gap: 4 }}>
-          {['#1a2744', '#b8860b', '#2a6049'].map((c) => (
-            <div key={c} style={{ width: 14, height: 14, borderRadius: '50%', background: c }} />
-          ))}
+        <div style={{ marginTop: 14, height: 4, borderRadius: 99, background: 'rgba(255,255,255,0.08)' }}>
+          <div style={{ width: '57%', height: '100%', borderRadius: 99, background: 'linear-gradient(90deg, #d4a24e, #f0c060)' }} />
         </div>
-      </div>
-      {/* floating stat */}
-      <div style={{
-        position: 'absolute', bottom: 60, left: -24,
-        background: 'linear-gradient(135deg, #1a2744, #243560)',
-        borderRadius: 14, padding: '10px 14px',
-        boxShadow: '0 8px 32px rgba(10,15,30,0.3)',
-      }}>
-        <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 20, fontWeight: 800, color: '#d4a24e', lineHeight: 1 }}>55+</p>
-        <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 8, color: 'rgba(255,255,255,0.55)', marginTop: 2 }}>doa ibadah lengkap</p>
-      </div>
+      </motion.div>
+
+      {/* Card 2 — Doa */}
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.65, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        style={{
+          position: 'absolute', top: 50, right: 0,
+          background: '#fff', borderRadius: 20,
+          padding: '20px 24px', width: 230,
+          boxShadow: '0 24px 60px rgba(0,0,0,0.3)',
+        }}
+      >
+        <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 10, fontWeight: 600, color: '#d4a24e', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>Doa Tawaf Putaran 4</p>
+        <p style={{ fontFamily: "'Amiri', serif", fontSize: 18, color: '#1a2744', textAlign: 'right', lineHeight: 1.7, marginBottom: 10, direction: 'rtl' }}>رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الآخِرَةِ حَسَنَةً</p>
+        <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 10, color: '#888', lineHeight: 1.5 }}>Ya Rabb, berikanlah kami kebaikan di dunia dan akhirat...</p>
+      </motion.div>
+
+      {/* Card 3 — Kartu Jamaah */}
+      <motion.div
+        initial={{ opacity: 0, y: 35 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.8, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        style={{
+          position: 'absolute', top: 230, left: 20,
+          background: 'linear-gradient(135deg, #1a2744 0%, #243560 100%)',
+          borderRadius: 20, padding: '20px 24px', width: 210,
+          boxShadow: '0 20px 48px rgba(10,15,40,0.5)',
+          border: '1px solid rgba(212,162,78,0.2)',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+          <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 10, fontWeight: 600, color: '#d4a24e', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Kartu Jamaah</p>
+          <div style={{ width: 28, height: 18, borderRadius: 4, background: 'linear-gradient(135deg, #d4a24e, #b8860b)' }} />
+        </div>
+        <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: 4 }}>Ahmad Fauzi</p>
+        <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 11, color: 'rgba(255,255,255,0.5)', marginBottom: 14 }}>Travel Barokah Mandiri</p>
+        <div style={{ display: 'flex', gap: 16 }}>
+          <div><p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 9, color: 'rgba(255,255,255,0.4)', marginBottom: 2 }}>Rombongan</p><p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 12, fontWeight: 600, color: '#fff' }}>Grup A</p></div>
+          <div><p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 9, color: 'rgba(255,255,255,0.4)', marginBottom: 2 }}>Hotel</p><p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 12, fontWeight: 600, color: '#fff' }}>Hilton Makkah</p></div>
+        </div>
+      </motion.div>
+
+      {/* Card 4 — Pengumuman */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.95, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        style={{
+          position: 'absolute', bottom: 40, right: 10,
+          background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(16px)',
+          border: '1px solid rgba(255,255,255,0.12)', borderRadius: 20,
+          padding: '18px 22px', width: 220,
+          boxShadow: '0 16px 40px rgba(0,0,0,0.3)',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+          <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#4ade80', flexShrink: 0, boxShadow: '0 0 8px rgba(74,222,128,0.6)' }} />
+          <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Pengumuman Travel</p>
+        </div>
+        <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 13, fontWeight: 500, color: '#fff', lineHeight: 1.5 }}>Bus keberangkatan ke Madinah pukul 08.00 WAS. Mohon berkumpul 15 menit lebih awal.</p>
+        <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 10, color: 'rgba(255,255,255,0.35)', marginTop: 8 }}>3 menit lalu · Travel Barokah</p>
+      </motion.div>
+
+      {/* floating label */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 1.1, duration: 0.5 }}
+        style={{
+          position: 'absolute', top: 170, left: '50%', transform: 'translateX(-50%)',
+          background: 'linear-gradient(135deg, #d4a24e, #f0c060)',
+          borderRadius: 99, padding: '8px 16px',
+          boxShadow: '0 8px 24px rgba(212,162,78,0.5)',
+        }}
+      >
+        <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 11, fontWeight: 700, color: '#1a2744' }}>White-label penuh ✦</p>
+      </motion.div>
     </div>
   );
 }
 
-/* ─── Bento Feature Cards ─── */
-function BentoGrid() {
-  const items = [
-    {
-      id: 'doa', size: 'wide-tall',
-      content: (
-        <div className="flex flex-col justify-between h-full">
-          <div>
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 11, fontWeight: 600, color: '#b8860b', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 12 }}>Kumpulan Doa Lengkap</p>
-            <p style={{ fontFamily: "'Playfair Display', serif", fontSize: 80, fontWeight: 800, color: '#1a2744', lineHeight: 0.85, marginBottom: 8 }}>55<span style={{ fontSize: 40, color: '#b8860b' }}>+</span></p>
-            <p style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: '#2a3a5e', marginBottom: 12 }}>doa ibadah</p>
-          </div>
-          <div>
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 13, color: '#555', lineHeight: 1.6 }}>Dari ihram sampai tawaf wada'. Teks Arab, latin, dan terjemahan dalam genggaman jamaah — kapan saja dibutuhkan.</p>
-            <div style={{ marginTop: 16, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              {['Arab', 'Latin', 'Terjemahan'].map((t) => (
-                <span key={t} style={{ fontFamily: 'Inter, sans-serif', fontSize: 11, fontWeight: 500, padding: '4px 10px', borderRadius: 20, background: 'rgba(184,134,11,0.08)', border: '1px solid rgba(184,134,11,0.2)', color: '#7a5200' }}>{t}</span>
-              ))}
-            </div>
-          </div>
-        </div>
-      ),
-      bg: '#fff',
-      border: 'rgba(184,134,11,0.2)',
-    },
-    {
-      id: 'counter', size: 'tall',
-      content: (
-        <div className="flex flex-col justify-between h-full">
-          <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 11, fontWeight: 600, color: '#b8860b', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Counter Tawaf & Sa'i</p>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, padding: '16px 0' }}>
-            <div style={{
-              width: 100, height: 100, borderRadius: '50%',
-              background: 'linear-gradient(135deg, #1a2744, #243560)',
-              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-              boxShadow: '0 0 0 8px rgba(26,39,68,0.08)',
-            }}>
-              <p style={{ fontFamily: "'Playfair Display', serif", fontSize: 40, fontWeight: 800, color: '#d4a24e', lineHeight: 1 }}>3</p>
-              <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 9, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.06em' }}>/ 7 putaran</p>
-            </div>
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 9, color: '#888', textAlign: 'center', letterSpacing: '0.04em', textTransform: 'uppercase' }}>Tawaf Qudum</p>
-          </div>
-          <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 12, color: '#555', lineHeight: 1.6 }}>Tidak salah hitung lagi. Doa per putaran muncul otomatis.</p>
-        </div>
-      ),
-      bg: '#faf8f4',
-      border: 'rgba(212,162,78,0.15)',
-    },
-    {
-      id: 'manasik', size: 'normal',
-      content: (
-        <div className="flex flex-col justify-between h-full">
-          <div>
-            <svg viewBox="0 0 24 24" fill="none" stroke="#b8860b" strokeWidth={1.5} width={24} height={24} style={{ marginBottom: 12 }}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" />
-            </svg>
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 11, fontWeight: 600, color: '#b8860b', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Manasik Interaktif</p>
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 13, color: '#555', lineHeight: 1.6 }}>Modul belajar tata cara umrah lengkap. Bisa dipelajari jamaah sebelum berangkat.</p>
-          </div>
-        </div>
-      ),
-      bg: '#fff',
-      border: 'rgba(212,162,78,0.15)',
-    },
-    {
-      id: 'peta', size: 'wide',
-      content: (
-        <div className="flex items-center justify-between h-full gap-6" style={{ flexWrap: 'wrap' }}>
-          <div style={{ flex: '1 1 200px' }}>
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 11, fontWeight: 600, color: '#b8860b', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 8 }}>Peta Lokasi Ziarah</p>
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 13, color: '#555', lineHeight: 1.6 }}>Masjidil Haram, Nabawi, Quba, Uhud, dan 6 lokasi bersejarah lainnya — lengkap dengan sejarah & Google Maps.</p>
-          </div>
-          <div style={{ flex: '0 0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-            <p style={{ fontFamily: "'Playfair Display', serif", fontSize: 64, fontWeight: 800, color: '#1a2744', lineHeight: 0.9 }}>10</p>
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 11, color: '#888', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Lokasi Ziarah</p>
-          </div>
-        </div>
-      ),
-      bg: '#faf8f4',
-      border: 'rgba(212,162,78,0.15)',
-    },
-    {
-      id: 'navigator', size: 'normal',
-      content: (
-        <div className="flex flex-col justify-between h-full">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#1a2744" strokeWidth={1.5} width={24} height={24} style={{ marginBottom: 12 }}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z" />
-          </svg>
-          <div>
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 11, fontWeight: 600, color: '#1a2744', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Ritual Navigator</p>
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 13, color: '#555', lineHeight: 1.6 }}>Pemandu langkah demi langkah saat ibadah berlangsung.</p>
-          </div>
-        </div>
-      ),
-      bg: '#fff',
-      border: 'rgba(26,39,68,0.1)',
-    },
-    {
-      id: 'agenda', size: 'normal',
-      content: (
-        <div className="flex flex-col justify-between h-full">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#b8860b" strokeWidth={1.5} width={24} height={24} style={{ marginBottom: 12 }}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
-          </svg>
-          <div>
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 11, fontWeight: 600, color: '#b8860b', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Agenda Perjalanan</p>
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 13, color: '#555', lineHeight: 1.6 }}>Jadwal harian diatur travel, tampil otomatis di HP jamaah sesuai fase perjalanan.</p>
-          </div>
-        </div>
-      ),
-      bg: '#fff',
-      border: 'rgba(212,162,78,0.15)',
-    },
-    {
-      id: 'kartu', size: 'normal',
-      content: (
-        <div className="flex flex-col justify-between h-full">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#1a2744" strokeWidth={1.5} width={24} height={24} style={{ marginBottom: 12 }}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-          </svg>
-          <div>
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 11, fontWeight: 600, color: '#1a2744', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Kartu Jamaah Digital</p>
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 13, color: '#555', lineHeight: 1.6 }}>Identitas digital: nama, rombongan, hotel, kontak pembimbing. Berguna saat darurat.</p>
-          </div>
-        </div>
-      ),
-      bg: '#faf8f4',
-      border: 'rgba(26,39,68,0.08)',
-    },
-    {
-      id: 'sholat', size: 'normal',
-      content: (
-        <div className="flex flex-col justify-between h-full">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#b8860b" strokeWidth={1.5} width={24} height={24} style={{ marginBottom: 12 }}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-          </svg>
-          <div>
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 11, fontWeight: 600, color: '#b8860b', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Jadwal Sholat</p>
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 13, color: '#555', lineHeight: 1.6 }}>Waktu sholat akurat di Makkah & Madinah sesuai lokasi jamaah.</p>
-          </div>
-        </div>
-      ),
-      bg: '#fff',
-      border: 'rgba(212,162,78,0.15)',
-    },
-    {
-      id: 'sertifikat', size: 'wide',
-      content: (
-        <div className="flex items-center justify-between h-full gap-6" style={{ flexWrap: 'wrap' }}>
-          <div style={{ flex: '1 1 180px' }}>
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 11, fontWeight: 600, color: '#1a2744', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 8 }}>Sertifikat & Jurnal</p>
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 13, color: '#555', lineHeight: 1.6 }}>Sertifikat umrah digital + jurnal kenangan perjalanan ibadah — kenangan yang tersimpan selamanya.</p>
-          </div>
-          <div style={{
-            flex: '0 0 auto',
-            width: 80, height: 80,
-            borderRadius: 16,
-            background: 'linear-gradient(135deg, #1a2744, #243560)',
-            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-          }}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="#d4a24e" strokeWidth={1.5} width={28} height={28}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
-            </svg>
-          </div>
-        </div>
-      ),
-      bg: '#faf8f4',
-      border: 'rgba(26,39,68,0.08)',
-    },
+/* ─── FAQ Item ─── */
+function FAQItem({ q, a }: { q: string; a: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div
+      style={{ borderBottom: '1px solid rgba(255,255,255,0.07)', cursor: 'pointer' }}
+      onClick={() => setOpen((p) => !p)}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 0', gap: 16 }}>
+        <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 15, fontWeight: 600, color: '#fff', lineHeight: 1.5 }}>{q}</p>
+        <span style={{ color: '#d4a24e', fontSize: 20, flexShrink: 0, transition: 'transform 0.25s', transform: open ? 'rotate(45deg)' : 'rotate(0deg)' }}>+</span>
+      </div>
+      <AnimatePresence>
+        {open && (
+          <motion.p
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 14, color: 'rgba(255,255,255,0.55)', lineHeight: 1.75, paddingBottom: 20, overflow: 'hidden' }}
+          >{a}</motion.p>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+/* ─── MAIN ─── */
+export default function LandingPage() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    document.title = 'Umrahme — Digitalisasi Layanan Jamaah Travel Umrah';
+    const handler = () => setScrolled(window.scrollY > 40);
+    window.addEventListener('scroll', handler);
+    return () => window.removeEventListener('scroll', handler);
+  }, []);
+
+  const features = [
+    { icon: '📖', title: 'Pengganti Buku Doa Digital', desc: '45 doa lengkap — Arab, latin, terjemahan — dikelompokkan per tahapan ibadah. Jamaah ikuti langsung saat muthowif menjelaskan.' },
+    { icon: '🔄', title: 'Counter Tawaf & Sa\'i', desc: 'Hitung putaran 1–7 otomatis, doa per putaran muncul sendiri. Tidak akan salah hitung lagi.' },
+    { icon: '🗺️', title: 'Panduan Ibadah Step-by-Step', desc: 'Ritual Navigator, Manasik Interaktif, Panduan Ihram — jamaah bisa belajar mandiri sebelum berangkat.' },
+    { icon: '📍', title: 'Peta & Lokasi Bersejarah', desc: 'Info masjid dan ziarah di Makkah & Madinah — sejarah, koordinat Google Maps, adab berkunjung.' },
+    { icon: '🕐', title: 'Jadwal Sholat Real-time', desc: 'Waktu sholat otomatis sesuai lokasi jamaah di Makkah atau Madinah.' },
+    { icon: '📢', title: 'Pengumuman dari Travel', desc: 'Kirim info penting ke seluruh jamaah sekaligus — perubahan jadwal, meeting point, dan lainnya.' },
+    { icon: '📅', title: 'Agenda Perjalanan', desc: 'Jadwal harian jamaah diisi travel, tampil real-time di HP jamaah sesuai fase perjalanan.' },
+    { icon: '🪪', title: 'Kartu Jamaah Digital', desc: 'Nama, nomor, rombongan, bus, kamar hotel, kontak pembimbing — semua digital, tidak perlu kartu fisik.' },
+    { icon: '📓', title: 'Jurnal Perjalanan', desc: 'Jamaah catat momen & foto selama perjalanan sebagai kenangan abadi.' },
+    { icon: '🏆', title: 'Sertifikat Umrah Digital', desc: 'Kenangan selesai umrah yang bisa disimpan dan dibagikan ke media sosial.' },
+    { icon: '🎨', title: 'White-label Penuh', desc: 'Logo travel, warna brand, nama app — semua bisa disesuaikan. Jamaah merasa ini app travel mereka.' },
+    { icon: '⚙️', title: 'Portal Travel Agency', desc: 'Dashboard khusus travel untuk kelola jamaah, isi agenda, kirim pengumuman, dan atur semua data.' },
+  ];
+
+  const pains = [
+    { icon: '😰', title: 'Jamaah kebingungan & ketinggalan info', desc: 'Tanpa panduan digital, jamaah bergantung penuh pada muthowif untuk semua informasi.' },
+    { icon: '🔁', title: 'Muthowif menjelaskan hal yang sama berulang', desc: 'Pertanyaan berulang menguras energi pembimbing yang seharusnya fokus membimbing ibadah.' },
+    { icon: '📕', title: 'Buku doa hilang atau tidak dibaca', desc: 'Buku fisik mahal, mudah ketinggalan, dan sering tidak dimanfaatkan jamaah.' },
+    { icon: '📱', title: 'Broadcast pengumuman ke semua jamaah susah', desc: 'Kirim pesan satu per satu via WhatsApp tidak efisien dan rawan terlewat.' },
+    { icon: '📋', title: 'Semua masih manual & rawan error', desc: 'Tidak ada sistem digital — data jamaah, jadwal, hotel — semuanya di spreadsheet atau kertas.' },
+  ];
+
+  const steps = [
+    { num: '01', title: 'Daftar & Kustomisasi Brand', desc: 'Upload logo travel, pilih warna brand, dan atur nama app. Selesai dalam hitungan menit.' },
+    { num: '02', title: 'Input Data Jamaah & Jadwal', desc: 'Tambahkan data jamaah, atur agenda perjalanan, info hotel, dan kontak pembimbing via portal.' },
+    { num: '03', title: 'Jamaah Login & Langsung Pakai', desc: 'Jamaah buka link, masukkan kode aktivasi — langsung bisa akses semua fitur tanpa install.' },
+  ];
+
+  const testimonials = [
+    { name: 'H. Ridwan Effendi', travel: 'PT. Barokah Safar Abadi', text: 'Sejak pakai Umrahme, pertanyaan ke muthowif berkurang drastis. Jamaah lebih mandiri, perjalanan lebih tenang.' },
+    { name: 'Ibu Siti Nurhaliza', travel: 'Yayasan Al-Haramain Tour', text: 'Saya takjub — jamaah yang sudah tua pun bisa pakai. Tidak perlu install, langsung buka link. Praktis sekali.' },
+    { name: 'Ust. Farid Amanullah', travel: 'CV. Bintang Madinah Travel', text: 'Harga 10 SAR per jamaah sangat worth it. Kalau cetak buku doa saja sudah lebih mahal dari itu.' },
+  ];
+
+  const faqs = [
+    { q: 'Apakah jamaah perlu install aplikasi?', a: 'Tidak perlu. Jamaah cukup buka link dari browser HP, masukkan kode aktivasi, dan langsung bisa pakai semua fitur. Tidak ada install dari Play Store atau App Store.' },
+    { q: 'Bagaimana cara kustomisasi tampilan?', a: 'Dari portal travel agency, Anda bisa upload logo, pilih warna brand, dan atur nama app. Perubahan langsung berlaku real-time untuk semua jamaah aktif.' },
+    { q: 'Apakah data jamaah aman?', a: 'Ya. Data disimpan di server aman dengan enkripsi. Kami tidak menjual atau membagikan data jamaah kepada pihak ketiga.' },
+    { q: 'Apakah bisa dipakai tanpa internet?', a: 'Fitur utama seperti kumpulan doa, panduan ibadah, dan kartu jamaah bisa diakses dalam mode offline setelah pertama kali dimuat. Fitur real-time (pengumuman, jadwal sholat) butuh koneksi.' },
+    { q: 'Bagaimana cara pembayaran?', a: 'Pembayaran dilakukan per keberangkatan berdasarkan jumlah jamaah aktif. Tidak ada biaya bulanan atau biaya setup. Hubungi kami via WhatsApp untuk detail.' },
+    { q: 'Apakah ada masa trial?', a: 'Ya, kami menyediakan demo gratis dengan branding travel Anda sehingga Anda bisa merasakan langsung sebelum memutuskan.' },
   ];
 
   return (
-    <div style={{
-      display: 'grid',
-      gridTemplateColumns: 'repeat(12, 1fr)',
-      gridAutoRows: 'minmax(140px, auto)',
-      gap: 16,
-    }}>
-      {items.map((item, i) => {
-        const span =
-          item.size === 'wide-tall' ? 'span 7 / span 7'
-          : item.size === 'tall' ? 'span 5 / span 5'
-          : item.size === 'wide' ? 'span 7 / span 7'
-          : 'span 5 / span 5';
-
-        const rowSpan =
-          item.size === 'wide-tall' ? '2'
-          : item.size === 'tall' ? '2'
-          : '1';
-
-        return (
-          <Reveal key={item.id} delay={i * 0.05}>
-            <div
-              style={{
-                gridColumn: span,
-                gridRow: rowSpan === '2' ? `span 2` : 'span 1',
-                background: item.bg,
-                border: `1px solid ${item.border}`,
-                borderRadius: 20,
-                padding: 24,
-                height: '100%',
-                minHeight: item.size === 'wide-tall' || item.size === 'tall' ? 300 : 160,
-                transition: 'transform 0.25s ease, box-shadow 0.25s ease',
-              }}
-              className="bento-card"
-            >
-              {item.content}
-            </div>
-          </Reveal>
-        );
-      })}
-    </div>
-  );
-}
-
-/* ─── Main Component ─── */
-export default function LandingPage() {
-  useEffect(() => {
-    document.title = 'Umrahme — Digitalisasi layanan jamaah travel Anda';
-  }, []);
-
-  return (
-    <div style={{ background: '#faf8f4', color: '#1a1a1a', minHeight: '100vh', fontFamily: 'Inter, system-ui, sans-serif' }}>
+    <div style={{ background: '#080f1c', color: '#fff', minHeight: '100vh', fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Amiri:wght@400;700&family=Inter:wght@400;500;600;700&display=swap');
-        .lp-btn-gold {
-          background: linear-gradient(135deg, #b8860b, #d4a24e);
-          color: #fff;
-          font-weight: 600;
-          padding: 14px 28px;
-          border-radius: 999px;
-          font-size: 15px;
-          transition: all 0.25s ease;
-          box-shadow: 0 4px 20px rgba(184,134,11,0.28);
-          display: inline-block;
-          text-decoration: none;
-          font-family: Inter, sans-serif;
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600&family=Amiri:wght@400;700&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        .btn-primary {
+          display: inline-flex; align-items: center; gap: 10px;
+          background: linear-gradient(135deg, #d4a24e, #b8860b);
+          color: #fff; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif;
+          padding: 14px 28px; border-radius: 999px; font-size: 15px;
+          text-decoration: none; transition: all 0.25s ease;
+          box-shadow: 0 4px 24px rgba(212,162,78,0.35);
         }
-        .lp-btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(184,134,11,0.38); }
-        .lp-btn-outline {
-          border: 1.5px solid rgba(184,134,11,0.5);
-          color: #b8860b;
-          font-weight: 600;
-          padding: 13px 28px;
-          border-radius: 999px;
-          font-size: 15px;
-          transition: all 0.25s ease;
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          text-decoration: none;
-          font-family: Inter, sans-serif;
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(212,162,78,0.48); }
+        .btn-primary .arrow {
+          width: 32px; height: 32px; border-radius: 50%;
+          background: rgba(255,255,255,0.2);
+          display: flex; align-items: center; justify-content: center;
+          font-size: 14px; flex-shrink: 0;
         }
-        .lp-btn-outline:hover { background: rgba(184,134,11,0.06); border-color: #b8860b; transform: translateY(-1px); }
-        .benefit-card { transition: transform 0.25s ease, box-shadow 0.25s ease; }
-        .benefit-card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.06); }
-        .bento-card { transition: transform 0.25s ease, box-shadow 0.25s ease; }
-        .bento-card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.06); }
+        .btn-ghost {
+          display: inline-flex; align-items: center; gap: 8px;
+          border: 1.5px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.8);
+          font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif;
+          padding: 13px 28px; border-radius: 999px; font-size: 15px;
+          text-decoration: none; transition: all 0.25s ease;
+        }
+        .btn-ghost:hover { border-color: rgba(212,162,78,0.6); color: #d4a24e; background: rgba(212,162,78,0.06); }
+        .feature-card {
+          background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
+          border-radius: 16px; padding: 24px; transition: all 0.25s ease;
+        }
+        .feature-card:hover { background: rgba(255,255,255,0.07); border-color: rgba(212,162,78,0.2); transform: translateY(-3px); }
+        .pain-card {
+          background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
+          border-radius: 16px; padding: 28px; transition: all 0.25s ease;
+        }
+        .pain-card:hover { border-color: rgba(212,162,78,0.2); }
+        .nav-link { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.6); text-decoration: none; transition: color 0.2s; }
+        .nav-link:hover { color: #fff; }
         @media (max-width: 768px) {
-          .hero-grid { flex-direction: column !important; }
-          .hero-text { max-width: 100% !important; }
+          .hero-inner { flex-direction: column !important; }
+          .hero-cards-wrap { display: none !important; }
+          .features-grid { grid-template-columns: 1fr 1fr !important; }
+          .steps-grid { grid-template-columns: 1fr !important; }
+          .testimonials-grid { grid-template-columns: 1fr !important; }
+          .pains-grid { grid-template-columns: 1fr !important; }
+          .stat-grid { grid-template-columns: 1fr 1fr !important; }
+          .nav-menu { display: none !important; }
+        }
+        @media (max-width: 480px) {
+          .features-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
 
-      {/* ── Navbar ── */}
+      {/* ══ NAVBAR ══ */}
       <nav style={{
-        position: 'sticky', top: 0, zIndex: 50,
-        background: 'rgba(250,248,244,0.92)',
-        backdropFilter: 'blur(12px)',
-        borderBottom: '1px solid rgba(212,162,78,0.15)',
+        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
+        transition: 'all 0.3s ease',
+        background: scrolled ? 'rgba(8,15,28,0.95)' : 'transparent',
+        backdropFilter: scrolled ? 'blur(16px)' : 'none',
+        borderBottom: scrolled ? '1px solid rgba(255,255,255,0.06)' : '1px solid transparent',
       }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 32px', height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 700, color: '#1a2744' }}>Umrahme</span>
-            <span style={{ fontSize: 11, fontWeight: 500, padding: '3px 10px', borderRadius: 20, background: 'rgba(184,134,11,0.08)', color: '#7a5200', border: '1px solid rgba(184,134,11,0.15)', fontFamily: 'Inter, sans-serif', letterSpacing: '0.03em' }}>for Travel</span>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 32px', height: 68, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ width: 32, height: 32, borderRadius: 10, background: 'linear-gradient(135deg, #d4a24e, #b8860b)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ fontSize: 14 }}>🕌</span>
+            </div>
+            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 20, fontWeight: 800, color: '#fff' }}>Umrahme</span>
           </div>
-          <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-btn-gold" style={{ padding: '10px 22px', fontSize: 13 }}>
-            Minta Demo
+          <div className="nav-menu" style={{ display: 'flex', gap: 36 }}>
+            {[['#fitur', 'Fitur'], ['#harga', 'Harga'], ['#cara-kerja', 'Cara Kerja'], ['#kontak', 'Kontak']].map(([h, l]) => (
+              <a key={h} href={h} className="nav-link">{l}</a>
+            ))}
+          </div>
+          <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ padding: '10px 20px', fontSize: 13 }}>
+            Daftar Sekarang <span className="arrow">↗</span>
           </a>
         </div>
       </nav>
 
-      {/* ══════════════════════
-          SECTION 1 — HERO (Asimetris)
-      ══════════════════════ */}
-      <section style={{ maxWidth: 1200, margin: '0 auto', padding: '80px 32px 60px' }}>
-        <div className="hero-grid" style={{ display: 'flex', alignItems: 'center', gap: 64 }}>
-          {/* left — text */}
-          <div className="hero-text" style={{ flex: '1 1 0', maxWidth: 560 }}>
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1 }}
-              style={{ fontFamily: "'Amiri', serif", fontSize: 22, color: '#b8860b', marginBottom: 20, letterSpacing: '0.03em' }}
-            >
-              السَّلامُ عَلَيْكُم
-            </motion.p>
+      {/* ══ HERO ══ */}
+      <section style={{
+        minHeight: '100vh', paddingTop: 68,
+        background: 'linear-gradient(135deg, #080f1c 0%, #0d1a35 50%, #111e40 100%)',
+        position: 'relative', overflow: 'hidden',
+        display: 'flex', alignItems: 'center',
+      }}>
+        {/* background glow */}
+        <div style={{ position: 'absolute', top: '10%', left: '-5%', width: 500, height: 500, borderRadius: '50%', background: 'rgba(212,162,78,0.06)', filter: 'blur(80px)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: '10%', right: '-5%', width: 400, height: 400, borderRadius: '50%', background: 'rgba(26,39,68,0.6)', filter: 'blur(60px)', pointerEvents: 'none' }} />
 
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15, duration: 0.5 }}
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 7, marginBottom: 24, padding: '6px 14px', borderRadius: 999, background: 'rgba(26,39,68,0.05)', border: '1px solid rgba(26,39,68,0.1)' }}
-            >
-              <span style={{ color: '#b8860b', fontSize: 10 }}>◆</span>
-              <span style={{ fontFamily: 'Inter, sans-serif', fontSize: 12, fontWeight: 600, color: '#1a2744', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Untuk Pemilik Travel Umrah</span>
-            </motion.div>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '60px 32px', width: '100%' }}>
+          <div className="hero-inner" style={{ display: 'flex', alignItems: 'center', gap: 60 }}>
+            {/* left */}
+            <div style={{ flex: '1 1 0', maxWidth: 580 }}>
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 14px', borderRadius: 99, background: 'rgba(212,162,78,0.1)', border: '1px solid rgba(212,162,78,0.25)', marginBottom: 28 }}
+              >
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#d4a24e', display: 'inline-block' }} />
+                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 12, fontWeight: 600, color: '#d4a24e', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Untuk Pemilik Travel Umrah</span>
+              </motion.div>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.25, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-              style={{
-                fontFamily: "'Playfair Display', serif",
-                fontSize: 'clamp(2.2rem, 4.5vw, 3.4rem)',
-                fontWeight: 800,
-                color: '#1a2744',
-                lineHeight: 1.15,
-                marginBottom: 24,
-              }}
-            >
-              Digitalisasi layanan jamaah Anda —{' '}
-              <em style={{ color: '#b8860b', fontStyle: 'italic' }}>tampil dengan nama travel Anda sendiri</em>
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.38, duration: 0.6 }}
-              style={{ fontFamily: 'Inter, sans-serif', fontSize: 16, color: '#4a4a4a', lineHeight: 1.75, marginBottom: 28, maxWidth: 480 }}
-            >
-              Umrahme adalah aplikasi pendamping umrah yang bisa Anda white-label sepenuhnya. Jamaah melihatnya sebagai aplikasi milik travel Anda — bukan kami. Satu pendamping untuk seluruh perjalanan ibadah mereka.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.48, duration: 0.5 }}
-              style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 36 }}
-            >
-              {['White-label penuh', 'Ganti buku doa cetak', 'Tanpa perlu install'].map((t) => (
-                <span key={t} style={{
-                  fontFamily: 'Inter, sans-serif', fontSize: 12, fontWeight: 500,
-                  padding: '6px 14px', borderRadius: 999,
-                  background: '#fff', border: '1.5px solid rgba(184,134,11,0.25)', color: '#5a3e00',
-                }}>
-                  {t}
-                </span>
-              ))}
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.56, duration: 0.5 }}
-              style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}
-            >
-              <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-btn-gold">
-                Minta Demo Gratis
-              </a>
-              <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-btn-outline">
-                <svg viewBox="0 0 24 24" fill="currentColor" width={16} height={16}>
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-                  <path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.554 4.122 1.526 5.852L.057 23.143a.75.75 0 0 0 .916.944l5.458-1.445A11.944 11.944 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.9 0-3.7-.502-5.263-1.381l-.378-.214-3.928 1.04 1.072-3.835-.234-.393A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
-                </svg>
-                Hubungi via WhatsApp
-              </a>
-            </motion.div>
-          </div>
-
-          {/* right — phone mockup */}
-          <motion.div
-            style={{ flex: '0 0 auto', width: 340 }}
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.4, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-            className="hidden md:block"
-          >
-            <PhoneMockup />
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ══════════════════════
-          SECTION 2 — MANFAAT (dua kolom, teks kiri)
-      ══════════════════════ */}
-      <section style={{ background: '#fff', padding: '96px 0' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 32px' }}>
-          {/* header — rata kiri, bukan tengah */}
-          <Reveal>
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 11, fontWeight: 600, color: '#b8860b', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 16 }}>
-              Kenapa Travel Butuh Ini
-            </p>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)', fontWeight: 700, color: '#1a2744', marginBottom: 16, maxWidth: 480 }}>
-              Nilai tambah nyata untuk bisnis travel Anda
-            </h2>
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 16, color: '#666', lineHeight: 1.7, maxWidth: 440, marginBottom: 56 }}>
-              Lebih dari sekadar aplikasi — ini cara travel mendigitalisasi layanan jamaah dan tampil lebih profesional.
-            </p>
-          </Reveal>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 20 }}>
-            {[
-              {
-                num: '01',
-                title: 'Brand travel Anda makin kuat',
-                desc: 'Nama, logo, dan warna travel tampil di seluruh aplikasi. Jamaah memegang aplikasi bermerek travel Anda setiap hari selama perjalanan — promosi berjalan sepanjang umrah.',
-                accent: '#1a2744',
-              },
-              {
-                num: '02',
-                title: 'Pengganti buku doa cetak',
-                desc: '55+ doa lengkap dengan teks Arab, latin, dan terjemahan dalam genggaman. Hemat biaya cetak, tidak hilang, selalu terbawa. Saat muthowif menjelaskan, jamaah bisa ikuti langsung di aplikasi.',
-                accent: '#b8860b',
-              },
-              {
-                num: '03',
-                title: 'Beban muthowif & tim lebih ringan',
-                desc: 'Pertanyaan berulang seperti "jadwal hari ini apa?", "doanya bagaimana?", "hotel kita di mana?" terjawab sendiri lewat aplikasi. Muthowif fokus membimbing, bukan mengulang informasi.',
-                accent: '#1a2744',
-              },
-              {
-                num: '04',
-                title: 'Jamaah lebih puas, lebih banyak referral',
-                desc: 'Jamaah yang terlayani dengan baik merekomendasikan travel Anda. Pengalaman digital yang rapi jadi pembeda dari travel lain yang masih manual.',
-                accent: '#b8860b',
-              },
-            ].map((b, i) => (
-              <Reveal key={b.num} delay={i * 0.08}>
-                <div
-                  className="benefit-card"
-                  style={{
-                    background: '#faf8f4',
-                    border: '1px solid rgba(212,162,78,0.12)',
-                    borderRadius: 20,
-                    padding: 28,
-                    borderTop: `3px solid ${b.accent}`,
-                  }}
-                >
-                  <p style={{ fontFamily: "'Playfair Display', serif", fontSize: 36, fontWeight: 800, color: 'rgba(0,0,0,0.06)', lineHeight: 1, marginBottom: 16 }}>{b.num}</p>
-                  <p style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 600, color: '#1a2744', marginBottom: 12 }}>{b.title}</p>
-                  <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 14, color: '#555', lineHeight: 1.7 }}>{b.desc}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════
-          SECTION 3 — FITUR (Bento Grid)
-      ══════════════════════ */}
-      <section style={{ padding: '96px 0', background: '#faf8f4' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 32px' }}>
-          <Reveal className="mb-14">
-            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 24, marginBottom: 48 }}>
-              <div>
-                <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 11, fontWeight: 600, color: '#b8860b', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 14 }}>Fitur Lengkap</p>
-                <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)', fontWeight: 700, color: '#1a2744', maxWidth: 440 }}>
-                  Pendamping lengkap dari persiapan hingga pulang
-                </h2>
-              </div>
-              <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 15, color: '#666', maxWidth: 300, lineHeight: 1.7 }}>
-                Semua fitur sudah jadi dan siap pakai — tinggal aktifkan untuk jamaah Anda.
-              </p>
-            </div>
-          </Reveal>
-          <BentoGrid />
-        </div>
-      </section>
-
-      {/* ══════════════════════
-          SECTION 4 — CARA KERJA (horizontal timeline)
-      ══════════════════════ */}
-      <section style={{ background: '#1a2744', padding: '96px 0', position: 'relative', overflow: 'hidden' }}>
-        {/* subtle pattern */}
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(circle at 80% 50%, rgba(212,162,78,0.06) 0%, transparent 55%)', pointerEvents: 'none' }} />
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 32px', position: 'relative' }}>
-          <Reveal>
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 11, fontWeight: 600, color: '#d4a24e', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 16 }}>Cara Kerja</p>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)', fontWeight: 700, color: '#fff', marginBottom: 56, maxWidth: 420 }}>
-              Travel pegang kendali penuh lewat portal
-            </h2>
-          </Reveal>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 0, position: 'relative' }}>
-            {/* connector line */}
-            <div style={{ position: 'absolute', top: 28, left: '5%', right: '5%', height: 1, background: 'linear-gradient(90deg, rgba(212,162,78,0.2), rgba(212,162,78,0.5), rgba(212,162,78,0.2))', display: 'none' }} className="md:block" />
-
-            {[
-              { n: '01', title: 'Atur branding & data lewat portal travel', desc: 'Login ke portal, atur nama travel, logo, warna, data hotel, pembimbing, dan agenda keberangkatan. Semua dalam kendali Anda.' },
-              { n: '02', title: 'Bagikan kode aktivasi ke jamaah', desc: 'Setiap keberangkatan dapat kode unik. Jamaah cukup buka link, masukkan kode & nama — langsung masuk tanpa install dari Play Store.' },
-              { n: '03', title: 'Kirim pengumuman kapan saja', desc: 'Ada perubahan jadwal atau info penting? Kirim langsung dari portal, muncul di HP semua jamaah. Tidak perlu broadcast WhatsApp satu per satu.' },
-            ].map((s, i) => (
-              <Reveal key={s.n} delay={i * 0.12}>
-                <div style={{ padding: '0 24px', borderLeft: i > 0 ? '1px solid rgba(212,162,78,0.12)' : 'none' }}>
-                  <div style={{
-                    width: 56, height: 56, borderRadius: 14, marginBottom: 24,
-                    background: 'linear-gradient(135deg, #b8860b, #d4a24e)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    boxShadow: '0 8px 24px rgba(184,134,11,0.35)',
-                  }}>
-                    <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 800, color: '#fff' }}>{s.n}</span>
-                  </div>
-                  <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 600, color: '#fff', marginBottom: 12, lineHeight: 1.3 }}>{s.title}</h3>
-                  <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 14, color: 'rgba(255,255,255,0.55)', lineHeight: 1.75 }}>{s.desc}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════
-          SECTION 5 — HARGA (sangat lega, satu angka)
-      ══════════════════════ */}
-      <section style={{ padding: '120px 32px', background: '#faf8f4' }}>
-        <div style={{ maxWidth: 680, margin: '0 auto', textAlign: 'center' }}>
-          <Reveal>
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 11, fontWeight: 600, color: '#b8860b', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 24 }}>Harga</p>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', fontWeight: 700, color: '#1a2744', marginBottom: 64 }}>
-              Cukup 10 SAR per jamaah. Itu saja.
-            </h2>
-          </Reveal>
-
-          <Reveal delay={0.1}>
-            <div style={{
-              background: '#fff',
-              border: '1px solid rgba(212,162,78,0.2)',
-              borderRadius: 28,
-              padding: '64px 48px',
-              boxShadow: '0 20px 80px rgba(184,134,11,0.07)',
-            }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', gap: 4, marginBottom: 12 }}>
-                <span style={{ fontFamily: 'Inter, sans-serif', fontSize: 20, fontWeight: 700, color: '#b8860b', paddingTop: 24 }}>SAR</span>
-                <span style={{
-                  fontFamily: "'Playfair Display', serif",
-                  fontSize: 'clamp(6rem, 18vw, 10rem)',
-                  fontWeight: 800,
-                  color: '#1a2744',
-                  lineHeight: 0.9,
-                }}>10</span>
-              </div>
-              <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 15, color: '#999', marginBottom: 32, letterSpacing: '0.03em' }}>
-                per jamaah &nbsp;·&nbsp; per keberangkatan
-              </p>
-
-              <div style={{ width: 48, height: 1, background: 'rgba(212,162,78,0.4)', margin: '0 auto 28px' }} />
-
-              <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 15, color: '#555', marginBottom: 8 }}>
-                Tanpa biaya bulanan, tanpa biaya setup.
-              </p>
-              <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 15, color: '#555', marginBottom: 40 }}>
-                Bayar hanya untuk jamaah yang berangkat.
-              </p>
-
-              <p style={{ fontFamily: "'Playfair Display', serif", fontSize: 17, fontStyle: 'italic', color: '#7a5200', marginBottom: 40, lineHeight: 1.6 }}>
-                "Lebih murah dari biaya cetak buku doa per jamaah — tapi nilai yang jamaah terima jauh lebih besar."
-              </p>
-
-              <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-btn-gold" style={{ fontSize: 16, padding: '16px 40px' }}>
-                Minta Demo Gratis
-              </a>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ══════════════════════
-          SECTION 6 — CTA PENUTUP
-      ══════════════════════ */}
-      <section style={{ background: 'linear-gradient(135deg, #0c1526 0%, #1a2744 100%)', padding: '100px 32px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: '60%', height: 1, background: 'linear-gradient(90deg, transparent, rgba(212,162,78,0.5), transparent)' }} />
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(ellipse at 50% 0%, rgba(212,162,78,0.1) 0%, transparent 55%)', pointerEvents: 'none' }} />
-
-        <div style={{ maxWidth: 640, margin: '0 auto', textAlign: 'center', position: 'relative' }}>
-          <Reveal>
-            <p style={{ fontFamily: "'Amiri', serif", fontSize: 32, color: '#d4a24e', marginBottom: 24, letterSpacing: '0.02em' }}>بَارَكَ اللَّهُ فِيكُم</p>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(1.9rem, 4vw, 2.8rem)', fontWeight: 700, color: '#fff', marginBottom: 20, lineHeight: 1.25 }}>
-              Jadikan travel Anda yang terdepan dalam pelayanan
-            </h2>
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 16, color: 'rgba(255,255,255,0.6)', lineHeight: 1.75, marginBottom: 40, maxWidth: 480, margin: '0 auto 40px' }}>
-              Coba demo gratis dengan branding travel Anda. Lihat sendiri bagaimana jamaah terbantu sebelum memutuskan.
-            </p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center' }}>
-              <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-btn-gold">
-                Minta Demo Gratis
-              </a>
-              <a
-                href={WA_LINK}
-                target="_blank"
-                rel="noopener noreferrer"
+              <motion.h1
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15, duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
                 style={{
-                  border: '1.5px solid rgba(212,162,78,0.5)',
-                  color: '#d4a24e',
-                  fontWeight: 600,
-                  padding: '13px 28px',
-                  borderRadius: 999,
-                  fontSize: 15,
-                  transition: 'all 0.25s ease',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  textDecoration: 'none',
-                  fontFamily: 'Inter, sans-serif',
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  fontSize: 'clamp(2.4rem, 5vw, 3.8rem)',
+                  fontWeight: 800,
+                  lineHeight: 1.15,
+                  marginBottom: 24,
+                  letterSpacing: '-0.02em',
                 }}
               >
-                <svg viewBox="0 0 24 24" fill="currentColor" width={16} height={16}>
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-                  <path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.554 4.122 1.526 5.852L.057 23.143a.75.75 0 0 0 .916.944l5.458-1.445A11.944 11.944 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.9 0-3.7-.502-5.263-1.381l-.378-.214-3.928 1.04 1.072-3.835-.234-.393A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
-                </svg>
-                Hubungi via WhatsApp
+                Jadikan Perjalanan Jamaah Anda{' '}
+                <span style={{ background: 'linear-gradient(135deg, #d4a24e, #f0c060)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                  Lebih Bermakna
+                </span>
+                {' '}— Tanpa Repot
+              </motion.h1>
+
+              <motion.p
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.28, duration: 0.65 }}
+                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 17, color: 'rgba(255,255,255,0.6)', lineHeight: 1.8, marginBottom: 36, maxWidth: 500 }}
+              >
+                Satu aplikasi lengkap pengganti buku doa, panduan ibadah, dan sistem komunikasi travel. White-label, siap pakai,{' '}
+                <span style={{ color: '#d4a24e', fontWeight: 600 }}>hanya 10 SAR per jamaah.</span>
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.55 }}
+                style={{ display: 'flex', flexWrap: 'wrap', gap: 14, marginBottom: 40 }}
+              >
+                <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="btn-primary">
+                  Mulai Sekarang <span className="arrow">↗</span>
+                </a>
+                <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="btn-ghost">
+                  Lihat Demo
+                </a>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.55, duration: 0.5 }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <div style={{ display: 'flex' }}>
+                    {['#d4a24e', '#b8860b', '#c99a3d', '#e0b850'].map((c, i) => (
+                      <div key={i} style={{ width: 28, height: 28, borderRadius: '50%', background: c, border: '2px solid #080f1c', marginLeft: i > 0 ? -8 : 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11 }}>🕌</div>
+                    ))}
+                  </div>
+                  <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>
+                    Dipercaya travel agency di Indonesia
+                  </p>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* right — floating cards */}
+            <div className="hero-cards-wrap" style={{ flex: '0 0 auto', width: 420 }}>
+              <HeroCards />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══ STATS BENTO ══ */}
+      <section style={{ background: '#0d1525', borderTop: '1px solid rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '64px 32px' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+          <div className="stat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}>
+            {[
+              { val: '10 SAR', label: 'Per jamaah. Itu saja', sub: 'Tanpa setup, tanpa biaya bulanan' },
+              { val: '45+', label: 'Doa lengkap', sub: 'Arab · Latin · Terjemahan' },
+              { val: '12', label: 'Fitur siap pakai', sub: 'Langsung aktif tanpa konfigurasi' },
+              { val: '100%', label: 'White-label', sub: 'Brand travel Anda, bukan Umrahme' },
+            ].map((s, i) => (
+              <Reveal key={i} delay={i * 0.07}>
+                <div style={{
+                  background: i === 0 ? 'linear-gradient(135deg, #d4a24e15, #b8860b08)' : 'rgba(255,255,255,0.03)',
+                  border: `1px solid ${i === 0 ? 'rgba(212,162,78,0.25)' : 'rgba(255,255,255,0.06)'}`,
+                  borderRadius: 16, padding: '28px 24px',
+                }}>
+                  <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', fontWeight: 800, color: i === 0 ? '#d4a24e' : '#fff', marginBottom: 6 }}>{s.val}</p>
+                  <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 14, fontWeight: 600, color: '#fff', marginBottom: 4 }}>{s.label}</p>
+                  <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>{s.sub}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══ PAIN POINTS ══ */}
+      <section style={{ padding: '100px 32px', background: '#080f1c' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+          <Reveal>
+            <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 11, fontWeight: 700, color: '#d4a24e', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 16 }}>• Masalah Yang Ada</p>
+            <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', fontWeight: 800, lineHeight: 1.2, marginBottom: 16, letterSpacing: '-0.02em', maxWidth: 520 }}>
+              Masalah yang Sering Dihadapi Travel Agency
+            </h2>
+            <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 16, color: 'rgba(255,255,255,0.5)', lineHeight: 1.7, marginBottom: 60, maxWidth: 440 }}>
+              Masalah yang selama ini terasa wajar — padahal ada solusinya.
+            </p>
+          </Reveal>
+          <div className="pains-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+            {pains.map((p, i) => (
+              <Reveal key={i} delay={i * 0.07}>
+                <div className="pain-card" style={{ gridColumn: i === 3 || i === 4 ? 'span 1' : undefined }}>
+                  <span style={{ fontSize: 28, marginBottom: 16, display: 'block' }}>{p.icon}</span>
+                  <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: 8 }}>{p.title}</p>
+                  <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.65 }}>{p.desc}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══ FEATURES ══ */}
+      <section id="fitur" style={{ padding: '100px 32px', background: '#0d1525' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+          <Reveal>
+            <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 11, fontWeight: 700, color: '#d4a24e', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 16 }}>• Fitur</p>
+            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 24, marginBottom: 56 }}>
+              <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-0.02em', maxWidth: 420 }}>
+                Semua yang Dibutuhkan Jamaah,{' '}
+                <span style={{ color: '#d4a24e' }}>dalam Satu App</span>
+              </h2>
+              <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 15, color: 'rgba(255,255,255,0.5)', maxWidth: 320, lineHeight: 1.7 }}>
+                12 fitur siap pakai — tidak perlu konfigurasi teknis, langsung aktif untuk jamaah Anda.
+              </p>
+            </div>
+          </Reveal>
+          <div className="features-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+            {features.map((f, i) => (
+              <Reveal key={i} delay={i * 0.04}>
+                <div className="feature-card" style={{ height: '100%' }}>
+                  <span style={{ fontSize: 26, marginBottom: 14, display: 'block' }}>{f.icon}</span>
+                  <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: 8 }}>{f.title}</p>
+                  <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.65 }}>{f.desc}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══ HOW IT WORKS ══ */}
+      <section id="cara-kerja" style={{ padding: '100px 32px', background: '#080f1c' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+          <Reveal>
+            <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 11, fontWeight: 700, color: '#d4a24e', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 16 }}>• Cara Kerja</p>
+            <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-0.02em', marginBottom: 16, maxWidth: 440 }}>
+              3 Langkah Simpel — Langsung Jalan
+            </h2>
+            <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 16, color: 'rgba(255,255,255,0.5)', lineHeight: 1.7, marginBottom: 64, maxWidth: 400 }}>
+              Tidak butuh tim IT. Tidak butuh waktu lama. Travel siap dalam hitungan jam.
+            </p>
+          </Reveal>
+          <div className="steps-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 2 }}>
+            {steps.map((s, i) => (
+              <Reveal key={i} delay={i * 0.1}>
+                <div style={{
+                  padding: '36px 32px',
+                  background: i === 1 ? 'linear-gradient(135deg, rgba(212,162,78,0.1), rgba(184,134,11,0.05))' : 'transparent',
+                  border: `1px solid ${i === 1 ? 'rgba(212,162,78,0.25)' : 'rgba(255,255,255,0.06)'}`,
+                  borderRadius: 20,
+                  position: 'relative',
+                }}>
+                  {i < 2 && (
+                    <div style={{ position: 'absolute', top: '50%', right: -18, transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.15)', fontSize: 20, fontWeight: 300 }}>→</div>
+                  )}
+                  <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 48, fontWeight: 800, color: i === 1 ? 'rgba(212,162,78,0.3)' : 'rgba(255,255,255,0.08)', lineHeight: 1, marginBottom: 20 }}>{s.num}</p>
+                  <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 12 }}>{s.title}</p>
+                  <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 14, color: 'rgba(255,255,255,0.5)', lineHeight: 1.7 }}>{s.desc}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══ WHITE-LABEL SHOWCASE ══ */}
+      <section style={{ padding: '100px 32px', background: 'linear-gradient(135deg, #0d1a35 0%, #111e40 100%)', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(ellipse at 50% 50%, rgba(212,162,78,0.07) 0%, transparent 65%)', pointerEvents: 'none' }} />
+        <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 80, flexWrap: 'wrap' }}>
+            <Reveal from="left" className="">
+              <div style={{ flex: '1 1 340px' }}>
+                <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 11, fontWeight: 700, color: '#d4a24e', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 16 }}>• White-Label</p>
+                <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-0.02em', marginBottom: 20 }}>
+                  App Anda,{' '}
+                  <span style={{ color: '#d4a24e' }}>Brand Anda</span>
+                </h2>
+                <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 16, color: 'rgba(255,255,255,0.6)', lineHeight: 1.8, marginBottom: 32 }}>
+                  Jamaah tidak tahu ini Umrahme. Mereka pikir ini aplikasi milik travel mereka sendiri — karena memang itulah yang terlihat. Logo Anda, warna brand Anda, nama travel Anda.
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                  {['Logo & nama travel tampil di seluruh app', 'Warna brand bisa disesuaikan penuh', 'Jamaah tidak tahu ini platform Umrahme', 'URL bisa disesuaikan dengan nama travel'].map((t) => (
+                    <div key={t} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <span style={{ width: 20, height: 20, borderRadius: '50%', background: 'linear-gradient(135deg, #d4a24e, #b8860b)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, flexShrink: 0 }}>✓</span>
+                      <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 14, color: 'rgba(255,255,255,0.7)' }}>{t}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </Reveal>
+
+            <Reveal from="right" className="">
+              <div style={{ flex: '1 1 340px', display: 'flex', gap: 16 }}>
+                {[
+                  { name: 'Travel Barokah Mandiri', color: '#1a2744', accent: '#d4a24e' },
+                  { name: 'Al-Haramain Tour', color: '#1a3a2a', accent: '#4ade80' },
+                  { name: 'Bintang Madinah', color: '#2a1a44', accent: '#a78bfa' },
+                ].map((t) => (
+                  <div key={t.name} style={{
+                    flex: 1, borderRadius: 16, overflow: 'hidden',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    boxShadow: '0 20px 48px rgba(0,0,0,0.4)',
+                  }}>
+                    <div style={{ background: t.color, padding: '14px 12px', borderBottom: `2px solid ${t.accent}` }}>
+                      <p style={{ fontFamily: "'Amiri', serif", fontSize: 12, color: t.accent, textAlign: 'center', marginBottom: 4 }}>بِسْمِ اللهِ</p>
+                      <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.7)', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{t.name}</p>
+                    </div>
+                    <div style={{ background: '#f5f0e8', padding: 10 }}>
+                      <div style={{ background: '#fff', borderRadius: 8, padding: 8, marginBottom: 6, border: `1px solid ${t.accent}20` }}>
+                        <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 8, fontWeight: 600, color: '#333', marginBottom: 4 }}>Counter Tawaf</p>
+                        <div style={{ width: 32, height: 32, borderRadius: '50%', background: t.color, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 14, fontWeight: 800, color: t.accent }}>3</span>
+                        </div>
+                      </div>
+                      <div style={{ background: '#fff', borderRadius: 8, padding: 8 }}>
+                        <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 8, color: '#666', lineHeight: 1.5 }}>رَبَّنَا آتِنَا فِي الدُّنْيَا...</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ══ PRICING ══ */}
+      <section id="harga" style={{ padding: '100px 32px', background: '#080f1c' }}>
+        <div style={{ maxWidth: 720, margin: '0 auto', textAlign: 'center' }}>
+          <Reveal>
+            <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 11, fontWeight: 700, color: '#d4a24e', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 16 }}>• Harga</p>
+            <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-0.02em', marginBottom: 60 }}>
+              Transparan. Terjangkau. Tanpa Kejutan.
+            </h2>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <div style={{
+              background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
+              borderRadius: 24, padding: '52px 48px', position: 'relative', overflow: 'hidden',
+            }}>
+              <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: '50%', height: 1, background: 'linear-gradient(90deg, transparent, rgba(212,162,78,0.6), transparent)' }} />
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', gap: 4, marginBottom: 8 }}>
+                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 22, fontWeight: 700, color: '#d4a24e', paddingTop: 20 }}>SAR</span>
+                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(5rem, 16vw, 9rem)', fontWeight: 800, color: '#fff', lineHeight: 0.9, letterSpacing: '-0.04em' }}>10</span>
+              </div>
+              <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 15, color: 'rgba(255,255,255,0.4)', marginBottom: 40 }}>per jamaah · per keberangkatan</p>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 36 }}>
+                {['Tidak ada biaya setup', 'Tidak ada biaya bulanan', 'Bayar hanya jamaah aktif', 'Semua 12 fitur sudah termasuk'].map((t) => (
+                  <div key={t} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', background: 'rgba(255,255,255,0.03)', borderRadius: 10, border: '1px solid rgba(255,255,255,0.06)' }}>
+                    <span style={{ color: '#d4a24e', fontSize: 14 }}>✓</span>
+                    <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 13, color: 'rgba(255,255,255,0.7)' }}>{t}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ padding: '20px 24px', background: 'rgba(212,162,78,0.08)', border: '1px solid rgba(212,162,78,0.2)', borderRadius: 14, marginBottom: 36 }}>
+                <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 14, color: 'rgba(255,255,255,0.6)', marginBottom: 4 }}>Contoh estimasi biaya:</p>
+                <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 16, fontWeight: 700, color: '#d4a24e' }}>40 jamaah = 400 SAR sekali bayar</p>
+              </div>
+
+              <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ fontSize: 16, padding: '16px 40px' }}>
+                Mulai Sekarang <span className="arrow">↗</span>
               </a>
             </div>
           </Reveal>
         </div>
       </section>
 
-      {/* ── Footer ── */}
-      <footer style={{ background: '#080f1c', borderTop: '1px solid rgba(212,162,78,0.08)', padding: '40px 32px' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 24 }}>
-          <div>
-            <p style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, color: '#d4a24e', marginBottom: 4 }}>Umrahme</p>
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>Pendamping umrah digital untuk travel modern</p>
-          </div>
-          <div style={{ display: 'flex', gap: 28 }}>
-            {[{ l: 'Tentang', h: '#' }, { l: 'Kontak', h: '#' }, { l: 'WhatsApp', h: WA_LINK }].map((link) => (
-              <a key={link.l} href={link.h} target={link.h.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer"
-                style={{ fontFamily: 'Inter, sans-serif', fontSize: 13, color: 'rgba(255,255,255,0.35)', textDecoration: 'none', transition: 'color 0.2s' }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = '#d4a24e')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.35)')}
-              >{link.l}</a>
+      {/* ══ TESTIMONIALS ══ */}
+      <section style={{ padding: '100px 32px', background: '#0d1525' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+          <Reveal>
+            <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 11, fontWeight: 700, color: '#d4a24e', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 16 }}>• Testimoni</p>
+            <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-0.02em', marginBottom: 60, maxWidth: 440 }}>
+              Kata Mereka yang Sudah Pakai
+            </h2>
+          </Reveal>
+          <div className="testimonials-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
+            {testimonials.map((t, i) => (
+              <Reveal key={i} delay={i * 0.08}>
+                <div style={{
+                  background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)',
+                  borderRadius: 20, padding: '32px', height: '100%',
+                }}>
+                  <div style={{ display: 'flex', gap: 4, marginBottom: 20 }}>
+                    {Array(5).fill(0).map((_, j) => <span key={j} style={{ color: '#d4a24e', fontSize: 14 }}>★</span>)}
+                  </div>
+                  <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 15, color: 'rgba(255,255,255,0.75)', lineHeight: 1.75, marginBottom: 24, fontStyle: 'italic' }}>"{t.text}"</p>
+                  <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 20 }}>
+                    <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 2 }}>{t.name}</p>
+                    <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 12, color: '#d4a24e' }}>{t.travel}</p>
+                  </div>
+                </div>
+              </Reveal>
             ))}
           </div>
-          <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>© {new Date().getFullYear()} Umrahme</p>
+        </div>
+      </section>
+
+      {/* ══ FAQ ══ */}
+      <section style={{ padding: '100px 32px', background: '#080f1c' }}>
+        <div style={{ maxWidth: 720, margin: '0 auto' }}>
+          <Reveal>
+            <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 11, fontWeight: 700, color: '#d4a24e', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 16 }}>• FAQ</p>
+            <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(1.8rem, 3.5vw, 2.4rem)', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-0.02em', marginBottom: 52 }}>
+              Pertanyaan yang Sering Ditanyakan
+            </h2>
+          </Reveal>
+          <Reveal delay={0.1}>
+            {faqs.map((f, i) => <FAQItem key={i} q={f.q} a={f.a} />)}
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ══ CTA PENUTUP ══ */}
+      <section id="kontak" style={{
+        padding: '120px 32px',
+        background: 'linear-gradient(135deg, #0d1a35 0%, #111e40 100%)',
+        position: 'relative', overflow: 'hidden', textAlign: 'center',
+      }}>
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 600, height: 600, borderRadius: '50%', background: 'rgba(212,162,78,0.05)', filter: 'blur(80px)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: '40%', height: 1, background: 'linear-gradient(90deg, transparent, rgba(212,162,78,0.5), transparent)' }} />
+        <div style={{ maxWidth: 640, margin: '0 auto', position: 'relative' }}>
+          <Reveal>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 16px', borderRadius: 99, background: 'rgba(212,162,78,0.1)', border: '1px solid rgba(212,162,78,0.25)', marginBottom: 28 }}>
+              <span style={{ fontFamily: "'Amiri', serif", fontSize: 16, color: '#d4a24e' }}>بَارَكَ اللَّهُ فِيكُم</span>
+            </div>
+            <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-0.02em', marginBottom: 20 }}>
+              Siap Upgrade Layanan Travel Anda?
+            </h2>
+            <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 17, color: 'rgba(255,255,255,0.55)', lineHeight: 1.75, marginBottom: 44, maxWidth: 480, margin: '0 auto 44px' }}>
+              Bergabung sekarang dan berikan pengalaman umrah terbaik untuk jamaah Anda. Demo gratis, tidak ada komitmen.
+            </p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, justifyContent: 'center' }}>
+              <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ fontSize: 16, padding: '16px 32px' }}>
+                Hubungi Kami via WhatsApp <span className="arrow">↗</span>
+              </a>
+              <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="btn-ghost" style={{ fontSize: 15, padding: '15px 28px' }}>
+                Minta Demo Gratis
+              </a>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ══ FOOTER ══ */}
+      <footer style={{ background: '#040a14', borderTop: '1px solid rgba(255,255,255,0.05)', padding: '48px 32px' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 32, marginBottom: 40 }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                <div style={{ width: 28, height: 28, borderRadius: 8, background: 'linear-gradient(135deg, #d4a24e, #b8860b)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <span style={{ fontSize: 13 }}>🕌</span>
+                </div>
+                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 18, fontWeight: 800, color: '#fff' }}>Umrahme</span>
+              </div>
+              <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 13, color: 'rgba(255,255,255,0.35)' }}>Pendamping umrah digital untuk travel modern</p>
+            </div>
+            <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap' }}>
+              {[['#fitur', 'Fitur'], ['#harga', 'Harga'], ['#cara-kerja', 'Cara Kerja'], ['#kontak', 'Kontak'], [WA_LINK, 'WhatsApp']].map(([h, l]) => (
+                <a key={h} href={h} target={h.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer"
+                  style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none', transition: 'color 0.2s' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = '#d4a24e')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.4)')}
+                >{l}</a>
+              ))}
+            </div>
+          </div>
+          <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: 28, display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+            <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>© {new Date().getFullYear()} Umrahme. All rights reserved.</p>
+            <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>Dibuat untuk travel umrah Indonesia 🇮🇩</p>
+          </div>
         </div>
       </footer>
     </div>
