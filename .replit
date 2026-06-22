@@ -63,4 +63,3 @@ channel = "stable-25_05"
 
 [userenv.shared]
 SUPABASE_URL = "https://aaaxsumtjonvzxoeurqu.supabase.co"
-SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFhYXhzdW10am9udnp4b2V1cnF1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5ODY2MDEsImV4cCI6MjA5NzU2MjYwMX0.0OLbmWuM6bVDOs_fT1p4aJbrzgbeCMv0J0l8YOSvBMY"
