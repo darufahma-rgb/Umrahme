@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import heroBg from '@assets/image_1782030121542.png';
 import GlobalSearch from '../components/GlobalSearch';
-import { TripIdentityCard, PinnedAnnouncementCard, EmergencyGuideCard } from '../components/dashboard/TravelCompanionFlow';
+import { TravelCompanionFlow } from '../components/dashboard/TravelCompanionFlow';
+import { checklistItems } from '../data/checklist';
 import { supabase, type AgendaItemRow } from '../lib/supabase';
 import type { Fase } from '../types';
 import {
@@ -23,6 +24,14 @@ function IconJurnal({ className = '' }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}>
       <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" /><path d="M8 7 h8 M8 11 h6" />
+    </svg>
+  );
+}
+
+function IconNavigator({ className = '' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <circle cx="12" cy="12" r="9" /><path d="M16.24 7.76 L14.12 14.12 L7.76 16.24 L9.88 9.88 Z" />
     </svg>
   );
 }
@@ -49,237 +58,6 @@ function hitungHariMenuju(tanggalISO: string): number {
   sekarang.setHours(0, 0, 0, 0);
   return Math.ceil((target.getTime() - sekarang.getTime()) / (1000 * 60 * 60 * 24));
 }
-
-function formatTanggalHari(iso: string) {
-  return new Date(iso + 'T00:00:00').toLocaleDateString('id-ID', {
-    weekday: 'long', day: 'numeric', month: 'long',
-  });
-}
-
-// ── Live Itinerary Card ──────────────────────────────────────────
-
-type ItineraryState = 'menunggu' | 'live' | 'kosong' | 'selesai';
-
-function KartuLiveItinerary({
-  fase,
-  hariMenuju,
-  namaTravel,
-  agendaHariIni,
-  tanggalKeberangkatan,
-}: {
-  fase: Fase;
-  hariMenuju: number | null;
-  namaTravel: string;
-  agendaHariIni: AgendaItemRow[];
-  tanggalKeberangkatan: string | null;
-}) {
-  // Tentukan state
-  let state: ItineraryState;
-  if (fase === 'selesai') {
-    state = 'selesai';
-  } else if (fase === 'tanah-suci' || (hariMenuju !== null && hariMenuju <= 0)) {
-    state = agendaHariIni.length > 0 ? 'live' : 'kosong';
-  } else {
-    state = 'menunggu';
-  }
-
-  const hariIniLabel = new Date().toLocaleDateString('id-ID', {
-    weekday: 'long', day: 'numeric', month: 'long',
-  });
-
-  // ── State: Menunggu keberangkatan ────────────────────────────
-  if (state === 'menunggu') {
-    return (
-      <div className="relative overflow-hidden rounded-2xl"
-        style={{ background: 'linear-gradient(135deg, #0c2340 0%, #0a3d62 60%, #0ea5e9 100%)' }}>
-        <div className="pointer-events-none absolute -right-6 -top-6 h-32 w-32 rounded-full bg-white/[0.05]" />
-        <div className="pointer-events-none absolute -bottom-8 -right-8 h-40 w-40 rounded-full bg-sky-300/[0.04]" />
-        <div className="relative px-5 pt-5 pb-4">
-          <p className="font-mono text-[8px] uppercase tracking-[0.28em] text-white/40 mb-1">Keberangkatan</p>
-          {hariMenuju !== null && hariMenuju >= 1 ? (
-            <div className="flex items-end gap-3 mb-4">
-              <p className="font-display font-bold text-white" style={{ fontSize: '60px', letterSpacing: '-3px', lineHeight: 1 }}>
-                H<span className="text-white/30">-</span>{hariMenuju}
-              </p>
-              <div className="pb-2">
-                <p className="text-[13px] font-semibold text-white/80 leading-snug">
-                  Menuju keberangkatan<br />bersama {namaTravel}
-                </p>
-                {tanggalKeberangkatan && (
-                  <p className="mt-1 font-mono text-[10px] text-white/35 tracking-wider">
-                    {formatTanggalHari(tanggalKeberangkatan)}
-                  </p>
-                )}
-              </div>
-            </div>
-          ) : (
-            <p className="text-[18px] font-bold text-white mb-4 leading-snug">
-              Perjalanan bersama {namaTravel} dimulai!
-            </p>
-          )}
-
-          <div style={{ height: '1px', background: 'rgba(255,255,255,0.10)' }} className="mb-4" />
-
-          <p className="text-[11px] text-white/50 mb-3">Sambil menunggu, persiapkan perjalananmu:</p>
-          <div className="flex flex-wrap gap-2">
-            <Link to="/profil/persiapan"
-              className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-[11.5px] font-semibold text-white active:scale-[0.97] transition-all"
-              style={{ background: 'rgba(255,255,255,0.16)', border: '1px solid rgba(255,255,255,0.22)' }}>
-              <IconCheck className="h-3 w-3" /> Cek Persiapan
-            </Link>
-            <Link to="/panduan/tata-cara"
-              className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-[11.5px] font-semibold text-white active:scale-[0.97] transition-all"
-              style={{ background: 'rgba(255,255,255,0.10)', border: '1px solid rgba(255,255,255,0.14)' }}>
-              <IconPanduan className="h-3 w-3" /> Pelajari Tata Cara
-            </Link>
-            <Link to="/doa"
-              className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-[11.5px] font-semibold text-white active:scale-[0.97] transition-all"
-              style={{ background: 'rgba(255,255,255,0.10)', border: '1px solid rgba(255,255,255,0.14)' }}>
-              <IconDoa className="h-3 w-3" /> Kumpulan Doa
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // ── State: Selesai ───────────────────────────────────────────
-  if (state === 'selesai') {
-    return (
-      <div className="overflow-hidden rounded-2xl bg-white" style={{ border: '1px solid rgba(0,0,0,0.07)', boxShadow: '0 2px 10px rgba(0,0,0,0.05)' }}>
-        <div className="px-5 py-5 text-center">
-          <p className="text-2xl mb-2">✨</p>
-          <p className="font-mono text-[8px] uppercase tracking-[0.28em] text-mute mb-1">Perjalanan Selesai</p>
-          <p className="text-[15px] font-bold text-ink leading-snug mb-1">Semoga ibadahmu diterima Allah SWT</p>
-          <p className="text-[12px] text-charcoal mb-4">Jazakumullahu khairan atas kepercayaan kepada {namaTravel}.</p>
-          <div className="flex justify-center gap-2">
-            <Link to="/profil/jurnal"
-              className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[12px] font-semibold text-white"
-              style={{ background: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)' }}>
-              <IconJurnal className="h-3.5 w-3.5" /> Jurnal Perjalanan
-            </Link>
-            <Link to="/profil/sertifikat"
-              className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[12px] font-semibold"
-              style={{ background: 'rgba(0,0,0,0.05)', color: '#374151', border: '1px solid rgba(0,0,0,0.07)' }}>
-              <IconSertifikat className="h-3.5 w-3.5" /> Sertifikat
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // ── State: Tidak ada agenda hari ini ─────────────────────────
-  if (state === 'kosong') {
-    return (
-      <div className="overflow-hidden rounded-2xl bg-white" style={{ border: '1px solid rgba(0,0,0,0.07)', boxShadow: '0 2px 10px rgba(0,0,0,0.05)' }}>
-        <div className="flex items-center justify-between px-4 py-3 border-b border-hairline">
-          <div>
-            <div className="flex items-center gap-1.5 mb-0.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-              <p className="font-mono text-[8px] uppercase tracking-[0.22em] text-mute">Agenda Hari Ini</p>
-            </div>
-            <p className="text-[13px] font-bold text-ink">{hariIniLabel}</p>
-          </div>
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl" style={{ background: 'rgba(16,185,129,0.08)' }}>
-            <IconKalender className="h-3.5 w-3.5 text-emerald-500" />
-          </div>
-        </div>
-        <div className="px-4 py-5 text-center">
-          <p className="text-[13px] font-semibold text-ink mb-1">Tidak ada kegiatan terjadwal hari ini</p>
-          <p className="text-[12px] text-charcoal mb-3">Manfaatkan waktu untuk istirahat dan ibadah mandiri.</p>
-          <Link to="/profil/agenda"
-            className="inline-flex items-center gap-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-primary">
-            Lihat Agenda Lengkap <IconChevron className="h-3 w-3" />
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  // ── State: Live — ada agenda hari ini ────────────────────────
-  const tampil = agendaHariIni.slice(0, 5);
-  const lebih  = agendaHariIni.length - tampil.length;
-
-  return (
-    <div className="overflow-hidden rounded-2xl bg-white" style={{ border: '1px solid rgba(0,0,0,0.07)', boxShadow: '0 2px 10px rgba(0,0,0,0.05)' }}>
-      {/* Header live */}
-      <div className="flex items-center justify-between px-4 py-3" style={{ background: 'rgba(14,165,233,0.04)', borderBottom: '1px solid rgba(14,165,233,0.10)' }}>
-        <div>
-          <div className="flex items-center gap-1.5 mb-0.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
-            <p className="font-mono text-[8px] uppercase tracking-[0.22em] text-primary">Live · Agenda Hari Ini</p>
-          </div>
-          <p className="text-[13px] font-bold text-ink">{hariIniLabel}</p>
-        </div>
-        <div className="flex h-8 w-8 items-center justify-center rounded-xl" style={{ background: 'rgba(14,165,233,0.10)' }}>
-          <IconKalender className="h-3.5 w-3.5 text-primary" />
-        </div>
-      </div>
-
-      {/* Daftar agenda */}
-      <div className="divide-y divide-hairline">
-        {tampil.map((item) => {
-          // Tandai kegiatan yang sedang berlangsung / sudah lewat
-          const jamNow = new Date().getHours() * 60 + new Date().getMinutes();
-          const [h, m] = (item.jam_mulai ?? '').split(':').map(Number);
-          const jamItem = !isNaN(h) ? h * 60 + (m ?? 0) : null;
-          const sudahLewat = jamItem !== null && jamItem < jamNow;
-          const sedangBerjalan = jamItem !== null && jamItem <= jamNow && jamItem + 90 >= jamNow;
-
-          return (
-            <div key={item.id} className="flex items-start gap-3 px-4 py-3.5"
-              style={{ opacity: sudahLewat && !sedangBerjalan ? 0.45 : 1 }}>
-              {/* Jam */}
-              <div className="flex-none w-10 pt-0.5">
-                <p className="font-mono text-[11px] font-bold" style={{ color: sedangBerjalan ? 'var(--color-primary)' : '#374151' }}>
-                  {item.jam_mulai ? item.jam_mulai.slice(0, 5) : '—:—'}
-                </p>
-              </div>
-              {/* Garis waktu */}
-              <div className="flex-none flex flex-col items-center mt-1.5">
-                <div className="h-2 w-2 rounded-full border-2 flex-none"
-                  style={{
-                    borderColor: sedangBerjalan ? 'var(--color-primary)' : sudahLewat ? '#d1d5db' : '#9ca3af',
-                    background:  sedangBerjalan ? 'var(--color-primary)' : 'transparent',
-                  }} />
-              </div>
-              {/* Konten */}
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-1.5">
-                  <p className="text-[13px] font-semibold text-ink leading-tight">{item.judul}</p>
-                  {sedangBerjalan && (
-                    <span className="rounded-full px-1.5 py-0.5 font-mono text-[7px] font-bold uppercase tracking-wider text-white"
-                      style={{ background: 'var(--color-primary)' }}>
-                      Sekarang
-                    </span>
-                  )}
-                </div>
-                {item.lokasi && (
-                  <p className="mt-0.5 text-[11px] text-charcoal">{item.lokasi}</p>
-                )}
-                {item.deskripsi && (
-                  <p className="mt-0.5 text-[11px] text-ash leading-relaxed">{item.deskripsi}</p>
-                )}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Footer */}
-      <div className="flex items-center justify-between border-t border-hairline px-4 py-2.5" style={{ background: 'rgba(0,0,0,0.015)' }}>
-        {lebih > 0 && <p className="text-[11px] text-charcoal">+{lebih} agenda lainnya</p>}
-        <Link to="/profil/agenda"
-          className="ml-auto inline-flex items-center gap-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-primary">
-          Lihat Semua <IconChevron className="h-3 w-3" />
-        </Link>
-      </div>
-    </div>
-  );
-}
-
-// ── Quick Actions ─────────────────────────────────────────────
 
 function QuickAction({ to, label, icon, accent = false }: {
   to: string; label: string; icon: ReactNode; accent?: boolean;
@@ -310,10 +88,10 @@ function getPhaseActions(fase: Fase): QA[] {
     { to: '/ibadah/sai',           label: "Counter Sa'i",   icon: <IconSai        className="h-5 w-5" /> },
     { to: '/doa',                  label: 'Doa Tawaf',      icon: <IconDoa        className="h-5 w-5" /> },
     { to: '/panduan/tata-cara',    label: 'Panduan',        icon: <IconPanduan    className="h-5 w-5" /> },
+    { to: '/ibadah/navigator',     label: 'Navigator',      icon: <IconNavigator  className="h-5 w-5" /> },
     { to: '/ibadah/jadwal-sholat', label: 'Sholat',         icon: <IconMoon       className="h-5 w-5" /> },
-    { to: '/profil/agenda',        label: 'Agenda',         icon: <IconKalender   className="h-5 w-5" /> },
     { to: '/peta',                 label: 'Peta',           icon: <IconPeta       className="h-5 w-5" /> },
-    { to: '/panduan/manasik-interaktif', label: 'Manasik', icon: <IconIbadah className="h-5 w-5" /> },
+    { to: '/profil/agenda',        label: 'Agenda',         icon: <IconKalender   className="h-5 w-5" /> },
   ];
   if (fase === 'selesai') return [
     { to: '/profil/jurnal',     label: 'Jurnal',      icon: <IconJurnal     className="h-5 w-5" />, accent: true },
@@ -337,32 +115,104 @@ function getPhaseActions(fase: Fase): QA[] {
   ];
 }
 
+function KartuHitung({ n, namaTravel }: { n: number; namaTravel: string }) {
+  return (
+    <div className="relative overflow-hidden rounded-2xl px-5 py-4"
+      style={{ background: 'linear-gradient(135deg, #0c2340 0%, #0a3d62 60%, #0ea5e9 100%)' }}>
+      <div className="pointer-events-none absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/[0.06]" />
+      <div className="pointer-events-none absolute -bottom-6 -right-6 h-32 w-32 rounded-full bg-sky-300/[0.05]" />
+      <div className="relative flex items-center gap-5">
+        <div className="flex-none">
+          <p className="font-mono text-[8.5px] uppercase tracking-[0.22em] text-white/45 mb-0.5">Keberangkatan</p>
+          <p className="font-display font-bold text-white" style={{ fontSize: '52px', letterSpacing: '-2px', lineHeight: 1 }}>
+            H<span className="text-white/35">-</span>{n}
+          </p>
+        </div>
+        <div className="flex-1">
+          <p className="text-[13px] font-semibold text-white/85 leading-snug">Menuju keberangkatan bersama {namaTravel}</p>
+          <Link to="/profil/persiapan"
+            className="mt-2.5 inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[11.5px] font-semibold text-white"
+            style={{ background: 'rgba(255,255,255,0.16)', border: '1px solid rgba(255,255,255,0.20)' }}>
+            Cek Persiapan <IconChevron className="h-3 w-3" />
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function KartuAgendaHariIni({ items, total }: { items: AgendaItemRow[]; total: number }) {
+  const hariIni = new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' });
+  const lebih = total - items.length;
+  return (
+    <div className="overflow-hidden rounded-2xl bg-white" style={{ border: '1px solid rgba(0,0,0,0.08)', boxShadow: '0 2px 10px rgba(0,0,0,0.05)' }}>
+      <div className="flex items-center justify-between px-4 py-3 border-b border-hairline">
+        <div>
+          <p className="font-mono text-[8px] uppercase tracking-[0.22em] text-mute">Agenda Hari Ini</p>
+          <p className="text-[13px] font-bold text-ink mt-0.5">{hariIni}</p>
+        </div>
+        <div className="flex h-8 w-8 items-center justify-center rounded-xl" style={{ background: 'rgba(14,165,233,0.08)' }}>
+          <IconKalender className="h-3.5 w-3.5 text-primary" />
+        </div>
+      </div>
+      <div className="divide-y divide-hairline">
+        {items.map((item) => (
+          <div key={item.id} className="flex items-start gap-3 px-4 py-3">
+            <span className="flex-none pt-0.5 font-mono text-[11px] font-bold text-primary" style={{ minWidth: '36px' }}>
+              {item.jam_mulai ? item.jam_mulai.slice(0, 5) : '—:—'}
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="text-[13px] font-semibold text-ink">{item.judul}</p>
+              {item.lokasi && <p className="mt-0.5 text-[11px] text-charcoal">{item.lokasi}</p>}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="flex items-center justify-between border-t border-hairline px-4 py-2.5 bg-surface-bone/60">
+        {lebih > 0 && <p className="text-[11px] text-charcoal">+{lebih} agenda lainnya</p>}
+        <Link to="/profil/agenda" className="ml-auto inline-flex items-center gap-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-primary">
+          Lihat Semua <IconChevron className="h-3 w-3" />
+        </Link>
+      </div>
+    </div>
+  );
+}
+
 const moreFeatures = [
   { to: '/panduan/manasik-interaktif', label: 'Manasik Interaktif',  icon: <IconIbadah   className="h-4 w-4" /> },
   { to: '/profil/jurnal',              label: 'Jurnal Perjalanan',   icon: <IconJurnal   className="h-4 w-4" /> },
-  { to: '/profil/agenda',              label: 'Agenda Perjalanan',   icon: <IconKalender className="h-4 w-4" /> },
+  { to: '/profil/agenda',              label: 'Agenda',              icon: <IconKalender className="h-4 w-4" /> },
   { to: '/profil/sertifikat',          label: 'Sertifikat Digital',  icon: <IconSertifikat className="h-4 w-4" /> },
 ];
 
 const faseBadge: Record<string, string> = {
   persiapan:    'Fase Persiapan',
+  perjalanan:   'Dalam Perjalanan',
   'tanah-suci': '🕌 Di Tanah Suci',
+  kepulangan:   'Dalam Kepulangan',
   selesai:      '✨ Ibadah Selesai',
 };
-
-// ── Beranda ───────────────────────────────────────────────────
 
 export default function Beranda() {
   const { jamaah, tenant } = useAuth();
 
-  const [agendaHariIni, setAgendaHariIni] = useState<AgendaItemRow[]>([]);
+  const totalPersiapan = checklistItems.length;
+  const [persiapanDone] = useState<number>(() => {
+    try {
+      const raw = localStorage.getItem('umrahme.persiapan');
+      return raw ? (JSON.parse(raw) as string[]).length : 0;
+    } catch { return 0; }
+  });
+  const persiapanPersen = totalPersiapan > 0 ? Math.round((persiapanDone / totalPersiapan) * 100) : 0;
+
+  const [todayAgenda, setTodayAgenda] = useState<AgendaItemRow[]>([]);
   useEffect(() => {
     if (!tenant?.id) return;
     const today = new Date().toISOString().split('T')[0];
     supabase
       .from('agenda_items').select('*').eq('tenant_id', tenant.id).eq('tanggal', today)
       .order('jam_mulai', { ascending: true })
-      .then(({ data }) => { setAgendaHariIni((data as AgendaItemRow[]) ?? []); });
+      .then(({ data }) => { setTodayAgenda((data as AgendaItemRow[]) ?? []); });
   }, [tenant?.id]);
 
   if (!jamaah) return null;
@@ -370,6 +220,7 @@ export default function Beranda() {
   const firstName   = jamaah.nama.split(' ')[0];
   const namaTravel  = tenant?.nama_travel ?? jamaah.travel;
   const hariMenuju  = tenant?.tanggal_keberangkatan ? hitungHariMenuju(tenant.tanggal_keberangkatan) : null;
+  const showHitung  = hariMenuju !== null && hariMenuju >= 1 && hariMenuju <= 30;
   const phaseActions = getPhaseActions(jamaah.fase);
 
   return (
@@ -378,7 +229,7 @@ export default function Beranda() {
       <div className="lg:hidden min-h-screen bg-canvas overflow-x-hidden">
 
         {/* ── HERO HEADER ─────────────────────────────── */}
-        <div className="relative overflow-hidden" style={{ height: 'clamp(220px, 52vw, 300px)' }}>
+        <div className="relative overflow-hidden" style={{ height: 'clamp(240px, 58vw, 340px)' }}>
           <img src={heroBg} alt="" aria-hidden
             className="absolute inset-0 h-full w-full object-cover animate-ken-burns"
             style={{ objectPosition: 'center 38%' }} />
@@ -396,11 +247,11 @@ export default function Beranda() {
           </div>
 
           {/* Greeting */}
-          <div className="absolute inset-x-0 bottom-0 px-5 pb-12">
+          <div className="absolute inset-x-0 bottom-0 px-5 pb-14">
             <p className="font-mono text-[9.5px] uppercase tracking-[0.30em] text-white/40 mb-0.5">
               Assalamu'alaikum
             </p>
-            <h1 className="font-display font-bold text-white" style={{ fontSize: 'clamp(26px,8vw,38px)', letterSpacing: '-1px', lineHeight: 1.05 }}>
+            <h1 className="font-display font-bold text-white" style={{ fontSize: 'clamp(28px,8vw,40px)', letterSpacing: '-1px', lineHeight: 1.05 }}>
               {firstName}
             </h1>
             <div className="mt-2 flex items-center gap-2">
@@ -417,22 +268,21 @@ export default function Beranda() {
         </div>
 
         {/* ── CONTENT SHEET ───────────────────────────── */}
-        <div className="relative z-10 -mt-6 rounded-t-[28px] bg-canvas px-4 pt-4 pb-32 space-y-4">
+        <div className="relative z-10 -mt-8 rounded-t-[28px] bg-canvas px-4 pt-5 pb-32 space-y-4">
 
           {/* Search */}
           <GlobalSearch />
 
-          {/* ★ LIVE ITINERARY — hero card ★ */}
-          <KartuLiveItinerary
-            fase={jamaah.fase}
-            hariMenuju={hariMenuju}
-            namaTravel={namaTravel}
-            agendaHariIni={agendaHariIni}
-            tanggalKeberangkatan={tenant?.tanggal_keberangkatan ?? null}
-          />
+          {/* Countdown */}
+          {showHitung && <KartuHitung n={hariMenuju!} namaTravel={namaTravel} />}
 
-          {/* Pengumuman dari travel */}
-          <PinnedAnnouncementCard />
+          {/* Agenda hari ini */}
+          {todayAgenda.length > 0 && (
+            <KartuAgendaHariIni items={todayAgenda.slice(0, 3)} total={todayAgenda.length} />
+          )}
+
+          {/* Travel companion cards */}
+          <TravelCompanionFlow />
 
           {/* Pemisah */}
           <div className="flex items-center gap-3">
@@ -448,11 +298,33 @@ export default function Beranda() {
             ))}
           </div>
 
-          {/* Kartu identitas jamaah */}
-          <TripIdentityCard />
-
-          {/* Kontak darurat */}
-          <EmergencyGuideCard />
+          {/* Checklist */}
+          {jamaah.fase === 'persiapan' && (
+            <Link to="/profil/persiapan" className="block active:scale-[0.99] transition-transform">
+              <div className="rounded-2xl bg-white p-4" style={{ border: '1px solid rgba(0,0,0,0.07)', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+                <div className="flex items-center justify-between gap-3 mb-3">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-9 w-9 flex-none items-center justify-center rounded-xl"
+                      style={{ background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)', border: '1px solid rgba(16,185,129,0.16)' }}>
+                      <IconCheck className="h-4 w-4 text-emerald-500" />
+                    </div>
+                    <div>
+                      <p className="font-mono text-[8.5px] uppercase tracking-[0.18em] text-mute">Checklist Persiapan</p>
+                      <p className="mt-0.5 text-[13px] font-semibold text-ink">{persiapanDone} dari {totalPersiapan} selesai</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <p className="font-display text-[22px] font-bold text-ink">{persiapanPersen}%</p>
+                    <IconChevron className="h-3.5 w-3.5 text-ash" />
+                  </div>
+                </div>
+                <div className="h-1.5 overflow-hidden rounded-full bg-surface-bone">
+                  <div className="h-full rounded-full transition-all duration-700"
+                    style={{ width: `${persiapanPersen}%`, background: 'linear-gradient(90deg, #10b981 0%, #34d399 100%)' }} />
+                </div>
+              </div>
+            </Link>
+          )}
 
           {/* Fitur lainnya */}
           <div>
@@ -492,16 +364,10 @@ export default function Beranda() {
 
           <GlobalSearch />
 
-          {/* Live Itinerary desktop */}
-          <KartuLiveItinerary
-            fase={jamaah.fase}
-            hariMenuju={hariMenuju}
-            namaTravel={namaTravel}
-            agendaHariIni={agendaHariIni}
-            tanggalKeberangkatan={tenant?.tanggal_keberangkatan ?? null}
-          />
+          {showHitung && <KartuHitung n={hariMenuju!} namaTravel={namaTravel} />}
+          {todayAgenda.length > 0 && <KartuAgendaHariIni items={todayAgenda.slice(0, 3)} total={todayAgenda.length} />}
 
-          <PinnedAnnouncementCard />
+          <TravelCompanionFlow desktop />
 
           <div>
             <div className="flex items-center gap-3 mb-4">
@@ -516,8 +382,22 @@ export default function Beranda() {
             </div>
           </div>
 
-          <TripIdentityCard />
-          <EmergencyGuideCard />
+          {jamaah.fase === 'persiapan' && (
+            <Link to="/profil/persiapan" className="block active:scale-[0.99] transition-transform">
+              <div className="rounded-2xl bg-white p-4" style={{ border: '1px solid rgba(0,0,0,0.07)', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+                <div className="flex items-center justify-between gap-3 mb-3">
+                  <div>
+                    <p className="font-mono text-[8.5px] uppercase tracking-[0.18em] text-mute">Checklist Persiapan</p>
+                    <p className="mt-0.5 text-[14px] font-semibold text-ink">{persiapanDone} dari {totalPersiapan} selesai</p>
+                  </div>
+                  <p className="font-display text-[26px] font-bold text-ink">{persiapanPersen}%</p>
+                </div>
+                <div className="h-1.5 overflow-hidden rounded-full bg-surface-bone">
+                  <div className="h-full rounded-full" style={{ width: `${persiapanPersen}%`, background: 'linear-gradient(90deg, #10b981 0%, #34d399 100%)' }} />
+                </div>
+              </div>
+            </Link>
+          )}
         </div>
 
         {/* Kolom kanan */}
