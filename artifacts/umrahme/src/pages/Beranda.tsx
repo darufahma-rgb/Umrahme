@@ -346,14 +346,6 @@ export default function Beranda() {
           <div className="pointer-events-none absolute inset-0"
             style={{ background: 'linear-gradient(to top, rgba(5,10,20,0.92) 0%, rgba(5,10,20,0.40) 40%, transparent 70%)' }} />
 
-          {/* Logo travel */}
-          <div className="absolute right-4 flex items-center" style={{ top: 'max(1rem, env(safe-area-inset-top))' }}>
-            <img src={tenant?.logo_url || undefined} alt={namaTravel}
-              className="h-5 w-auto max-w-[80px] object-contain"
-              style={{ filter: 'brightness(0) invert(1) opacity(0.55)' }}
-              onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
-          </div>
-
           {/* Greeting */}
           <div className="absolute inset-x-0 bottom-0 px-5 pb-14">
             <p className="font-mono text-[9.5px] uppercase tracking-[0.30em] text-white/40 mb-0.5">
