@@ -1,7 +1,7 @@
 import { useState, useEffect, type FormEvent } from 'react';
 import { useTravelAuth } from '../../context/TravelAuthContext';
 import TravelLayout from '../../components/travel/TravelLayout';
-import { supabase, type JamaahAccountRow } from '../../lib/supabase';
+import { fetchJamaah, createJamaah, deleteJamaah, updateJamaah, type JamaahAccountRow } from '../../lib/api';
 
 const FASE_OPTIONS: { value: JamaahAccountRow['fase']; label: string }[] = [
   { value: 'persiapan', label: 'Persiapan' },
@@ -60,20 +60,14 @@ export default function TravelDashboard() {
   const [jmError, setJmError] = useState('');
   const [jmSubmitting, setJmSubmitting] = useState(false);
 
-  async function fetchJamaah() {
+  async function loadJamaah() {
     if (!tenant?.id) return;
     setJamaahLoading(true);
-    const { data } = await supabase
-      .from('jamaah_accounts')
-      .select('*')
-      .eq('tenant_id', tenant.id)
-      .order('nama', { ascending: true });
-    setJamaahList((data as JamaahAccountRow[]) ?? []);
-    setJamaahLoading(false);
+    fetchJamaah(tenant.id).then(setJamaahList).catch(() => {}).finally(() => setJamaahLoading(false));
   }
 
   useEffect(() => {
-    fetchJamaah();
+    loadJamaah();
   }, [tenant?.id]);
 
   async function handleAddJamaah(e: FormEvent) {
@@ -82,39 +76,26 @@ export default function TravelDashboard() {
     setJmError('');
     setJmSubmitting(true);
 
-    const { error } = await supabase.from('jamaah_accounts').insert({
-      tenant_id: tenant.id,
-      nama: jmNama.trim(),
-      nomor_jamaah: jmNomorJamaah.trim(),
-      rombongan: jmRombongan.trim() || null,
-      nomor_bus: jmBus.trim() || null,
-      nomor_kamar: jmKamar.trim() || null,
-      fase: jmFase,
-    });
-
-    if (error) {
-      setJmError(error.message);
-    } else {
-      setJmNama('');
-      setJmNomorJamaah('');
-      setJmRombongan('');
-      setJmBus('');
-      setJmKamar('');
-      setJmFase('persiapan');
-      await fetchJamaah();
+    try {
+      await createJamaah(tenant.id, { nama: jmNama.trim(), nomor_jamaah: jmNomorJamaah.trim(), rombongan: jmRombongan.trim() || null, nomor_bus: jmBus.trim() || null, nomor_kamar: jmKamar.trim() || null, fase: jmFase });
+      setJmNama(''); setJmNomorJamaah(''); setJmRombongan(''); setJmBus(''); setJmKamar(''); setJmFase('persiapan');
+      await loadJamaah();
+    } catch (err: unknown) {
+      setJmError(err instanceof Error ? err.message : 'Gagal menambah jamaah.');
     }
     setJmSubmitting(false);
   }
 
-  async function handleDeleteJamaah(id: string, nama: string) {
-    if (!confirm(`Hapus jamaah "${nama}"? Akses login mereka akan dicabut.`)) return;
-    await supabase.from('jamaah_accounts').delete().eq('id', id);
-    setJamaahList(prev => prev.filter(j => j.id !== id));
+  async function handleDeleteJamaah(jamaahId: string, nama: string) {
+    if (!tenant?.id || !confirm(`Hapus jamaah "${nama}"? Akses login mereka akan dicabut.`)) return;
+    await deleteJamaah(tenant.id, jamaahId);
+    setJamaahList(prev => prev.filter(j => j.id !== jamaahId));
   }
 
-  async function handleUpdateFase(id: string, fase: JamaahAccountRow['fase']) {
-    await supabase.from('jamaah_accounts').update({ fase }).eq('id', id);
-    setJamaahList(prev => prev.map(j => j.id === id ? { ...j, fase } : j));
+  async function handleUpdateFase(jamaahId: string, fase: JamaahAccountRow['fase']) {
+    if (!tenant?.id) return;
+    await updateJamaah(tenant.id, jamaahId, { fase });
+    setJamaahList(prev => prev.map(j => j.id === jamaahId ? { ...j, fase } : j));
   }
 
   if (!tenant) {

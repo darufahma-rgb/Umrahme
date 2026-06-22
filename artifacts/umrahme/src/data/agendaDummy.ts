@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabase';
+import { bulkInsertAgenda } from '../lib/api';
 
 function getRelativeDate(daysFromToday: number): string {
   const d = new Date();
@@ -116,7 +116,10 @@ export async function insertAgendaDummy(tenantId: string): Promise<{ inserted: n
     }));
   });
 
-  const { error } = await supabase.from('agenda_items').insert(rows);
-  if (error) return { inserted: 0, error: error.message };
-  return { inserted: rows.length };
+  try {
+    const result = await bulkInsertAgenda(tenantId, rows);
+    return { inserted: result.inserted };
+  } catch (err: unknown) {
+    return { inserted: 0, error: err instanceof Error ? err.message : String(err) };
+  }
 }

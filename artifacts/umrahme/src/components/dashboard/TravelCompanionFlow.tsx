@@ -7,7 +7,7 @@ import {
   whatsappLink,
   type TravelAnnouncement,
 } from '../../data/travelCompanion';
-import { supabase, type AgendaItemRow } from '../../lib/supabase';
+import { fetchAgenda, type AgendaItemRow } from '../../lib/api';
 import { SkeletonLine } from '../Skeleton';
 import type { Fase } from '../../types';
 import { IconChevron } from '../icons';
@@ -194,17 +194,10 @@ export function TodayInstructionCard() {
   useEffect(() => {
     if (!tenant?.id) { setLoading(false); return; }
     const today = new Date().toISOString().split('T')[0];
-    supabase
-      .from('agenda_items')
-      .select('*')
-      .eq('tenant_id', tenant.id)
-      .eq('tanggal', today)
-      .order('jam_mulai', { ascending: true })
-      .order('urutan', { ascending: true })
-      .then(({ data }) => {
-        setTodayItems((data as AgendaItemRow[]) ?? []);
-        setLoading(false);
-      });
+    fetchAgenda(tenant.id).then(data => {
+      setTodayItems(data.filter(i => i.tanggal === today));
+      setLoading(false);
+    }).catch(() => setLoading(false));
   }, [tenant?.id]);
 
   if (loading) {

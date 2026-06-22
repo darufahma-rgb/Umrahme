@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import { useAuth } from '../context/AuthContext';
-import { supabase, type AgendaItemRow } from '../lib/supabase';
+import { fetchAgenda, type AgendaItemRow } from '../lib/api';
 import { insertAgendaDummy } from '../data/agendaDummy';
 
 function formatTanggalHeader(iso: string) {
@@ -76,18 +76,9 @@ export default function AgendaLengkap() {
   useEffect(() => {
     if (!tenant?.id) { setLoading(false); return; }
     setLoading(true);
-    supabase
-      .from('agenda_items')
-      .select('*')
-      .eq('tenant_id', tenant.id)
-      .order('tanggal', { ascending: true })
-      .order('jam_mulai', { ascending: true })
-      .order('urutan', { ascending: true })
-      .then(({ data, error: err }) => {
-        if (err) setError('Gagal memuat agenda.');
-        else setItems((data as AgendaItemRow[]) ?? []);
-        setLoading(false);
-      });
+    fetchAgenda(tenant.id)
+      .then(data => { setItems(data); setLoading(false); })
+      .catch(() => { setError('Gagal memuat agenda.'); setLoading(false); });
   }, [tenant?.id, refreshKey]);
 
   useEffect(() => {

@@ -1,7 +1,5 @@
-import { supabase, type TenantRow, type TravelAnnouncementRow } from '../lib/supabase';
+import { fetchAnnouncements, type TenantRow, type TravelAnnouncementRow } from '../lib/api';
 import type { Fase } from '../types';
-
-// ── Tipe ──────────────────────────────────────────────────────
 
 export type TravelAnnouncement = {
   id: string;
@@ -39,49 +37,43 @@ export type DailyInstruction = {
   note: string;
 };
 
-// ── Default / fallback ─────────────────────────────────────────
-
 const DEFAULT_OPERATIONAL_INFO: TravelOperationalInfo = {
-  groupCode:          'Rombongan A',
-  busNumber:          'Bus 3',
-  roomNumber:         '804',
-  hotelMakkah:        'Swissôtel Makkah',
-  hotelMadinah:       'Maden Hotel Madinah',
-  meetingPoint:       'Lobby utama hotel',
-  guideName:          'Ust. Muthowwif',
-  guideRole:          'Muthowwif Rombongan',
-  guideWhatsapp:      '6281234567890',
-  tourLeaderName:     'Bpk. Tour Leader',
-  tourLeaderRole:     'Tour Leader',
+  groupCode: 'Rombongan A',
+  busNumber: 'Bus 3',
+  roomNumber: '804',
+  hotelMakkah: 'Swissôtel Makkah',
+  hotelMadinah: 'Maden Hotel Madinah',
+  meetingPoint: 'Lobby utama hotel',
+  guideName: 'Ust. Muthowwif',
+  guideRole: 'Muthowwif Rombongan',
+  guideWhatsapp: '6281234567890',
+  tourLeaderName: 'Bpk. Tour Leader',
+  tourLeaderRole: 'Tour Leader',
   tourLeaderWhatsapp: '6289876543210',
-  travelWhatsapp:     '6281234567890',
-  emergencyNote:      'Jika tersesat, tetap tenang. Hubungi pembimbing dan tunjukkan Kartu Jamaah Digital kepada petugas terdekat.',
+  travelWhatsapp: '6281234567890',
+  emergencyNote: 'Jika tersesat, tetap tenang. Hubungi pembimbing dan tunjukkan Kartu Jamaah Digital kepada petugas terdekat.',
 };
 
-// ── Fungsi sync ────────────────────────────────────────────────
-
-/** Gabungkan data tenant dari DB dengan fallback DEFAULT per field. */
 export function getOperationalInfo(tenant: TenantRow | null): TravelOperationalInfo {
   if (!tenant) return DEFAULT_OPERATIONAL_INFO;
   return {
-    groupCode:          DEFAULT_OPERATIONAL_INFO.groupCode,
-    busNumber:          DEFAULT_OPERATIONAL_INFO.busNumber,
-    roomNumber:         DEFAULT_OPERATIONAL_INFO.roomNumber,
-    hotelMakkah:        tenant.hotel_makkah        ?? DEFAULT_OPERATIONAL_INFO.hotelMakkah,
-    hotelMadinah:       tenant.hotel_madinah       ?? DEFAULT_OPERATIONAL_INFO.hotelMadinah,
-    meetingPoint:       tenant.meeting_point       ?? DEFAULT_OPERATIONAL_INFO.meetingPoint,
-    guideName:          tenant.guide_name          ?? DEFAULT_OPERATIONAL_INFO.guideName,
-    guideRole:          'Muthowwif Rombongan',
-    guideWhatsapp:      tenant.guide_whatsapp      ?? DEFAULT_OPERATIONAL_INFO.guideWhatsapp,
-    tourLeaderName:     tenant.tour_leader_name    ?? DEFAULT_OPERATIONAL_INFO.tourLeaderName,
-    tourLeaderRole:     'Tour Leader',
+    groupCode: DEFAULT_OPERATIONAL_INFO.groupCode,
+    busNumber: DEFAULT_OPERATIONAL_INFO.busNumber,
+    roomNumber: DEFAULT_OPERATIONAL_INFO.roomNumber,
+    hotelMakkah: tenant.hotel_makkah ?? DEFAULT_OPERATIONAL_INFO.hotelMakkah,
+    hotelMadinah: tenant.hotel_madinah ?? DEFAULT_OPERATIONAL_INFO.hotelMadinah,
+    meetingPoint: tenant.meeting_point ?? DEFAULT_OPERATIONAL_INFO.meetingPoint,
+    guideName: tenant.guide_name ?? DEFAULT_OPERATIONAL_INFO.guideName,
+    guideRole: 'Muthowwif Rombongan',
+    guideWhatsapp: tenant.guide_whatsapp ?? DEFAULT_OPERATIONAL_INFO.guideWhatsapp,
+    tourLeaderName: tenant.tour_leader_name ?? DEFAULT_OPERATIONAL_INFO.tourLeaderName,
+    tourLeaderRole: 'Tour Leader',
     tourLeaderWhatsapp: tenant.tour_leader_whatsapp ?? DEFAULT_OPERATIONAL_INFO.tourLeaderWhatsapp,
-    travelWhatsapp:     tenant.guide_whatsapp      ?? DEFAULT_OPERATIONAL_INFO.travelWhatsapp,
-    emergencyNote:      tenant.emergency_note      ?? DEFAULT_OPERATIONAL_INFO.emergencyNote,
+    travelWhatsapp: tenant.guide_whatsapp ?? DEFAULT_OPERATIONAL_INFO.travelWhatsapp,
+    emergencyNote: tenant.emergency_note ?? DEFAULT_OPERATIONAL_INFO.emergencyNote,
   };
 }
 
-/** @deprecated Digantikan oleh query agenda_items di TodayInstructionCard. */
 export function getTodayInstruction(_tenantId?: string | null): DailyInstruction {
   return {
     id: 'instruction-1',
@@ -94,44 +86,37 @@ export function getTodayInstruction(_tenantId?: string | null): DailyInstruction
   };
 }
 
-// ── Fungsi async (query Supabase) ──────────────────────────────
-
 function rowToAnnouncement(row: TravelAnnouncementRow): TravelAnnouncement {
   return {
-    id:          row.id,
-    label:       row.label,
-    title:       row.title,
-    content:     row.content,
-    important:   row.important,
+    id: row.id,
+    label: row.label,
+    title: row.title,
+    content: row.content,
+    important: row.important,
     publishedAt: row.published_at,
   };
 }
 
 export async function getLatestAnnouncement(tenantId: string | null): Promise<TravelAnnouncement | null> {
   if (!tenantId) return null;
-  const { data, error } = await supabase
-    .from('travel_announcements')
-    .select('*')
-    .eq('tenant_id', tenantId)
-    .order('published_at', { ascending: false })
-    .limit(1)
-    .single();
-  if (error || !data) return null;
-  return rowToAnnouncement(data as TravelAnnouncementRow);
+  try {
+    const rows = await fetchAnnouncements(tenantId);
+    if (!rows.length) return null;
+    return rowToAnnouncement(rows[0]);
+  } catch {
+    return null;
+  }
 }
 
 export async function getAllAnnouncements(tenantId: string | null): Promise<TravelAnnouncement[]> {
   if (!tenantId) return [];
-  const { data, error } = await supabase
-    .from('travel_announcements')
-    .select('*')
-    .eq('tenant_id', tenantId)
-    .order('published_at', { ascending: false });
-  if (error || !data) return [];
-  return (data as TravelAnnouncementRow[]).map(rowToAnnouncement);
+  try {
+    const rows = await fetchAnnouncements(tenantId);
+    return rows.map(rowToAnnouncement);
+  } catch {
+    return [];
+  }
 }
-
-// ── Helper UI ──────────────────────────────────────────────────
 
 export function getFocusByFase(fase: Fase): {
   title: string; description: string; ctaLabel: string; ctaTo: string;

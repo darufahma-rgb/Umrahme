@@ -5,7 +5,7 @@ import heroBg from '@assets/image_1782030121542.png';
 import GlobalSearch from '../components/GlobalSearch';
 import { TravelCompanionFlow } from '../components/dashboard/TravelCompanionFlow';
 import { checklistItems } from '../data/checklist';
-import { supabase, type AgendaItemRow } from '../lib/supabase';
+import { fetchAgenda, type AgendaItemRow } from '../lib/api';
 import type { Fase } from '../types';
 import {
   IconDoa,
@@ -184,16 +184,10 @@ function KartuItinerary({ tenantId }: { tenantId: string }) {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    supabase
-      .from('agenda_items')
-      .select('tanggal, judul, jam_mulai')
-      .eq('tenant_id', tenantId)
-      .order('tanggal', { ascending: true })
-      .order('jam_mulai', { ascending: true })
-      .then(({ data }) => {
-        setAllItems((data as SlimItem[]) ?? []);
-        setReady(true);
-      });
+    fetchAgenda(tenantId).then(data => {
+      setAllItems(data.map(i => ({ tanggal: i.tanggal, judul: i.judul, jam_mulai: i.jam_mulai })));
+      setReady(true);
+    }).catch(() => setReady(true));
   }, [tenantId]);
 
   if (!ready) return null;
@@ -330,10 +324,9 @@ export default function Beranda() {
   useEffect(() => {
     if (!tenant?.id) return;
     const today = new Date().toISOString().split('T')[0];
-    supabase
-      .from('agenda_items').select('*').eq('tenant_id', tenant.id).eq('tanggal', today)
-      .order('jam_mulai', { ascending: true })
-      .then(({ data }) => { setTodayAgenda((data as AgendaItemRow[]) ?? []); });
+    fetchAgenda(tenant.id).then(data => {
+      setTodayAgenda(data.filter(i => i.tanggal === today));
+    }).catch(() => {});
   }, [tenant?.id]);
 
   if (!jamaah) return null;
