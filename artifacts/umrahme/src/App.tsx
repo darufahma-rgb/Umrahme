@@ -37,6 +37,8 @@ import AdminTenantForm from './pages/admin/AdminTenantForm';
 import TravelLogin from './pages/travel/TravelLogin';
 import TravelDashboard from './pages/travel/TravelDashboard';
 
+import LandingPage from './pages/LandingPage';
+
 export default function App() {
   return (
     <Routes>
@@ -107,8 +109,8 @@ export default function App() {
         }
       />
 
-      <Route path="/" element={<Navigate to="/beranda" replace />} />
-      <Route path="*" element={<Navigate to="/beranda" replace />} />
+      <Route path="/" element={<LandingPage />} />
+      <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 }
