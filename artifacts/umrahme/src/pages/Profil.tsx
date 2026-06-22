@@ -25,7 +25,7 @@ const menuItems = (inisial: string, nomorJamaah: string) => [
 ];
 
 export default function Profil() {
-  const { jamaah, logout } = useAuth();
+  const { jamaah, tenant, logout } = useAuth();
   const navigate = useNavigate();
   if (!jamaah) return null;
 
@@ -62,7 +62,7 @@ export default function Profil() {
             </div>
             <div className="mt-4 border-t border-hairline pt-3">
               <p className="font-mono text-[10px] uppercase tracking-widest text-mute">Travel</p>
-              <p className="mt-0.5 text-sm text-body">{jamaah.travel}</p>
+              <p className="mt-0.5 text-sm text-body">{tenant?.nama_travel ?? jamaah.travel}</p>
             </div>
           </div>
         </section>
@@ -126,7 +126,7 @@ export default function Profil() {
             </div>
             <div className="mt-4 border-t border-hairline pt-4">
               <p className="font-mono text-[10px] uppercase tracking-widest text-mute">Travel</p>
-              <p className="mt-0.5 text-sm text-body">{jamaah.travel}</p>
+              <p className="mt-0.5 text-sm text-body">{tenant?.nama_travel ?? jamaah.travel}</p>
             </div>
           </div>
 

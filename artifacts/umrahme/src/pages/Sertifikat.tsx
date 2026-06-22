@@ -18,7 +18,7 @@ const tanggalSekarang = new Date().toLocaleDateString('id-ID', {
 });
 
 export default function Sertifikat() {
-  const { jamaah, setFase } = useAuth();
+  const { jamaah, tenant, setFase } = useAuth();
   const certRef = useRef<HTMLDivElement>(null);
   const [busy, setBusy] = useState(false);
   if (!jamaah) return null;
@@ -150,7 +150,7 @@ export default function Sertifikat() {
             Diselenggarakan oleh
           </p>
           <p className="mt-0.5 font-display text-base font-bold" style={{ color: '#f3e9d5' }}>
-            {jamaah.travel}
+            {tenant?.nama_travel ?? jamaah.travel}
           </p>
         </div>
       </div>
@@ -212,7 +212,7 @@ export default function Sertifikat() {
                   { label: 'No. Jamaah', value: jamaah.nomorJamaah, mono: true },
                   { label: 'No. Sertifikat', value: nomorSertifikat(jamaah.nomorJamaah), mono: true },
                   { label: 'Tanggal', value: tanggalSekarang },
-                  { label: 'Travel', value: jamaah.travel },
+                  { label: 'Travel', value: tenant?.nama_travel ?? jamaah.travel },
                 ].map(({ label, value, mono }) => (
                   <div key={label}>
                     <p className="font-mono text-[11px] uppercase tracking-wider text-mute">{label}</p>

@@ -51,7 +51,7 @@ export default function DesktopSidebar() {
             </div>
           </div>
           <p className="mt-2 text-[11px] text-ash border-t border-hairline pt-2">
-            via <span className="text-charcoal font-medium">{jamaah.travel}</span>
+            via <span className="text-charcoal font-medium">{tenant?.nama_travel ?? jamaah.travel}</span>
           </p>
         </div>
       </div>

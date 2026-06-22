@@ -78,6 +78,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     applyTenantTheme(tenant);
   }, [tenant]);
 
+  useEffect(() => {
+    setJamaah((prev) => {
+      if (!prev) return prev;
+      const namaTravel = tenant?.nama_travel ?? prev.travel;
+      if (prev.travel === namaTravel) return prev;
+      return { ...prev, travel: namaTravel };
+    });
+  }, [tenant]);
+
   const value: AuthValue = {
     jamaah,
     tenant,
