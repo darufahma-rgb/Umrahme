@@ -8,6 +8,8 @@ const supabaseAnonKey = __SUPABASE_ANON_KEY__;
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+export const SUPABASE_FUNCTIONS_URL = `${supabaseUrl}/functions/v1`;
+
 export type TenantRow = {
   id: string;
   activation_code: string;

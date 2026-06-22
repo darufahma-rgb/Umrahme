@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef, useCallback, type FormEvent, type ChangeEvent } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import AdminLayout from '../../components/admin/AdminLayout';
-import { supabase, type TenantRow, type AgendaItemRow, type TravelAnnouncementRow, type JamaahAccountRow } from '../../lib/supabase';
+import { supabase, SUPABASE_FUNCTIONS_URL, type TenantRow, type AgendaItemRow, type TravelAnnouncementRow, type JamaahAccountRow } from '../../lib/supabase';
 import { darkenHex, generateActivationCode } from '../../lib/colorUtils';
+
+type TenantUserRow = { id: string; user_id: string; tenant_id: string; created_at: string };
 
 const MAX_LOGO_SIZE = 1024 * 1024;
 
@@ -128,6 +130,25 @@ export default function AdminTenantForm() {
   const [jmSubmitting, setJmSubmitting] = useState(false);
   const [jmError, setJmError] = useState('');
 
+  // Akun Travel Agency state
+  const [travelAccounts, setTravelAccounts] = useState<TenantUserRow[]>([]);
+  const [travelAccountsLoading, setTravelAccountsLoading] = useState(false);
+  const [taEmail, setTaEmail] = useState('');
+  const [taPassword, setTaPassword] = useState('');
+  const [taSubmitting, setTaSubmitting] = useState(false);
+  const [taError, setTaError] = useState('');
+  const [taSuccess, setTaSuccess] = useState('');
+
+  const loadTravelAccounts = useCallback(async () => {
+    if (!id || isNew) return;
+    setTravelAccountsLoading(true);
+    const { data } = await supabase
+      .from('tenant_users').select('id, user_id, tenant_id, created_at').eq('tenant_id', id)
+      .order('created_at', { ascending: false });
+    setTravelAccounts((data as TenantUserRow[]) ?? []);
+    setTravelAccountsLoading(false);
+  }, [id, isNew]);
+
   const loadAgenda = useCallback(async () => {
     if (!id || isNew) return;
     setAgendaLoading(true);
@@ -185,8 +206,9 @@ export default function AdminTenantForm() {
       loadAgenda();
       loadAnnouncements();
       loadJamaah();
+      loadTravelAccounts();
     }
-  }, [id, isNew, loadAgenda, loadAnnouncements, loadJamaah]);
+  }, [id, isNew, loadAgenda, loadAnnouncements, loadJamaah, loadTravelAccounts]);
 
   function handleNamaChange(val: string) {
     setNamaTravel(val);
@@ -366,6 +388,42 @@ export default function AdminTenantForm() {
   async function handleUpdateJamaahFase(jamaahId: string, fase: JamaahAccountRow['fase']) {
     await supabase.from('jamaah_accounts').update({ fase }).eq('id', jamaahId);
     setJamaahList(prev => prev.map(j => j.id === jamaahId ? { ...j, fase } : j));
+  }
+
+  async function handleCreateTravelAccount(e: FormEvent) {
+    e.preventDefault();
+    setTaError('');
+    setTaSuccess('');
+    if (!taEmail.trim()) { setTaError('Email wajib diisi.'); return; }
+    if (taPassword.length < 8) { setTaError('Password minimal 8 karakter.'); return; }
+    setTaSubmitting(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error('Sesi admin tidak ditemukan. Silakan login ulang.');
+      const response = await fetch(`${SUPABASE_FUNCTIONS_URL}/create-travel-user`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({ email: taEmail.trim(), password: taPassword, tenant_id: id }),
+      });
+      const result = await response.json() as { success?: boolean; error?: string };
+      if (!response.ok || !result.success) throw new Error(result.error ?? 'Gagal membuat akun.');
+      setTaEmail('');
+      setTaPassword('');
+      setTaSuccess(`Akun berhasil dibuat. Travel agency bisa login di /travel/login menggunakan email ${taEmail.trim()}.`);
+      await loadTravelAccounts();
+    } catch (err: unknown) {
+      setTaError(err instanceof Error ? err.message : 'Terjadi kesalahan.');
+    }
+    setTaSubmitting(false);
+  }
+
+  async function handleRevokeTravelAccess(mappingId: string, userId: string) {
+    if (!window.confirm(`Cabut akses akun ini (user: ${userId.slice(0, 8)}...)? Akun Supabase-nya tetap ada, hanya koneksi ke tenant ini yang dihapus.`)) return;
+    await supabase.from('tenant_users').delete().eq('id', mappingId);
+    await loadTravelAccounts();
   }
 
   function formatTanggal(iso: string) {
@@ -776,7 +834,7 @@ export default function AdminTenantForm() {
 
         {/* ── Daftar Jamaah (hanya saat EDIT) ── */}
         {!isNew && (
-          <div className="mt-10 mb-12">
+          <div className="mt-10">
             <div className="flex items-center gap-3 mb-5">
               <h2 className="font-bold" style={{ fontSize: '18px', color: '#111827', letterSpacing: '-0.02em' }}>Daftar Jamaah</h2>
               <span className="font-mono text-[10px] uppercase tracking-widest px-2 py-1 rounded-full" style={{ background: 'rgba(67,56,202,0.07)', color: '#4338ca' }}>{jamaahList.length} jamaah</span>
@@ -885,6 +943,93 @@ export default function AdminTenantForm() {
                     </tbody>
                   </table>
                 </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* ── Akun Travel Agency (hanya saat EDIT) ── */}
+        {!isNew && (
+          <div className="mt-10 mb-12">
+            <div className="flex items-center gap-3 mb-5">
+              <h2 className="font-bold" style={{ fontSize: '18px', color: '#111827', letterSpacing: '-0.02em' }}>Akun Travel Agency</h2>
+              <span className="font-mono text-[10px] uppercase tracking-widest px-2 py-1 rounded-full" style={{ background: 'rgba(67,56,202,0.07)', color: '#4338ca' }}>{travelAccounts.length} akun</span>
+            </div>
+
+            <div className="mb-4 flex items-start gap-2.5 px-4 py-3 rounded-xl text-[12px]" style={{ background: 'rgba(67,56,202,0.05)', border: '1px solid rgba(67,56,202,0.12)', color: '#4338ca' }}>
+              <svg className="flex-none mt-0.5" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+              Buat akun login untuk travel agency ini. Mereka bisa login di <strong>/travel/login</strong> untuk mengelola jamaah secara mandiri.
+            </div>
+
+            {/* Form buat akun baru */}
+            <div className="rounded-2xl px-6 py-6 mb-4" style={{ ...cardStyle, border: '1px solid rgba(67,56,202,0.12)' }}>
+              <p className="font-mono text-[10px] uppercase tracking-[0.14em] mb-4" style={{ color: '#6b7280' }}>Buat Akun Baru</p>
+              <form onSubmit={handleCreateTravelAccount} className="space-y-3">
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Email <span style={{ color: '#f87171' }}>*</span></p>
+                    <StyledInput type="email" value={taEmail} onChange={e => { setTaEmail(e.target.value); setTaError(''); setTaSuccess(''); }} placeholder="travel@example.com" required />
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Password <span style={{ color: '#f87171' }}>*</span></p>
+                    <StyledInput type="password" value={taPassword} onChange={e => { setTaPassword(e.target.value); setTaError(''); setTaSuccess(''); }} placeholder="Min. 8 karakter" required minLength={8} />
+                  </div>
+                </div>
+                {taError && (
+                  <p className="flex items-center gap-1.5 text-[12px]" style={{ color: '#dc2626' }}>
+                    <svg className="flex-none" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+                    {taError}
+                  </p>
+                )}
+                {taSuccess && (
+                  <div className="flex items-start gap-2 px-4 py-3 rounded-xl text-[12px]" style={{ background: 'rgba(16,185,129,0.07)', border: '1px solid rgba(16,185,129,0.20)', color: '#065f46' }}>
+                    <svg className="flex-none mt-0.5" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                    {taSuccess}
+                  </div>
+                )}
+                <button type="submit" disabled={taSubmitting} className="flex items-center gap-2 px-5 py-2.5 text-[12px] font-semibold rounded-xl transition-all duration-150 disabled:opacity-60"
+                  style={{ background: 'linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)', color: '#ffffff', boxShadow: '0 2px 8px rgba(67,56,202,0.22)' }}>
+                  {taSubmitting
+                    ? <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeOpacity="0.3" /><path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" /></svg>
+                    : <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>}
+                  {taSubmitting ? 'Membuat akun...' : 'Buat Akun & Hubungkan'}
+                </button>
+              </form>
+            </div>
+
+            {/* List akun terhubung */}
+            <div className="rounded-2xl overflow-hidden" style={cardStyle}>
+              {travelAccountsLoading ? (
+                <div className="py-10 text-center font-mono text-[12px]" style={{ color: '#d1d5db' }}>Memuat akun...</div>
+              ) : travelAccounts.length === 0 ? (
+                <div className="py-10 text-center"><p className="text-[13px]" style={{ color: '#9ca3af' }}>Belum ada akun travel agency terhubung.</p></div>
+              ) : (
+                <table className="w-full">
+                  <thead>
+                    <tr style={{ borderBottom: '1px solid rgba(0,0,0,0.06)', background: '#fafaf9' }}>
+                      {['User ID', 'Terhubung Sejak', ''].map(h => (
+                        <th key={h} className="text-left font-mono text-[10px] uppercase tracking-[0.12em] px-5 py-3" style={{ color: '#9ca3af' }}>{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {travelAccounts.map((acc, i) => (
+                      <tr key={acc.id} style={{ borderBottom: i < travelAccounts.length - 1 ? '1px solid rgba(0,0,0,0.04)' : 'none' }}>
+                        <td className="px-5 py-3.5 font-mono text-[12px]" style={{ color: '#374151' }}>{acc.user_id.slice(0, 8)}...</td>
+                        <td className="px-5 py-3.5 font-mono text-[11px]" style={{ color: '#6b7280' }}>{formatDatetime(acc.created_at)}</td>
+                        <td className="px-5 py-3.5 text-right">
+                          <button type="button" onClick={() => handleRevokeTravelAccess(acc.id, acc.user_id)}
+                            className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150"
+                            style={{ color: '#9ca3af', border: '1px solid rgba(0,0,0,0.07)' }}
+                            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#dc2626'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(220,38,38,0.25)'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(220,38,38,0.05)'; }}
+                            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#9ca3af'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,0,0,0.07)'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}>
+                            Cabut Akses
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               )}
             </div>
           </div>
