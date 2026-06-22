@@ -382,9 +382,10 @@ export default function AdminTenantForm() {
     await loadJamaah();
   }
 
-  async function handleUpdateJamaahFase(jamaahId: string, fase: JamaahAccountRow['fase']) {
-    await updateJamaah(id!, jamaahId, { fase });
-    setJamaahList(prev => prev.map(j => j.id === jamaahId ? { ...j, fase } : j));
+  async function handleUpdateJamaahFase(jamaahId: string, val: string) {
+    const fase_override = (val === '' ? null : val) as JamaahAccountRow['fase'] | null;
+    await updateJamaah(id!, jamaahId, { fase_override } as Partial<JamaahAccountRow>);
+    setJamaahList(prev => prev.map(j => j.id === jamaahId ? { ...j, fase_override } : j));
   }
 
   async function handleCreateTravelAccount(e: FormEvent) {
@@ -774,7 +775,8 @@ export default function AdminTenantForm() {
                           <td className="px-5 py-3.5 font-mono text-[12px]" style={{ color: '#6b7280' }}>{j.nomor_jamaah}</td>
                           <td className="px-5 py-3.5 text-[12px]" style={{ color: '#6b7280' }}>{j.rombongan ?? '—'}</td>
                           <td className="px-5 py-3.5">
-                            <select value={j.fase} onChange={e => handleUpdateJamaahFase(j.id, e.target.value as JamaahAccountRow['fase'])} className="text-[11px] rounded-lg px-2 py-1 focus:outline-none transition-all" style={{ border: '1px solid rgba(0,0,0,0.09)', background: '#fafaf9', color: '#374151' }}>
+                            <select value={j.fase_override ?? ''} onChange={e => handleUpdateJamaahFase(j.id, e.target.value)} className="text-[11px] rounded-lg px-2 py-1 focus:outline-none transition-all" style={{ border: '1px solid rgba(0,0,0,0.09)', background: '#fafaf9', color: '#374151' }}>
+                              <option value="">Otomatis (dari jadwal)</option>
                               {FASE_OPTIONS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
                             </select>
                           </td>

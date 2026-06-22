@@ -30,6 +30,7 @@ export const jamaahAccountsTable = pgTable("jamaah_accounts", {
   nomor_bus: text("nomor_bus"),
   nomor_kamar: text("nomor_kamar"),
   fase: text("fase", { enum: ["persiapan", "tanah-suci", "selesai"] }).notNull().default("persiapan"),
+  fase_override: text("fase_override", { enum: ["persiapan", "tanah-suci", "selesai"] }),
   created_at: timestamp("created_at").defaultNow().notNull(),
 });
 

@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import type { Fase, Jamaah } from '../types';
 import type { TenantRow } from '../lib/supabase';
+import { hitungFaseEfektif } from '../data/jamaah';
 
 const STORAGE_KEY = 'umrahme.jamaah';
 const TENANT_STORAGE_KEY = 'umrahme.tenant';
@@ -45,7 +46,21 @@ function applyTenantTheme(tenant: TenantRow | null) {
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [jamaah, setJamaah] = useState<Jamaah | null>(() => bacaStorage());
+  const [jamaah, setJamaah] = useState<Jamaah | null>(() => {
+    const saved = bacaStorage();
+    const savedTenant = bacaTenant();
+    if (saved && savedTenant) {
+      return {
+        ...saved,
+        fase: hitungFaseEfektif(
+          null,
+          savedTenant.tanggal_keberangkatan,
+          savedTenant.tanggal_kepulangan,
+        ),
+      };
+    }
+    return saved;
+  });
   const [tenant, setTenant] = useState<TenantRow | null>(() => bacaTenant());
 
   useEffect(() => {

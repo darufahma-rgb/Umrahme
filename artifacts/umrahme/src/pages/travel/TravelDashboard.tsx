@@ -92,10 +92,11 @@ export default function TravelDashboard() {
     setJamaahList(prev => prev.filter(j => j.id !== jamaahId));
   }
 
-  async function handleUpdateFase(jamaahId: string, fase: JamaahAccountRow['fase']) {
+  async function handleUpdateFase(jamaahId: string, val: string) {
     if (!tenant?.id) return;
-    await updateJamaah(tenant.id, jamaahId, { fase });
-    setJamaahList(prev => prev.map(j => j.id === jamaahId ? { ...j, fase } : j));
+    const fase_override = (val === '' ? null : val) as JamaahAccountRow['fase'] | null;
+    await updateJamaah(tenant.id, jamaahId, { fase_override } as Partial<JamaahAccountRow>);
+    setJamaahList(prev => prev.map(j => j.id === jamaahId ? { ...j, fase_override } : j));
   }
 
   if (!tenant) {
@@ -329,25 +330,30 @@ export default function TravelDashboard() {
                       </td>
                       <td className="px-4 py-3.5">
                         <select
-                          value={j.fase}
-                          onChange={e => handleUpdateFase(j.id, e.target.value as JamaahAccountRow['fase'])}
+                          value={j.fase_override ?? ''}
+                          onChange={e => handleUpdateFase(j.id, e.target.value)}
                           className="rounded-lg px-2.5 py-1.5 text-[11px] font-semibold transition-all duration-150 focus:outline-none appearance-none cursor-pointer"
                           style={{
                             border: '1px solid rgba(0,0,0,0.09)',
                             background:
-                              j.fase === 'persiapan'
+                              j.fase_override === 'persiapan'
                                 ? 'rgba(245,158,11,0.08)'
-                                : j.fase === 'tanah-suci'
+                                : j.fase_override === 'tanah-suci'
                                 ? 'rgba(16,185,129,0.08)'
-                                : 'rgba(107,114,128,0.08)',
+                                : j.fase_override === 'selesai'
+                                ? 'rgba(107,114,128,0.08)'
+                                : 'rgba(99,102,241,0.08)',
                             color:
-                              j.fase === 'persiapan'
+                              j.fase_override === 'persiapan'
                                 ? '#b45309'
-                                : j.fase === 'tanah-suci'
+                                : j.fase_override === 'tanah-suci'
                                 ? '#059669'
-                                : '#6b7280',
+                                : j.fase_override === 'selesai'
+                                ? '#6b7280'
+                                : '#4f46e5',
                           }}
                         >
+                          <option value="">Otomatis (dari jadwal)</option>
                           {FASE_OPTIONS.map(o => (
                             <option key={o.value} value={o.value}>{o.label}</option>
                           ))}

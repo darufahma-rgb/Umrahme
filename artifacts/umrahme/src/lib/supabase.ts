@@ -64,6 +64,7 @@ export type JamaahAccountRow = {
   nomor_bus: string | null;
   nomor_kamar: string | null;
   fase: 'persiapan' | 'tanah-suci' | 'selesai';
+  fase_override: 'persiapan' | 'tanah-suci' | 'selesai' | null;
   created_at: string;
 };
 

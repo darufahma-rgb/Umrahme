@@ -4,6 +4,29 @@ import type { TenantRow } from '../lib/supabase';
 
 export const KODE_DEMO = 'DEMO01';
 
+/**
+ * Hitung fase efektif: fase_override (manual admin) > otomatis dari tanggal > fallback 'persiapan'
+ */
+export function hitungFaseEfektif(
+  faseOverride: string | null | undefined,
+  tanggalKeberangkatan: string | null | undefined,
+  tanggalKepulangan: string | null | undefined,
+): 'persiapan' | 'tanah-suci' | 'selesai' {
+  if (faseOverride === 'persiapan' || faseOverride === 'tanah-suci' || faseOverride === 'selesai') {
+    return faseOverride;
+  }
+  if (!tanggalKeberangkatan) return 'persiapan';
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const berangkat = new Date(tanggalKeberangkatan + 'T00:00:00');
+  const pulang = tanggalKepulangan ? new Date(tanggalKepulangan + 'T00:00:00') : null;
+
+  if (today < berangkat) return 'persiapan';
+  if (pulang && today > pulang) return 'selesai';
+  return 'tanah-suci';
+}
+
 export interface HasilValidasi {
   ok: boolean;
   jamaah?: Jamaah;
@@ -44,7 +67,11 @@ export async function validasiKode(kode: string, nama: string): Promise<HasilVal
     nomorJamaah: akun.nomor_jamaah,
     travel: tenant.nama_travel,
     kodeAktivasi: k,
-    fase: akun.fase,
+    fase: hitungFaseEfektif(
+      akun.fase_override ?? null,
+      tenant.tanggal_keberangkatan,
+      tenant.tanggal_kepulangan,
+    ),
     rombongan: akun.rombongan ?? undefined,
     nomorBus: akun.nomor_bus ?? undefined,
     nomorKamar: akun.nomor_kamar ?? undefined,
