@@ -36,22 +36,26 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f0efed] p-0 sm:p-6">
-      <div className="w-full sm:max-w-[390px] overflow-hidden h-screen sm:h-auto flex flex-col sm:rounded-[32px] sm:shadow-[0_16px_64px_rgba(0,0,0,0.14),0_4px_16px_rgba(0,0,0,0.08)] bg-white">
+      <div className="w-full sm:max-w-[390px] h-screen sm:h-auto flex flex-col sm:rounded-[32px] sm:shadow-[0_16px_64px_rgba(0,0,0,0.14),0_4px_16px_rgba(0,0,0,0.08)] overflow-hidden bg-white">
 
-        {/* Hero */}
-        <div className="relative w-full overflow-hidden" style={{ height: 'clamp(200px, 45vw, 280px)' }}>
+        {/* Hero — image + gradient fade, no hard bottom edge */}
+        <div className="relative w-full flex-shrink-0" style={{ height: 'clamp(260px, 56vw, 340px)' }}>
           <img
             src={heroBg}
             alt=""
             aria-hidden
             className="absolute inset-0 w-full h-full object-cover"
-            style={{ objectPosition: 'center 38%', transform: 'scale(1.08)', transformOrigin: 'center 40%' }}
+            style={{ objectPosition: 'center 35%', transform: 'scale(1.08)', transformOrigin: 'center 38%' }}
           />
+          {/* Dark overlay for top text readability */}
           <div className="pointer-events-none absolute inset-0"
-            style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.42) 0%, rgba(0,0,0,0.08) 50%, rgba(255,255,255,0.70) 100%)' }} />
+            style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.44) 0%, rgba(0,0,0,0.12) 38%, transparent 58%)' }} />
+          {/* Smooth white fade covers the entire bottom half */}
+          <div className="pointer-events-none absolute inset-x-0 bottom-0"
+            style={{ height: '60%', background: 'linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.55) 30%, rgba(255,255,255,0.88) 58%, rgba(255,255,255,1) 78%, rgba(255,255,255,1) 100%)' }} />
 
-          {/* Arabic calligraphy */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-8">
+          {/* Arabic calligraphy — positioned in top 55% */}
+          <div className="absolute inset-x-0 top-0 flex flex-col items-center justify-center gap-2 px-8" style={{ height: '55%' }}>
             <p className="font-arab text-center text-white"
               style={{ fontSize: 'clamp(20px, 6vw, 28px)', direction: 'rtl', textShadow: '0 2px 12px rgba(0,0,0,0.6)', lineHeight: 1.7 }}>
               لَبَّيْكَ اللّٰهُمَّ لَبَّيْكَ
@@ -66,8 +70,8 @@ export default function Login() {
           </div>
         </div>
 
-        {/* Form area */}
-        <div className="flex flex-col flex-1 px-6 pt-5 pb-6">
+        {/* Form area — overlaps hero with negative margin for seamless flow */}
+        <div className="flex flex-col flex-1 px-6 pb-6 bg-white" style={{ marginTop: '-56px', position: 'relative', zIndex: 10, paddingTop: '0' }}>
 
           {/* Heading */}
           <div className="text-center mb-5">
