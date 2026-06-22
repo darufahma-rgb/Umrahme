@@ -101,26 +101,36 @@ export function TripIdentityCard() {
           {[
             { city: 'Makkah', hotel: hotelMakkah,  dot: 'var(--color-primary)' },
             { city: 'Madinah', hotel: hotelMadinah, dot: '#22c55e' },
-          ].map(({ city, hotel, dot }) => (
-            <div key={city} className="rounded-xl bg-surface-bone px-2.5 py-2">
-              <div className="flex items-center gap-1 mb-0.5">
-                <div className="h-1.5 w-1.5 rounded-full flex-none" style={{ background: dot }} />
-                <p className="font-mono text-[7px] uppercase tracking-[0.15em] text-ash">{city}</p>
-              </div>
-              {hotel ? (
-                <a
-                  href={`https://maps.google.com/?q=${encodeURIComponent(hotel + (city === 'Makkah' ? ' Makkah Saudi Arabia' : ' Madinah Saudi Arabia'))}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[11px] font-semibold leading-tight text-ink active:opacity-60 transition-opacity"
-                >
-                  {hotel}
-                </a>
-              ) : (
+          ].map(({ city, hotel, dot }) =>
+            hotel ? (
+              <a
+                key={city}
+                href={`https://maps.google.com/?q=${encodeURIComponent(hotel + (city === 'Makkah' ? ' Makkah Saudi Arabia' : ' Madinah Saudi Arabia'))}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block rounded-xl bg-surface-bone px-2.5 py-2 active:opacity-60 transition-opacity"
+              >
+                <div className="flex items-center justify-between mb-0.5">
+                  <div className="flex items-center gap-1">
+                    <div className="h-1.5 w-1.5 rounded-full flex-none" style={{ background: dot }} />
+                    <p className="font-mono text-[7px] uppercase tracking-[0.15em] text-ash">{city}</p>
+                  </div>
+                  <svg className="h-3 w-3 text-ash flex-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
+                    <path d="M7 17L17 7M17 7H7M17 7V17" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
+                <p className="text-[11px] font-semibold leading-tight text-ink">{hotel}</p>
+              </a>
+            ) : (
+              <div key={city} className="rounded-xl bg-surface-bone px-2.5 py-2">
+                <div className="flex items-center gap-1 mb-0.5">
+                  <div className="h-1.5 w-1.5 rounded-full flex-none" style={{ background: dot }} />
+                  <p className="font-mono text-[7px] uppercase tracking-[0.15em] text-ash">{city}</p>
+                </div>
                 <p className="text-[11px] font-semibold leading-tight text-ash italic">Belum diisi</p>
-              )}
-            </div>
-          ))}
+              </div>
+            )
+          )}
         </div>
       </div>
     </div>
