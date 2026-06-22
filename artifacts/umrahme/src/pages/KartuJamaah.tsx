@@ -21,8 +21,7 @@ function IconPhone({ className = '' }: { className?: string }) {
 function IconUser({ className = '' }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-      <circle cx="12" cy="7" r="4" />
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
     </svg>
   );
 }
@@ -31,14 +30,17 @@ export default function KartuJamaah() {
   const { jamaah, tenant } = useAuth();
   if (!jamaah) return null;
 
-  const info = getOperationalInfo(tenant ?? null);
+  const info         = getOperationalInfo(tenant ?? null);
+  const rombongan    = jamaah.rombongan  ?? info.groupCode;
+  const bus          = jamaah.nomorBus   ?? info.busNumber;
+  const kamar        = jamaah.nomorKamar ?? info.roomNumber;
   const hotelMakkah  = jamaah.hotelMakkah  ?? info.hotelMakkah;
   const hotelMadinah = jamaah.hotelMadinah ?? info.hotelMadinah;
-  const pembimbing    = jamaah.pembimbingNama     ?? info.guideName;
-  const pembimbingWa  = jamaah.pembimbingWhatsapp ?? info.guideWhatsapp;
-  const tourLeader    = info.tourLeaderName;
-  const tourLeaderWa  = info.tourLeaderWhatsapp;
-  const namaTravel    = tenant?.nama_travel ?? jamaah.travel;
+  const pembimbing   = jamaah.pembimbingNama     ?? info.guideName;
+  const pembimbingWa = jamaah.pembimbingWhatsapp ?? info.guideWhatsapp;
+  const tourLeader   = info.tourLeaderName;
+  const tourLeaderWa = info.tourLeaderWhatsapp;
+  const namaTravel   = tenant?.nama_travel ?? jamaah.travel;
 
   return (
     <div className="min-h-screen bg-canvas">
@@ -46,38 +48,33 @@ export default function KartuJamaah() {
 
       <div className="px-4 pb-12 pt-3 space-y-3">
 
-        {/* ── KARTU UTAMA ─────────────────────────────────────────── */}
+        {/* ── KARTU UTAMA ─────────────────────────────────────── */}
         <div
           className="relative overflow-hidden rounded-[28px] shadow-drop-lifted"
           style={{ background: 'linear-gradient(150deg, #0b1f3a 0%, #0d3156 45%, #0c4a82 80%, #1565a8 100%)' }}
         >
-          {/* Dekorasi lingkaran */}
+          {/* Dekorasi */}
           <div className="pointer-events-none absolute -right-16 -top-16 h-52 w-52 rounded-full"
             style={{ background: 'radial-gradient(circle, rgba(99,179,237,0.12) 0%, transparent 70%)' }} />
           <div className="pointer-events-none absolute -left-10 bottom-0 h-40 w-40 rounded-full"
             style={{ background: 'radial-gradient(circle, rgba(14,165,233,0.10) 0%, transparent 70%)' }} />
-
-          {/* Pola diagonal halus */}
           <div className="pointer-events-none absolute inset-0 opacity-[0.025]"
             style={{ backgroundImage: 'repeating-linear-gradient(135deg,#fff 0,#fff 1px,transparent 1px,transparent 14px)' }} />
 
           <div className="relative px-5 pt-5 pb-5">
-
-            {/* Header: label + logo */}
+            {/* Header */}
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="font-mono text-[8px] uppercase tracking-[0.32em] text-sky-300/60">
-                  Kartu Jamaah Digital
-                </p>
+                <p className="font-mono text-[8px] uppercase tracking-[0.32em] text-sky-300/60">Kartu Jamaah Digital</p>
                 <p className="mt-0.5 text-[12px] font-semibold text-white/50">{namaTravel}</p>
               </div>
-              {tenant?.logo_url ? (
+              {tenant?.logo_url && tenant.logo_url !== '' ? (
                 <img src={tenant.logo_url} alt={namaTravel}
                   className="h-7 w-auto max-w-[90px] flex-none object-contain"
                   style={{ filter: 'brightness(0) invert(1) opacity(0.55)' }}
                   onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
               ) : (
-                <div className="rounded-xl border border-white/10 px-3 py-1.5 backdrop-blur-sm"
+                <div className="rounded-xl border border-white/10 px-3 py-1.5"
                   style={{ background: 'rgba(255,255,255,0.06)' }}>
                   <span className="font-mono text-[9px] uppercase tracking-widest text-white/40">
                     {namaTravel.slice(0, 4).toUpperCase()}
@@ -88,53 +85,47 @@ export default function KartuJamaah() {
 
             {/* Avatar + nama */}
             <div className="mt-5 flex items-center gap-4">
-              <div className="relative flex-none">
-                <div
-                  className="flex h-[56px] w-[56px] items-center justify-center rounded-[18px]"
-                  style={{
-                    background: 'linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.05) 100%)',
-                    border: '1.5px solid rgba(255,255,255,0.14)',
-                    backdropFilter: 'blur(8px)',
-                  }}
-                >
-                  <IconUser className="h-6 w-6 text-white/50" />
-                </div>
+              <div className="flex h-[56px] w-[56px] flex-none items-center justify-center rounded-[18px]"
+                style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.05) 100%)', border: '1.5px solid rgba(255,255,255,0.14)' }}>
+                <IconUser className="h-6 w-6 text-white/50" />
               </div>
               <div className="min-w-0 flex-1">
                 <h1 className="font-display text-[24px] font-bold leading-tight text-white" style={{ letterSpacing: '-0.5px' }}>
                   {jamaah.nama}
                 </h1>
-                <p className="mt-0.5 font-mono text-[10px] tracking-[0.1em] text-sky-200/50">
-                  {jamaah.nomorJamaah}
-                </p>
+                <p className="mt-0.5 font-mono text-[10px] tracking-[0.1em] text-sky-200/50">{jamaah.nomorJamaah}</p>
               </div>
             </div>
 
-            {/* Separator boarding-pass */}
+            {/* Separator */}
             <div className="relative my-5 flex items-center">
-              <div className="absolute -left-5 h-4 w-4 rounded-full" style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.06)' }} />
+              <div className="absolute -left-5 h-4 w-4 rounded-full" style={{ background: 'rgba(255,255,255,0.08)' }} />
               <div className="flex-1 border-t border-dashed border-white/10" />
-              <div className="absolute -right-5 h-4 w-4 rounded-full" style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.06)' }} />
+              <div className="absolute -right-5 h-4 w-4 rounded-full" style={{ background: 'rgba(255,255,255,0.08)' }} />
             </div>
 
-            {/* Hotel Makkah + Madinah — gaya SISKOPATUH */}
-            <div className="grid grid-cols-2 gap-2.5">
+            {/* Rombongan · Bus · Kamar */}
+            <div className="flex flex-wrap gap-2 mb-3">
+              {[{ l: 'Rombongan', v: rombongan }, { l: 'Bus', v: bus }, { l: 'Kamar', v: kamar }].map(({ l, v }) => (
+                <div key={l} className="flex flex-col items-center rounded-xl px-3.5 py-2 text-center"
+                  style={{ background: 'rgba(0,0,0,0.22)', border: '1px solid rgba(255,255,255,0.07)', minWidth: '68px' }}>
+                  <p className="font-mono text-[7px] uppercase tracking-[0.14em] text-white/35">{l}</p>
+                  <p className="mt-0.5 text-[13px] font-bold text-white/90">{v}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Hotel Makkah + Madinah */}
+            <div className="grid grid-cols-2 gap-2">
               {[
-                { kota: 'Makkah Al-Mukarramah', hotel: hotelMakkah, dot: '#60a5fa' },
+                { kota: 'Makkah Al-Mukarramah', hotel: hotelMakkah,  dot: '#60a5fa' },
                 { kota: 'Madinah Al-Munawwarah', hotel: hotelMadinah, dot: '#86efac' },
               ].map(({ kota, hotel, dot }) => (
-                <div
-                  key={kota}
-                  className="rounded-2xl px-3.5 py-3"
-                  style={{
-                    background: 'rgba(0,0,0,0.22)',
-                    border: '1px solid rgba(255,255,255,0.07)',
-                    backdropFilter: 'blur(6px)',
-                  }}
-                >
-                  <div className="flex items-center gap-1.5 mb-1.5">
+                <div key={kota} className="rounded-2xl px-3.5 py-3"
+                  style={{ background: 'rgba(0,0,0,0.22)', border: '1px solid rgba(255,255,255,0.07)' }}>
+                  <div className="flex items-center gap-1.5 mb-1">
                     <div className="h-1.5 w-1.5 rounded-full flex-none" style={{ background: dot }} />
-                    <p className="font-mono text-[7px] uppercase tracking-[0.16em] text-white/35 leading-none">{kota}</p>
+                    <p className="font-mono text-[7px] uppercase tracking-[0.14em] text-white/35 leading-none">{kota}</p>
                   </div>
                   <p className="text-[11.5px] font-bold leading-snug text-white/90">{hotel}</p>
                 </div>
@@ -142,19 +133,22 @@ export default function KartuJamaah() {
             </div>
 
             {/* Kode aktivasi */}
-            <div
-              className="mt-2.5 flex items-center justify-between rounded-2xl px-4 py-3"
-              style={{ background: 'rgba(0,0,0,0.28)', border: '1px solid rgba(255,255,255,0.05)' }}
-            >
+            <div className="mt-2.5 flex items-center justify-between rounded-2xl px-4 py-3"
+              style={{ background: 'rgba(0,0,0,0.28)', border: '1px solid rgba(255,255,255,0.05)' }}>
               <p className="font-mono text-[8px] uppercase tracking-[0.22em] text-white/30">Kode Aktivasi</p>
-              <p className="font-mono text-[17px] font-bold tracking-[0.2em] text-white">
-                {jamaah.kodeAktivasi}
-              </p>
+              <p className="font-mono text-[17px] font-bold tracking-[0.2em] text-white">{jamaah.kodeAktivasi}</p>
             </div>
           </div>
         </div>
 
-        {/* ── PEMBIMBING + TOUR LEADER ─────────────────────────────── */}
+        {/* ── TITIK KUMPUL ─────────────────────────────────────── */}
+        <div className="rounded-2xl border border-hairline bg-white px-4 py-3.5 shadow-drop-card">
+          <p className="font-mono text-[8px] uppercase tracking-[0.22em] text-mute mb-1">Titik Kumpul</p>
+          <p className="text-[14px] font-bold text-ink">{info.meetingPoint}</p>
+          <p className="text-[11px] text-charcoal mt-0.5">Selalu ikuti arahan pembimbing mengenai titik kumpul harian.</p>
+        </div>
+
+        {/* ── KONTAK PEMBIMBING ─────────────────────────────────── */}
         <div className="rounded-2xl border border-hairline bg-white shadow-drop-card overflow-hidden">
           <div className="px-5 pt-4 pb-3">
             <p className="font-mono text-[8.5px] uppercase tracking-[0.22em] text-mute mb-3">Kontak Pembimbing</p>
@@ -193,7 +187,7 @@ export default function KartuJamaah() {
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-[14px] font-bold leading-tight text-ink">{tourLeader}</p>
-                <p className="text-[11px] text-charcoal mt-0.5">Tour Leader</p>
+                <p className="text-[11px] text-charcoal mt-0.5">{info.tourLeaderRole}</p>
                 <p className="font-mono text-[11px] text-emerald-600 mt-0.5 tracking-[0.04em]">{tourLeaderWa}</p>
               </div>
               <div className="flex gap-1.5 flex-none">
@@ -211,19 +205,16 @@ export default function KartuJamaah() {
           </div>
         </div>
 
-        {/* ── DARURAT ─────────────────────────────────────────────── */}
-        <div
-          className="rounded-2xl px-4 py-4"
-          style={{ background: 'linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)', border: '1px solid rgba(212,162,78,0.22)' }}
-        >
+        {/* ── DARURAT ──────────────────────────────────────────── */}
+        <div className="rounded-2xl px-4 py-4"
+          style={{ background: 'linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)', border: '1px solid rgba(212,162,78,0.22)' }}>
           <div className="flex items-start gap-3">
             <div className="flex h-9 w-9 flex-none items-center justify-center rounded-xl text-[16px]"
-              style={{ background: 'rgba(212,162,78,0.14)' }}>
-              ⚠️
-            </div>
+              style={{ background: 'rgba(212,162,78,0.14)' }}>⚠️</div>
             <div className="min-w-0 flex-1">
               <p className="text-[12px] font-bold text-amber-800">Jika tersesat atau butuh bantuan</p>
               <p className="mt-1 text-[11.5px] leading-relaxed text-amber-700">{info.emergencyNote}</p>
+              <p className="mt-2 text-[11px] text-amber-600 font-semibold">Tunjukkan kartu ini kepada petugas terdekat.</p>
             </div>
           </div>
         </div>
@@ -231,7 +222,6 @@ export default function KartuJamaah() {
         <p className="text-center text-[10.5px] leading-relaxed text-mute pt-1">
           Screenshot halaman ini dan simpan offline agar bisa ditunjukkan saat dibutuhkan.
         </p>
-
       </div>
     </div>
   );

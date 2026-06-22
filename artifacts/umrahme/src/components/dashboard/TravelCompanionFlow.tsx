@@ -2,21 +2,22 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
-  getFocusByFase,
+  getTodayInstruction,
   getLatestAnnouncement,
   getOperationalInfo,
   whatsappLink,
   type TravelAnnouncement,
+  type DailyInstruction,
 } from '../../data/travelCompanion';
+import type { Fase } from '../../types';
 import { IconChevron } from '../icons';
 
-// ── Ikon ─────────────────────────────────────────────────────
+// ── Ikon ──────────────────────────────────────────────────────
 
 function IconBell({ className = '' }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 7h18s-3 0-3-7" />
-      <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+      <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 7h18s-3 0-3-7" /><path d="M13.73 21a2 2 0 0 1-3.46 0" />
     </svg>
   );
 }
@@ -37,102 +38,196 @@ function IconWhatsapp({ className = '' }: { className?: string }) {
   );
 }
 
-function IconMapPin({ className = '' }: { className?: string }) {
+function IconClipboard({ className = '' }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z" />
-      <circle cx="12" cy="10" r="3" />
+      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+      <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
     </svg>
   );
 }
 
-// ── 1. Identity Band ─────────────────────────────────────────
+// ── 1. TripIdentityCard ────────────────────────────────────────
 
-export function TripIdentityCard({ desktop = false }: { desktop?: boolean }) {
+export function TripIdentityCard() {
   const { jamaah, tenant } = useAuth();
   if (!jamaah) return null;
 
-  const info = getOperationalInfo(tenant ?? null);
+  const info        = getOperationalInfo(tenant ?? null);
+  const firstName   = jamaah.nama.split(' ')[0];
+  const namaTravel  = tenant?.nama_travel ?? jamaah.travel;
+  const rombongan   = jamaah.rombongan ?? info.groupCode;
+  const bus         = jamaah.nomorBus  ?? info.busNumber;
+  const kamar       = jamaah.nomorKamar ?? info.roomNumber;
   const hotelMakkah  = jamaah.hotelMakkah  ?? info.hotelMakkah;
   const hotelMadinah = jamaah.hotelMadinah ?? info.hotelMadinah;
-  const firstName  = jamaah.nama.split(' ')[0];
 
   return (
-    <div className={`overflow-hidden rounded-2xl border border-hairline bg-white shadow-drop-card ${desktop ? '' : ''}`}>
-      <div className="flex">
-        <div className="w-1 flex-none" style={{ background: 'linear-gradient(to bottom, #0ea5e9, #0284c7)' }} />
-        <div className="flex-1 p-4">
-          <div className="flex items-start justify-between gap-2">
-            <div className="min-w-0 flex-1">
-              <p className="font-mono text-[8.5px] uppercase tracking-[0.22em] text-mute">Identitas Perjalanan</p>
-              <p className="mt-0.5 text-[16px] font-bold leading-tight text-ink">{firstName}</p>
-              <p className="mt-0.5 text-[12px] font-semibold text-primary">{tenant?.nama_travel ?? jamaah.travel}</p>
-            </div>
-            <Link
-              to="/profil/kartu"
-              className="flex-none rounded-xl bg-surface-bone px-3 py-2 text-[11px] font-semibold text-charcoal active:scale-[0.96] transition-all hover:bg-primary/10 hover:text-primary"
-            >
-              Kartu →
-            </Link>
+    <div className="overflow-hidden rounded-2xl border border-hairline bg-white shadow-drop-card">
+      {/* Stripe warna travel */}
+      <div className="h-1 w-full" style={{ background: 'linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary-deep) 100%)' }} />
+      <div className="p-4">
+        {/* Greeting */}
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0 flex-1">
+            <p className="font-mono text-[8.5px] uppercase tracking-[0.28em] text-mute">
+              Aplikasi Jamaah
+            </p>
+            <p className="mt-0.5 text-[13px] font-bold text-primary leading-tight">{namaTravel}</p>
+            <h2 className="mt-0.5 font-display text-[22px] font-bold leading-tight text-ink" style={{ letterSpacing: '-0.5px' }}>
+              Assalamu'alaikum, {firstName}
+            </h2>
+            <p className="font-mono text-[10px] text-ash mt-0.5 tracking-wider">{jamaah.nomorJamaah}</p>
           </div>
+          <Link to="/profil/kartu"
+            className="flex-none rounded-xl bg-surface-bone px-3 py-2 text-[10px] font-bold text-charcoal active:scale-[0.96] transition-all hover:bg-primary/10 hover:text-primary whitespace-nowrap">
+            Kartu →
+          </Link>
+        </div>
 
-          <div className="mt-2 grid grid-cols-2 gap-2">
-            {[
-              { l: 'Hotel Makkah',  v: hotelMakkah,  icon: <IconMapPin className="h-3 w-3 text-primary" /> },
-              { l: 'Hotel Madinah', v: hotelMadinah, icon: <IconMapPin className="h-3 w-3 text-charcoal" /> },
-            ].map(({ l, v, icon }) => (
-              <div key={l} className="flex items-start gap-1.5 rounded-xl bg-surface-bone px-2.5 py-2">
-                <span className="mt-0.5 flex-none">{icon}</span>
-                <div className="min-w-0">
-                  <p className="font-mono text-[7px] uppercase tracking-[0.12em] text-ash">{l}</p>
-                  <p className="mt-0.5 text-[11px] font-semibold leading-snug text-ink">{v}</p>
-                </div>
+        {/* Chips: Rombongan · Bus · Kamar */}
+        <div className="mt-3 flex flex-wrap gap-1.5">
+          {[rombongan, bus, `Kamar ${kamar}`].map((v) => (
+            <span key={v}
+              className="rounded-full px-2.5 py-1 font-mono text-[10px] font-semibold text-charcoal"
+              style={{ background: 'rgba(0,0,0,0.045)', border: '1px solid rgba(0,0,0,0.06)' }}>
+              {v}
+            </span>
+          ))}
+        </div>
+
+        {/* Hotel Makkah + Madinah */}
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          {[
+            { city: 'Makkah', hotel: hotelMakkah,  dot: 'var(--color-primary)' },
+            { city: 'Madinah', hotel: hotelMadinah, dot: '#22c55e' },
+          ].map(({ city, hotel, dot }) => (
+            <div key={city} className="rounded-xl bg-surface-bone px-2.5 py-2">
+              <div className="flex items-center gap-1 mb-0.5">
+                <div className="h-1.5 w-1.5 rounded-full flex-none" style={{ background: dot }} />
+                <p className="font-mono text-[7px] uppercase tracking-[0.15em] text-ash">{city}</p>
               </div>
-            ))}
-          </div>
+              <p className="text-[11px] font-semibold leading-tight text-ink">{hotel}</p>
+            </div>
+          ))}
         </div>
       </div>
     </div>
   );
 }
 
-// ── 2. Focus Card ─────────────────────────────────────────────
+// ── 2. TripProgressCard ───────────────────────────────────────
 
-export function TripFocusCard({ desktop = false }: { desktop?: boolean }) {
+const STEPS: { label: string; short: string }[] = [
+  { label: 'Persiapan',   short: 'Persiapan' },
+  { label: 'Keberangkatan', short: 'Berangkat' },
+  { label: 'Tanah Suci',  short: 'Tanah Suci' },
+  { label: 'Selesai',     short: 'Selesai' },
+];
+
+function faseToStep(fase: Fase): number {
+  if (fase === 'tanah-suci') return 2;
+  if (fase === 'selesai')    return 3;
+  return 0; // persiapan
+}
+
+const FASE_LABEL: Record<string, string> = {
+  persiapan:    'Fase Persiapan Keberangkatan',
+  'tanah-suci': 'Sedang Berada di Tanah Suci',
+  selesai:      'Perjalanan Ibadah Selesai',
+};
+
+export function TripProgressCard() {
   const { jamaah } = useAuth();
   if (!jamaah) return null;
 
-  const focus = getFocusByFase(jamaah.fase);
+  const activeStep = faseToStep(jamaah.fase);
 
   return (
-    <div
-      className="relative overflow-hidden rounded-2xl p-4"
-      style={{ background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)', border: '1.5px solid rgba(14,165,233,0.18)' }}
-    >
-      <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-primary/[0.07]" />
-      <div className="relative">
-        <p className="font-mono text-[8.5px] uppercase tracking-[0.22em] text-primary/60">Fokus Perjalanan</p>
-        <h3 className={`mt-1 font-display font-bold leading-tight text-ink ${desktop ? 'text-[18px]' : 'text-[17px]'}`}>
-          {focus.title}
-        </h3>
-        <p className={`mt-1.5 leading-relaxed text-charcoal ${desktop ? 'text-[13px]' : 'text-[12px]'}`}>
-          {focus.description}
-        </p>
-        <Link
-          to={focus.ctaTo}
-          className="mt-3 inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-[12px] font-bold text-white active:scale-[0.97] transition-all shadow-[0_4px_12px_rgba(14,165,233,0.3)]"
-          style={{ background: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)' }}
-        >
-          {focus.ctaLabel} <IconChevron className="h-3 w-3" />
-        </Link>
+    <div className="rounded-2xl border border-hairline bg-white p-4 shadow-drop-card">
+      <p className="font-mono text-[8.5px] uppercase tracking-[0.28em] text-mute mb-1">Fase Perjalanan</p>
+      <p className="text-[13px] font-bold text-ink mb-3">{FASE_LABEL[jamaah.fase] ?? jamaah.fase}</p>
+
+      {/* Stepper */}
+      <div className="flex items-center gap-0">
+        {STEPS.map((step, i) => {
+          const done   = i < activeStep;
+          const active = i === activeStep;
+          const isLast = i === STEPS.length - 1;
+          return (
+            <div key={step.label} className="flex flex-1 items-center">
+              <div className="flex flex-col items-center flex-none" style={{ minWidth: 0 }}>
+                <div
+                  className="flex h-6 w-6 items-center justify-center rounded-full text-[9px] font-bold transition-all"
+                  style={{
+                    background: done ? 'var(--color-primary)' : active ? 'var(--color-primary)' : 'rgba(0,0,0,0.06)',
+                    color: done || active ? '#fff' : '#9ca3af',
+                    boxShadow: active ? '0 0 0 3px rgba(14,165,233,0.18)' : 'none',
+                  }}
+                >
+                  {done ? '✓' : i + 1}
+                </div>
+                <p className={`mt-1 text-[9px] font-semibold text-center leading-tight ${done || active ? 'text-primary' : 'text-ash'}`}
+                  style={{ maxWidth: '44px' }}>
+                  {step.short}
+                </p>
+              </div>
+              {!isLast && (
+                <div className="flex-1 h-0.5 mx-1 rounded-full"
+                  style={{ background: done ? 'var(--color-primary)' : 'rgba(0,0,0,0.07)' }} />
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 }
 
-// ── 3. Announcement Strip ─────────────────────────────────────
+// ── 3. TodayInstructionCard ───────────────────────────────────
 
-export function TravelAnnouncementCard({ desktop = false, compact = false }: { desktop?: boolean; compact?: boolean }) {
+export function TodayInstructionCard() {
+  const { tenant } = useAuth();
+  const instr: DailyInstruction = getTodayInstruction(tenant?.id);
+
+  return (
+    <div className="overflow-hidden rounded-2xl border border-hairline bg-white shadow-drop-card">
+      <div className="flex items-center gap-2.5 px-4 pt-3.5 pb-3">
+        <div className="flex h-8 w-8 flex-none items-center justify-center rounded-xl"
+          style={{ background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)', border: '1px solid rgba(34,197,94,0.16)' }}>
+          <IconClipboard className="h-3.5 w-3.5 text-emerald-500" />
+        </div>
+        <div>
+          <p className="font-mono text-[8px] uppercase tracking-[0.22em] text-mute">Arahan Hari Ini</p>
+          <p className="text-[13px] font-bold text-ink leading-tight">{instr.title}</p>
+        </div>
+      </div>
+      <div className="h-px bg-hairline mx-4" />
+      <div className="px-4 py-3 space-y-2">
+        {[
+          { label: 'Jam Kumpul',  value: instr.meetingTime },
+          { label: 'Titik Kumpul', value: instr.meetingPoint },
+          { label: 'Pakaian',     value: instr.dressCode },
+          { label: 'Bawa',        value: instr.bringItems.join(', ') },
+        ].map(({ label, value }) => (
+          <div key={label} className="flex items-start gap-2">
+            <p className="flex-none font-mono text-[9px] uppercase tracking-[0.12em] text-mute pt-0.5" style={{ minWidth: '72px' }}>{label}</p>
+            <p className="flex-1 text-[12px] font-semibold text-ink leading-snug">{value}</p>
+          </div>
+        ))}
+        {instr.note && (
+          <div className="mt-1 rounded-xl px-3 py-2" style={{ background: 'rgba(34,197,94,0.07)', border: '1px solid rgba(34,197,94,0.12)' }}>
+            <p className="text-[11px] text-emerald-700 leading-relaxed">📌 {instr.note}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── 4. PinnedAnnouncementCard ─────────────────────────────────
+
+export function PinnedAnnouncementCard() {
   const { tenant } = useAuth();
   const [announcement, setAnnouncement] = useState<TravelAnnouncement | null>(null);
 
@@ -142,173 +237,111 @@ export function TravelAnnouncementCard({ desktop = false, compact = false }: { d
 
   if (!announcement) return null;
 
-  if (compact) {
-    return (
-      <Link
-        to="/pengumuman"
-        className="flex flex-col rounded-2xl p-3.5 h-full active:scale-[0.97] transition-transform"
-        style={{
-          background: announcement.important ? 'linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)' : '#ffffff',
-          border: `1.5px solid ${announcement.important ? 'rgba(212,162,78,0.3)' : 'rgba(0,0,0,0.07)'}`,
-        }}
-      >
-        <div
-          className="flex h-8 w-8 flex-none items-center justify-center rounded-xl mb-2.5"
-          style={{ background: 'rgba(212,162,78,0.14)', border: '1px solid rgba(212,162,78,0.22)' }}
-        >
-          <IconBell className="h-3.5 w-3.5 text-gold" />
-        </div>
-        <span
-          className="mb-1 self-start rounded-full px-2 py-0.5 font-mono text-[7px] font-bold uppercase tracking-[0.15em]"
-          style={{ background: 'rgba(212,162,78,0.18)', color: '#a07828' }}
-        >
-          {announcement.label}
-        </span>
-        <p className="font-mono text-[7px] uppercase tracking-[0.12em] text-mute">Dari Travel</p>
-        <p className="mt-1 text-[12px] font-semibold leading-snug text-ink line-clamp-2">
-          {announcement.title}
-        </p>
-        <span className="mt-auto pt-2 inline-flex items-center gap-1 font-mono text-[8px] font-semibold uppercase tracking-wider text-[#a07828]">
-          Lihat Semua <IconChevron className="h-2.5 w-2.5" />
-        </span>
-      </Link>
-    );
-  }
-
   return (
     <div
-      className="flex items-start gap-3 rounded-2xl p-4"
+      className="overflow-hidden rounded-2xl"
       style={{
         background: announcement.important ? 'linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)' : '#ffffff',
-        border: `1.5px solid ${announcement.important ? 'rgba(212,162,78,0.3)' : 'rgba(0,0,0,0.07)'}`,
+        border: `1.5px solid ${announcement.important ? 'rgba(212,162,78,0.28)' : 'rgba(0,0,0,0.07)'}`,
       }}
     >
-      <div
-        className="flex h-9 w-9 flex-none items-center justify-center rounded-xl"
-        style={{ background: 'rgba(212,162,78,0.14)', border: '1px solid rgba(212,162,78,0.22)' }}
-      >
-        <IconBell className="h-4 w-4 text-gold" />
-      </div>
-      <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2 flex-wrap">
-          <span
-            className="rounded-full px-2 py-0.5 font-mono text-[7.5px] font-bold uppercase tracking-[0.15em]"
-            style={{ background: 'rgba(212,162,78,0.18)', color: '#a07828' }}
-          >
-            {announcement.label}
-          </span>
-          <span className="font-mono text-[7.5px] uppercase tracking-[0.12em] text-mute">Dari Travel</span>
+      <div className="flex items-center gap-2 px-4 pt-3.5 pb-2">
+        <div className="flex h-8 w-8 flex-none items-center justify-center rounded-xl"
+          style={{ background: 'rgba(212,162,78,0.14)', border: '1px solid rgba(212,162,78,0.20)' }}>
+          <IconBell className="h-3.5 w-3.5 text-[#a07828]" />
         </div>
-        <p className={`mt-1 font-semibold leading-snug text-ink ${desktop ? 'text-[14px]' : 'text-[13px]'}`}>
-          {announcement.title}
-        </p>
-        <p className={`mt-0.5 leading-relaxed text-charcoal ${desktop ? 'text-[13px]' : 'text-[11px]'}`}>
-          {announcement.content}
-        </p>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            {announcement.important && (
+              <span className="rounded-full px-2 py-0.5 font-mono text-[7px] font-bold uppercase tracking-[0.15em]"
+                style={{ background: 'rgba(212,162,78,0.20)', color: '#a07828' }}>
+                Penting
+              </span>
+            )}
+            <span className="font-mono text-[7.5px] uppercase tracking-[0.12em] text-mute">
+              {announcement.label} · Dari Travel
+            </span>
+          </div>
+          <p className="text-[13px] font-bold leading-snug text-ink mt-0.5">{announcement.title}</p>
+        </div>
       </div>
+      <div className="px-4 pb-2">
+        <p className="text-[11.5px] leading-relaxed text-charcoal">{announcement.content}</p>
+      </div>
+      <div className="h-px mx-4" style={{ background: 'rgba(0,0,0,0.05)' }} />
+      <Link to="/pengumuman"
+        className="flex items-center justify-end gap-1 px-4 py-2.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-[#a07828] active:opacity-70 transition-opacity">
+        Lihat Semua Pengumuman <IconChevron className="h-3 w-3" />
+      </Link>
     </div>
   );
 }
 
-// ── 4. Emergency / Guide Contact ──────────────────────────────
+// ── 5. EmergencyGuideCard ─────────────────────────────────────
 
-export function EmergencyGuideCard({ desktop = false, compact = false }: { desktop?: boolean; compact?: boolean }) {
+export function EmergencyGuideCard() {
   const { jamaah, tenant } = useAuth();
   if (!jamaah) return null;
 
-  const info           = getOperationalInfo(tenant ?? null);
-  const muthowwif      = jamaah.pembimbingNama     ?? info.guideName;
-  const muthowwifWa    = jamaah.pembimbingWhatsapp ?? info.guideWhatsapp;
-  const tourLeader     = info.tourLeaderName;
-  const tourLeaderWa   = info.tourLeaderWhatsapp;
-
-  if (compact) {
-    return (
-      <div className="flex flex-col rounded-2xl border border-hairline bg-white shadow-drop-card p-3.5 h-full">
-        <div className="flex h-8 w-8 flex-none items-center justify-center rounded-xl bg-red-50 mb-2.5">
-          <IconPhone className="h-3.5 w-3.5 text-red-400" />
-        </div>
-        <p className="font-mono text-[7px] uppercase tracking-[0.2em] text-mute">Butuh Bantuan?</p>
-
-        <div className="mt-1.5">
-          <p className="text-[10px] font-mono uppercase tracking-wider text-charcoal">Muthowwif</p>
-          <p className="text-[11px] font-bold leading-tight text-ink">{muthowwif}</p>
-        </div>
-
-        <div className="mt-1.5">
-          <p className="text-[10px] font-mono uppercase tracking-wider text-charcoal">Tour Leader</p>
-          <p className="text-[11px] font-bold leading-tight text-ink">{tourLeader}</p>
-        </div>
-
-        <div className="mt-auto pt-3 grid grid-cols-2 gap-1.5">
-          <a
-            href={whatsappLink(muthowwifWa)}
-            target="_blank"
-            rel="noreferrer"
-            className="flex items-center justify-center gap-1 rounded-xl py-1.5 text-[9px] font-bold text-white active:scale-[0.97] transition-all"
-            style={{ background: '#25D366' }}
-          >
-            <IconWhatsapp className="h-3 w-3" />
-            Muthow.
-          </a>
-          <a
-            href={whatsappLink(tourLeaderWa)}
-            target="_blank"
-            rel="noreferrer"
-            className="flex items-center justify-center gap-1 rounded-xl py-1.5 text-[9px] font-bold text-white active:scale-[0.97] transition-all"
-            style={{ background: '#25D366' }}
-          >
-            <IconWhatsapp className="h-3 w-3" />
-            TL
-          </a>
-        </div>
-      </div>
-    );
-  }
+  const info          = getOperationalInfo(tenant ?? null);
+  const muthowwif     = jamaah.pembimbingNama     ?? info.guideName;
+  const muthowwifWa   = jamaah.pembimbingWhatsapp ?? info.guideWhatsapp;
+  const tourLeader    = info.tourLeaderName;
+  const tourLeaderWa  = info.tourLeaderWhatsapp;
 
   return (
-    <div className={`rounded-2xl border border-hairline bg-white shadow-drop-card ${desktop ? 'p-4' : 'p-4'}`}>
-      <p className="font-mono text-[8.5px] uppercase tracking-[0.2em] text-mute mb-3">Butuh Bantuan?</p>
+    <div className="overflow-hidden rounded-2xl border border-hairline bg-white shadow-drop-card">
+      <div className="flex items-center justify-between px-4 pt-3.5 pb-3">
+        <div>
+          <p className="font-mono text-[8.5px] uppercase tracking-[0.22em] text-mute">Butuh Bantuan Cepat?</p>
+          <p className="text-[12px] text-charcoal mt-0.5">Hubungi pembimbing jika tersesat atau butuh bantuan.</p>
+        </div>
+      </div>
+      <div className="h-px bg-hairline mx-4" />
 
-      <div className="flex items-center gap-3 mb-2">
-        <div className="flex h-9 w-9 flex-none items-center justify-center rounded-xl bg-red-50">
-          <IconPhone className="h-3.5 w-3.5 text-red-400" />
+      {/* Muthowwif */}
+      <div className="px-4 py-3 flex items-center gap-3">
+        <div className="flex h-10 w-10 flex-none items-center justify-center rounded-xl"
+          style={{ background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)', border: '1px solid rgba(14,165,233,0.14)' }}>
+          <IconPhone className="h-4 w-4 text-primary" />
         </div>
-        <div className="min-w-0 flex-1">
-          <p className="font-mono text-[8px] uppercase tracking-wider text-mute">Muthowwif</p>
+        <div className="flex-1 min-w-0">
           <p className="text-[13px] font-bold text-ink leading-tight">{muthowwif}</p>
+          <p className="text-[10px] text-charcoal">{info.guideRole}</p>
         </div>
-        <div className="flex gap-1.5">
+        <div className="flex gap-1.5 flex-none">
           <a href={whatsappLink(muthowwifWa)} target="_blank" rel="noreferrer"
-            className="flex h-8 w-8 items-center justify-center rounded-xl text-white active:scale-[0.97] transition-all"
+            className="flex h-9 w-9 items-center justify-center rounded-xl text-white active:scale-[0.97] transition-all"
             style={{ background: '#25D366' }}>
             <IconWhatsapp className="h-4 w-4" />
           </a>
           <a href={`tel:${muthowwifWa}`}
-            className="flex h-8 w-8 items-center justify-center rounded-xl border border-hairline bg-surface-bone text-charcoal active:scale-[0.97] transition-all">
+            className="flex h-9 w-9 items-center justify-center rounded-xl border border-hairline bg-surface-bone text-ink active:scale-[0.97] transition-all">
             <IconPhone className="h-3.5 w-3.5" />
           </a>
         </div>
       </div>
 
-      <div className="h-px bg-hairline mb-2" />
+      <div className="h-px bg-hairline mx-4" />
 
-      <div className="flex items-center gap-3">
-        <div className="flex h-9 w-9 flex-none items-center justify-center rounded-xl bg-primary/8">
-          <IconPhone className="h-3.5 w-3.5 text-primary" />
+      {/* Tour Leader */}
+      <div className="px-4 py-3 flex items-center gap-3">
+        <div className="flex h-10 w-10 flex-none items-center justify-center rounded-xl"
+          style={{ background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)', border: '1px solid rgba(34,197,94,0.14)' }}>
+          <IconPhone className="h-4 w-4 text-emerald-500" />
         </div>
-        <div className="min-w-0 flex-1">
-          <p className="font-mono text-[8px] uppercase tracking-wider text-mute">Tour Leader</p>
+        <div className="flex-1 min-w-0">
           <p className="text-[13px] font-bold text-ink leading-tight">{tourLeader}</p>
+          <p className="text-[10px] text-charcoal">{info.tourLeaderRole}</p>
         </div>
-        <div className="flex gap-1.5">
+        <div className="flex gap-1.5 flex-none">
           <a href={whatsappLink(tourLeaderWa)} target="_blank" rel="noreferrer"
-            className="flex h-8 w-8 items-center justify-center rounded-xl text-white active:scale-[0.97] transition-all"
+            className="flex h-9 w-9 items-center justify-center rounded-xl text-white active:scale-[0.97] transition-all"
             style={{ background: '#25D366' }}>
             <IconWhatsapp className="h-4 w-4" />
           </a>
           <a href={`tel:${tourLeaderWa}`}
-            className="flex h-8 w-8 items-center justify-center rounded-xl border border-hairline bg-surface-bone text-charcoal active:scale-[0.97] transition-all">
+            className="flex h-9 w-9 items-center justify-center rounded-xl border border-hairline bg-surface-bone text-ink active:scale-[0.97] transition-all">
             <IconPhone className="h-3.5 w-3.5" />
           </a>
         </div>
@@ -317,31 +350,30 @@ export function EmergencyGuideCard({ desktop = false, compact = false }: { deskt
   );
 }
 
-// ── TravelCompanionFlow — gabungan ────────────────────────────
+// ── TravelCompanionFlow — orkestrasi ──────────────────────────
 
 export function TravelCompanionFlow({ desktop = false }: { desktop?: boolean }) {
   if (desktop) {
     return (
-      <div className="grid grid-cols-3 gap-4">
-        <TripIdentityCard desktop />
-        <div className="flex flex-col gap-4">
-          <TripFocusCard desktop />
-          <TravelAnnouncementCard desktop />
+      <div className="space-y-4">
+        <div className="grid grid-cols-2 gap-4">
+          <TripIdentityCard />
+          <TripProgressCard />
         </div>
-        <EmergencyGuideCard desktop />
+        <TodayInstructionCard />
+        <PinnedAnnouncementCard />
+        <EmergencyGuideCard />
       </div>
     );
   }
 
   return (
     <div className="space-y-3">
-      <p className="font-mono text-[9px] uppercase tracking-[0.28em] text-mute">Perjalanan Saya</p>
       <TripIdentityCard />
-      <TripFocusCard />
-      <div className="grid grid-cols-2 gap-3 items-stretch">
-        <TravelAnnouncementCard compact />
-        <EmergencyGuideCard compact />
-      </div>
+      <TripProgressCard />
+      <TodayInstructionCard />
+      <PinnedAnnouncementCard />
+      <EmergencyGuideCard />
     </div>
   );
 }

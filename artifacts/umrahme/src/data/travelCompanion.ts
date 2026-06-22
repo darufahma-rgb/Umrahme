@@ -1,6 +1,8 @@
 import { supabase, type TenantRow, type TravelAnnouncementRow } from '../lib/supabase';
 import type { Fase } from '../types';
 
+// ── Tipe ──────────────────────────────────────────────────────
+
 export type TravelAnnouncement = {
   id: string;
   label: string;
@@ -21,59 +23,90 @@ export type TravelOperationalInfo = {
   guideRole: string;
   guideWhatsapp: string;
   tourLeaderName: string;
+  tourLeaderRole: string;
   tourLeaderWhatsapp: string;
   travelWhatsapp: string;
   emergencyNote: string;
 };
 
-const DEFAULT_OPERATIONAL_INFO: TravelOperationalInfo = {
-  groupCode: 'Rombongan A',
-  busNumber: 'Bus 3',
-  roomNumber: '804',
-  hotelMakkah: 'Hotel Makkah — diisi travel',
-  hotelMadinah: 'Hotel Madinah — diisi travel',
-  meetingPoint: 'Lobby hotel / titik kumpul dari pembimbing',
-  guideName: 'Ust. Muthowwif',
-  guideRole: 'Muthowwif',
-  guideWhatsapp: '6281234567890',
-  tourLeaderName: 'Bpk. Tour Leader',
-  tourLeaderWhatsapp: '6289876543210',
-  travelWhatsapp: '6281234567890',
-  emergencyNote: 'Jika tersesat, tetap tenang. Hubungi pembimbing dan tunjukkan Kartu Jamaah Digital.',
+export type DailyInstruction = {
+  id: string;
+  title: string;
+  meetingTime: string;
+  meetingPoint: string;
+  dressCode: string;
+  bringItems: string[];
+  note: string;
 };
 
-// Sync — gabungkan data tenant dari DB dengan fallback DEFAULT per field
+// ── Default / fallback ─────────────────────────────────────────
+
+const DEFAULT_OPERATIONAL_INFO: TravelOperationalInfo = {
+  groupCode:          'Rombongan A',
+  busNumber:          'Bus 3',
+  roomNumber:         '804',
+  hotelMakkah:        'Swissôtel Makkah',
+  hotelMadinah:       'Maden Hotel Madinah',
+  meetingPoint:       'Lobby utama hotel',
+  guideName:          'Ust. Muthowwif',
+  guideRole:          'Muthowwif Rombongan',
+  guideWhatsapp:      '6281234567890',
+  tourLeaderName:     'Bpk. Tour Leader',
+  tourLeaderRole:     'Tour Leader',
+  tourLeaderWhatsapp: '6289876543210',
+  travelWhatsapp:     '6281234567890',
+  emergencyNote:      'Jika tersesat, tetap tenang. Hubungi pembimbing dan tunjukkan Kartu Jamaah Digital kepada petugas terdekat.',
+};
+
+// ── Fungsi sync ────────────────────────────────────────────────
+
+/** Gabungkan data tenant dari DB dengan fallback DEFAULT per field. */
 export function getOperationalInfo(tenant: TenantRow | null): TravelOperationalInfo {
   if (!tenant) return DEFAULT_OPERATIONAL_INFO;
   return {
-    groupCode:         DEFAULT_OPERATIONAL_INFO.groupCode,
-    busNumber:         DEFAULT_OPERATIONAL_INFO.busNumber,
-    roomNumber:        DEFAULT_OPERATIONAL_INFO.roomNumber,
-    hotelMakkah:       tenant.hotel_makkah       ?? DEFAULT_OPERATIONAL_INFO.hotelMakkah,
-    hotelMadinah:      tenant.hotel_madinah      ?? DEFAULT_OPERATIONAL_INFO.hotelMadinah,
-    meetingPoint:      tenant.meeting_point      ?? DEFAULT_OPERATIONAL_INFO.meetingPoint,
-    guideName:         tenant.guide_name         ?? DEFAULT_OPERATIONAL_INFO.guideName,
-    guideRole:         'Muthowwif',
-    guideWhatsapp:     tenant.guide_whatsapp     ?? DEFAULT_OPERATIONAL_INFO.guideWhatsapp,
-    tourLeaderName:    tenant.tour_leader_name   ?? DEFAULT_OPERATIONAL_INFO.tourLeaderName,
-    tourLeaderWhatsapp:tenant.tour_leader_whatsapp ?? DEFAULT_OPERATIONAL_INFO.tourLeaderWhatsapp,
-    travelWhatsapp:    tenant.guide_whatsapp     ?? DEFAULT_OPERATIONAL_INFO.travelWhatsapp,
-    emergencyNote:     tenant.emergency_note     ?? DEFAULT_OPERATIONAL_INFO.emergencyNote,
+    groupCode:          DEFAULT_OPERATIONAL_INFO.groupCode,
+    busNumber:          DEFAULT_OPERATIONAL_INFO.busNumber,
+    roomNumber:         DEFAULT_OPERATIONAL_INFO.roomNumber,
+    hotelMakkah:        tenant.hotel_makkah        ?? DEFAULT_OPERATIONAL_INFO.hotelMakkah,
+    hotelMadinah:       tenant.hotel_madinah       ?? DEFAULT_OPERATIONAL_INFO.hotelMadinah,
+    meetingPoint:       tenant.meeting_point       ?? DEFAULT_OPERATIONAL_INFO.meetingPoint,
+    guideName:          tenant.guide_name          ?? DEFAULT_OPERATIONAL_INFO.guideName,
+    guideRole:          'Muthowwif Rombongan',
+    guideWhatsapp:      tenant.guide_whatsapp      ?? DEFAULT_OPERATIONAL_INFO.guideWhatsapp,
+    tourLeaderName:     tenant.tour_leader_name    ?? DEFAULT_OPERATIONAL_INFO.tourLeaderName,
+    tourLeaderRole:     'Tour Leader',
+    tourLeaderWhatsapp: tenant.tour_leader_whatsapp ?? DEFAULT_OPERATIONAL_INFO.tourLeaderWhatsapp,
+    travelWhatsapp:     tenant.guide_whatsapp      ?? DEFAULT_OPERATIONAL_INFO.travelWhatsapp,
+    emergencyNote:      tenant.emergency_note      ?? DEFAULT_OPERATIONAL_INFO.emergencyNote,
   };
 }
 
+/** Instruksi harian untuk dashboard. Sumber: nanti dari DB, sekarang static placeholder. */
+export function getTodayInstruction(_tenantId?: string | null): DailyInstruction {
+  return {
+    id: 'instruction-1',
+    title: 'Persiapan kegiatan hari ini',
+    meetingTime: '04.30',
+    meetingPoint: 'Lobby utama hotel',
+    dressCode: 'Pakaian ihram / seragam sesuai arahan pembimbing',
+    bringItems: ['Sandal', 'Tas kecil', 'Kartu jamaah', 'Botol minum'],
+    note: 'Tetap bersama rombongan dan ikuti arahan pembimbing.',
+  };
+}
+
+// ── Fungsi async (query Supabase) ──────────────────────────────
+
 function rowToAnnouncement(row: TravelAnnouncementRow): TravelAnnouncement {
   return {
-    id: row.id,
-    label: row.label,
-    title: row.title,
-    content: row.content,
-    important: row.important,
+    id:          row.id,
+    label:       row.label,
+    title:       row.title,
+    content:     row.content,
+    important:   row.important,
     publishedAt: row.published_at,
   };
 }
 
-// Async — query dari tabel travel_announcements
 export async function getLatestAnnouncement(tenantId: string | null): Promise<TravelAnnouncement | null> {
   if (!tenantId) return null;
   const { data, error } = await supabase
@@ -98,11 +131,10 @@ export async function getAllAnnouncements(tenantId: string | null): Promise<Trav
   return (data as TravelAnnouncementRow[]).map(rowToAnnouncement);
 }
 
+// ── Helper UI ──────────────────────────────────────────────────
+
 export function getFocusByFase(fase: Fase): {
-  title: string;
-  description: string;
-  ctaLabel: string;
-  ctaTo: string;
+  title: string; description: string; ctaLabel: string; ctaTo: string;
 } {
   if (fase === 'tanah-suci') {
     return {
@@ -112,7 +144,6 @@ export function getFocusByFase(fase: Fase): {
       ctaTo: '/ibadah/navigator',
     };
   }
-
   if (fase === 'selesai') {
     return {
       title: 'Jaga kenangan perjalanan',
@@ -121,7 +152,6 @@ export function getFocusByFase(fase: Fase): {
       ctaTo: '/profil/jurnal',
     };
   }
-
   return {
     title: 'Persiapkan keberangkatan',
     description: 'Lengkapi checklist, dokumen, perlengkapan, dan pahami tata cara umrah sebelum berangkat.',
