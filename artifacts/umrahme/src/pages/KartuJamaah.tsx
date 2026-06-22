@@ -132,9 +132,9 @@ export default function KartuJamaah() {
                       href={`https://maps.google.com/?q=${encodeURIComponent(hotel + (kota.includes('Makkah') ? ' Makkah Saudi Arabia' : ' Madinah Saudi Arabia'))}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[11.5px] font-bold leading-snug text-white underline underline-offset-2 decoration-white/40 hover:decoration-white active:opacity-70 transition-opacity"
+                      className="text-[11.5px] font-bold leading-snug text-white/90 active:opacity-60 transition-opacity"
                     >
-                      {hotel} ↗
+                      {hotel}
                     </a>
                   ) : (
                     <p className="text-[11.5px] font-bold leading-snug text-white/40 italic">Belum diisi</p>

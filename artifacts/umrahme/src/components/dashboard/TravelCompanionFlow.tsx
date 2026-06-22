@@ -112,9 +112,9 @@ export function TripIdentityCard() {
                   href={`https://maps.google.com/?q=${encodeURIComponent(hotel + (city === 'Makkah' ? ' Makkah Saudi Arabia' : ' Madinah Saudi Arabia'))}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[11px] font-semibold leading-tight text-primary underline underline-offset-2 decoration-primary/40 hover:decoration-primary active:opacity-70 transition-opacity"
+                  className="text-[11px] font-semibold leading-tight text-ink active:opacity-60 transition-opacity"
                 >
-                  {hotel} ↗
+                  {hotel}
                 </a>
               ) : (
                 <p className="text-[11px] font-semibold leading-tight text-ash italic">Belum diisi</p>
