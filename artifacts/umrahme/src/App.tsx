@@ -2,6 +2,8 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminProtectedRoute from './components/admin/AdminProtectedRoute';
+import TravelProtectedRoute from './components/travel/TravelProtectedRoute';
+import { TravelAuthProvider } from './context/TravelAuthContext';
 
 import Login from './pages/Login';
 import Beranda from './pages/Beranda';
@@ -31,6 +33,9 @@ import Pengumuman from './pages/Pengumuman';
 import AdminLogin from './pages/admin/AdminLogin';
 import AdminTenantList from './pages/admin/AdminTenantList';
 import AdminTenantForm from './pages/admin/AdminTenantForm';
+
+import TravelLogin from './pages/travel/TravelLogin';
+import TravelDashboard from './pages/travel/TravelDashboard';
 
 export default function App() {
   return (
@@ -86,6 +91,19 @@ export default function App() {
           <AdminProtectedRoute>
             <AdminTenantForm />
           </AdminProtectedRoute>
+        }
+      />
+
+      {/* ── Travel Agency Portal ── */}
+      <Route path="/travel/login" element={<TravelLogin />} />
+      <Route
+        path="/travel"
+        element={
+          <TravelAuthProvider>
+            <TravelProtectedRoute>
+              <TravelDashboard />
+            </TravelProtectedRoute>
+          </TravelAuthProvider>
         }
       />
 
