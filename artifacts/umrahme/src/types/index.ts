@@ -92,6 +92,11 @@ export interface Lokasi {
   jarakKm: number;
   jamKunjungan: string;
   ringkas: string;
+  /**
+   * URL gambar lokasi. Kosongkan ("") jika belum tersedia.
+   * Saat nanti ada gambar, isi dengan URL publik atau path /public/images/...
+   */
+  gambar?: string;
   /** Koordinat asli untuk deep-link Google Maps. WAJIB diisi. */
   koordinat: { lat: number; lng: number };
   /** Sejarah panjang dipecah jadi beberapa seksi berheading. */

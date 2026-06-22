@@ -38,7 +38,44 @@ export default function LokasiDetail() {
           </p>
         )}
 
-        {/* 2. KARTU PETA / GOOGLE MAPS — selalu tampil */}
+        {/* 2. BOX GAMBAR — antara nama Arab dan kartu Maps */}
+        {lokasi.gambar ? (
+          <div className="rounded-md overflow-hidden border border-hairline">
+            <img
+              src={lokasi.gambar}
+              alt={lokasi.nama}
+              className="w-full h-52 object-cover"
+            />
+          </div>
+        ) : (
+          <div className="relative flex h-52 items-center justify-center overflow-hidden rounded-md border border-dashed border-hairline-strong bg-surface-bone">
+            <div
+              className="absolute inset-0 opacity-[0.12]"
+              style={{ backgroundImage: 'repeating-linear-gradient(45deg, #d4a24e 0 1px, transparent 1px 18px)' }}
+              aria-hidden
+            />
+            <div className="relative flex flex-col items-center gap-2 text-center px-6">
+              <div className="h-10 w-10 rounded-full bg-surface-bone border border-hairline flex items-center justify-center">
+                <svg
+                  className="h-5 w-5 text-ash"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  aria-hidden="true"
+                >
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                  <circle cx="12" cy="13" r="4" />
+                </svg>
+              </div>
+              <p className="font-mono text-[11px] uppercase tracking-wider text-mute leading-tight">
+                Foto belum tersedia
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* 3. KARTU PETA / GOOGLE MAPS — selalu tampil */}
         {lokasi.koordinat ? (
           <a
             href={gmapsUrl(lokasi)}

@@ -17,6 +17,7 @@ export const daftarLokasi: Lokasi[] = [
     jarakKm: 0.4,
     jamKunjungan: 'Buka 24 jam',
     ringkas: 'Masjid teragung dalam Islam, mengelilingi Ka\u2019bah \u2014 kiblat seluruh umat.',
+    gambar: '',
     koordinat: { lat: 21.4225, lng: 39.8262 },
     sejarah:
       'Masjidil Haram adalah masjid tertua sekaligus terbesar di dunia, berpusat pada Ka\u2019bah yang dalam tradisi Islam dibangun kembali oleh Nabi Ibrahim dan putranya Ismail \u2018alaihimas-salam, lalu mengalami perluasan besar dari masa para Khalifah hingga era Saudi modern.',
@@ -70,6 +71,7 @@ export const daftarLokasi: Lokasi[] = [
     jarakKm: 1.1,
     jamKunjungan: 'Buka 24 jam \u00b7 Raudhah perlu tasrih/janji temu via aplikasi Nusuk',
     ringkas: 'Masjid yang dibangun Rasulullah \ufdfa, tempat makam beliau berada.',
+    gambar: '',
     koordinat: { lat: 24.4672, lng: 39.6111 },
     sejarah:
       'Masjid Nabawi didirikan Nabi Muhammad \ufdfa sesaat setelah hijrah ke Madinah pada 622 M, berdampingan dengan kediaman beliau. Di dalamnya terdapat makam Rasulullah \ufdfa bersama Abu Bakar dan Umar, serta Raudhah yang disebut \u201ctaman surga\u201d.',
@@ -123,6 +125,7 @@ export const daftarLokasi: Lokasi[] = [
     jarakKm: 5.0,
     jamKunjungan: 'Buka 24 jam (waktu setempat)',
     ringkas: 'Masjid pertama yang dibangun dalam sejarah Islam.',
+    gambar: '',
     koordinat: { lat: 24.4395, lng: 39.6175 },
     sejarah:
       'Masjid Quba adalah masjid pertama yang dibangun Rasulullah \ufdfa saat tiba di pinggiran Madinah dalam perjalanan hijrah, dibangun di atas dasar takwa. Shalat di dalamnya berpahala seperti umrah.',
@@ -175,6 +178,7 @@ export const daftarLokasi: Lokasi[] = [
     jarakKm: 6.5,
     jamKunjungan: 'Disarankan pagi hari \u00b7 pendakian berat, butuh fisik prima',
     ringkas: 'Bukit tempat Gua Hira, lokasi turunnya wahyu pertama.',
+    gambar: '',
     koordinat: { lat: 21.4577, lng: 39.8617 },
     sejarah:
       'Jabal Nur (\u201cGunung Cahaya\u201d) di timur laut Makkah memuat Gua Hira, tempat Nabi Muhammad \ufdfa menerima wahyu pertama berupa lima ayat awal Surah Al-\u2018Alaq melalui Malaikat Jibril.',
@@ -219,6 +223,7 @@ export const daftarLokasi: Lokasi[] = [
     jarakKm: 7.0,
     jamKunjungan: 'Pagi hari \u00b7 pendakian terjal & panjang',
     ringkas: 'Gunung tempat Nabi \ufdfa dan Abu Bakar bersembunyi saat hijrah.',
+    gambar: '',
     koordinat: { lat: 21.3733, lng: 39.8628 },
     sejarah:
       'Jabal Tsur di selatan Makkah memuat Gua Tsur, tempat Nabi Muhammad \ufdfa dan Abu Bakar Ash-Shiddiq bersembunyi tiga hari dari kejaran Quraisy di awal perjalanan hijrah ke Madinah.',
@@ -262,6 +267,7 @@ export const daftarLokasi: Lokasi[] = [
     jarakKm: 22.0,
     jamKunjungan: 'Ramai saat musim haji \u00b7 area terbuka',
     ringkas: 'Bukit di Padang Arafah, dikaitkan dengan Khutbah Wada\u2019.',
+    gambar: '',
     koordinat: { lat: 21.3549, lng: 39.9843 },
     sejarah:
       'Jabal Rahmah (\u201cBukit Kasih Sayang\u201d) di Padang Arafah. Di kawasan Arafah inilah Rasulullah \ufdfa menyampaikan Khutbah Wada\u2019 di hadapan puluhan ribu sahabat.',
@@ -298,6 +304,7 @@ export const daftarLokasi: Lokasi[] = [
     jarakKm: 4.5,
     jamKunjungan: '06.00 \u2013 18.00 (waktu setempat)',
     ringkas: 'Gunung tempat Perang Uhud dan makam para syuhada.',
+    gambar: '',
     koordinat: { lat: 24.5018, lng: 39.6157 },
     sejarah:
       'Jabal Uhud, gunung batu kemerahan \u00b15 km di utara Madinah, menjadi saksi Perang Uhud (3 H / 625 M). Di kakinya dimakamkan para syuhada Uhud, termasuk Hamzah bin Abdul Muthalib.',
@@ -345,6 +352,7 @@ export const daftarLokasi: Lokasi[] = [
     jarakKm: 1.2,
     jamKunjungan: 'Dibuka untuk ziarah pada waktu tertentu setelah shalat',
     ringkas: 'Pemakaman utama umat Islam sejak zaman Nabi \ufdfa.',
+    gambar: '',
     koordinat: { lat: 24.4672, lng: 39.6147 },
     sejarah:
       'Jannatul Baqi\u2019 adalah kompleks pemakaman utama di sisi tenggara Masjid Nabawi, tempat bersemayam ribuan sahabat, keluarga, dan ahlul bait Rasulullah \ufdfa.',
@@ -382,6 +390,7 @@ export const daftarLokasi: Lokasi[] = [
     jarakKm: 5.5,
     jamKunjungan: 'Buka 24 jam',
     ringkas: 'Masjid \u201cdua kiblat\u201d, saksi perpindahan arah kiblat ke Ka\u2019bah.',
+    gambar: '',
     koordinat: { lat: 24.4842, lng: 39.5779 },
     sejarah:
       'Masjid Qiblatain (\u201cMasjid Dua Kiblat\u201d) di barat laut Madinah adalah tempat turunnya perintah memindahkan kiblat dari Baitul Maqdis ke Ka\u2019bah saat shalat berlangsung.',
@@ -418,6 +427,7 @@ export const daftarLokasi: Lokasi[] = [
     jarakKm: 7.5,
     jamKunjungan: 'Buka 24 jam \u00b7 titik miqat',
     ringkas: 'Miqat terdekat dari Makkah untuk memulai ihram umrah.',
+    gambar: '',
     koordinat: { lat: 21.4486, lng: 39.7656 },
     sejarah:
       'Masjid Aisyah di Tan\u2019im adalah salah satu titik miqat terdekat dari Makkah, sekitar 7,5 km dari Masjidil Haram, tempat banyak jamaah mengambil ihram untuk umrah.',
