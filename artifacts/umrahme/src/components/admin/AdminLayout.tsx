@@ -61,12 +61,12 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         </div>
 
         <div className="flex items-center gap-3">
-          {session?.user.email && (
+          {email && (
             <span
               className="font-mono text-[11px] hidden sm:block px-2 py-1 rounded-md"
               style={{ color: '#9ca3af', background: 'rgba(0,0,0,0.03)', letterSpacing: '0.01em' }}
             >
-              {session.user.email}
+              {email}
             </span>
           )}
           <button

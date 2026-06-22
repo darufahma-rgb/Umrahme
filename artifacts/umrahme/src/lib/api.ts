@@ -228,8 +228,10 @@ export async function revokeTravelAccess(tenantId: string, mappingId: string) {
 // ── Logo Upload ───────────────────────────────────────────────
 
 export async function uploadLogo(file: File): Promise<string> {
+  const ext = file.type === 'image/png' ? 'png' : file.type === 'image/webp' ? 'webp' : 'jpg';
+  const filename = `logos/${crypto.randomUUID()}.${ext}`;
   const formData = new FormData();
-  formData.append("logo", file);
+  formData.append("logo", file, filename);
   const token = getAdminToken();
   const res = await fetch(`${API_BASE}/upload/logo`, {
     method: "POST",
