@@ -1,4 +1,4 @@
-import { fetchAnnouncements, type TenantRow, type TravelAnnouncementRow } from '../lib/api';
+import { fetchAnnouncements, type TenantRow, type TravelAnnouncementRow } from '../lib/supabase';
 import type { Fase } from '../types';
 
 export type TravelAnnouncement = {

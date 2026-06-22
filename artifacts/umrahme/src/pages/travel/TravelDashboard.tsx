@@ -1,7 +1,7 @@
 import { useState, useEffect, type FormEvent } from 'react';
 import { useTravelAuth } from '../../context/TravelAuthContext';
 import TravelLayout from '../../components/travel/TravelLayout';
-import { fetchJamaah, createJamaah, deleteJamaah, updateJamaah, type JamaahAccountRow } from '../../lib/api';
+import { fetchJamaah, createJamaah, deleteJamaah, updateJamaah, type JamaahAccountRow } from '../../lib/supabase';
 
 const FASE_OPTIONS: { value: JamaahAccountRow['fase']; label: string }[] = [
   { value: 'persiapan', label: 'Persiapan' },

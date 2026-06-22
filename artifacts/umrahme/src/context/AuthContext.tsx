@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import type { Fase, Jamaah } from '../types';
-import type { TenantRow } from '../lib/api';
+import type { TenantRow } from '../lib/supabase';
 
 const STORAGE_KEY = 'umrahme.jamaah';
 const TENANT_STORAGE_KEY = 'umrahme.tenant';

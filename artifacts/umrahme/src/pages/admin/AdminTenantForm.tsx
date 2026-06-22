@@ -9,7 +9,7 @@ import {
   fetchTravelAccounts, createTravelAccount, revokeTravelAccess,
   uploadLogo as apiUploadLogo,
   type TenantRow, type AgendaItemRow, type TravelAnnouncementRow, type JamaahAccountRow, type TenantUserRow,
-} from '../../lib/api';
+} from '../../lib/supabase';
 import { darkenHex, generateActivationCode } from '../../lib/colorUtils';
 import { insertAgendaDummy } from '../../data/agendaDummy';
 

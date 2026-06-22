@@ -7,7 +7,7 @@ import {
   whatsappLink,
   type TravelAnnouncement,
 } from '../../data/travelCompanion';
-import { fetchAgenda, type AgendaItemRow } from '../../lib/api';
+import { fetchAgenda, type AgendaItemRow } from '../../lib/supabase';
 import { SkeletonLine } from '../Skeleton';
 import type { Fase } from '../../types';
 import { IconChevron } from '../icons';

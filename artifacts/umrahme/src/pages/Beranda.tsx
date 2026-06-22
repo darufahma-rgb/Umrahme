@@ -5,7 +5,7 @@ import heroBg from '@assets/image_1782030121542.png';
 import GlobalSearch from '../components/GlobalSearch';
 import { TravelCompanionFlow } from '../components/dashboard/TravelCompanionFlow';
 import { checklistItems } from '../data/checklist';
-import { fetchAgenda, type AgendaItemRow } from '../lib/api';
+import { fetchAgenda, type AgendaItemRow } from '../lib/supabase';
 import type { Fase } from '../types';
 import {
   IconDoa,

@@ -1,4 +1,4 @@
-import { bulkInsertAgenda } from '../lib/api';
+import { bulkInsertAgenda } from '../lib/supabase';
 
 function getRelativeDate(daysFromToday: number): string {
   const d = new Date();

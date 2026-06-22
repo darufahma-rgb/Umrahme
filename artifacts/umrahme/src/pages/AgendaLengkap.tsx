@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import { useAuth } from '../context/AuthContext';
-import { fetchAgenda, type AgendaItemRow } from '../lib/api';
+import { fetchAgenda, type AgendaItemRow } from '../lib/supabase';
 import { insertAgendaDummy } from '../data/agendaDummy';
 
 function formatTanggalHeader(iso: string) {
