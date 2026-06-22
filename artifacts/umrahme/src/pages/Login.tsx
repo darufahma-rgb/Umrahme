@@ -151,7 +151,7 @@ export default function Login() {
               >
                 {KODE_DEMO}
               </button>
-              {' '}+ nama bebas
+              {' '}+ nama terdaftar
             </p>
           </form>
         </div>

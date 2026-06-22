@@ -51,3 +51,15 @@ export type TravelAnnouncementRow = {
   important: boolean;
   published_at: string;
 };
+
+export type JamaahAccountRow = {
+  id: string;
+  tenant_id: string;
+  nama: string;
+  nomor_jamaah: string;
+  rombongan: string | null;
+  nomor_bus: string | null;
+  nomor_kamar: string | null;
+  fase: 'persiapan' | 'tanah-suci' | 'selesai';
+  created_at: string;
+};

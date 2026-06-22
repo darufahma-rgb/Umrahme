@@ -3,8 +3,9 @@ import { supabase } from '../lib/supabase';
 import type { TenantRow } from '../lib/supabase';
 
 // =============================================================
-// AUTH — validasi kode aktivasi jamaah via tabel `tenants` di Supabase.
-// Kode diperiksa ke database setiap kali jamaah mencoba login.
+// AUTH — validasi kode aktivasi + nama jamaah via Supabase.
+// Langkah 1: cek kode aktivasi → cari tenant.
+// Langkah 2: cek nama jamaah di bawah tenant tersebut (case-insensitive).
 // =============================================================
 
 export const KODE_DEMO = 'DEMO01';
@@ -16,46 +17,53 @@ export interface HasilValidasi {
   error?: string;
 }
 
-let nomorUrut = 142;
-
 export async function validasiKode(kode: string, nama: string): Promise<HasilValidasi> {
   const k = kode.trim().toUpperCase();
   const n = nama.trim();
 
-  if (!n) {
-    return { ok: false, error: 'Nama jamaah wajib diisi.' };
-  }
+  if (!n) return { ok: false, error: 'Nama jamaah wajib diisi.' };
+  if (!k) return { ok: false, error: 'Kode aktivasi wajib diisi.' };
 
-  const { data, error } = await supabase
+  // Langkah 1: cek kode aktivasi, ambil data tenant
+  const { data: tenant, error: tenantErr } = await supabase
     .from('tenants')
     .select('*')
     .eq('activation_code', k)
     .maybeSingle();
 
-  if (error || !data) {
+  if (tenantErr || !tenant) {
     return { ok: false, error: 'Kode tidak ditemukan, hubungi travel Anda.' };
   }
 
-  const tahun = new Date().getFullYear();
-  const jamaah: Jamaah = {
-    nama: n,
-    nomorJamaah: `UMR-${tahun}-${String(nomorUrut++).padStart(4, '0')}`,
-    travel: data.nama_travel,
-    kodeAktivasi: k,
-    fase: 'persiapan',
+  // Langkah 2: cek nama jamaah di bawah tenant ini (case-insensitive)
+  const { data: akun, error: akunErr } = await supabase
+    .from('jamaah_accounts')
+    .select('*')
+    .eq('tenant_id', tenant.id)
+    .ilike('nama', n)
+    .maybeSingle();
 
-    // Data demo operasional supaya dashboard terasa seperti app resmi travel.
-    // Nanti field ini bisa diganti dari database jamaah/travel.
-    rombongan: 'Rombongan A',
-    nomorBus: 'Bus 3',
-    nomorKamar: '804',
-    hotelMakkah: 'Hotel Makkah — diisi travel',
-    hotelMadinah: 'Hotel Madinah — diisi travel',
-    pembimbingNama: 'Ust. Pembimbing',
-    pembimbingWhatsapp: '6281234567890',
+  if (akunErr || !akun) {
+    return { ok: false, error: 'Nama tidak ditemukan. Pastikan nama sesuai yang didaftarkan travel Anda.' };
+  }
+
+  // Susun objek Jamaah dari data database
+  const jamaah: Jamaah = {
+    nama: akun.nama,
+    nomorJamaah: akun.nomor_jamaah,
+    travel: tenant.nama_travel,
+    kodeAktivasi: k,
+    fase: akun.fase,
+    rombongan: akun.rombongan ?? undefined,
+    nomorBus: akun.nomor_bus ?? undefined,
+    nomorKamar: akun.nomor_kamar ?? undefined,
+    hotelMakkah: tenant.hotel_makkah ?? undefined,
+    hotelMadinah: tenant.hotel_madinah ?? undefined,
+    pembimbingNama: tenant.guide_name ?? undefined,
+    pembimbingWhatsapp: tenant.guide_whatsapp ?? undefined,
   };
 
-  return { ok: true, jamaah, tenant: data };
+  return { ok: true, jamaah, tenant };
 }
 
 /** Urutan fase untuk indikator visual. */

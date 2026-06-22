@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback, type FormEvent, type ChangeEvent } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import AdminLayout from '../../components/admin/AdminLayout';
-import { supabase, type TenantRow, type AgendaItemRow, type TravelAnnouncementRow } from '../../lib/supabase';
+import { supabase, type TenantRow, type AgendaItemRow, type TravelAnnouncementRow, type JamaahAccountRow } from '../../lib/supabase';
 import { darkenHex, generateActivationCode } from '../../lib/colorUtils';
 
 const MAX_LOGO_SIZE = 1024 * 1024;
@@ -54,6 +54,12 @@ const cardStyle: React.CSSProperties = {
   border: '1px solid rgba(0,0,0,0.06)',
   boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.04)',
 };
+
+const FASE_OPTIONS: { value: JamaahAccountRow['fase']; label: string }[] = [
+  { value: 'persiapan', label: 'Persiapan' },
+  { value: 'tanah-suci', label: 'Di Tanah Suci' },
+  { value: 'selesai', label: 'Selesai' },
+];
 
 export default function AdminTenantForm() {
   const { id } = useParams<{ id: string }>();
@@ -110,6 +116,18 @@ export default function AdminTenantForm() {
   const [annSubmitting, setAnnSubmitting] = useState(false);
   const [annError, setAnnError] = useState('');
 
+  // Daftar Jamaah state
+  const [jamaahList, setJamaahList] = useState<JamaahAccountRow[]>([]);
+  const [jamaahLoading, setJamaahLoading] = useState(false);
+  const [jmNama, setJmNama] = useState('');
+  const [jmNomorJamaah, setJmNomorJamaah] = useState('');
+  const [jmRombongan, setJmRombongan] = useState('');
+  const [jmBus, setJmBus] = useState('');
+  const [jmKamar, setJmKamar] = useState('');
+  const [jmFase, setJmFase] = useState<JamaahAccountRow['fase']>('persiapan');
+  const [jmSubmitting, setJmSubmitting] = useState(false);
+  const [jmError, setJmError] = useState('');
+
   const loadAgenda = useCallback(async () => {
     if (!id || isNew) return;
     setAgendaLoading(true);
@@ -130,6 +148,16 @@ export default function AdminTenantForm() {
     setAnnLoading(false);
   }, [id, isNew]);
 
+  const loadJamaah = useCallback(async () => {
+    if (!id || isNew) return;
+    setJamaahLoading(true);
+    const { data } = await supabase
+      .from('jamaah_accounts').select('*').eq('tenant_id', id)
+      .order('nama', { ascending: true });
+    setJamaahList((data as JamaahAccountRow[]) ?? []);
+    setJamaahLoading(false);
+  }, [id, isNew]);
+
   useEffect(() => {
     if (!isNew && id) {
       supabase.from('tenants').select('*').eq('id', id).single()
@@ -144,7 +172,6 @@ export default function AdminTenantForm() {
           setExistingLogoUrl(t.logo_url);
           setTanggalKeberangkatan(t.tanggal_keberangkatan ?? '');
           setTanggalKepulangan(t.tanggal_kepulangan ?? '');
-          // Operasional
           setOpHotelMakkah(t.hotel_makkah ?? '');
           setOpHotelMadinah(t.hotel_madinah ?? '');
           setOpMeetingPoint(t.meeting_point ?? '');
@@ -157,8 +184,9 @@ export default function AdminTenantForm() {
         });
       loadAgenda();
       loadAnnouncements();
+      loadJamaah();
     }
-  }, [id, isNew, loadAgenda, loadAnnouncements]);
+  }, [id, isNew, loadAgenda, loadAnnouncements, loadJamaah]);
 
   function handleNamaChange(val: string) {
     setNamaTravel(val);
@@ -233,7 +261,6 @@ export default function AdminTenantForm() {
         page_title: finalTitle,
         tanggal_keberangkatan: tanggalKeberangkatan || null,
         tanggal_kepulangan: tanggalKepulangan || null,
-        // Operasional
         hotel_makkah: opHotelMakkah.trim() || null,
         hotel_madinah: opHotelMadinah.trim() || null,
         meeting_point: opMeetingPoint.trim() || null,
@@ -303,6 +330,42 @@ export default function AdminTenantForm() {
     if (!window.confirm(`Hapus pengumuman "${title}"?`)) return;
     await supabase.from('travel_announcements').delete().eq('id', annId);
     await loadAnnouncements();
+  }
+
+  async function handleAddJamaah(e: FormEvent) {
+    e.preventDefault();
+    setJmError('');
+    if (!jmNama.trim()) { setJmError('Nama jamaah wajib diisi.'); return; }
+    if (!jmNomorJamaah.trim()) { setJmError('Nomor jamaah wajib diisi.'); return; }
+    setJmSubmitting(true);
+    const { error: insErr } = await supabase.from('jamaah_accounts').insert({
+      tenant_id: id,
+      nama: jmNama.trim(),
+      nomor_jamaah: jmNomorJamaah.trim(),
+      rombongan: jmRombongan.trim() || null,
+      nomor_bus: jmBus.trim() || null,
+      nomor_kamar: jmKamar.trim() || null,
+      fase: jmFase,
+    });
+    if (insErr) {
+      setJmError(insErr.message.includes('unique') ? `Nama "${jmNama.trim()}" sudah terdaftar di tenant ini.` : insErr.message);
+      setJmSubmitting(false);
+      return;
+    }
+    setJmNama(''); setJmNomorJamaah(''); setJmRombongan(''); setJmBus(''); setJmKamar(''); setJmFase('persiapan');
+    setJmSubmitting(false);
+    await loadJamaah();
+  }
+
+  async function handleDeleteJamaah(jamaahId: string, nama: string) {
+    if (!window.confirm(`Hapus jamaah "${nama}"? Jamaah ini tidak bisa login lagi.`)) return;
+    await supabase.from('jamaah_accounts').delete().eq('id', jamaahId);
+    await loadJamaah();
+  }
+
+  async function handleUpdateJamaahFase(jamaahId: string, fase: JamaahAccountRow['fase']) {
+    await supabase.from('jamaah_accounts').update({ fase }).eq('id', jamaahId);
+    setJamaahList(prev => prev.map(j => j.id === jamaahId ? { ...j, fase } : j));
   }
 
   function formatTanggal(iso: string) {
@@ -424,8 +487,12 @@ export default function AdminTenantForm() {
                   Pilih File
                 </button>
                 <input ref={fileInputRef} type="file" accept="image/png,image/svg+xml,image/jpeg,image/webp" onChange={handleLogoChange} className="hidden" />
-                <p className="mt-2 text-[11px]" style={{ color: '#9ca3af' }}>PNG, SVG, JPG, WebP — maks 1MB</p>
-                {logoFile && <p className="mt-1 font-mono text-[11px]" style={{ color: '#4338ca' }}>{logoFile.name}</p>}
+                <p className="mt-2 text-[11px]" style={{ color: '#9ca3af' }}>PNG, SVG, JPG, WebP — maks. 1MB</p>
+                {(logoPreview || existingLogoUrl) && (
+                  <button type="button" onClick={() => { setLogoFile(null); setLogoPreview(null); setExistingLogoUrl(null); }} className="mt-1 text-[11px] transition-all duration-150" style={{ color: '#9ca3af' }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#dc2626'; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#9ca3af'; }}>Hapus logo</button>
+                )}
               </div>
             </div>
           </div>
@@ -434,8 +501,9 @@ export default function AdminTenantForm() {
 
           {/* ── Page Title ── */}
           <div className="px-6 py-6" style={cardStyle}>
-            <FieldLabel>Judul Halaman (tab browser)</FieldLabel>
+            <FieldLabel>Judul Halaman</FieldLabel>
             <StyledInput type="text" value={pageTitle} onChange={e => setPageTitle(e.target.value)} placeholder={buildDefaultTitle(namaTravel) || 'Nama Travel — Pendamping Umrah Anda'} />
+            <p className="mt-2 text-[11px]" style={{ color: '#9ca3af' }}>Muncul di tab browser jamaah. Kosongkan untuk pakai default.</p>
           </div>
 
           <SectionDivider />
@@ -701,6 +769,122 @@ export default function AdminTenantForm() {
                     ))}
                   </tbody>
                 </table>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* ── Daftar Jamaah (hanya saat EDIT) ── */}
+        {!isNew && (
+          <div className="mt-10 mb-12">
+            <div className="flex items-center gap-3 mb-5">
+              <h2 className="font-bold" style={{ fontSize: '18px', color: '#111827', letterSpacing: '-0.02em' }}>Daftar Jamaah</h2>
+              <span className="font-mono text-[10px] uppercase tracking-widest px-2 py-1 rounded-full" style={{ background: 'rgba(67,56,202,0.07)', color: '#4338ca' }}>{jamaahList.length} jamaah</span>
+            </div>
+
+            {/* Warning */}
+            <div className="mb-4 flex items-start gap-2.5 px-4 py-3 rounded-xl text-[12px]" style={{ background: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.18)', color: '#b45309' }}>
+              <svg className="flex-none mt-0.5" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              Menghapus jamaah akan mencabut akses login mereka.
+            </div>
+
+            {/* Form tambah jamaah baru */}
+            <div className="rounded-2xl px-6 py-6 mb-4" style={{ ...cardStyle, border: '1px solid rgba(67,56,202,0.12)' }}>
+              <p className="font-mono text-[10px] uppercase tracking-[0.14em] mb-4" style={{ color: '#6b7280' }}>Tambah Jamaah Baru</p>
+              <form onSubmit={handleAddJamaah} className="space-y-3">
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Nama Lengkap <span style={{ color: '#f87171' }}>*</span></p>
+                    <StyledInput type="text" value={jmNama} onChange={e => setJmNama(e.target.value)} placeholder="Sesuai data pendaftaran" required />
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Nomor Jamaah <span style={{ color: '#f87171' }}>*</span></p>
+                    <StyledInput type="text" value={jmNomorJamaah} onChange={e => setJmNomorJamaah(e.target.value)} placeholder="UMR-2026-0001" required />
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-3">
+                  <div>
+                    <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Rombongan</p>
+                    <StyledInput type="text" value={jmRombongan} onChange={e => setJmRombongan(e.target.value)} placeholder="Rombongan A" />
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Nomor Bus</p>
+                    <StyledInput type="text" value={jmBus} onChange={e => setJmBus(e.target.value)} placeholder="Bus 3" />
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Nomor Kamar</p>
+                    <StyledInput type="text" value={jmKamar} onChange={e => setJmKamar(e.target.value)} placeholder="804" />
+                  </div>
+                </div>
+                <div style={{ maxWidth: '200px' }}>
+                  <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Fase</p>
+                  <select value={jmFase} onChange={e => setJmFase(e.target.value as JamaahAccountRow['fase'])}
+                    className="w-full rounded-xl px-4 py-3 text-sm transition-all duration-150 focus:outline-none appearance-none"
+                    style={{ ...inputBase, cursor: 'pointer' }}
+                    onFocus={e => { e.currentTarget.style.border = '1px solid #4338ca'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(67,56,202,0.10)'; e.currentTarget.style.background = '#ffffff'; }}
+                    onBlur={e => { e.currentTarget.style.border = '1px solid rgba(0,0,0,0.09)'; e.currentTarget.style.boxShadow = 'inset 0 1px 2px rgba(0,0,0,0.04)'; e.currentTarget.style.background = '#fafaf9'; }}>
+                    {FASE_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                  </select>
+                </div>
+                {jmError && <p className="text-[12px]" style={{ color: '#dc2626' }}>{jmError}</p>}
+                <button type="submit" disabled={jmSubmitting} className="flex items-center gap-2 px-5 py-2.5 text-[12px] font-semibold rounded-xl transition-all duration-150 disabled:opacity-60"
+                  style={{ background: 'linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)', color: '#ffffff', boxShadow: '0 2px 8px rgba(67,56,202,0.22)' }}>
+                  {jmSubmitting ? <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeOpacity="0.3" /><path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" /></svg>
+                    : <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>}
+                  Tambah Jamaah
+                </button>
+              </form>
+            </div>
+
+            {/* Tabel daftar jamaah */}
+            <div className="rounded-2xl overflow-hidden" style={cardStyle}>
+              {jamaahLoading ? (
+                <div className="py-10 text-center font-mono text-[12px]" style={{ color: '#d1d5db' }}>Memuat daftar jamaah...</div>
+              ) : jamaahList.length === 0 ? (
+                <div className="py-10 text-center"><p className="text-[13px]" style={{ color: '#9ca3af' }}>Belum ada jamaah terdaftar.</p></div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr style={{ borderBottom: '1px solid rgba(0,0,0,0.06)', background: '#fafaf9' }}>
+                        {['Nama', 'No. Jamaah', 'Rombongan', 'Bus', 'Kamar', 'Fase', ''].map(h => (
+                          <th key={h} className="text-left font-mono text-[10px] uppercase tracking-[0.12em] px-4 py-3 whitespace-nowrap" style={{ color: '#9ca3af' }}>{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {jamaahList.map((j, i) => (
+                        <tr key={j.id} style={{ borderBottom: i < jamaahList.length - 1 ? '1px solid rgba(0,0,0,0.04)' : 'none' }}>
+                          <td className="px-4 py-3.5 text-[13px] font-semibold" style={{ color: '#111827' }}>{j.nama}</td>
+                          <td className="px-4 py-3.5 font-mono text-[11px]" style={{ color: '#6b7280' }}>{j.nomor_jamaah}</td>
+                          <td className="px-4 py-3.5 text-[12px]" style={{ color: '#6b7280' }}>{j.rombongan ?? '—'}</td>
+                          <td className="px-4 py-3.5 text-[12px]" style={{ color: '#6b7280' }}>{j.nomor_bus ?? '—'}</td>
+                          <td className="px-4 py-3.5 text-[12px]" style={{ color: '#6b7280' }}>{j.nomor_kamar ?? '—'}</td>
+                          <td className="px-4 py-3.5">
+                            <select value={j.fase} onChange={e => handleUpdateJamaahFase(j.id, e.target.value as JamaahAccountRow['fase'])}
+                              className="rounded-lg px-2.5 py-1.5 text-[11px] font-semibold transition-all duration-150 focus:outline-none appearance-none cursor-pointer"
+                              style={{
+                                border: '1px solid rgba(0,0,0,0.09)',
+                                background: j.fase === 'persiapan' ? 'rgba(245,158,11,0.08)' : j.fase === 'tanah-suci' ? 'rgba(16,185,129,0.08)' : 'rgba(107,114,128,0.08)',
+                                color: j.fase === 'persiapan' ? '#b45309' : j.fase === 'tanah-suci' ? '#059669' : '#6b7280',
+                              }}>
+                              {FASE_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                            </select>
+                          </td>
+                          <td className="px-4 py-3.5 text-right">
+                            <button type="button" onClick={() => handleDeleteJamaah(j.id, j.nama)}
+                              className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150"
+                              style={{ color: '#9ca3af', border: '1px solid rgba(0,0,0,0.07)' }}
+                              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#dc2626'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(220,38,38,0.25)'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(220,38,38,0.05)'; }}
+                              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#9ca3af'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,0,0,0.07)'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}>
+                              Hapus
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               )}
             </div>
           </div>
