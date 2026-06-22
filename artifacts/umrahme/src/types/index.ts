@@ -65,18 +65,45 @@ export interface Doa {
 
 export type TipeLokasi = 'masjid' | 'sejarah';
 
+/** Satu sub-bagian sejarah berstruktur (heading + paragraf). */
+export interface SejarahSeksi {
+  judul: string;
+  isi: string;
+}
+
+/** Tokoh penting yang terkait dengan lokasi. */
+export interface TokohLokasi {
+  nama: string;
+  peran: string;
+}
+
+/** Dalil (ayat atau hadits) yang relevan. */
+export interface DalilLokasi {
+  sumber: string;
+  teks: string;
+}
+
 export interface Lokasi {
   id: string;
   tipe: TipeLokasi;
   nama: string;
+  namaArab?: string;
   kota: string;
-  /** Jarak dummy dari hotel (km). Ganti dengan data nyata via API. */
   jarakKm: number;
-  /** Jam buka / adab kunjungan. */
   jamKunjungan: string;
   ringkas: string;
+  /** Koordinat asli untuk deep-link Google Maps. WAJIB diisi. */
+  koordinat: { lat: number; lng: number };
+  /** Sejarah panjang dipecah jadi beberapa seksi berheading. */
+  sejarahSeksi?: SejarahSeksi[];
+  /** Tetap dipertahankan sebagai fallback / ringkasan sejarah. */
   sejarah: string;
-  // TODO(maps): tambahkan { lat: number; lng: number } untuk integrasi Google Maps.
+  tokoh?: TokohLokasi[];
+  keutamaan?: string[];
+  dalil?: DalilLokasi[];
+  adab?: string[];
+  /** Catatan riwayat lemah / perlu di-flag. */
+  catatan?: string;
 }
 
 export type KategoriChecklist = 'dokumen' | 'kesehatan' | 'barang' | 'mental';

@@ -19,7 +19,7 @@ export default function Peta() {
       <PageHeader title="Peta Lokasi" eyebrow="Panduan" backTo="/panduan" />
 
       <div className="px-5 pt-4 pb-8 lg:px-8 lg:max-w-5xl lg:mx-auto">
-        {/* Placeholder peta */}
+        {/* Banner informasi */}
         <div className="relative mb-4 flex h-32 lg:h-44 items-center justify-center overflow-hidden rounded-md border border-hairline bg-surface-bone">
           <div
             className="absolute inset-0 opacity-[0.25]"
@@ -32,7 +32,7 @@ export default function Peta() {
           <div className="relative text-center">
             <IconPeta className="mx-auto h-6 w-6 text-primary" />
             <p className="mt-1.5 font-mono text-[11px] uppercase tracking-wider text-mute">
-              Peta interaktif — segera hadir
+              Ketuk lokasi untuk lihat detail & Google Maps
             </p>
           </div>
         </div>
@@ -66,6 +66,11 @@ export default function Peta() {
                   <h2 className="truncate text-[15px] font-semibold text-ink">{l.nama}</h2>
                   <IconChevron className="h-4 w-4 flex-none text-ash" />
                 </div>
+                {l.namaArab && (
+                  <p className="text-right font-arab text-sm text-gold leading-loose" dir="rtl">
+                    {l.namaArab}
+                  </p>
+                )}
                 <p className="mt-0.5 truncate text-xs text-charcoal">{l.ringkas}</p>
                 <div className="mt-2 flex items-center gap-3 font-mono text-[11px] text-gold">
                   <span>{l.kota}</span>
@@ -109,13 +114,20 @@ export default function Peta() {
                     </span>
                   )}
                   <div className="flex items-start justify-between gap-2">
-                    <h2
-                      className={`font-semibold leading-tight text-ink ${
-                        isFeatured ? 'text-[18px]' : 'text-[14px]'
-                      }`}
-                    >
-                      {l.nama}
-                    </h2>
+                    <div className="min-w-0 flex-1">
+                      <h2
+                        className={`font-semibold leading-tight text-ink ${
+                          isFeatured ? 'text-[18px]' : 'text-[14px]'
+                        }`}
+                      >
+                        {l.nama}
+                      </h2>
+                      {l.namaArab && (
+                        <p className="font-arab text-sm text-gold leading-loose" dir="rtl">
+                          {l.namaArab}
+                        </p>
+                      )}
+                    </div>
                     <IconChevron className="h-4 w-4 flex-none text-ash mt-0.5 group-hover:text-charcoal transition-colors" />
                   </div>
                   <p
