@@ -12,7 +12,7 @@ function GearIcon() {
 }
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
-  const { signOut, session } = useAdminAuth();
+  const { signOut, email } = useAdminAuth();
   const location = useLocation();
 
   return (

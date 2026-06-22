@@ -15,6 +15,14 @@ import { insertAgendaDummy } from '../../data/agendaDummy';
 
 const MAX_LOGO_SIZE = 1024 * 1024;
 
+function isValidHex(val: string) {
+  return /^#[0-9A-Fa-f]{6}$/.test(val);
+}
+
+function normalizePhone(val: string) {
+  return val.replace(/[^\d+]/g, '');
+}
+
 function FieldLabel({ children }: { children: React.ReactNode }) {
   return <label className="block font-mono text-[10px] uppercase tracking-[0.14em] mb-2" style={{ color: '#6b7280' }}>{children}</label>;
 }
@@ -197,6 +205,11 @@ export default function AdminTenantForm() {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > MAX_LOGO_SIZE) { setError('Ukuran logo maksimal 1MB.'); return; }
+    const allowedTypes = ['image/png', 'image/jpeg', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      setError('Logo harus berupa PNG, JPG, atau WEBP. SVG tidak diizinkan.');
+      return;
+    }
     setLogoFile(file);
     const reader = new FileReader();
     reader.onload = ev => setLogoPreview(ev.target?.result as string);
@@ -216,6 +229,10 @@ export default function AdminTenantForm() {
     e.preventDefault();
     setError(''); setCodeError('');
     if (!validateDates()) return;
+    if (!isValidHex(primaryColor)) {
+      setError('Warna primary harus berupa hex valid, contoh: #0ea5e9');
+      return;
+    }
     setSubmitting(true);
     try {
       let logoUrl = existingLogoUrl;
@@ -400,7 +417,7 @@ export default function AdminTenantForm() {
 
           <div className="px-6 py-6" style={cardStyle}>
             <FieldLabel>Nama Travel <span style={{ color: '#f87171' }}>*</span></FieldLabel>
-            <StyledInput type="text" value={namaTravel} onChange={e => handleNamaChange(e.target.value)} required placeholder="Barakah Mulia Wisata" />
+            <StyledInput type="text" value={namaTravel} onChange={e => handleNamaChange(e.target.value)} required placeholder="Barakah Mulia Wisata" maxLength={80} />
           </div>
 
           <SectionDivider />
@@ -447,8 +464,8 @@ export default function AdminTenantForm() {
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 16 12 12 8 16" /><line x1="12" y1="12" x2="12" y2="21" /><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" /></svg>
                   Pilih File
                 </button>
-                <input ref={fileInputRef} type="file" accept="image/png,image/svg+xml,image/jpeg,image/webp" onChange={handleLogoChange} className="hidden" />
-                <p className="mt-2 text-[11px]" style={{ color: '#9ca3af' }}>PNG, SVG, JPG, WebP — maks. 1MB</p>
+                <input ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/webp" onChange={handleLogoChange} className="hidden" />
+                <p className="mt-2 text-[11px]" style={{ color: '#9ca3af' }}>PNG, JPG, WebP — maks. 1MB. SVG tidak didukung.</p>
                 {(logoPreview || existingLogoUrl) && (
                   <button type="button" onClick={() => { setLogoFile(null); setLogoPreview(null); setExistingLogoUrl(null); }} className="mt-1 text-[11px] transition-all duration-150" style={{ color: '#9ca3af' }}
                     onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#dc2626'; }}
@@ -490,18 +507,18 @@ export default function AdminTenantForm() {
             <p className="text-[11px] mb-4" style={{ color: '#9ca3af' }}>Semua field optional — kosong berarti tampilkan nilai default.</p>
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
-                <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Hotel Makkah</p><StyledInput type="text" value={opHotelMakkah} onChange={e => setOpHotelMakkah(e.target.value)} placeholder="Nama & no kamar hotel" /></div>
-                <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Hotel Madinah</p><StyledInput type="text" value={opHotelMadinah} onChange={e => setOpHotelMadinah(e.target.value)} placeholder="Nama & no kamar hotel" /></div>
+                <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Hotel Makkah</p><StyledInput type="text" value={opHotelMakkah} onChange={e => setOpHotelMakkah(e.target.value)} placeholder="Nama & no kamar hotel" maxLength={120} /></div>
+                <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Hotel Madinah</p><StyledInput type="text" value={opHotelMadinah} onChange={e => setOpHotelMadinah(e.target.value)} placeholder="Nama & no kamar hotel" maxLength={120} /></div>
               </div>
-              <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Titik Kumpul</p><StyledInput type="text" value={opMeetingPoint} onChange={e => setOpMeetingPoint(e.target.value)} placeholder="Cth: Lobby hotel lantai 1" /></div>
+              <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Titik Kumpul</p><StyledInput type="text" value={opMeetingPoint} onChange={e => setOpMeetingPoint(e.target.value)} placeholder="Cth: Lobby hotel lantai 1" maxLength={160} /></div>
               <div style={{ height: '1px', background: 'rgba(0,0,0,0.05)' }} />
               <div className="grid grid-cols-2 gap-4">
-                <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Nama Muthowwif</p><StyledInput type="text" value={opGuideName} onChange={e => setOpGuideName(e.target.value)} placeholder="Ust. Ahmad" /></div>
-                <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>WhatsApp Muthowwif</p><StyledInput type="text" value={opGuideWhatsapp} onChange={e => setOpGuideWhatsapp(e.target.value)} placeholder="628xxxxxxxxxx" /></div>
+                <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Nama Muthowwif</p><StyledInput type="text" value={opGuideName} onChange={e => setOpGuideName(e.target.value)} placeholder="Ust. Ahmad" maxLength={80} /></div>
+                <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>WhatsApp Muthowwif</p><StyledInput type="text" value={opGuideWhatsapp} onChange={e => setOpGuideWhatsapp(normalizePhone(e.target.value))} placeholder="628xxxxxxxxxx" /></div>
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Nama Tour Leader</p><StyledInput type="text" value={opTourLeaderName} onChange={e => setOpTourLeaderName(e.target.value)} placeholder="Bpk. Budi" /></div>
-                <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>WhatsApp Tour Leader</p><StyledInput type="text" value={opTourLeaderWhatsapp} onChange={e => setOpTourLeaderWhatsapp(e.target.value)} placeholder="628xxxxxxxxxx" /></div>
+                <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Nama Tour Leader</p><StyledInput type="text" value={opTourLeaderName} onChange={e => setOpTourLeaderName(e.target.value)} placeholder="Bpk. Budi" maxLength={80} /></div>
+                <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>WhatsApp Tour Leader</p><StyledInput type="text" value={opTourLeaderWhatsapp} onChange={e => setOpTourLeaderWhatsapp(normalizePhone(e.target.value))} placeholder="628xxxxxxxxxx" /></div>
               </div>
               <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Catatan Darurat</p><StyledTextarea rows={2} value={opEmergencyNote} onChange={e => setOpEmergencyNote(e.target.value)} placeholder="Instruksi jika jamaah tersesat atau butuh bantuan darurat..." /></div>
             </div>
@@ -589,9 +606,9 @@ export default function AdminTenantForm() {
                 <form onSubmit={handleAddAnnouncement} className="space-y-3">
                   <div className="grid grid-cols-2 gap-3">
                     <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Label</p><StyledInput type="text" value={annLabel} onChange={e => setAnnLabel(e.target.value)} placeholder="Info / Penting / Darurat" /></div>
-                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Judul <span style={{ color: '#f87171' }}>*</span></p><StyledInput type="text" value={annTitle} onChange={e => setAnnTitle(e.target.value)} required placeholder="Perubahan jadwal..." /></div>
+                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Judul <span style={{ color: '#f87171' }}>*</span></p><StyledInput type="text" value={annTitle} onChange={e => setAnnTitle(e.target.value)} required placeholder="Perubahan jadwal..." maxLength={120} /></div>
                   </div>
-                  <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Isi Pengumuman <span style={{ color: '#f87171' }}>*</span></p><StyledTextarea rows={3} value={annContent} onChange={e => setAnnContent(e.target.value)} required placeholder="Detail pengumuman untuk jamaah..." /></div>
+                  <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Isi Pengumuman <span style={{ color: '#f87171' }}>*</span></p><StyledTextarea rows={3} value={annContent} onChange={e => setAnnContent(e.target.value)} required placeholder="Detail pengumuman untuk jamaah..." maxLength={1000} /></div>
                   <label className="flex items-center gap-2.5 cursor-pointer">
                     <input type="checkbox" checked={annImportant} onChange={e => setAnnImportant(e.target.checked)} className="rounded" />
                     <span className="text-[12px]" style={{ color: '#374151' }}>Tandai sebagai penting</span>

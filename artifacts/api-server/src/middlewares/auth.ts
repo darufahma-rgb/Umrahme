@@ -23,7 +23,8 @@ export function verifyToken(req: Request): TokenPayload | null {
 export function requireAdmin(req: Request, res: Response, next: NextFunction) {
   const payload = verifyToken(req);
   if (!payload || payload.role !== "admin") {
-    return res.status(401).json({ error: "Unauthorized" });
+    res.status(401).json({ error: "Unauthorized" });
+    return;
   }
   (req as Request & { user: TokenPayload }).user = payload;
   next();
@@ -32,7 +33,8 @@ export function requireAdmin(req: Request, res: Response, next: NextFunction) {
 export function requireTravel(req: Request, res: Response, next: NextFunction) {
   const payload = verifyToken(req);
   if (!payload || (payload.role !== "travel" && payload.role !== "admin")) {
-    return res.status(401).json({ error: "Unauthorized" });
+    res.status(401).json({ error: "Unauthorized" });
+    return;
   }
   (req as Request & { user: TokenPayload }).user = payload;
   next();

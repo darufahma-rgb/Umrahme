@@ -16,7 +16,10 @@ const ADMIN_EMAIL = process.env.SUPER_ADMIN_EMAIL ?? "";
 
 router.post("/auth/admin/login", async (req, res) => {
   const { email, password } = req.body;
-  if (!email || !password) return res.status(400).json({ error: "Email dan password wajib diisi." });
+  if (!email || !password) {
+    res.status(400).json({ error: "Email dan password wajib diisi." });
+    return;
+  }
 
   const [admin] = await db
     .select()
@@ -26,20 +29,28 @@ router.post("/auth/admin/login", async (req, res) => {
   if (!admin) {
     if (email === ADMIN_EMAIL && process.env.ADMIN_PASSWORD) {
       const match = password === process.env.ADMIN_PASSWORD;
-      if (!match) return res.status(401).json({ error: "Email atau password salah." });
+      if (!match) {
+        res.status(401).json({ error: "Email atau password salah." });
+        return;
+      }
       const hash = await bcrypt.hash(password, 12);
       const [newAdmin] = await db
         .insert(adminUsersTable)
         .values({ email, password_hash: hash })
         .returning();
       const token = jwt.sign({ id: newAdmin.id, email: newAdmin.email, role: "admin" }, JWT_SECRET, { expiresIn: "7d" });
-      return res.json({ token, email: newAdmin.email });
+      res.json({ token, email: newAdmin.email });
+      return;
     }
-    return res.status(401).json({ error: "Email atau password salah." });
+    res.status(401).json({ error: "Email atau password salah." });
+    return;
   }
 
   const match = await bcrypt.compare(password, admin.password_hash);
-  if (!match) return res.status(401).json({ error: "Email atau password salah." });
+  if (!match) {
+    res.status(401).json({ error: "Email atau password salah." });
+    return;
+  }
 
   const token = jwt.sign({ id: admin.id, email: admin.email, role: "admin" }, JWT_SECRET, { expiresIn: "7d" });
   res.json({ token, email: admin.email });
@@ -47,17 +58,26 @@ router.post("/auth/admin/login", async (req, res) => {
 
 router.post("/auth/travel/login", async (req, res) => {
   const { email, password } = req.body;
-  if (!email || !password) return res.status(400).json({ error: "Email dan password wajib diisi." });
+  if (!email || !password) {
+    res.status(400).json({ error: "Email dan password wajib diisi." });
+    return;
+  }
 
   const [travelUser] = await db
     .select()
     .from(travelUsersTable)
     .where(eq(travelUsersTable.email, email));
 
-  if (!travelUser) return res.status(401).json({ error: "Email atau password salah." });
+  if (!travelUser) {
+    res.status(401).json({ error: "Email atau password salah." });
+    return;
+  }
 
   const match = await bcrypt.compare(password, travelUser.password_hash);
-  if (!match) return res.status(401).json({ error: "Email atau password salah." });
+  if (!match) {
+    res.status(401).json({ error: "Email atau password salah." });
+    return;
+  }
 
   const [tenant] = await db
     .select()
@@ -76,10 +96,14 @@ router.post("/auth/admin/setup", async (_req, res) => {
   const email = ADMIN_EMAIL;
   const password = process.env.ADMIN_PASSWORD;
   if (!email || !password) {
-    return res.status(400).json({ error: "SUPER_ADMIN_EMAIL dan ADMIN_PASSWORD harus di-set." });
+    res.status(400).json({ error: "SUPER_ADMIN_EMAIL dan ADMIN_PASSWORD harus di-set." });
+    return;
   }
   const existing = await db.select().from(adminUsersTable).where(eq(adminUsersTable.email, email));
-  if (existing.length > 0) return res.json({ ok: true, message: "Admin sudah ada." });
+  if (existing.length > 0) {
+    res.json({ ok: true, message: "Admin sudah ada." });
+    return;
+  }
   const hash = await bcrypt.hash(password, 12);
   await db.insert(adminUsersTable).values({ email, password_hash: hash });
   res.json({ ok: true, message: "Admin berhasil dibuat." });

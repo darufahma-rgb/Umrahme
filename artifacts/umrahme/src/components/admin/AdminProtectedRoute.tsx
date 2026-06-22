@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { useAdminAuth } from '../../context/AdminAuthContext';
 
 export default function AdminProtectedRoute({ children }: { children: ReactNode }) {
-  const { session, loading } = useAdminAuth();
+  const { email, loading } = useAdminAuth();
   const location = useLocation();
 
   if (loading) {
@@ -14,7 +14,7 @@ export default function AdminProtectedRoute({ children }: { children: ReactNode 
     );
   }
 
-  if (!session) {
+  if (!email) {
     return <Navigate to="/admin/login" replace state={{ from: location.pathname }} />;
   }
 

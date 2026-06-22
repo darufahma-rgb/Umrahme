@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { useTravelAuth } from '../../context/TravelAuthContext';
 
 export default function TravelProtectedRoute({ children }: { children: ReactNode }) {
-  const { session, loading } = useTravelAuth();
+  const { email, loading } = useTravelAuth();
   const location = useLocation();
 
   if (loading) {
@@ -14,7 +14,7 @@ export default function TravelProtectedRoute({ children }: { children: ReactNode
     );
   }
 
-  if (!session) {
+  if (!email) {
     return <Navigate to="/travel/login" replace state={{ from: location.pathname }} />;
   }
 

@@ -86,11 +86,11 @@ export default function Login() {
               <input
                 id="kode"
                 value={kode}
-                onChange={(e) => setKode(e.target.value.toUpperCase())}
+                onChange={(e) => setKode(e.target.value.toUpperCase().trim())}
                 placeholder="UMR8X2"
                 autoCapitalize="characters"
                 autoComplete="off"
-                maxLength={6}
+                maxLength={20}
                 className="w-full bg-transparent font-mono text-[20px] tracking-[0.40em] text-ink placeholder:text-stone/35 focus:outline-none"
               />
             </div>
