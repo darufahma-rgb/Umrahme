@@ -38,20 +38,21 @@ export type DailyInstruction = {
 };
 
 const DEFAULT_OPERATIONAL_INFO: TravelOperationalInfo = {
-  groupCode: 'Rombongan A',
-  busNumber: 'Bus 3',
-  roomNumber: '804',
-  hotelMakkah: 'Swissôtel Makkah',
-  hotelMadinah: 'Maden Hotel Madinah',
-  meetingPoint: 'Lobby utama hotel',
-  guideName: 'Ust. Muthowwif',
+  groupCode: 'Rombongan Al-Fajr 2026',
+  busNumber: 'Bus 2',
+  roomNumber: '714',
+  hotelMakkah: 'Al Marwa Rayhaan by Rotana, Makkah',
+  hotelMadinah: 'Dar Al Iman InterContinental, Madinah',
+  meetingPoint: 'Lobby utama hotel — lantai dasar dekat resepsionis',
+  guideName: 'Ust. Ahmad Fauzi, Lc.',
   guideRole: 'Muthowwif Rombongan',
-  guideWhatsapp: '6281234567890',
-  tourLeaderName: 'Bpk. Tour Leader',
+  guideWhatsapp: '6281312345678',
+  tourLeaderName: 'Bpk. Hendra Setiawan',
   tourLeaderRole: 'Tour Leader',
-  tourLeaderWhatsapp: '6289876543210',
-  travelWhatsapp: '6281234567890',
-  emergencyNote: 'Jika tersesat, tetap tenang. Hubungi pembimbing dan tunjukkan Kartu Jamaah Digital kepada petugas terdekat.',
+  tourLeaderWhatsapp: '6281298765432',
+  travelWhatsapp: '622150001234',
+  emergencyNote:
+    'Jika tersesat atau memerlukan bantuan mendesak, tetap tenang dan hubungi Ust. Ahmad Fauzi. Tunjukkan Kartu Jamaah Digital kepada petugas masjid atau polisi terdekat.',
 };
 
 export function getOperationalInfo(tenant: TenantRow | null): TravelOperationalInfo {
