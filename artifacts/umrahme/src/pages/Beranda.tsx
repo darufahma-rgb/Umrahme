@@ -376,7 +376,7 @@ export default function Beranda() {
         </div>
 
         {/* ── CONTENT SHEET ───────────────────────────── */}
-        <div className="relative z-10 -mt-8 rounded-t-[28px] bg-canvas px-4 pt-3 pb-12 space-y-1">
+        <div className="relative z-10 -mt-8 rounded-t-[28px] bg-canvas px-4 pt-4 pb-12 space-y-3">
 
           {/* Search */}
           <GlobalSearch />
