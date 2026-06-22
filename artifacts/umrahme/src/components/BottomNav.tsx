@@ -12,66 +12,59 @@ const slots = [
 export default function BottomNav() {
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-40 mx-auto max-w-app px-4"
-      style={{ paddingBottom: 'max(0.875rem, env(safe-area-inset-bottom))' }}
+      className="fixed inset-x-0 bottom-0 z-40 mx-auto max-w-app"
+      style={{ paddingBottom: 'max(0px, env(safe-area-inset-bottom))' }}
       aria-label="Navigasi utama"
     >
-      <ul
-        className="relative flex items-end justify-around rounded-[28px] overflow-visible px-2 pt-3 pb-2.5"
+      <div
+        className="mx-3 mb-3 flex items-end justify-around rounded-[24px] px-1 pt-3 pb-2.5"
         style={{
-          background: 'rgba(252, 250, 247, 0.92)',
-          WebkitBackdropFilter: 'blur(32px) saturate(1.8)',
-          backdropFilter: 'blur(32px) saturate(1.8)',
-          border: '1px solid rgba(32,32,32,0.07)',
-          boxShadow:
-            '0 -1px 0 0 rgba(255,255,255,0.6) inset, 0 20px 48px -8px rgba(0,0,0,0.14), 0 4px 12px rgba(0,0,0,0.05)',
+          background: 'rgba(255,255,255,0.94)',
+          WebkitBackdropFilter: 'blur(24px) saturate(1.6)',
+          backdropFilter: 'blur(24px) saturate(1.6)',
+          border: '1px solid rgba(0,0,0,0.08)',
+          boxShadow: '0 -1px 0 rgba(255,255,255,0.7) inset, 0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06)',
         }}
       >
         {slots.map(({ to, label, Icon, center }) =>
           center ? (
-            /* ── FAB "Ibadah" ── */
-            <li key={to}>
-              <NavLink to={to} aria-label={label} className="flex flex-col items-center">
-                {({ isActive }) => (
+            <NavLink key={to} to={to} aria-label={label} className="flex flex-col items-center gap-1 pb-0.5">
+              {({ isActive }) => (
+                <>
                   <span
-                    className="flex h-[58px] w-[58px] items-center justify-center rounded-full transition-all duration-200 active:scale-90"
+                    className="flex h-[52px] w-[52px] items-center justify-center rounded-full transition-all duration-200 active:scale-90"
                     style={{
-                      marginTop: '-32px',
+                      marginTop: '-28px',
                       background: isActive
-                        ? 'linear-gradient(145deg, #0ea5e9 0%, #0284c7 100%)'
-                        : 'linear-gradient(145deg, #38bdf8 0%, #0ea5e9 100%)',
-                      boxShadow: isActive
-                        ? '0 0 0 3px rgba(14,165,233,0.18), 0 8px 22px rgba(14,165,233,0.40), 0 2px 6px rgba(0,0,0,0.22)'
-                        : '0 0 0 3px rgba(14,165,233,0.10), 0 6px 16px rgba(14,165,233,0.28), 0 2px 6px rgba(0,0,0,0.16)',
+                        ? 'linear-gradient(145deg, #0284c7 0%, #0369a1 100%)'
+                        : 'linear-gradient(145deg, #0ea5e9 0%, #0284c7 100%)',
+                      boxShadow: '0 4px 16px rgba(14,165,233,0.40), 0 1px 4px rgba(0,0,0,0.16)',
                     }}
                   >
-                    <Icon className="h-[22px] w-[22px]" style={{ color: '#ffffff' }} />
+                    <Icon className="h-[20px] w-[20px] text-white" />
                   </span>
-                )}
-              </NavLink>
-            </li>
+                  <span className={`text-[10px] font-semibold ${isActive ? 'text-primary' : 'text-ash'}`}>
+                    {label}
+                  </span>
+                </>
+              )}
+            </NavLink>
           ) : (
-            /* ── Regular icon-only item ── */
-            <li key={to} className="flex">
-              <NavLink
-                to={to}
-                aria-label={label}
-                className="group flex flex-col items-center justify-center gap-1.5 px-4 pb-0.5"
-              >
-                {({ isActive }) => (
-                  <>
-                    <Icon
-                      className={`h-[22px] w-[22px] transition-colors duration-200 ${
-                        isActive ? 'text-primary' : 'text-ash group-hover:text-charcoal'
-                      }`}
-                    />
-                  </>
-                )}
-              </NavLink>
-            </li>
-          ),
+            <NavLink key={to} to={to} aria-label={label} className="group flex flex-col items-center gap-1 px-3 pb-0.5">
+              {({ isActive }) => (
+                <>
+                  <span className={`flex h-9 w-9 items-center justify-center rounded-2xl transition-all ${isActive ? 'bg-primary/10' : 'group-active:bg-surface-bone'}`}>
+                    <Icon className={`h-[20px] w-[20px] transition-colors duration-200 ${isActive ? 'text-primary' : 'text-ash'}`} />
+                  </span>
+                  <span className={`text-[10px] font-semibold transition-colors ${isActive ? 'text-primary' : 'text-ash'}`}>
+                    {label}
+                  </span>
+                </>
+              )}
+            </NavLink>
+          )
         )}
-      </ul>
+      </div>
     </nav>
   );
 }
