@@ -1,0 +1,8 @@
+{
+  "buildCommand": "cd artifacts/umrahme && pnpm run build",
+  "outputDirectory": "artifacts/umrahme/dist/public",
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}

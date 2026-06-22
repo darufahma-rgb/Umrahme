@@ -139,6 +139,10 @@ export default function AdminTenantForm() {
   const [taError, setTaError] = useState('');
   const [taSuccess, setTaSuccess] = useState('');
 
+  const [ocrLoading, setOcrLoading] = useState(false);
+  const [ocrError, setOcrError] = useState('');
+  const [ocrResult, setOcrResult] = useState<Record<string, string | null> | null>(null);
+
   const loadTravelAccounts = useCallback(async () => {
     if (!id || isNew) return;
     setTravelAccountsLoading(true);
@@ -192,6 +196,47 @@ export default function AdminTenantForm() {
       loadTravelAccounts();
     }
   }, [id, isNew, loadAgenda, loadAnnouncements, loadJamaah, loadTravelAccounts]);
+
+  async function handleOcrPoster(file: File) {
+    setOcrLoading(true);
+    setOcrError('');
+    try {
+      const base64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve((reader.result as string).split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+
+      const response = await fetch('/api/ai-ocr', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageBase64: base64, mimeType: file.type }),
+      });
+
+      const result = await response.json();
+      if (!result.ok) throw new Error(result.error);
+
+      const d = result.data as Record<string, string | null>;
+      setOcrResult(d);
+
+      if (d.nama_travel) { setNamaTravel(d.nama_travel); if (!pageTitle || pageTitle === buildDefaultTitle(namaTravel)) setPageTitle(buildDefaultTitle(d.nama_travel)); }
+      if (d.tanggal_keberangkatan) setTanggalKeberangkatan(d.tanggal_keberangkatan);
+      if (d.tanggal_kepulangan) setTanggalKepulangan(d.tanggal_kepulangan);
+      if (d.hotel_makkah) setOpHotelMakkah(d.hotel_makkah);
+      if (d.hotel_madinah) setOpHotelMadinah(d.hotel_madinah);
+      if (d.guide_name) setOpGuideName(d.guide_name);
+      if (d.guide_whatsapp) setOpGuideWhatsapp(d.guide_whatsapp);
+      if (d.tour_leader_name) setOpTourLeaderName(d.tour_leader_name);
+      if (d.tour_leader_whatsapp) setOpTourLeaderWhatsapp(d.tour_leader_whatsapp);
+      if (d.meeting_point) setOpMeetingPoint(d.meeting_point);
+      if (d.catatan) setOpEmergencyNote(d.catatan);
+    } catch (err) {
+      setOcrError(err instanceof Error ? err.message : 'Gagal membaca poster.');
+    } finally {
+      setOcrLoading(false);
+    }
+  }
 
   function handleNamaChange(val: string) {
     setNamaTravel(val);
@@ -393,7 +438,50 @@ export default function AdminTenantForm() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-0">
-          <div className="rounded-t-2xl px-6 py-6" style={cardStyle}>
+
+          {/* ── Import dari Poster ── */}
+          <div className="rounded-t-2xl px-6 py-5 mb-0" style={{ background: 'rgba(67,56,202,0.03)', border: '2px dashed rgba(67,56,202,0.22)', borderRadius: '16px 16px 0 0' }}>
+            <p className="font-mono text-[10px] uppercase tracking-widest mb-1" style={{ color: '#4338ca' }}>
+              ✨ Import dari Poster
+            </p>
+            <p className="text-[12px] mb-3" style={{ color: '#6b7280' }}>
+              Upload foto poster/brosur keberangkatan — AI akan membaca dan mengisi form secara otomatis.
+            </p>
+            <input
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              onChange={e => {
+                const file = e.target.files?.[0];
+                if (file) handleOcrPoster(file);
+              }}
+              className="hidden"
+              id="poster-upload"
+            />
+            <label
+              htmlFor="poster-upload"
+              className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[12px] font-semibold transition-all"
+              style={{ background: '#4338ca', color: '#ffffff' }}
+            >
+              {ocrLoading ? '⏳ Membaca poster...' : '📎 Pilih Foto Poster'}
+            </label>
+            {ocrLoading && (
+              <p className="mt-2 text-[11px] animate-pulse" style={{ color: '#4338ca' }}>
+                AI sedang membaca poster, mohon tunggu...
+              </p>
+            )}
+            {ocrError && (
+              <p className="mt-2 text-[11px]" style={{ color: '#dc2626' }}>{ocrError}</p>
+            )}
+            {ocrResult && !ocrLoading && (
+              <p className="mt-2 text-[11px]" style={{ color: '#16a34a' }}>
+                ✓ Data berhasil diekstrak dan form telah diisi otomatis. Periksa dan sesuaikan jika perlu.
+              </p>
+            )}
+          </div>
+
+          <SectionDivider />
+
+          <div className="px-6 py-6" style={cardStyle}>
             <FieldLabel>Kode Aktivasi{!isNew && <span className="ml-2 normal-case" style={{ color: '#d1d5db', fontFamily: 'inherit', letterSpacing: 'normal', textTransform: 'none', fontSize: '10px' }}>(tidak dapat diubah)</span>}</FieldLabel>
             {isNew ? (
               <div className="flex gap-2">
