@@ -293,12 +293,6 @@ function KartuItinerary({ tenantId }: { tenantId: string }) {
   );
 }
 
-const moreFeatures = [
-  { to: '/panduan/manasik-interaktif', label: 'Manasik Interaktif',  icon: <IconIbadah   className="h-4 w-4" /> },
-  { to: '/profil/jurnal',              label: 'Jurnal Perjalanan',   icon: <IconJurnal   className="h-4 w-4" /> },
-  { to: '/profil/agenda',              label: 'Agenda',              icon: <IconKalender className="h-4 w-4" /> },
-  { to: '/profil/sertifikat',          label: 'Sertifikat Digital',  icon: <IconSertifikat className="h-4 w-4" /> },
-];
 
 const faseBadge: Record<string, string> = {
   persiapan:    'Fase Persiapan',
@@ -395,25 +389,11 @@ export default function Beranda() {
             <KartuAgendaHariIni items={todayAgenda.slice(0, 3)} total={todayAgenda.length} />
           )}
 
-          {/* Itinerary ringkasan */}
-          {tenant?.id && <KartuItinerary tenantId={tenant.id} />}
-
           {/* Travel companion cards */}
           <TravelCompanionFlow />
 
-          {/* Pemisah */}
-          <div className="flex items-center gap-3">
-            <div className="flex-1 h-px bg-hairline" />
-            <p className="font-mono text-[8.5px] uppercase tracking-[0.28em] text-stone">Akses Cepat</p>
-            <div className="flex-1 h-px bg-hairline" />
-          </div>
-
-          {/* Quick actions */}
-          <div className="grid grid-cols-4 gap-y-4 gap-x-2">
-            {phaseActions.map(({ to, label, icon, accent }) => (
-              <QuickAction key={to} to={to} label={label} icon={icon} accent={accent} />
-            ))}
-          </div>
+          {/* Itinerary ringkasan */}
+          {tenant?.id && <KartuItinerary tenantId={tenant.id} />}
 
           {/* Checklist */}
           {jamaah.fase === 'persiapan' && (
@@ -443,19 +423,18 @@ export default function Beranda() {
             </Link>
           )}
 
-          {/* Fitur lainnya */}
-          <div>
-            <p className="mb-2.5 font-mono text-[8.5px] uppercase tracking-[0.28em] text-stone">Fitur Lainnya</p>
-            <div className="rounded-2xl bg-white overflow-hidden divide-y divide-hairline"
-              style={{ border: '1px solid rgba(0,0,0,0.07)', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
-              {moreFeatures.map(({ to, label, icon }) => (
-                <Link key={to} to={to} className="flex items-center gap-3 px-4 py-3.5 active:bg-surface-bone transition-colors">
-                  <span className="flex h-8 w-8 flex-none items-center justify-center rounded-xl bg-surface-bone text-charcoal">{icon}</span>
-                  <span className="flex-1 text-[13px] font-semibold text-ink">{label}</span>
-                  <IconChevron className="h-3.5 w-3.5 text-ash" />
-                </Link>
-              ))}
-            </div>
+          {/* Pemisah */}
+          <div className="flex items-center gap-3">
+            <div className="flex-1 h-px bg-hairline" />
+            <p className="font-mono text-[8.5px] uppercase tracking-[0.28em] text-stone">Akses Cepat</p>
+            <div className="flex-1 h-px bg-hairline" />
+          </div>
+
+          {/* Quick actions */}
+          <div className="grid grid-cols-4 gap-y-4 gap-x-2">
+            {phaseActions.map(({ to, label, icon, accent }) => (
+              <QuickAction key={to} to={to} label={label} icon={icon} accent={accent} />
+            ))}
           </div>
 
         </div>
@@ -484,23 +463,10 @@ export default function Beranda() {
           {showHitung && <KartuHitung n={hariMenuju!} namaTravel={namaTravel} />}
           {todayAgenda.length > 0 && <KartuAgendaHariIni items={todayAgenda.slice(0, 3)} total={todayAgenda.length} />}
 
-          {/* Itinerary ringkasan */}
-          {tenant?.id && <KartuItinerary tenantId={tenant.id} />}
-
           <TravelCompanionFlow desktop />
 
-          <div>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="flex-1 h-px bg-hairline" />
-              <p className="font-mono text-[8.5px] uppercase tracking-[0.28em] text-stone">Akses Cepat</p>
-              <div className="flex-1 h-px bg-hairline" />
-            </div>
-            <div className="grid grid-cols-8 gap-3">
-              {phaseActions.map(({ to, label, icon, accent }) => (
-                <QuickAction key={to} to={to} label={label} icon={icon} accent={accent} />
-              ))}
-            </div>
-          </div>
+          {/* Itinerary ringkasan */}
+          {tenant?.id && <KartuItinerary tenantId={tenant.id} />}
 
           {jamaah.fase === 'persiapan' && (
             <Link to="/profil/persiapan" className="block active:scale-[0.99] transition-transform">
@@ -518,6 +484,19 @@ export default function Beranda() {
               </div>
             </Link>
           )}
+
+          <div>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="flex-1 h-px bg-hairline" />
+              <p className="font-mono text-[8.5px] uppercase tracking-[0.28em] text-stone">Akses Cepat</p>
+              <div className="flex-1 h-px bg-hairline" />
+            </div>
+            <div className="grid grid-cols-8 gap-3">
+              {phaseActions.map(({ to, label, icon, accent }) => (
+                <QuickAction key={to} to={to} label={label} icon={icon} accent={accent} />
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Kolom kanan */}
@@ -529,19 +508,6 @@ export default function Beranda() {
               <p className="font-mono text-[9px] uppercase tracking-[0.28em] text-white/40">Jamaah</p>
               <p className="mt-0.5 font-display text-[24px] font-bold text-white leading-tight">{jamaah.nama}</p>
               <p className="mt-0.5 font-mono text-[10px] tracking-widest text-sky-200/50">{jamaah.kodeAktivasi}</p>
-            </div>
-          </div>
-          <div className="flex-1 overflow-y-auto p-4 space-y-3">
-            <p className="font-mono text-[8.5px] uppercase tracking-[0.28em] text-stone">Fitur Lainnya</p>
-            <div className="rounded-2xl bg-white overflow-hidden divide-y divide-hairline"
-              style={{ border: '1px solid rgba(0,0,0,0.07)', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
-              {moreFeatures.map(({ to, label, icon }) => (
-                <Link key={to} to={to} className="flex items-center gap-3 px-4 py-3.5 hover:bg-surface-bone transition-colors">
-                  <span className="flex h-8 w-8 flex-none items-center justify-center rounded-xl bg-surface-bone text-charcoal">{icon}</span>
-                  <span className="flex-1 text-[13px] font-semibold text-ink">{label}</span>
-                  <IconChevron className="h-3.5 w-3.5 text-ash" />
-                </Link>
-              ))}
             </div>
           </div>
         </div>
