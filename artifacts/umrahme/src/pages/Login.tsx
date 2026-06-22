@@ -36,42 +36,45 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f0efed] p-0 sm:p-6">
-      <div className="w-full sm:max-w-[390px] h-screen sm:h-auto flex flex-col sm:rounded-[32px] sm:shadow-[0_16px_64px_rgba(0,0,0,0.14),0_4px_16px_rgba(0,0,0,0.08)] overflow-hidden bg-white">
+      {/* Card — image is absolute background, content flows on top, no split sections */}
+      <div className="relative w-full sm:max-w-[390px] h-screen sm:h-auto flex flex-col sm:rounded-[32px] sm:shadow-[0_16px_64px_rgba(0,0,0,0.14),0_4px_16px_rgba(0,0,0,0.08)] overflow-hidden">
 
-        {/* Hero — image + gradient fade, no hard bottom edge */}
-        <div className="relative w-full flex-shrink-0" style={{ height: 'clamp(260px, 56vw, 340px)' }}>
-          <img
-            src={heroBg}
-            alt=""
-            aria-hidden
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{ objectPosition: 'center 35%', transform: 'scale(1.08)', transformOrigin: 'center 38%' }}
-          />
-          {/* Dark overlay for top text readability */}
-          <div className="pointer-events-none absolute inset-0"
-            style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.44) 0%, rgba(0,0,0,0.12) 38%, transparent 58%)' }} />
-          {/* Smooth white fade covers the entire bottom half */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0"
-            style={{ height: '60%', background: 'linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.55) 30%, rgba(255,255,255,0.88) 58%, rgba(255,255,255,1) 78%, rgba(255,255,255,1) 100%)' }} />
+        {/* Background image fills entire card — positioned to show dome + minaret */}
+        <img
+          src={heroBg}
+          alt=""
+          aria-hidden
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+          style={{ objectPosition: 'center 45%', transform: 'scale(1.04)', transformOrigin: 'center 45%' }}
+        />
 
-          {/* Arabic calligraphy — positioned in top 55% */}
-          <div className="absolute inset-x-0 top-0 flex flex-col items-center justify-center gap-2 px-8" style={{ height: '55%' }}>
-            <p className="font-arab text-center text-white"
-              style={{ fontSize: 'clamp(20px, 6vw, 28px)', direction: 'rtl', textShadow: '0 2px 12px rgba(0,0,0,0.6)', lineHeight: 1.7 }}>
-              لَبَّيْكَ اللّٰهُمَّ لَبَّيْكَ
+        {/* Gradient: darken sky at top for text, stay fully transparent through mid, then dissolve to white */}
+        <div className="pointer-events-none absolute inset-0"
+          style={{
+            background: 'linear-gradient(to bottom, rgba(0,0,0,0.44) 0%, rgba(0,0,0,0.08) 18%, transparent 28%, transparent 52%, rgba(255,255,255,0.50) 63%, rgba(255,255,255,0.90) 72%, #ffffff 80%)'
+          }}
+        />
+
+        {/* Arabic calligraphy — top section over image */}
+        <div className="relative flex flex-col items-center justify-center gap-2 px-8 pt-12 pb-4" style={{ zIndex: 1 }}>
+          <p className="font-arab text-center text-white"
+            style={{ fontSize: 'clamp(20px, 6vw, 28px)', direction: 'rtl', textShadow: '0 2px 12px rgba(0,0,0,0.6)', lineHeight: 1.7 }}>
+            لَبَّيْكَ اللّٰهُمَّ لَبَّيْكَ
+          </p>
+          <div className="flex items-center gap-2.5">
+            <span className="h-px w-6 bg-white/35" />
+            <p className="font-mono text-[8.5px] uppercase tracking-[0.30em]" style={{ color: 'rgba(255,255,255,0.60)', textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}>
+              Talbiyah
             </p>
-            <div className="flex items-center gap-2.5">
-              <span className="h-px w-6 bg-white/35" />
-              <p className="font-mono text-[8.5px] uppercase tracking-[0.30em]" style={{ color: 'rgba(255,255,255,0.60)', textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}>
-                Talbiyah
-              </p>
-              <span className="h-px w-6 bg-white/35" />
-            </div>
+            <span className="h-px w-6 bg-white/35" />
           </div>
         </div>
 
-        {/* Form area — overlaps hero with negative margin for seamless flow */}
-        <div className="flex flex-col flex-1 px-6 pb-6 bg-white" style={{ marginTop: '-56px', position: 'relative', zIndex: 10, paddingTop: '0' }}>
+        {/* Spacer — this is the "image window": dome + building shows here */}
+        <div className="flex-shrink-0" style={{ height: 'clamp(130px, 30vw, 190px)' }} />
+
+        {/* Form — transparent top so image bleeds through softly then solid white */}
+        <div className="relative flex flex-col flex-1 px-6 pt-5 pb-6" style={{ zIndex: 1, background: 'linear-gradient(to bottom, transparent 0px, #ffffff 28px)' }}>
 
           {/* Heading */}
           <div className="text-center mb-5">
