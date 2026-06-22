@@ -81,7 +81,7 @@ export function getOperationalInfo(tenant: TenantRow | null): TravelOperationalI
   };
 }
 
-/** Instruksi harian untuk dashboard. Sumber: nanti dari DB, sekarang static placeholder. */
+/** @deprecated Digantikan oleh query agenda_items di TodayInstructionCard. */
 export function getTodayInstruction(_tenantId?: string | null): DailyInstruction {
   return {
     id: 'instruction-1',

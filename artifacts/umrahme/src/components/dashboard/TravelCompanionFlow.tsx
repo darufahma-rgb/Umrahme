@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
-  getTodayInstruction,
   getLatestAnnouncement,
   getOperationalInfo,
   whatsappLink,
   type TravelAnnouncement,
-  type DailyInstruction,
 } from '../../data/travelCompanion';
+import { supabase, type AgendaItemRow } from '../../lib/supabase';
+import { SkeletonLine } from '../Skeleton';
 import type { Fase } from '../../types';
 import { IconChevron } from '../icons';
 
@@ -188,7 +188,46 @@ export function TripProgressCard() {
 
 export function TodayInstructionCard() {
   const { tenant } = useAuth();
-  const instr: DailyInstruction = getTodayInstruction(tenant?.id);
+  const [todayItems, setTodayItems] = useState<AgendaItemRow[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!tenant?.id) { setLoading(false); return; }
+    const today = new Date().toISOString().split('T')[0];
+    supabase
+      .from('agenda_items')
+      .select('*')
+      .eq('tenant_id', tenant.id)
+      .eq('tanggal', today)
+      .order('jam_mulai', { ascending: true })
+      .order('urutan', { ascending: true })
+      .then(({ data }) => {
+        setTodayItems((data as AgendaItemRow[]) ?? []);
+        setLoading(false);
+      });
+  }, [tenant?.id]);
+
+  if (loading) {
+    return (
+      <div className="overflow-hidden rounded-2xl border border-hairline bg-white shadow-drop-card px-4 py-4 space-y-3">
+        <div className="flex items-center gap-2.5">
+          <div className="h-8 w-8 rounded-xl animate-pulse bg-surface-bone flex-none" />
+          <div className="flex-1 space-y-1.5">
+            <SkeletonLine w="w-1/4" />
+            <SkeletonLine w="w-2/3" />
+          </div>
+        </div>
+        <div className="h-px bg-hairline" />
+        <SkeletonLine w="w-full" />
+        <SkeletonLine w="w-4/5" />
+      </div>
+    );
+  }
+
+  if (todayItems.length === 0) return null;
+
+  const visible = todayItems.slice(0, 3);
+  const extra = todayItems.length - 3;
 
   return (
     <div className="overflow-hidden rounded-2xl border border-hairline bg-white shadow-drop-card">
@@ -199,27 +238,46 @@ export function TodayInstructionCard() {
         </div>
         <div>
           <p className="font-mono text-[8px] uppercase tracking-[0.22em] text-mute">Arahan Hari Ini</p>
-          <p className="text-[13px] font-bold text-ink leading-tight">{instr.title}</p>
+          <p className="text-[13px] font-bold text-ink leading-tight">
+            {todayItems.length === 1 ? todayItems[0].judul : `${todayItems.length} kegiatan hari ini`}
+          </p>
         </div>
       </div>
       <div className="h-px bg-hairline mx-4" />
-      <div className="px-4 py-3 space-y-2">
-        {[
-          { label: 'Jam Kumpul',   value: instr.meetingTime },
-          { label: 'Titik Kumpul', value: instr.meetingPoint },
-          { label: 'Pakaian',      value: instr.dressCode },
-          { label: 'Bawa',         value: instr.bringItems.join(', ') },
-        ].map(({ label, value }) => (
-          <div key={label} className="grid items-start gap-x-3" style={{ gridTemplateColumns: '88px 1fr' }}>
-            <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-mute pt-0.5 whitespace-nowrap">{label}</p>
-            <p className="text-[12px] font-semibold text-ink leading-snug">{value}</p>
+      <div className="px-4 py-3 space-y-2.5">
+        {visible.map((item) => (
+          <div key={item.id} className="flex gap-3 items-start">
+            <span className="font-mono text-[10px] text-mute pt-0.5 whitespace-nowrap w-9 flex-none">
+              {item.jam_mulai ? item.jam_mulai.slice(0, 5) : '—'}
+            </span>
+            <div className="flex-1 min-w-0">
+              <p className="text-[12px] font-bold text-ink leading-snug">{item.judul}</p>
+              {item.lokasi && (
+                <p className="font-mono text-[10px] text-mute mt-0.5 flex items-center gap-1">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-2.5 w-2.5 flex-none">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                  </svg>
+                  {item.lokasi}
+                </p>
+              )}
+              {item.deskripsi && (
+                <p className="text-[11px] text-mute italic mt-0.5 leading-snug">{item.deskripsi}</p>
+              )}
+            </div>
           </div>
         ))}
-        {instr.note && (
-          <div className="mt-1 rounded-xl px-3 py-2" style={{ background: 'rgba(34,197,94,0.07)', border: '1px solid rgba(34,197,94,0.12)' }}>
-            <p className="text-[11px] text-emerald-700 leading-relaxed">📌 {instr.note}</p>
-          </div>
+        {extra > 0 && (
+          <p className="text-[11px] text-mute font-mono">+{extra} agenda lainnya</p>
         )}
+      </div>
+      <div className="px-4 pb-3">
+        <Link to="/profil/agenda"
+          className="text-[11px] font-semibold text-emerald-600 flex items-center gap-1 hover:text-emerald-700 transition-colors">
+          Lihat Semua Agenda
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className="h-3 w-3">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </Link>
       </div>
     </div>
   );
