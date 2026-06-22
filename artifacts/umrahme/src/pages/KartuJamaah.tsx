@@ -166,6 +166,7 @@ export default function KartuJamaah() {
               <div className="min-w-0 flex-1">
                 <p className="text-[15px] font-bold leading-tight text-ink">{pembimbing}</p>
                 <p className="text-[11px] text-charcoal mt-0.5">{info.guideRole}</p>
+                <p className="font-mono text-[11px] text-primary mt-0.5 tracking-[0.04em]">{pembimbingWa}</p>
               </div>
             </div>
           </div>
