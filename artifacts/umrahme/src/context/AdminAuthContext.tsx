@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { adminLogin } from '../lib/api';
+import { verifyAdminToken } from '../lib/adminAuth';
 
 interface AdminAuthValue {
   email: string | null;
@@ -15,12 +16,16 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('umrahme.admin_token');
-    const savedEmail = localStorage.getItem('umrahme.admin_email');
-    if (token && savedEmail) {
-      setEmail(savedEmail);
-    }
-    setLoading(false);
+    verifyAdminToken().then(({ valid, email: verifiedEmail }) => {
+      if (valid && verifiedEmail) {
+        setEmail(verifiedEmail);
+        localStorage.setItem('umrahme.admin_email', verifiedEmail);
+      } else {
+        localStorage.removeItem('umrahme.admin_token');
+        localStorage.removeItem('umrahme.admin_email');
+        setEmail(null);
+      }
+    }).finally(() => setLoading(false));
   }, []);
 
   const login = async (emailInput: string, password: string) => {

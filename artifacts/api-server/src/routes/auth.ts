@@ -1,4 +1,5 @@
-import { Router } from "express";
+import { Router, type Request } from "express";
+import { requireAdmin } from "../middlewares/auth";
 import { db } from "@workspace/db";
 import {
   adminUsersTable,
@@ -90,6 +91,11 @@ router.post("/auth/travel/login", async (req, res) => {
     { expiresIn: "7d" },
   );
   res.json({ token, email: travelUser.email, tenant });
+});
+
+router.get("/auth/admin/verify", requireAdmin, (req, res) => {
+  const user = (req as Request & { user: { id: string; email: string; role: string } }).user;
+  res.json({ valid: true, email: user.email, role: user.role });
 });
 
 router.post("/auth/admin/setup", async (_req, res) => {
