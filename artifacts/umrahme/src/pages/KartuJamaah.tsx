@@ -127,7 +127,18 @@ export default function KartuJamaah() {
                     <div className="h-1.5 w-1.5 rounded-full flex-none" style={{ background: dot }} />
                     <p className="font-mono text-[7px] uppercase tracking-[0.14em] text-white/35 leading-none">{kota}</p>
                   </div>
-                  <p className="text-[11.5px] font-bold leading-snug text-white/90">{hotel}</p>
+                  {hotel ? (
+                    <a
+                      href={`https://maps.google.com/?q=${encodeURIComponent(hotel + (kota.includes('Makkah') ? ' Makkah Saudi Arabia' : ' Madinah Saudi Arabia'))}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[11.5px] font-bold leading-snug text-white underline underline-offset-2 decoration-white/40 hover:decoration-white active:opacity-70 transition-opacity"
+                    >
+                      {hotel} ↗
+                    </a>
+                  ) : (
+                    <p className="text-[11.5px] font-bold leading-snug text-white/40 italic">Belum diisi</p>
+                  )}
                 </div>
               ))}
             </div>

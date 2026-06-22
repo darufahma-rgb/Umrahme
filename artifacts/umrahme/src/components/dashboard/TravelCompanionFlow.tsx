@@ -107,7 +107,18 @@ export function TripIdentityCard() {
                 <div className="h-1.5 w-1.5 rounded-full flex-none" style={{ background: dot }} />
                 <p className="font-mono text-[7px] uppercase tracking-[0.15em] text-ash">{city}</p>
               </div>
-              <p className="text-[11px] font-semibold leading-tight text-ink">{hotel}</p>
+              {hotel ? (
+                <a
+                  href={`https://maps.google.com/?q=${encodeURIComponent(hotel + (city === 'Makkah' ? ' Makkah Saudi Arabia' : ' Madinah Saudi Arabia'))}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[11px] font-semibold leading-tight text-primary underline underline-offset-2 decoration-primary/40 hover:decoration-primary active:opacity-70 transition-opacity"
+                >
+                  {hotel} ↗
+                </a>
+              ) : (
+                <p className="text-[11px] font-semibold leading-tight text-ash italic">Belum diisi</p>
+              )}
             </div>
           ))}
         </div>
