@@ -1,3 +1,4 @@
+import { supabase, type TenantRow, type TravelAnnouncementRow } from '../lib/supabase';
 import type { Fase } from '../types';
 
 export type TravelAnnouncement = {
@@ -41,51 +42,60 @@ const DEFAULT_OPERATIONAL_INFO: TravelOperationalInfo = {
   emergencyNote: 'Jika tersesat, tetap tenang. Hubungi pembimbing dan tunjukkan Kartu Jamaah Digital.',
 };
 
-const DEFAULT_ANNOUNCEMENTS: TravelAnnouncement[] = [
-  {
-    id: 'announcement-1',
-    label: 'Penting',
-    title: 'Perhatikan titik kumpul hari ini',
-    content: 'Jamaah dimohon berkumpul sesuai arahan pembimbing. Bawa sandal, tas kecil, kartu jamaah, dan tetap bersama rombongan.',
-    important: true,
-    publishedAt: new Date().toISOString(),
-  },
-  {
-    id: 'announcement-2',
-    label: 'Info',
-    title: 'Jadwal keberangkatan ke Madinah',
-    content: 'Bus berangkat pukul 08.00 WAS dari lobby hotel. Pastikan jamaah sudah siap 30 menit sebelumnya dengan seluruh barang bawaan.',
-    important: false,
-    publishedAt: new Date(Date.now() - 1000 * 60 * 60 * 6).toISOString(),
-  },
-  {
-    id: 'announcement-3',
-    label: 'Penting',
-    title: 'Pengumpulan paspor untuk proses visa',
-    content: 'Mohon kumpulkan paspor kepada ketua rombongan masing-masing paling lambat malam ini pukul 21.00.',
-    important: true,
-    publishedAt: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
-  },
-  {
-    id: 'announcement-4',
-    label: 'Info',
-    title: 'Pembagian makan malam di hotel',
-    content: 'Makan malam tersedia di restoran lantai 2 mulai pukul 19.00 s/d 21.00. Tunjukkan gelang jamaah saat masuk.',
-    important: false,
-    publishedAt: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString(),
-  },
-];
-
-export function getOperationalInfo(_tenantId?: string | null): TravelOperationalInfo {
-  return DEFAULT_OPERATIONAL_INFO;
+// Sync — gabungkan data tenant dari DB dengan fallback DEFAULT per field
+export function getOperationalInfo(tenant: TenantRow | null): TravelOperationalInfo {
+  if (!tenant) return DEFAULT_OPERATIONAL_INFO;
+  return {
+    groupCode:         DEFAULT_OPERATIONAL_INFO.groupCode,
+    busNumber:         DEFAULT_OPERATIONAL_INFO.busNumber,
+    roomNumber:        DEFAULT_OPERATIONAL_INFO.roomNumber,
+    hotelMakkah:       tenant.hotel_makkah       ?? DEFAULT_OPERATIONAL_INFO.hotelMakkah,
+    hotelMadinah:      tenant.hotel_madinah      ?? DEFAULT_OPERATIONAL_INFO.hotelMadinah,
+    meetingPoint:      tenant.meeting_point      ?? DEFAULT_OPERATIONAL_INFO.meetingPoint,
+    guideName:         tenant.guide_name         ?? DEFAULT_OPERATIONAL_INFO.guideName,
+    guideRole:         'Muthowwif',
+    guideWhatsapp:     tenant.guide_whatsapp     ?? DEFAULT_OPERATIONAL_INFO.guideWhatsapp,
+    tourLeaderName:    tenant.tour_leader_name   ?? DEFAULT_OPERATIONAL_INFO.tourLeaderName,
+    tourLeaderWhatsapp:tenant.tour_leader_whatsapp ?? DEFAULT_OPERATIONAL_INFO.tourLeaderWhatsapp,
+    travelWhatsapp:    tenant.guide_whatsapp     ?? DEFAULT_OPERATIONAL_INFO.travelWhatsapp,
+    emergencyNote:     tenant.emergency_note     ?? DEFAULT_OPERATIONAL_INFO.emergencyNote,
+  };
 }
 
-export function getLatestAnnouncement(_tenantId?: string | null): TravelAnnouncement | null {
-  return DEFAULT_ANNOUNCEMENTS[0] ?? null;
+function rowToAnnouncement(row: TravelAnnouncementRow): TravelAnnouncement {
+  return {
+    id: row.id,
+    label: row.label,
+    title: row.title,
+    content: row.content,
+    important: row.important,
+    publishedAt: row.published_at,
+  };
 }
 
-export function getAllAnnouncements(_tenantId?: string | null): TravelAnnouncement[] {
-  return DEFAULT_ANNOUNCEMENTS;
+// Async — query dari tabel travel_announcements
+export async function getLatestAnnouncement(tenantId: string | null): Promise<TravelAnnouncement | null> {
+  if (!tenantId) return null;
+  const { data, error } = await supabase
+    .from('travel_announcements')
+    .select('*')
+    .eq('tenant_id', tenantId)
+    .order('published_at', { ascending: false })
+    .limit(1)
+    .single();
+  if (error || !data) return null;
+  return rowToAnnouncement(data as TravelAnnouncementRow);
+}
+
+export async function getAllAnnouncements(tenantId: string | null): Promise<TravelAnnouncement[]> {
+  if (!tenantId) return [];
+  const { data, error } = await supabase
+    .from('travel_announcements')
+    .select('*')
+    .eq('tenant_id', tenantId)
+    .order('published_at', { ascending: false });
+  if (error || !data) return [];
+  return (data as TravelAnnouncementRow[]).map(rowToAnnouncement);
 }
 
 export function getFocusByFase(fase: Fase): {

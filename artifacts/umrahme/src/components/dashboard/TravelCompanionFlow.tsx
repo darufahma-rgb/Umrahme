@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
@@ -5,6 +6,7 @@ import {
   getLatestAnnouncement,
   getOperationalInfo,
   whatsappLink,
+  type TravelAnnouncement,
 } from '../../data/travelCompanion';
 import { IconChevron } from '../icons';
 
@@ -45,26 +47,21 @@ function IconMapPin({ className = '' }: { className?: string }) {
 }
 
 // ── 1. Identity Band ─────────────────────────────────────────
-// Kartu identitas bergaya "boarding pass" — left accent stripe
 
 export function TripIdentityCard({ desktop = false }: { desktop?: boolean }) {
   const { jamaah, tenant } = useAuth();
   if (!jamaah) return null;
 
-  const info = getOperationalInfo(tenant?.id);
+  const info = getOperationalInfo(tenant ?? null);
   const hotelMakkah  = jamaah.hotelMakkah  ?? info.hotelMakkah;
   const hotelMadinah = jamaah.hotelMadinah ?? info.hotelMadinah;
   const firstName  = jamaah.nama.split(' ')[0];
 
   return (
     <div className={`overflow-hidden rounded-2xl border border-hairline bg-white shadow-drop-card ${desktop ? '' : ''}`}>
-      {/* Left accent bar + content */}
       <div className="flex">
-        {/* Accent stripe */}
         <div className="w-1 flex-none" style={{ background: 'linear-gradient(to bottom, #0ea5e9, #0284c7)' }} />
-
         <div className="flex-1 p-4">
-          {/* Top row */}
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0 flex-1">
               <p className="font-mono text-[8.5px] uppercase tracking-[0.22em] text-mute">Identitas Perjalanan</p>
@@ -79,7 +76,6 @@ export function TripIdentityCard({ desktop = false }: { desktop?: boolean }) {
             </Link>
           </div>
 
-          {/* Hotel */}
           <div className="mt-2 grid grid-cols-2 gap-2">
             {[
               { l: 'Hotel Makkah',  v: hotelMakkah,  icon: <IconMapPin className="h-3 w-3 text-primary" /> },
@@ -101,7 +97,6 @@ export function TripIdentityCard({ desktop = false }: { desktop?: boolean }) {
 }
 
 // ── 2. Focus Card ─────────────────────────────────────────────
-// Editorial — full width, besar, jelas
 
 export function TripFocusCard({ desktop = false }: { desktop?: boolean }) {
   const { jamaah } = useAuth();
@@ -114,9 +109,7 @@ export function TripFocusCard({ desktop = false }: { desktop?: boolean }) {
       className="relative overflow-hidden rounded-2xl p-4"
       style={{ background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)', border: '1.5px solid rgba(14,165,233,0.18)' }}
     >
-      {/* Dekorasi halus */}
       <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-primary/[0.07]" />
-
       <div className="relative">
         <p className="font-mono text-[8.5px] uppercase tracking-[0.22em] text-primary/60">Fokus Perjalanan</p>
         <h3 className={`mt-1 font-display font-bold leading-tight text-ink ${desktop ? 'text-[18px]' : 'text-[17px]'}`}>
@@ -138,11 +131,15 @@ export function TripFocusCard({ desktop = false }: { desktop?: boolean }) {
 }
 
 // ── 3. Announcement Strip ─────────────────────────────────────
-// Bukan card penuh — strip ringkas dengan badge
 
 export function TravelAnnouncementCard({ desktop = false, compact = false }: { desktop?: boolean; compact?: boolean }) {
   const { tenant } = useAuth();
-  const announcement = getLatestAnnouncement(tenant?.id);
+  const [announcement, setAnnouncement] = useState<TravelAnnouncement | null>(null);
+
+  useEffect(() => {
+    getLatestAnnouncement(tenant?.id ?? null).then(setAnnouncement);
+  }, [tenant?.id]);
+
   if (!announcement) return null;
 
   if (compact) {
@@ -214,13 +211,12 @@ export function TravelAnnouncementCard({ desktop = false, compact = false }: { d
 }
 
 // ── 4. Emergency / Guide Contact ──────────────────────────────
-// Compact contact strip dengan tombol WA + Telepon
 
 export function EmergencyGuideCard({ desktop = false, compact = false }: { desktop?: boolean; compact?: boolean }) {
   const { jamaah, tenant } = useAuth();
   if (!jamaah) return null;
 
-  const info           = getOperationalInfo(tenant?.id);
+  const info           = getOperationalInfo(tenant ?? null);
   const muthowwif      = jamaah.pembimbingNama     ?? info.guideName;
   const muthowwifWa    = jamaah.pembimbingWhatsapp ?? info.guideWhatsapp;
   const tourLeader     = info.tourLeaderName;
@@ -234,19 +230,16 @@ export function EmergencyGuideCard({ desktop = false, compact = false }: { deskt
         </div>
         <p className="font-mono text-[7px] uppercase tracking-[0.2em] text-mute">Butuh Bantuan?</p>
 
-        {/* Muthowwif */}
         <div className="mt-1.5">
           <p className="text-[10px] font-mono uppercase tracking-wider text-charcoal">Muthowwif</p>
           <p className="text-[11px] font-bold leading-tight text-ink">{muthowwif}</p>
         </div>
 
-        {/* Tour Leader */}
         <div className="mt-1.5">
           <p className="text-[10px] font-mono uppercase tracking-wider text-charcoal">Tour Leader</p>
           <p className="text-[11px] font-bold leading-tight text-ink">{tourLeader}</p>
         </div>
 
-        {/* WA buttons */}
         <div className="mt-auto pt-3 grid grid-cols-2 gap-1.5">
           <a
             href={whatsappLink(muthowwifWa)}
@@ -277,7 +270,6 @@ export function EmergencyGuideCard({ desktop = false, compact = false }: { deskt
     <div className={`rounded-2xl border border-hairline bg-white shadow-drop-card ${desktop ? 'p-4' : 'p-4'}`}>
       <p className="font-mono text-[8.5px] uppercase tracking-[0.2em] text-mute mb-3">Butuh Bantuan?</p>
 
-      {/* Muthowwif row */}
       <div className="flex items-center gap-3 mb-2">
         <div className="flex h-9 w-9 flex-none items-center justify-center rounded-xl bg-red-50">
           <IconPhone className="h-3.5 w-3.5 text-red-400" />
@@ -301,7 +293,6 @@ export function EmergencyGuideCard({ desktop = false, compact = false }: { deskt
 
       <div className="h-px bg-hairline mb-2" />
 
-      {/* Tour Leader row */}
       <div className="flex items-center gap-3">
         <div className="flex h-9 w-9 flex-none items-center justify-center rounded-xl bg-primary/8">
           <IconPhone className="h-3.5 w-3.5 text-primary" />

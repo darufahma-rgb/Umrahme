@@ -73,7 +73,7 @@ export default function KartuJamaah() {
   const { jamaah, tenant } = useAuth();
   if (!jamaah) return null;
 
-  const info = getOperationalInfo(tenant?.id);
+  const info = getOperationalInfo(tenant ?? null);
 
   const rombongan = jamaah.rombongan ?? info.groupCode;
   const bus        = jamaah.nomorBus ?? info.busNumber;

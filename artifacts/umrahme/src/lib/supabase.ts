@@ -19,6 +19,15 @@ export type TenantRow = {
   tanggal_keberangkatan: string | null;
   tanggal_kepulangan: string | null;
   created_at: string;
+  // Kolom operasional (nullable — admin mungkin belum mengisi)
+  hotel_makkah: string | null;
+  hotel_madinah: string | null;
+  meeting_point: string | null;
+  guide_name: string | null;
+  guide_whatsapp: string | null;
+  tour_leader_name: string | null;
+  tour_leader_whatsapp: string | null;
+  emergency_note: string | null;
 };
 
 export type AgendaItemRow = {
@@ -31,4 +40,14 @@ export type AgendaItemRow = {
   lokasi: string | null;
   urutan: number;
   created_at: string;
+};
+
+export type TravelAnnouncementRow = {
+  id: string;
+  tenant_id: string;
+  label: string;
+  title: string;
+  content: string;
+  important: boolean;
+  published_at: string;
 };

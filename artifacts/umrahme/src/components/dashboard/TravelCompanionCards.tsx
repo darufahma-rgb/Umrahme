@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
@@ -5,6 +6,7 @@ import {
   getLatestAnnouncement,
   getOperationalInfo,
   whatsappLink,
+  type TravelAnnouncement,
 } from '../../data/travelCompanion';
 import { IconChevron } from '../icons';
 
@@ -47,10 +49,15 @@ function IconRoute({ className = '' }: { className?: string }) {
 
 export function DashboardTravelCompanionCards() {
   const { jamaah, tenant } = useAuth();
+  const [announcement, setAnnouncement] = useState<TravelAnnouncement | null>(null);
+
+  useEffect(() => {
+    getLatestAnnouncement(tenant?.id ?? null).then(setAnnouncement);
+  }, [tenant?.id]);
+
   if (!jamaah) return null;
 
-  const info = getOperationalInfo(tenant?.id);
-  const announcement = getLatestAnnouncement(tenant?.id);
+  const info = getOperationalInfo(tenant ?? null);
   const focus = getFocusByFase(jamaah.fase);
 
   const rombongan = jamaah.rombongan ?? info.groupCode;
@@ -158,10 +165,15 @@ export function DashboardTravelCompanionCards() {
 
 export function DashboardTravelCompanionDesktopRow() {
   const { jamaah, tenant } = useAuth();
+  const [announcement, setAnnouncement] = useState<TravelAnnouncement | null>(null);
+
+  useEffect(() => {
+    getLatestAnnouncement(tenant?.id ?? null).then(setAnnouncement);
+  }, [tenant?.id]);
+
   if (!jamaah) return null;
 
-  const info = getOperationalInfo(tenant?.id);
-  const announcement = getLatestAnnouncement(tenant?.id);
+  const info = getOperationalInfo(tenant ?? null);
 
   const rombongan = jamaah.rombongan ?? info.groupCode;
   const bus = jamaah.nomorBus ?? info.busNumber;

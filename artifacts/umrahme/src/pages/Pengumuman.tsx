@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getAllAnnouncements, type TravelAnnouncement } from '../data/travelCompanion';
@@ -21,7 +22,6 @@ function formatRelativeTime(isoString: string): string {
   return `${days}h lalu`;
 }
 
-// ── Card pengumuman — konten selalu tampil ──────────────────────
 function AnnouncementCard({ item, travelName = 'Travel' }: { item: TravelAnnouncement; travelName?: string }) {
   const isImportant = item.important;
 
@@ -37,7 +37,6 @@ function AnnouncementCard({ item, travelName = 'Travel' }: { item: TravelAnnounc
       }}
     >
       <div className="p-3.5">
-        {/* Icon */}
         <div
           className="flex h-8 w-8 items-center justify-center rounded-xl mb-2.5"
           style={{
@@ -48,7 +47,6 @@ function AnnouncementCard({ item, travelName = 'Travel' }: { item: TravelAnnounc
           <IconBell className={`h-3.5 w-3.5 ${isImportant ? 'text-[#a07828]' : 'text-primary'}`} />
         </div>
 
-        {/* Badge + time */}
         <div className="flex items-center gap-1.5 mb-1.5">
           <span
             className="rounded-full px-2 py-0.5 font-mono text-[7px] font-bold uppercase tracking-[0.15em]"
@@ -62,22 +60,29 @@ function AnnouncementCard({ item, travelName = 'Travel' }: { item: TravelAnnounc
           <span className="font-mono text-[7px] text-mute">{formatRelativeTime(item.publishedAt)}</span>
         </div>
 
-        {/* Title */}
         <h3 className="text-[13px] font-bold leading-snug text-ink mb-2">{item.title}</h3>
-
-        {/* Content — selalu tampil */}
         <p className="text-[11.5px] leading-relaxed text-charcoal">{item.content}</p>
       </div>
     </div>
   );
 }
 
-// ── Halaman ─────────────────────────────────────────────────────
 export default function Pengumuman() {
   const { tenant } = useAuth();
-  const announcements = getAllAnnouncements(tenant?.id);
+  const [announcements, setAnnouncements] = useState<TravelAnnouncement[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    getAllAnnouncements(tenant?.id ?? null).then((data) => {
+      setAnnouncements(data);
+      setLoading(false);
+    });
+  }, [tenant?.id]);
+
   const important = announcements.filter((a) => a.important);
   const info = announcements.filter((a) => !a.important);
+  const travelName = tenant?.nama_travel ?? 'Travel';
 
   return (
     <div className="min-h-screen bg-canvas">
@@ -102,12 +107,18 @@ export default function Pengumuman() {
             Pengumuman
           </h1>
           <p className="mt-1.5 text-[11px] text-charcoal">
-            Informasi & arahan terbaru dari {tenant?.nama_travel ?? 'travel Anda'}.
+            Informasi & arahan terbaru dari {travelName}.
           </p>
         </header>
 
         <section className="px-4 pb-8 space-y-5">
-          {announcements.length === 0 && (
+          {loading && (
+            <div className="py-10 text-center">
+              <p className="font-mono text-[11px] text-ash">Memuat pengumuman...</p>
+            </div>
+          )}
+
+          {!loading && announcements.length === 0 && (
             <div className="rounded-2xl border border-hairline bg-white p-8 text-center shadow-drop-card">
               <IconBell className="h-8 w-8 mx-auto text-ash mb-3" />
               <p className="text-[13px] font-semibold text-ink">Belum ada pengumuman</p>
@@ -115,29 +126,23 @@ export default function Pengumuman() {
             </div>
           )}
 
-          {/* Penting — 2 col grid */}
-          {important.length > 0 && (
+          {!loading && important.length > 0 && (
             <div>
-              <p className="mb-2.5 font-mono text-[9px] uppercase tracking-[0.28em] text-mute">
-                🔔 Penting
-              </p>
+              <p className="mb-2.5 font-mono text-[9px] uppercase tracking-[0.28em] text-mute">🔔 Penting</p>
               <div className="grid grid-cols-2 gap-2.5">
-                {important.map((item, i) => (
-                  <AnnouncementCard key={item.id} item={item} travelName={tenant?.nama_travel ?? 'Travel'} />
+                {important.map((item) => (
+                  <AnnouncementCard key={item.id} item={item} travelName={travelName} />
                 ))}
               </div>
             </div>
           )}
 
-          {/* Info — 2 col grid */}
-          {info.length > 0 && (
+          {!loading && info.length > 0 && (
             <div>
-              <p className="mb-2.5 font-mono text-[9px] uppercase tracking-[0.28em] text-mute">
-                ℹ️ Info
-              </p>
+              <p className="mb-2.5 font-mono text-[9px] uppercase tracking-[0.28em] text-mute">ℹ️ Info</p>
               <div className="grid grid-cols-2 gap-2.5">
                 {info.map((item) => (
-                  <AnnouncementCard key={item.id} item={item} travelName={tenant?.nama_travel ?? 'Travel'} />
+                  <AnnouncementCard key={item.id} item={item} travelName={travelName} />
                 ))}
               </div>
             </div>
@@ -156,26 +161,27 @@ export default function Pengumuman() {
           </Link>
           <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-primary mb-1">Dari Travel</p>
           <h1 className="font-display text-4xl font-bold text-ink" style={{ letterSpacing: '-1px' }}>Pengumuman</h1>
-          <p className="mt-1 text-sm text-charcoal">Informasi & arahan terbaru dari {tenant?.nama_travel ?? 'travel Anda'}.</p>
+          <p className="mt-1 text-sm text-charcoal">Informasi & arahan terbaru dari {travelName}.</p>
         </header>
 
         <div className="space-y-6 max-w-3xl">
-          {important.length > 0 && (
+          {loading && <p className="font-mono text-[12px] text-ash">Memuat pengumuman...</p>}
+          {!loading && important.length > 0 && (
             <div>
               <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-mute">🔔 Penting</p>
               <div className="grid grid-cols-2 gap-3">
                 {important.map((item) => (
-                  <AnnouncementCard key={item.id} item={item} travelName={tenant?.nama_travel ?? 'Travel'} />
+                  <AnnouncementCard key={item.id} item={item} travelName={travelName} />
                 ))}
               </div>
             </div>
           )}
-          {info.length > 0 && (
+          {!loading && info.length > 0 && (
             <div>
               <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-mute">ℹ️ Info</p>
               <div className="grid grid-cols-2 gap-3">
                 {info.map((item) => (
-                  <AnnouncementCard key={item.id} item={item} travelName={tenant?.nama_travel ?? 'Travel'} />
+                  <AnnouncementCard key={item.id} item={item} travelName={travelName} />
                 ))}
               </div>
             </div>
