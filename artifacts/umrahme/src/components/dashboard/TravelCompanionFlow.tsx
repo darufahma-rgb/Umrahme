@@ -205,14 +205,14 @@ export function TodayInstructionCard() {
       <div className="h-px bg-hairline mx-4" />
       <div className="px-4 py-3 space-y-2">
         {[
-          { label: 'Jam Kumpul',  value: instr.meetingTime },
+          { label: 'Jam Kumpul',   value: instr.meetingTime },
           { label: 'Titik Kumpul', value: instr.meetingPoint },
-          { label: 'Pakaian',     value: instr.dressCode },
-          { label: 'Bawa',        value: instr.bringItems.join(', ') },
+          { label: 'Pakaian',      value: instr.dressCode },
+          { label: 'Bawa',         value: instr.bringItems.join(', ') },
         ].map(({ label, value }) => (
-          <div key={label} className="flex items-start gap-2">
-            <p className="flex-none font-mono text-[9px] uppercase tracking-[0.12em] text-mute pt-0.5" style={{ minWidth: '72px' }}>{label}</p>
-            <p className="flex-1 text-[12px] font-semibold text-ink leading-snug">{value}</p>
+          <div key={label} className="grid items-start gap-x-3" style={{ gridTemplateColumns: '88px 1fr' }}>
+            <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-mute pt-0.5 whitespace-nowrap">{label}</p>
+            <p className="text-[12px] font-semibold text-ink leading-snug">{value}</p>
           </div>
         ))}
         {instr.note && (
