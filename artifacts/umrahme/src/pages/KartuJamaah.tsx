@@ -34,9 +34,11 @@ export default function KartuJamaah() {
   const info = getOperationalInfo(tenant ?? null);
   const hotelMakkah  = jamaah.hotelMakkah  ?? info.hotelMakkah;
   const hotelMadinah = jamaah.hotelMadinah ?? info.hotelMadinah;
-  const pembimbing   = jamaah.pembimbingNama     ?? info.guideName;
-  const pembimbingWa = jamaah.pembimbingWhatsapp ?? info.guideWhatsapp;
-  const namaTravel   = tenant?.nama_travel ?? jamaah.travel;
+  const pembimbing    = jamaah.pembimbingNama     ?? info.guideName;
+  const pembimbingWa  = jamaah.pembimbingWhatsapp ?? info.guideWhatsapp;
+  const tourLeader    = info.tourLeaderName;
+  const tourLeaderWa  = info.tourLeaderWhatsapp;
+  const namaTravel    = tenant?.nama_travel ?? jamaah.travel;
 
   return (
     <div className="min-h-screen bg-canvas">
@@ -152,37 +154,60 @@ export default function KartuJamaah() {
           </div>
         </div>
 
-        {/* ── PEMBIMBING ───────────────────────────────────────────── */}
+        {/* ── PEMBIMBING + TOUR LEADER ─────────────────────────────── */}
         <div className="rounded-2xl border border-hairline bg-white shadow-drop-card overflow-hidden">
           <div className="px-5 pt-4 pb-3">
-            <p className="font-mono text-[8.5px] uppercase tracking-[0.22em] text-mute mb-3">Pembimbing Rombongan</p>
+            <p className="font-mono text-[8.5px] uppercase tracking-[0.22em] text-mute mb-3">Kontak Pembimbing</p>
+
+            {/* Muthowwif */}
             <div className="flex items-center gap-3">
-              <div
-                className="flex h-11 w-11 flex-none items-center justify-center rounded-xl"
-                style={{ background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)', border: '1px solid rgba(14,165,233,0.14)' }}
-              >
+              <div className="flex h-11 w-11 flex-none items-center justify-center rounded-xl"
+                style={{ background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)', border: '1px solid rgba(14,165,233,0.14)' }}>
                 <IconUser className="h-5 w-5 text-primary" />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-[15px] font-bold leading-tight text-ink">{pembimbing}</p>
+                <p className="text-[14px] font-bold leading-tight text-ink">{pembimbing}</p>
                 <p className="text-[11px] text-charcoal mt-0.5">{info.guideRole}</p>
                 <p className="font-mono text-[11px] text-primary mt-0.5 tracking-[0.04em]">{pembimbingWa}</p>
               </div>
+              <div className="flex gap-1.5 flex-none">
+                <a href={whatsappLink(pembimbingWa)} target="_blank" rel="noreferrer"
+                  className="flex h-9 w-9 items-center justify-center rounded-xl text-white active:scale-[0.97] transition-all"
+                  style={{ background: '#25D366' }}>
+                  <IconWhatsapp className="h-4 w-4" />
+                </a>
+                <a href={`tel:${pembimbingWa}`}
+                  className="flex h-9 w-9 items-center justify-center rounded-xl border border-hairline bg-surface-bone text-ink active:scale-[0.97] transition-all">
+                  <IconPhone className="h-3.5 w-3.5" />
+                </a>
+              </div>
             </div>
-          </div>
-          <div className="h-px bg-hairline mx-5" />
-          <div className="grid grid-cols-2 gap-2 px-5 py-3">
-            <a href={whatsappLink(pembimbingWa)} target="_blank" rel="noreferrer"
-              className="flex items-center justify-center gap-2 rounded-xl py-3 text-[13px] font-bold text-white active:scale-[0.97] transition-all"
-              style={{ background: '#25D366' }}>
-              <IconWhatsapp className="h-4 w-4" />
-              WhatsApp
-            </a>
-            <a href={`tel:${pembimbingWa}`}
-              className="flex items-center justify-center gap-2 rounded-xl border border-hairline bg-surface-bone py-3 text-[13px] font-bold text-ink active:scale-[0.97] transition-all">
-              <IconPhone className="h-4 w-4" />
-              Telepon
-            </a>
+
+            <div className="h-px bg-hairline my-3" />
+
+            {/* Tour Leader */}
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 flex-none items-center justify-center rounded-xl"
+                style={{ background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)', border: '1px solid rgba(34,197,94,0.14)' }}>
+                <IconUser className="h-5 w-5 text-emerald-500" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-[14px] font-bold leading-tight text-ink">{tourLeader}</p>
+                <p className="text-[11px] text-charcoal mt-0.5">Tour Leader</p>
+                <p className="font-mono text-[11px] text-emerald-600 mt-0.5 tracking-[0.04em]">{tourLeaderWa}</p>
+              </div>
+              <div className="flex gap-1.5 flex-none">
+                <a href={whatsappLink(tourLeaderWa)} target="_blank" rel="noreferrer"
+                  className="flex h-9 w-9 items-center justify-center rounded-xl text-white active:scale-[0.97] transition-all"
+                  style={{ background: '#25D366' }}>
+                  <IconWhatsapp className="h-4 w-4" />
+                </a>
+                <a href={`tel:${tourLeaderWa}`}
+                  className="flex h-9 w-9 items-center justify-center rounded-xl border border-hairline bg-surface-bone text-ink active:scale-[0.97] transition-all">
+                  <IconPhone className="h-3.5 w-3.5" />
+                </a>
+              </div>
+            </div>
           </div>
         </div>
 
