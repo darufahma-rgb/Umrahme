@@ -178,6 +178,127 @@ function KartuAgendaHariIni({ items, total }: { items: AgendaItemRow[]; total: n
   );
 }
 
+function KartuItinerary({ tenantId }: { tenantId: string }) {
+  type SlimItem = { tanggal: string; judul: string; jam_mulai: string | null };
+  const [allItems, setAllItems] = useState<SlimItem[]>([]);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    supabase
+      .from('agenda_items')
+      .select('tanggal, judul, jam_mulai')
+      .eq('tenant_id', tenantId)
+      .order('tanggal', { ascending: true })
+      .order('jam_mulai', { ascending: true })
+      .then(({ data }) => {
+        setAllItems((data as SlimItem[]) ?? []);
+        setReady(true);
+      });
+  }, [tenantId]);
+
+  if (!ready) return null;
+
+  const tanggalUnik = [...new Set(allItems.map((i) => i.tanggal))].sort();
+  const totalHari = tanggalUnik.length;
+  if (totalHari === 0) return null;
+
+  const tanggalPertama = tanggalUnik[0];
+  const tanggalTerakhir = tanggalUnik[totalHari - 1];
+  const todayStr = new Date().toISOString().split('T')[0];
+
+  const hariKe = (() => {
+    const start = new Date(tanggalPertama + 'T00:00:00').getTime();
+    const cur   = new Date(todayStr       + 'T00:00:00').getTime();
+    return Math.round((cur - start) / 86400000) + 1;
+  })();
+
+  const belumMulai = todayStr < tanggalPertama;
+  const sudahSelesai = todayStr > tanggalTerakhir;
+
+  const persen = belumMulai ? 0 : sudahSelesai ? 100 : Math.round((Math.min(hariKe, totalHari) / totalHari) * 100);
+
+  const labelHari = belumMulai
+    ? 'Belum dimulai'
+    : sudahSelesai
+    ? 'Perjalanan selesai'
+    : `Hari ${hariKe} dari ${totalHari}`;
+
+  // Cari item berikutnya: hari ini jam >= sekarang, atau hari berikutnya pertama
+  const nowMin = new Date().getHours() * 60 + new Date().getMinutes();
+  const itemBerikutnya = (() => {
+    // item hari ini yang belum lewat
+    const hariIniItems = allItems.filter((i) => i.tanggal === todayStr);
+    const berikutHariIni = hariIniItems.find((i) => {
+      if (!i.jam_mulai) return false;
+      const [h, m] = i.jam_mulai.split(':').map(Number);
+      return h * 60 + m >= nowMin;
+    });
+    if (berikutHariIni) return berikutHariIni;
+    // item pertama hari berikutnya
+    const hariDepan = tanggalUnik.find((t) => t > todayStr);
+    if (!hariDepan) return null;
+    return allItems.find((i) => i.tanggal === hariDepan) ?? null;
+  })();
+
+  const semuaSelesaiHariIni =
+    !belumMulai &&
+    !sudahSelesai &&
+    allItems.some((i) => i.tanggal === todayStr) &&
+    !itemBerikutnya;
+
+  return (
+    <Link to="/profil/agenda" className="block active:scale-[0.99] transition-transform">
+      <div className="overflow-hidden rounded-2xl border border-hairline bg-white shadow-drop-card">
+        {/* Header */}
+        <div className="flex items-center justify-between px-4 py-3 border-b border-hairline">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-8 w-8 flex-none items-center justify-center rounded-xl"
+              style={{ background: 'rgba(14,165,233,0.08)' }}>
+              <IconKalender className="h-3.5 w-3.5 text-primary" />
+            </div>
+            <p className="font-mono text-[8px] uppercase tracking-[0.22em] text-mute">Itinerary Perjalanan</p>
+          </div>
+          <IconChevron className="h-3.5 w-3.5 text-ash" />
+        </div>
+
+        {/* Progress */}
+        <div className="px-4 pt-3.5 pb-1">
+          <p className="font-display text-[22px] font-bold leading-none text-ink">{labelHari}</p>
+          <div className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-surface-bone">
+            <div
+              className="h-full rounded-full transition-all duration-700"
+              style={{ width: `${persen}%`, background: 'var(--color-primary)' }}
+            />
+          </div>
+          <p className="mt-1 font-mono text-[10px] text-mute">{persen}%</p>
+        </div>
+
+        {/* Item berikutnya */}
+        <div className="px-4 pb-3.5 pt-2.5 border-t border-hairline mt-2">
+          {semuaSelesaiHariIni ? (
+            <div className="flex items-center gap-2">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5 flex-none">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              <p className="text-[12px] font-semibold text-emerald-600">Semua agenda hari ini selesai</p>
+            </div>
+          ) : itemBerikutnya ? (
+            <div>
+              <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-mute mb-0.5">Berikutnya</p>
+              <p className="text-[13px] font-semibold text-ink leading-snug">
+                {itemBerikutnya.jam_mulai ? itemBerikutnya.jam_mulai.slice(0, 5) + ' · ' : ''}
+                {itemBerikutnya.judul}
+              </p>
+            </div>
+          ) : (
+            <p className="text-[12px] text-mute italic">Tidak ada agenda terjadwal</p>
+          )}
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 const moreFeatures = [
   { to: '/panduan/manasik-interaktif', label: 'Manasik Interaktif',  icon: <IconIbadah   className="h-4 w-4" /> },
   { to: '/profil/jurnal',              label: 'Jurnal Perjalanan',   icon: <IconJurnal   className="h-4 w-4" /> },
@@ -281,6 +402,9 @@ export default function Beranda() {
             <KartuAgendaHariIni items={todayAgenda.slice(0, 3)} total={todayAgenda.length} />
           )}
 
+          {/* Itinerary ringkasan */}
+          {tenant?.id && <KartuItinerary tenantId={tenant.id} />}
+
           {/* Travel companion cards */}
           <TravelCompanionFlow />
 
@@ -366,6 +490,9 @@ export default function Beranda() {
 
           {showHitung && <KartuHitung n={hariMenuju!} namaTravel={namaTravel} />}
           {todayAgenda.length > 0 && <KartuAgendaHariIni items={todayAgenda.slice(0, 3)} total={todayAgenda.length} />}
+
+          {/* Itinerary ringkasan */}
+          {tenant?.id && <KartuItinerary tenantId={tenant.id} />}
 
           <TravelCompanionFlow desktop />
 
