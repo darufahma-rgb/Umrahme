@@ -149,33 +149,33 @@ export function TripProgressCard() {
       <p className="text-[13px] font-bold text-ink mb-3">{FASE_LABEL[jamaah.fase] ?? jamaah.fase}</p>
 
       {/* Stepper */}
-      <div className="flex items-center gap-0">
+      <div className="flex items-start">
         {STEPS.map((step, i) => {
           const done   = i < activeStep;
           const active = i === activeStep;
           const isLast = i === STEPS.length - 1;
           return (
-            <div key={step.label} className="flex flex-1 items-center">
-              <div className="flex flex-col items-center flex-none" style={{ minWidth: 0 }}>
+            <div key={step.label} className="flex flex-1 flex-col items-center">
+              <div className="flex w-full items-center">
+                <div className={`flex-1 h-0.5 rounded-full ${i === 0 ? 'invisible' : ''}`}
+                  style={{ background: done || (active && i > 0) ? 'var(--color-primary)' : 'rgba(0,0,0,0.07)' }} />
                 <div
-                  className="flex h-6 w-6 items-center justify-center rounded-full text-[9px] font-bold transition-all"
+                  className="flex h-6 w-6 flex-none items-center justify-center rounded-full text-[9px] font-bold transition-all"
                   style={{
-                    background: done ? 'var(--color-primary)' : active ? 'var(--color-primary)' : 'rgba(0,0,0,0.06)',
+                    background: done || active ? 'var(--color-primary)' : 'rgba(0,0,0,0.06)',
                     color: done || active ? '#fff' : '#9ca3af',
                     boxShadow: active ? '0 0 0 3px rgba(14,165,233,0.18)' : 'none',
                   }}
                 >
                   {done ? '✓' : i + 1}
                 </div>
-                <p className={`mt-1 text-[9px] font-semibold text-center leading-tight ${done || active ? 'text-primary' : 'text-ash'}`}
-                  style={{ maxWidth: '44px' }}>
-                  {step.short}
-                </p>
-              </div>
-              {!isLast && (
-                <div className="flex-1 h-0.5 mx-1 rounded-full"
+                <div className={`flex-1 h-0.5 rounded-full ${isLast ? 'invisible' : ''}`}
                   style={{ background: done ? 'var(--color-primary)' : 'rgba(0,0,0,0.07)' }} />
-              )}
+              </div>
+              <p className={`mt-1 text-[9px] font-semibold text-center leading-tight ${done || active ? 'text-primary' : 'text-ash'}`}
+                style={{ maxWidth: '44px' }}>
+                {step.short}
+              </p>
             </div>
           );
         })}
