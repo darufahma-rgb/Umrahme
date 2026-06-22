@@ -314,15 +314,6 @@ export default function Beranda() {
   });
   const persiapanPersen = totalPersiapan > 0 ? Math.round((persiapanDone / totalPersiapan) * 100) : 0;
 
-  const [todayAgenda, setTodayAgenda] = useState<AgendaItemRow[]>([]);
-  useEffect(() => {
-    if (!tenant?.id) return;
-    const today = new Date().toISOString().split('T')[0];
-    fetchAgenda(tenant.id).then(data => {
-      setTodayAgenda(data.filter(i => i.tanggal === today));
-    }).catch(() => {});
-  }, [tenant?.id]);
-
   if (!jamaah) return null;
 
   const firstName   = jamaah.nama.split(' ')[0];
@@ -375,11 +366,6 @@ export default function Beranda() {
 
           {/* Countdown */}
           {showHitung && <KartuHitung n={hariMenuju!} namaTravel={namaTravel} />}
-
-          {/* Agenda hari ini */}
-          {todayAgenda.length > 0 && (
-            <KartuAgendaHariIni items={todayAgenda.slice(0, 3)} total={todayAgenda.length} />
-          )}
 
           {/* Travel companion cards */}
           <TravelCompanionFlow />
@@ -453,7 +439,6 @@ export default function Beranda() {
           <GlobalSearch />
 
           {showHitung && <KartuHitung n={hariMenuju!} namaTravel={namaTravel} />}
-          {todayAgenda.length > 0 && <KartuAgendaHariIni items={todayAgenda.slice(0, 3)} total={todayAgenda.length} />}
 
           <TravelCompanionFlow desktop />
 
