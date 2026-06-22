@@ -48,11 +48,9 @@ export default function Login() {
           style={{ objectPosition: 'center 45%', transform: 'scale(1.04)', transformOrigin: 'center 45%' }}
         />
 
-        {/* Gradient: darken sky at top for text, stay fully transparent through mid, then dissolve to white */}
+        {/* Fix 1 — gradient hanya gelap di atas, transparan penuh di bawah */}
         <div className="pointer-events-none absolute inset-0"
-          style={{
-            background: 'linear-gradient(to bottom, rgba(0,0,0,0.44) 0%, rgba(0,0,0,0.08) 18%, transparent 28%, transparent 52%, rgba(255,255,255,0.50) 63%, rgba(255,255,255,0.90) 72%, #ffffff 80%)'
-          }}
+          style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.10) 60%, transparent 100%)' }}
         />
 
         {/* Arabic calligraphy — top section over image */}
@@ -73,21 +71,21 @@ export default function Login() {
         {/* Spacer — this is the "image window": dome + building shows here */}
         <div className="flex-shrink-0" style={{ height: 'clamp(130px, 30vw, 190px)' }} />
 
-        {/* Form — transparent top so image bleeds through softly then solid white */}
-        <div className="relative flex flex-col flex-1 px-6 pt-5 pb-6" style={{ zIndex: 1, background: 'linear-gradient(to bottom, transparent 0px, #ffffff 28px)' }}>
+        {/* Fix 2 — form overlap ke atas foto dengan white sheet */}
+        <div className="relative flex flex-col flex-1 px-6 pb-6" style={{ paddingTop: '20px', marginTop: '-16px', borderRadius: '24px 24px 0 0', background: 'white', position: 'relative', zIndex: 1 }}>
 
-          {/* Heading */}
-          <div className="text-center mb-5">
+          {/* Fix 3 — kurangi gap heading */}
+          <div className="text-center mb-4">
             <h2 className="font-display font-bold text-ink" style={{ fontSize: 'clamp(22px, 6.5vw, 28px)', letterSpacing: '-0.5px' }}>
               Selamat Datang!
             </h2>
-            <p className="mt-1 text-[13px] text-charcoal">Masukkan kode aktivasi untuk melanjutkan.</p>
+            <p className="mt-0.5 text-[13px] text-charcoal">Masukkan kode aktivasi untuk melanjutkan.</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-3 flex-1">
 
             {/* Kode Aktivasi */}
-            <div className="rounded-2xl border px-4 py-3.5"
+            <div className="rounded-2xl border px-4 py-3"
               style={{ borderColor: 'rgba(0,0,0,0.10)', background: '#fafaf9' }}>
               <p className="font-mono text-[8.5px] uppercase tracking-[0.20em] text-mute mb-1.5">Kode Aktivasi</p>
               <input
@@ -103,7 +101,7 @@ export default function Login() {
             </div>
 
             {/* Nama Jamaah */}
-            <div className="rounded-2xl border px-4 py-3.5"
+            <div className="rounded-2xl border px-4 py-3"
               style={{ borderColor: 'rgba(0,0,0,0.10)', background: '#fafaf9' }}>
               <p className="font-mono text-[8.5px] uppercase tracking-[0.20em] text-mute mb-1.5">Nama Jamaah</p>
               <input
@@ -133,7 +131,7 @@ export default function Login() {
               className="w-full flex items-center justify-center gap-2 rounded-2xl text-[15px] font-bold text-white transition-all active:scale-[0.98] disabled:opacity-50"
               style={{
                 minHeight: '52px',
-                background: loading || !kode || !nama ? '#9ca3af' : '#111111',
+                background: loading || !kode || !nama ? 'rgba(0,0,0,0.18)' : '#111111',
                 boxShadow: loading || !kode || !nama ? 'none' : '0 4px 16px rgba(0,0,0,0.20)',
               }}
             >
