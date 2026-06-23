@@ -275,7 +275,7 @@ export default function LandingPage() {
           <motion.h1
             initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            style={{ fontSize: 'clamp(38px, 6vw, 74px)', fontWeight: 800, lineHeight: 1.05, color: '#fff', letterSpacing: '-0.02em', maxWidth: 900, margin: '0 auto 22px' }}
+            style={{ fontSize: 'clamp(38px, 6vw, 74px)', fontWeight: 800, lineHeight: 1.05, color: '#fff', letterSpacing: '-0.02em', maxWidth: 900, margin: '0 auto 22px', textShadow: '0 2px 24px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.4)' }}
           >
             Jadikan Perjalanan Jamaah Anda{' '}
             <span style={{ color: C.accent }}>Lebih Bermakna</span>
@@ -285,7 +285,7 @@ export default function LandingPage() {
           <motion.p
             initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.18, duration: 0.65 }}
-            style={{ color: 'rgba(255,255,255,.92)', fontSize: 'clamp(15px, 2vw, 18px)', maxWidth: 640, margin: '0 auto 30px', fontWeight: 500 }}
+            style={{ color: 'rgba(255,255,255,.92)', fontSize: 'clamp(15px, 2vw, 18px)', maxWidth: 640, margin: '0 auto 30px', fontWeight: 500, textShadow: '0 1px 12px rgba(0,0,0,0.5)' }}
           >
             Pengganti buku doa digital, panduan ibadah lengkap, dan sistem komunikasi travel dalam satu aplikasi.
             White-label penuh, siap pakai, hanya <strong>10 SAR per jamaah</strong>.
