@@ -270,6 +270,11 @@ export default function LandingPage() {
           backgroundImage: 'url(/hero-bg.avif)',
           backgroundSize: 'cover', backgroundPosition: 'center center',
         }} />
+        {/* dark scrim so headline stays legible */}
+        <div style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          background: 'rgba(0,0,0,0.38)',
+        }} />
 
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 2, textAlign: 'center' }}>
           <motion.h1
