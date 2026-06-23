@@ -209,16 +209,22 @@ export default function LandingPage() {
           .lp-foot-top { grid-template-columns: 1fr 1fr !important; }
         }
         @media (max-width: 760px) {
-          .lp-nav-menu { position: fixed; top: 0; right: 0; bottom: 0; width: 78%; max-width: 320px; background: #fff; flex-direction: column; padding: 90px 30px; gap: 24px; box-shadow: -10px 0 40px -10px rgba(0,0,0,.25); transform: translateX(100%); transition: transform .35s ease; z-index: 99; }
+          /* pill navbar on mobile: hide links, show hamburger */
+          .lp-nav-menu { position: fixed; top: 0; right: 0; bottom: 0; width: 82%; max-width: 300px; background: #fff; flex-direction: column; padding: 56px 28px 40px; gap: 6px; box-shadow: -10px 0 40px -10px rgba(0,0,0,.25); transform: translateX(100%); transition: transform .35s ease; z-index: 200; }
           .lp-nav-menu.open { transform: none; }
-          .lp-nav-menu .lp-nav-link, .lp-nav-menu .lp-nav-link-dark { color: ${C.ink} !important; font-size: 17px; }
+          .lp-nav-menu a.lp-nav-link-dark { color: ${C.ink} !important; font-size: 17px !important; font-weight: 600 !important; padding: 12px 16px !important; border-radius: 12px; }
+          .lp-nav-menu a.lp-nav-link-dark:hover { background: ${C.soft}; }
           .lp-menu-toggle { display: flex !important; }
           .lp-nav-cta-btn { display: none !important; }
+          .lp-drawer-close { display: flex !important; }
+          .lp-drawer-cta { display: flex !important; }
+          /* grids */
           .lp-feat-grid { grid-template-columns: 1fr !important; }
           .lp-bento { grid-template-columns: 1fr !important; }
           .lp-foot-top { grid-template-columns: 1fr !important; }
           .lp-float-wrap { overflow-x: auto; justify-content: flex-start !important; padding: 0 20px 10px !important; }
-          .lp-hero-padding { padding: 120px 0 0 !important; }
+          /* hero top spacing for small pill navbar */
+          .lp-hero-padding { padding: 100px 0 0 !important; }
         }
       `}</style>
 
@@ -241,9 +247,24 @@ export default function LandingPage() {
         <a href="#" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 40, height: 40, borderRadius: '50%', background: C.ink, color: '#fff', fontWeight: 800, fontSize: 17, flexShrink: 0, textDecoration: 'none' }}>U</a>
 
         <nav className={`lp-nav-menu${menuOpen ? ' open' : ''}`} style={{ display: 'flex', gap: 0, padding: '0 10px' }}>
+          {/* close button inside drawer (mobile only) */}
+          <button
+            className="lp-drawer-close"
+            onClick={() => setMenuOpen(false)}
+            style={{ display: 'none', position: 'absolute', top: 16, right: 16, background: C.soft, border: 'none', borderRadius: 999, width: 36, height: 36, alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 18, color: C.ink }}
+            aria-label="Tutup menu"
+          >✕</button>
+
           {[['#fitur', 'Fitur'], ['#harga', 'Harga'], ['#cara', 'Cara Kerja'], ['#kontak', 'Kontak']].map(([h, l]) => (
             <a key={h} href={h} className="lp-nav-link-dark" style={{ padding: '8px 12px', borderRadius: 999 }} onClick={() => setMenuOpen(false)}>{l}</a>
           ))}
+
+          {/* CTA in drawer (mobile only) */}
+          <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-drawer-cta lp-btn"
+            style={{ display: 'none', background: C.ink, color: '#fff', borderRadius: 32, padding: '14px 20px', fontSize: 15, fontWeight: 600, textAlign: 'center', justifyContent: 'center', marginTop: 8 }}
+            onClick={() => setMenuOpen(false)}>
+            Daftar Sekarang →
+          </a>
         </nav>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -259,7 +280,7 @@ export default function LandingPage() {
             {[0, 1, 2].map(i => <span key={i} style={{ width: 20, height: 2, background: C.ink, borderRadius: 2, display: 'block' }} />)}
           </button>
         </div>
-        {menuOpen && <div onClick={() => setMenuOpen(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.4)', zIndex: 98 }} />}
+        {menuOpen && <div onClick={() => setMenuOpen(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.5)', zIndex: 198 }} />}
       </header>
 
       {/* ══════════ HERO ══════════ */}
