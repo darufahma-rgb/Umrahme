@@ -494,7 +494,7 @@ export default function LandingPage() {
       <section className="lp-hero-padding" style={{
         position: 'relative',
         background: `linear-gradient(180deg, ${C.blue1} 0%, ${C.blue2} 45%, ${C.blue3} 100%)`,
-        padding: '120px 0 0',
+        padding: '120px 0 90px',
       }}>
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
@@ -505,11 +505,12 @@ export default function LandingPage() {
           position: 'absolute', inset: 0, pointerEvents: 'none',
           background: 'rgba(0,0,0,0.18)',
         }} />
-        {/* fade mulus ke putih menyambung section berikutnya */}
-        <div style={{
-          position: 'absolute', left: 0, right: 0, bottom: 0, height: '38%', pointerEvents: 'none',
-          background: 'linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 55%, rgba(255,255,255,1) 100%)',
-        }} />
+        {/* kubah — transisi dome ke section berikutnya */}
+        <div style={{ position: 'absolute', bottom: -1, left: 0, right: 0, zIndex: 4, lineHeight: 0, pointerEvents: 'none' }}>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 72" preserveAspectRatio="none" style={{ display: 'block', width: '100%', height: 72 }}>
+            <path d="M0,72 Q720,0 1440,72 L1440,72 L0,72 Z" fill="#ffffff" />
+          </svg>
+        </div>
 
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 2, textAlign: 'center' }}>
 
