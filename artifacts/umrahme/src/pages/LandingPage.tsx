@@ -781,17 +781,17 @@ export default function LandingPage() {
       {/* ══════════ WHITE-LABEL SHOWCASE ══════════ */}
       <section className="lp-section" style={{ padding: '56px 0' }}>
         <div className="lp-inner" style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
-          <div className="lp-wl" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 36 }}>
+          <div className="lp-wl" style={{ maxWidth: 680, margin: '0 auto', textAlign: 'center' }}>
             <Reveal>
-              <div style={{ maxWidth: 680, margin: '0 auto' }}>
-                <Eyebrow align="left">White-Label</Eyebrow>
+              <div>
+                <Eyebrow>White-Label</Eyebrow>
                 <h2 style={{ fontSize: 'clamp(24px, 3.2vw, 34px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', marginBottom: 14 }}>
                   Jamaah lihat nama Anda. Bukan kami.
                 </h2>
                 <p style={{ color: C.muted, fontSize: 14, marginBottom: 18, lineHeight: 1.7 }}>
                   Logo, warna, dan nama travel Anda di setiap halaman. Tanpa jejak pihak ketiga. Yang jamaah ingat dan rekomendasikan: travel Anda.
                 </p>
-                <ul className="lp-wl-list" style={{ listStyle: 'none' }}>
+                <ul className="lp-wl-list" style={{ listStyle: 'none', display: 'inline-block', textAlign: 'left', margin: '0 auto' }}>
                   {[
                     'Logo & nama travel di setiap halaman',
                     'Warna brand Anda, konsisten & profesional',
@@ -804,7 +804,7 @@ export default function LandingPage() {
                     </li>
                   ))}
                 </ul>
-                <div style={{ marginTop: 22 }}>
+                <div style={{ marginTop: 28, display: 'flex', justifyContent: 'center' }}>
                   <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-btn lp-btn-dark lp-wl-cta">
                     Lihat Demo dengan Nama Travel Anda <span className="lp-arrow" style={{ background: C.accent, color: C.ink }}>→</span>
                   </a>
