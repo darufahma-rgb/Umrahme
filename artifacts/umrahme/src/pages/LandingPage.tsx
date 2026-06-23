@@ -127,7 +127,7 @@ export default function LandingPage() {
     { q: 'Seberapa cepat aplikasi bisa bermerek travel kami?', a: 'Kurang dari 10 menit. Upload logo, pilih warna, masukkan nama travel — dan aplikasi langsung tampil bermerek travel Anda. Tidak perlu menunggu, tidak perlu approval dari kami.' },
     { q: 'Apakah data jamaah kami aman?', a: 'Ya, aman. Data jamaah disimpan terenkripsi dan tidak pernah dibagikan ke pihak manapun. Hanya travel Anda yang bisa akses data jamaah Anda.' },
     { q: 'Sinyal di area Haram sering lemah. Tetap bisa dipakai?', a: 'Ya. Doa, panduan ibadah, kartu jamaah, dan konten yang sudah pernah dibuka tetap bisa diakses offline. Jamaah tidak akan tergantung sinyal saat tawaf atau sa\'i.' },
-    { q: 'Bagaimana cara mulai dan bayarnya?', a: 'Hubungi kami via WhatsApp, kami bantu setup demo gratis dengan nama travel Anda dulu. Kalau cocok, baru bicara soal pembayaran. 10 SAR per jamaah, dibayar per keberangkatan. Tidak ada kontrak, tidak ada minimum jamaah.' },
+    { q: 'Bagaimana cara mulai dan bayarnya?', a: 'Hubungi kami via WhatsApp, kami bantu setup demo gratis dengan nama travel Anda dulu. Kalau cocok, baru bicara soal pembayaran. Biaya dihitung per jamaah dan dibayar per keberangkatan — tanpa kontrak, tanpa minimum jamaah. Detail harga ada di bagian Harga.' },
     { q: 'Bisa lihat dulu sebelum memutuskan?', a: 'Tentu. Kami siapkan demo lengkap dengan logo dan nama travel Anda — supaya Anda bisa rasakan sendiri seperti apa tampilannya sebelum memutuskan. Gratis, tanpa komitmen apapun.' },
   ];
 
@@ -522,7 +522,7 @@ export default function LandingPage() {
             transition={{ delay: 0.18, duration: 0.65 }}
             style={{ color: 'rgba(255,255,255,.88)', fontSize: 'clamp(14px, 1.8vw, 16px)', maxWidth: 560, margin: '0 auto 26px', fontWeight: 400, textShadow: '0 1px 12px rgba(0,0,0,0.5)', lineHeight: 1.7 }}
           >
-            Doa, panduan ibadah, jadwal, dan komunikasi travel — semua dalam satu aplikasi bermerek nama Anda. Cukup <strong>10 SAR</strong> per jamaah.
+            Doa, panduan ibadah, jadwal, dan komunikasi travel — semua dalam satu aplikasi bermerek nama Anda. Lebih hemat dari mencetak buku doa, dengan manfaat berkali lipat.
           </motion.p>
 
           <motion.div
@@ -754,7 +754,7 @@ export default function LandingPage() {
           </Reveal>
           <Reveal>
             <p style={{ textAlign: 'center', color: C.muted, maxWidth: 520, margin: '0 auto 28px', fontSize: 14 }}>
-              Cetak buku doa 15–25 SAR per jamaah — hanya buku. Umrahme 10 SAR — 12 fitur, bermerek travel Anda.
+              Bandingkan: buku doa cetak hanya memberi jamaah satu buku. Umrahme memberi 12 fitur lengkap, bermerek travel Anda — dengan biaya yang justru lebih ringan.
             </p>
           </Reveal>
 
@@ -770,16 +770,19 @@ export default function LandingPage() {
                 <p style={{ color: 'rgba(255,255,255,.55)', fontSize: 12, fontStyle: 'italic', marginBottom: 18 }}>
                   Balik modal hanya dari hemat biaya cetak buku doa.
                 </p>
-                <p style={{ color: 'rgba(255,255,255,.7)', fontSize: 13, marginBottom: 20 }}>Bayar per keberangkatan. Tidak ada biaya bulanan, tidak ada kontrak.</p>
+                <p style={{ color: 'rgba(255,255,255,.7)', fontSize: 13, marginBottom: 20 }}>Investasi kecil per jamaah yang langsung terbayar dari hemat biaya cetak — dan terus memberi nilai di setiap keberangkatan.</p>
                 <ul style={{ listStyle: 'none', flex: 1 }}>
-                  {['Tidak ada biaya setup — langsung aktif', 'Tidak ada tagihan bulanan yang mengejutkan', 'Bayar sesuai jamaah yang berangkat saja', 'Semua 12 fitur langsung aktif — tidak ada upgrade berbayar', 'Branding travel Anda penuh — tanpa biaya kustomisasi', 'Support via WhatsApp'].map(t => (
+                  {['Lebih murah dari biaya cetak buku doa — langsung balik modal', 'Tanpa biaya setup, tanpa langganan bulanan, tanpa kontrak', 'Bayar hanya untuk jamaah yang benar-benar berangkat', '12 fitur premium aktif penuh — tanpa biaya tersembunyi', 'Aplikasi bermerek travel Anda — perkuat brand di mata jamaah', 'Tingkatkan kepuasan jamaah & dorong referral keberangkatan berikutnya', 'Pendampingan & support langsung via WhatsApp'].map(t => (
                     <li key={t} style={{ display: 'flex', gap: 9, alignItems: 'center', marginBottom: 9, fontSize: 13 }}>
                       <span style={{ width: 19, height: 19, borderRadius: '50%', background: C.accent, color: C.greenDark, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, flexShrink: 0 }}>✓</span>
                       {t}
                     </li>
                   ))}
                 </ul>
-                <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-btn lp-btn-accent" style={{ width: '100%', justifyContent: 'center', marginTop: 20 }}>
+                <p style={{ fontSize: 12.5, color: C.accent, fontWeight: 600, marginBottom: 12, textAlign: 'center', marginTop: 20 }}>
+                  Coba gratis dulu — tanpa risiko, tanpa komitmen.
+                </p>
+                <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-btn lp-btn-accent" style={{ width: '100%', justifyContent: 'center' }}>
                   Mulai Sekarang — Gratis Dulu <span className="lp-arrow">→</span>
                 </a>
               </div>
@@ -836,7 +839,7 @@ export default function LandingPage() {
                 Keberangkatan berikutnya, naik kelas.
               </h2>
               <p style={{ color: 'rgba(255,255,255,.85)', maxWidth: 500, margin: '0 auto 24px', fontSize: 15, lineHeight: 1.7, position: 'relative' }}>
-                Jamaah lebih tenang, muthowif lebih fokus, travel Anda lebih profesional. Semua mulai 10 SAR per jamaah. Coba demo gratis dulu — kami setup dengan nama travel Anda.
+                Jamaah lebih tenang. Muthowif lebih fokus. Travel Anda tampil lebih profesional. Mulai dengan demo gratis — kami setup langsung dengan nama travel Anda.
               </p>
               <div className="lp-cta-btns" style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap', position: 'relative' }}>
                 <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-btn lp-btn-accent">
@@ -861,7 +864,7 @@ export default function LandingPage() {
                 <img src={logoImg} alt="Umrahme" style={{ width: 28, height: 28, objectFit: 'contain', display: 'block', flexShrink: 0 }} />
                 Umrahme
               </div>
-              <p style={{ color: C.muted, fontSize: 13, maxWidth: 280, lineHeight: 1.7 }}>Ganti buku doa cetak. Ringankan kerja muthowif. Tampil profesional. Hanya 10 SAR per jamaah.</p>
+              <p style={{ color: C.muted, fontSize: 13, maxWidth: 280, lineHeight: 1.7 }}>Ganti buku doa cetak. Ringankan kerja muthowif. Bawa travel Anda tampil lebih profesional.</p>
             </div>
             <div className="lp-foot-links">
             {[
