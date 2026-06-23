@@ -551,7 +551,7 @@ export default function LandingPage() {
           <motion.h1
             initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            style={{ fontSize: 'clamp(34px, 5vw, 60px)', fontWeight: 800, lineHeight: 1.05, color: '#fff', letterSpacing: '-0.02em', maxWidth: 900, margin: '0 auto 20px', textShadow: '0 2px 24px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.4)' }}
+            style={{ fontSize: 'clamp(34px, 5vw, 60px)', fontWeight: 800, lineHeight: 1.05, color: '#fff', letterSpacing: '-0.02em', maxWidth: 900, margin: '0 auto 20px' }}
           >
             Pendamping Umrah Digital{' '}
             <span style={{ color: C.accent, fontStyle: 'italic' }}>untuk Travel Anda</span>
@@ -562,7 +562,7 @@ export default function LandingPage() {
             transition={{ delay: 0.18, duration: 0.65 }}
             style={{ color: 'rgba(255,255,255,.88)', fontSize: 'clamp(14px, 1.8vw, 16px)', maxWidth: 560, margin: '0 auto 26px', fontWeight: 400, textShadow: '0 1px 12px rgba(0,0,0,0.5)', lineHeight: 1.7 }}
           >
-            Doa, panduan ibadah, jadwal, dan komunikasi travel — semua dalam satu aplikasi bermerek nama Anda. Lebih hemat dari mencetak buku doa, dengan manfaat berkali lipat.
+            Jamaah Anda pegang HP, semua ada — doa, jadwal, panduan ibadah, sampai info hotel. Bermerek nama travel Anda. Tanpa ribet, tanpa cetak buku.
           </motion.p>
 
           <motion.div
@@ -572,10 +572,10 @@ export default function LandingPage() {
             style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 26 }}
           >
             <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-btn lp-cta-pulse" style={{ background: C.ink, color: '#fff', padding: '14px 28px', fontSize: 15, fontWeight: 600 }}>
-              Coba Gratis — 5 Jamaah Pertama
+              Saya Mau Coba Gratis →
             </a>
             <a href="#cara" className="lp-btn" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff', border: '1px solid rgba(255,255,255,0.4)', padding: '14px 28px', fontSize: 15, fontWeight: 600 }}>
-              Lihat Cara Kerjanya
+              Bagaimana Cara Kerjanya?
             </a>
           </motion.div>
 
