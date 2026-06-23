@@ -448,6 +448,8 @@ export default function LandingPage() {
           .lp-foot-links { grid-template-columns: 1fr 1fr !important; }
         }
 
+        .lp-bento > div { height: 100%; }
+
         @keyframes lpPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(0,84,249,0.0); } 50% { box-shadow: 0 0 0 6px rgba(0,84,249,0.08); } }
         .lp-cta-pulse { animation: lpPulse 2.8s ease-in-out infinite; }
 
@@ -589,33 +591,33 @@ export default function LandingPage() {
             </p>
           </Reveal>
 
-          <div className="lp-bento" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
+          <div className="lp-bento" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, alignItems: 'stretch' }}>
             <Reveal>
-              <motion.div whileHover={{ y: -4, transition: { duration: 0.2 } }} style={{ background: `linear-gradient(165deg, ${C.blue2}, ${C.blue1})`, color: '#fff', borderRadius: 14, padding: 20 }}>
-                <div style={{ fontSize: 12.5, fontWeight: 600, opacity: 0.85, marginBottom: 8 }}>Tampil sebagai aplikasi travel Anda sendiri</div>
-                <motion.div initial={{ scale: 0.6, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} viewport={{ once: true, margin: '-40px' }} transition={{ type: 'spring', stiffness: 200, damping: 14, delay: 0.1 }} style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em' }}>100%</motion.div>
-                <div style={{ fontSize: 12, opacity: 0.8, marginTop: 6 }}>Logo, nama, dan warna brand Anda — tanpa jejak pihak ketiga</div>
+              <motion.div whileHover={{ y: -4, transition: { duration: 0.2 } }} style={{ background: `linear-gradient(165deg, ${C.blue2}, ${C.blue1})`, color: '#fff', borderRadius: 16, padding: 22, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 200, boxSizing: 'border-box' }}>
+                <div style={{ fontSize: 13, fontWeight: 600, opacity: 0.85 }}>Tampil sebagai aplikasi travel Anda sendiri</div>
+                <motion.div initial={{ scale: 0.6, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} viewport={{ once: true, margin: '-40px' }} transition={{ type: 'spring', stiffness: 200, damping: 14, delay: 0.1 }} style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-0.03em', margin: '14px 0' }}>100%</motion.div>
+                <div style={{ fontSize: 12.5, opacity: 0.85 }}>Logo, nama, dan warna brand Anda — tanpa jejak pihak ketiga</div>
               </motion.div>
             </Reveal>
             <Reveal delay={0.05}>
-              <motion.div whileHover={{ y: -4, transition: { duration: 0.2 } }} style={{ background: C.bg, border: `1px solid ${C.line}`, borderRadius: 14, padding: 20 }}>
-                <div style={{ fontSize: 12.5, color: C.muted, fontWeight: 600, marginBottom: 8 }}>Doa & panduan ibadah siap pakai</div>
-                <motion.div initial={{ scale: 0.6, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} viewport={{ once: true, margin: '-40px' }} transition={{ type: 'spring', stiffness: 200, damping: 14, delay: 0.1 }} style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em', color: C.ink }}>55+</motion.div>
-                <div style={{ fontSize: 12, color: C.muted, marginTop: 6 }}>Lengkap dengan Arab, latin, dan terjemahan</div>
+              <motion.div whileHover={{ y: -4, transition: { duration: 0.2 } }} style={{ background: C.bg, border: `1px solid ${C.line}`, borderRadius: 16, padding: 22, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 200, boxSizing: 'border-box' }}>
+                <div style={{ fontSize: 13, color: C.muted, fontWeight: 600 }}>Doa & panduan ibadah siap pakai</div>
+                <motion.div initial={{ scale: 0.6, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} viewport={{ once: true, margin: '-40px' }} transition={{ type: 'spring', stiffness: 200, damping: 14, delay: 0.1 }} style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-0.03em', color: C.ink, margin: '14px 0' }}>55+</motion.div>
+                <div style={{ fontSize: 12.5, color: C.muted }}>Lengkap dengan Arab, latin, dan terjemahan</div>
               </motion.div>
             </Reveal>
             <Reveal delay={0.08}>
-              <motion.div whileHover={{ y: -4, transition: { duration: 0.2 } }} style={{ background: C.accent, borderRadius: 14, padding: 20 }}>
-                <div style={{ fontSize: 12.5, fontWeight: 600, color: C.greenDark, marginBottom: 8 }}>Fitur premium, langsung aktif</div>
-                <motion.div initial={{ scale: 0.6, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} viewport={{ once: true, margin: '-40px' }} transition={{ type: 'spring', stiffness: 200, damping: 14, delay: 0.1 }} style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em', color: C.greenDark }}>12</motion.div>
-                <div style={{ fontSize: 12, color: C.greenDark, opacity: 0.8, marginTop: 6 }}>Semua termasuk — tanpa biaya tambahan</div>
+              <motion.div whileHover={{ y: -4, transition: { duration: 0.2 } }} style={{ background: C.accent, borderRadius: 16, padding: 22, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 200, boxSizing: 'border-box' }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: C.greenDark }}>Fitur premium, langsung aktif</div>
+                <motion.div initial={{ scale: 0.6, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} viewport={{ once: true, margin: '-40px' }} transition={{ type: 'spring', stiffness: 200, damping: 14, delay: 0.1 }} style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-0.03em', color: C.greenDark, margin: '14px 0' }}>12</motion.div>
+                <div style={{ fontSize: 12.5, color: C.greenDark, opacity: 0.85 }}>Semua termasuk — tanpa biaya tambahan</div>
               </motion.div>
             </Reveal>
             <Reveal delay={0.11}>
-              <motion.div whileHover={{ y: -4, transition: { duration: 0.2 } }} style={{ background: C.ink, color: '#fff', borderRadius: 14, padding: 20 }}>
-                <div style={{ fontSize: 12.5, color: '#94a3b8', fontWeight: 600, marginBottom: 8 }}>Biaya setup & langganan bulanan</div>
-                <motion.div initial={{ scale: 0.6, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} viewport={{ once: true, margin: '-40px' }} transition={{ type: 'spring', stiffness: 200, damping: 14, delay: 0.1 }} style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em', color: C.accent }}>Rp 0</motion.div>
-                <div style={{ fontSize: 12, color: '#94a3b8', marginTop: 6 }}>Bayar hanya saat jamaah berangkat</div>
+              <motion.div whileHover={{ y: -4, transition: { duration: 0.2 } }} style={{ background: C.ink, color: '#fff', borderRadius: 16, padding: 22, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 200, boxSizing: 'border-box' }}>
+                <div style={{ fontSize: 13, color: '#94a3b8', fontWeight: 600 }}>Biaya setup & langganan bulanan</div>
+                <motion.div initial={{ scale: 0.6, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} viewport={{ once: true, margin: '-40px' }} transition={{ type: 'spring', stiffness: 200, damping: 14, delay: 0.1 }} style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-0.03em', color: C.accent, margin: '14px 0' }}>Rp 0</motion.div>
+                <div style={{ fontSize: 12.5, color: '#94a3b8' }}>Bayar hanya saat jamaah berangkat</div>
               </motion.div>
             </Reveal>
           </div>
