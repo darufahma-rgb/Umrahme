@@ -323,13 +323,163 @@ export default function LandingPage() {
           .lp-foot-top { grid-template-columns: 1fr 1fr !important; }
         }
         @media (max-width: 760px) {
+          /* ── GLOBAL ── */
+          body, #root { overflow-x: hidden; }
+
+          /* ── GRIDS ── */
+          .lp-feat-grid { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+          .lp-bento { grid-template-columns: 1fr !important; gap: 10px !important; }
+          .lp-pain-grid { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+          .lp-testi-grid { grid-template-columns: 1fr !important; gap: 10px !important; }
+          .lp-foot-top { grid-template-columns: 1fr !important; gap: 24px !important; }
+          .lp-steps { gap: 10px !important; }
+          .lp-price-wrap { grid-template-columns: 1fr !important; }
+
+          /* ── HERO ── */
+          .lp-hero-padding { padding-top: 76px !important; }
+
+          /* ── FLOATING CARDS: 2x2 grid ── */
+          .lp-float-wrap {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 10px !important;
+            padding: 0 16px !important;
+            margin-top: 28px !important;
+            margin-bottom: -32px !important;
+            overflow: visible !important;
+            justify-content: unset !important;
+            align-items: stretch !important;
+            min-height: unset !important;
+            perspective: none !important;
+          }
+          .lp-float-wrap > div {
+            width: 100% !important;
+            animation: none !important;
+            flex-shrink: unset !important;
+          }
+          .lp-float-wrap > div > div {
+            width: 100% !important;
+            border-radius: 14px !important;
+            padding: 14px !important;
+          }
+          .lp-float-card-mid { display: none !important; }
+
+          /* ── HERO CTA BUTTONS: stack vertikal ── */
+          .lp-hero-btns {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            width: 100% !important;
+            max-width: 320px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            gap: 10px !important;
+          }
+          .lp-hero-btns .lp-btn {
+            width: 100% !important;
+            justify-content: center !important;
+            padding: 13px 20px !important;
+            font-size: 14px !important;
+          }
+
+          /* ── HERO SOCIAL PROOF ── */
+          .lp-hero-social {
+            flex-direction: column !important;
+            gap: 4px !important;
+            font-size: 12px !important;
+          }
+
+          /* ── SECTION PADDING ── */
+          .lp-section { padding-top: 48px !important; padding-bottom: 48px !important; }
+          .lp-section-sm { padding-top: 32px !important; padding-bottom: 32px !important; }
+
+          /* ── TYPOGRAPHY ── */
+          .lp-h2 { line-height: 1.18 !important; margin-bottom: 28px !important; }
+
+          /* ── FEAT CARDS ── */
+          .lp-feat-card { padding: 18px !important; border-radius: 16px !important; }
+          .lp-feat-card h3 { font-size: 15px !important; margin-bottom: 5px !important; }
+          .lp-feat-card p { font-size: 12.5px !important; }
+          .lp-feat-card > div:first-child { width: 38px !important; height: 38px !important; font-size: 18px !important; margin-bottom: 10px !important; }
+
+          /* ── BENTO CARDS ── */
+          .lp-bento > div > div { min-height: unset !important; padding: 20px !important; border-radius: 16px !important; }
+          .lp-bento-right { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+
+          /* ── PAIN CARDS ── */
+          .lp-pain-grid > div > div { padding: 18px !important; border-radius: 16px !important; }
+
+          /* ── WHITE-LABEL PHONES ── */
+          .lp-wl { gap: 32px !important; }
+          .lp-wl-phones {
+            justify-content: center !important;
+            gap: 10px !important;
+            padding: 0 8px 16px !important;
+            flex-wrap: nowrap !important;
+          }
+          .lp-wl-phones > div {
+            transform: none !important;
+            width: calc(50% - 5px) !important;
+            max-width: 175px !important;
+          }
+          .lp-wl-phones > div > div { height: 320px !important; }
+
+          /* ── PRICING ── */
+          .lp-price-card { padding: 26px 22px !important; border-radius: 20px !important; }
+          .lp-price-num { font-size: 54px !important; line-height: 1 !important; }
+          .lp-calc-hide { display: none !important; }
+
+          /* ── TESTIMONIALS ── */
+          .lp-testi-grid > div > div { padding: 20px !important; border-radius: 16px !important; }
+
+          /* ── STEPS ── */
+          .lp-steps > div > div { padding: 22px 20px !important; border-radius: 16px !important; }
+          .lp-steps > div > div h3 { font-size: 17px !important; }
+
+          /* ── CTA BOX ── */
+          .lp-cta-box { padding: 32px 22px !important; border-radius: 20px !important; }
+          .lp-cta-box h2 { font-size: 24px !important; margin-bottom: 12px !important; }
+          .lp-cta-box p { font-size: 14px !important; margin-bottom: 20px !important; }
+          .lp-cta-btns {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 10px !important;
+          }
+          .lp-cta-btns .lp-btn {
+            width: 100% !important;
+            justify-content: center !important;
+            font-size: 14px !important;
+          }
+
+          /* ── FOOTER ── */
+          .lp-foot-links {
+            display: grid !important;
+            grid-template-columns: repeat(3, 1fr) !important;
+            gap: 16px !important;
+          }
+
+          /* ── MARQUEE ── */
+          .lp-marquee-wrap { padding-top: 52px !important; padding-bottom: 36px !important; }
+
+          /* ── FAQ ── */
+          .lp-faq-q { font-size: 14px !important; padding: 16px 18px !important; }
+          .lp-faq-a { font-size: 13.5px !important; padding: 0 18px 16px !important; }
+
+          /* ── WL CHECKLIST ── */
+          .lp-wl-list li { font-size: 13.5px !important; margin-bottom: 10px !important; }
+          .lp-wl-cta { font-size: 13px !important; padding: 12px 18px !important; }
+
+          /* ── INNER PADDING ── */
+          .lp-inner { padding-left: 18px !important; padding-right: 18px !important; }
+        }
+
+        @media (max-width: 480px) {
           .lp-feat-grid { grid-template-columns: 1fr !important; }
-          .lp-bento { grid-template-columns: 1fr !important; }
           .lp-pain-grid { grid-template-columns: 1fr !important; }
-          .lp-testi-grid { grid-template-columns: 1fr !important; }
-          .lp-foot-top { grid-template-columns: 1fr !important; }
-          .lp-float-wrap { overflow-x: auto; justify-content: flex-start !important; padding: 0 20px 10px !important; }
-          .lp-hero-padding { padding: 100px 0 0 !important; }
+          .lp-bento-right { grid-template-columns: 1fr !important; }
+          .lp-float-wrap { grid-template-columns: 1fr 1fr !important; }
+          .lp-wl-phones > div { max-width: 150px !important; }
+          .lp-wl-phones > div > div { height: 280px !important; }
+          .lp-foot-links { grid-template-columns: 1fr 1fr !important; }
         }
       `}</style>
 
@@ -429,6 +579,7 @@ export default function LandingPage() {
           <motion.div
             initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.32, duration: 0.55 }}
+            className="lp-hero-btns"
             style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 26 }}
           >
             <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-btn" style={{ background: C.ink, color: '#fff', padding: '14px 28px', fontSize: 15, fontWeight: 600 }}>
@@ -441,6 +592,7 @@ export default function LandingPage() {
 
           <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.48 }}
+            className="lp-hero-social"
             style={{ display: 'flex', alignItems: 'center', gap: 10, justifyContent: 'center', color: '#fff', fontSize: 14, fontWeight: 600 }}
           >
             <div style={{ display: 'flex' }}>
@@ -461,6 +613,7 @@ export default function LandingPage() {
             { delay: 0.9 },
           ].map((_, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 + i * 0.1, duration: 0.7 }}
+              className={i === 2 ? 'lp-float-card-mid' : ''}
               style={{ animation: `lpFloat 5s ease-in-out ${_.delay}s infinite`, flexShrink: 0 }}
             >
               {i === 0 && (
@@ -510,7 +663,7 @@ export default function LandingPage() {
       </section>
 
       {/* ══════════ PARTNERS MARQUEE ══════════ */}
-      <div style={{ padding: '90px 0 50px', borderBottom: `1px solid ${C.line}`, overflow: 'hidden' }}>
+      <div className="lp-marquee-wrap lp-section-sm" style={{ padding: '90px 0 50px', borderBottom: `1px solid ${C.line}`, overflow: 'hidden' }}>
         <p style={{ textAlign: 'center', color: C.muted, fontSize: 13, fontWeight: 600, marginBottom: 26 }}>
           BERGABUNGLAH BERSAMA TRAVEL UMRAH YANG LEBIH MODERN
         </p>
@@ -518,8 +671,8 @@ export default function LandingPage() {
       </div>
 
       {/* ══════════ ABOUT / BENTO ══════════ */}
-      <section style={{ padding: '90px 0' }}>
-        <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
+      <section className="lp-section" style={{ padding: '90px 0' }}>
+        <div className="lp-inner" style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
           <Reveal><Eyebrow>Tentang Umrahme</Eyebrow></Reveal>
           <Reveal>
             <h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 40px' }}>
@@ -548,7 +701,7 @@ export default function LandingPage() {
               </div>
             </Reveal>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+            <div className="lp-bento-right" style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
               <Reveal delay={0.08}>
                 <div style={{ borderRadius: 20, padding: 26, boxShadow: '0 8px 24px -12px rgba(15,23,42,.2)', background: C.accent, color: C.greenDark }}>
                   <div style={{ fontSize: 13, fontWeight: 600 }}>Total doa & panduan</div>
@@ -571,8 +724,8 @@ export default function LandingPage() {
       </section>
 
       {/* ══════════ PAIN POINTS ══════════ */}
-      <section style={{ background: C.soft, padding: '90px 0' }}>
-        <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
+      <section className="lp-section" style={{ background: C.soft, padding: '90px 0' }}>
+        <div className="lp-inner" style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
           <Reveal><Eyebrow>Masalah Anda Hari Ini</Eyebrow></Reveal>
           <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 16px' }}>Masih begini setiap keberangkatan?</h2></Reveal>
           <Reveal><p style={{ textAlign: 'center', color: C.muted, maxWidth: 560, margin: '0 auto 40px', fontSize: 16 }}>Jika iya, Anda tidak sendirian. Dan ada cara yang lebih baik.</p></Reveal>
@@ -599,8 +752,8 @@ export default function LandingPage() {
       </section>
 
       {/* ══════════ FEATURES ══════════ */}
-      <section id="fitur" style={{ padding: '90px 0' }}>
-        <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
+      <section id="fitur" className="lp-section" style={{ padding: '90px 0' }}>
+        <div className="lp-inner" style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
           <Reveal><Eyebrow>Fitur Lengkap</Eyebrow></Reveal>
           <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 16px' }}>12 fitur siap pakai. Tanpa biaya tambahan.</h2></Reveal>
           <Reveal><p style={{ textAlign: 'center', color: C.muted, maxWidth: 560, margin: '0 auto 40px', fontSize: 16 }}>Semuanya sudah ada dan langsung aktif begitu Anda daftar. Tidak perlu pengembangan, tidak perlu tim IT.</p></Reveal>
@@ -621,8 +774,8 @@ export default function LandingPage() {
       </section>
 
       {/* ══════════ HOW IT WORKS ══════════ */}
-      <section id="cara" style={{ background: C.soft, padding: '90px 0' }}>
-        <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
+      <section id="cara" className="lp-section" style={{ background: C.soft, padding: '90px 0' }}>
+        <div className="lp-inner" style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
           <Reveal><Eyebrow>Cara Kerja</Eyebrow></Reveal>
           <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 16px' }}>Aktif dalam hitungan menit</h2></Reveal>
           <Reveal><p style={{ textAlign: 'center', color: C.muted, maxWidth: 560, margin: '0 auto 40px', fontSize: 16 }}>Tidak perlu tim IT. Tidak perlu training panjang. Travel Anda bisa langsung pakai untuk keberangkatan berikutnya.</p></Reveal>
@@ -646,8 +799,8 @@ export default function LandingPage() {
       </section>
 
       {/* ══════════ WHITE-LABEL SHOWCASE ══════════ */}
-      <section style={{ padding: '90px 0' }}>
-        <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
+      <section className="lp-section" style={{ padding: '90px 0' }}>
+        <div className="lp-inner" style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
           <div className="lp-wl" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 50, alignItems: 'center' }}>
             <Reveal>
               <div>
@@ -675,7 +828,7 @@ export default function LandingPage() {
             </Reveal>
 
             <Reveal delay={0.08}>
-              <div style={{ display: 'flex', gap: 18, justifyContent: 'center', flexWrap: 'wrap', overflow: 'hidden', padding: '10px 10px 20px' }}>
+              <div className="lp-wl-phones" style={{ display: 'flex', gap: 18, justifyContent: 'center', flexWrap: 'wrap', overflow: 'hidden', padding: '10px 10px 20px' }}>
                 {[
                   { name: 'Barokah Tour', sub: "Assalamu'alaikum, Ahmad 👋", bg: 'linear-gradient(160deg, #15803d, #14532d)', items: ['📖 Buku Doa', '🔢 Counter Tawaf', '🗓️ Agenda Hari Ini', '📢 Pengumuman'], accent: '#dcfce7', tilt: 'rotate(-4deg) translateY(8px)' },
                   { name: 'Mabrur Travel', sub: "Assalamu'alaikum, Siti 👋", bg: 'linear-gradient(160deg, #b45309, #92400e)', items: ['🕌 Jadwal Sholat', '🗺️ Peta Lokasi', '🪪 Kartu Jamaah', '🎖️ Sertifikat'], accent: '#fef3c7', tilt: 'rotate(4deg)' },
@@ -704,19 +857,19 @@ export default function LandingPage() {
       </section>
 
       {/* ══════════ PRICING ══════════ */}
-      <section id="harga" style={{ background: C.soft, padding: '90px 0' }}>
-        <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
+      <section id="harga" className="lp-section" style={{ background: C.soft, padding: '90px 0' }}>
+        <div className="lp-inner" style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
           <Reveal><Eyebrow>Harga</Eyebrow></Reveal>
           <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 16px' }}>Lebih murah dari buku doa cetak. Jauh lebih lengkap.</h2></Reveal>
           <Reveal><p style={{ textAlign: 'center', color: C.muted, maxWidth: 560, margin: '0 auto 40px', fontSize: 16 }}>Buku doa cetak 15–25 SAR per jamaah — dan itu hanya buku doa. Umrahme 10 SAR, dapat 12 fitur lengkap, bermerek travel Anda.</p></Reveal>
 
           <div className="lp-price-wrap" style={{ display: 'grid', gridTemplateColumns: '1.1fr .9fr', gap: 24, alignItems: 'stretch' }}>
             <Reveal>
-              <div style={{ background: C.ink, color: '#fff', borderRadius: 28, padding: 40, position: 'relative', overflow: 'hidden', height: '100%', display: 'flex', flexDirection: 'column' }}>
+              <div className="lp-price-card" style={{ background: C.ink, color: '#fff', borderRadius: 28, padding: 40, position: 'relative', overflow: 'hidden', height: '100%', display: 'flex', flexDirection: 'column' }}>
                 <div style={{ position: 'absolute', top: 24, right: -34, background: C.accent, color: C.greenDark, fontWeight: 800, fontSize: 12, padding: '6px 44px', transform: 'rotate(45deg)' }}>POPULER</div>
                 <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 6 }}>Harga Per Jamaah</h3>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, margin: '18px 0 6px' }}>
-                  <span style={{ fontSize: 64, fontWeight: 800, lineHeight: 1, color: C.accent }}>10</span>
+                  <span className="lp-price-num" style={{ fontSize: 64, fontWeight: 800, lineHeight: 1, color: C.accent }}>10</span>
                   <span style={{ fontSize: 16, color: 'rgba(255,255,255,.8)' }}>SAR saja / jamaah</span>
                 </div>
                 <p style={{ color: 'rgba(255,255,255,.75)', fontSize: 14, marginBottom: 26 }}>Bayar per keberangkatan, sesuai jumlah jamaah aktif. Tidak ada biaya bulanan, tidak ada biaya setup, tidak ada kontrak.</p>
@@ -734,7 +887,7 @@ export default function LandingPage() {
               </div>
             </Reveal>
 
-            <Reveal delay={0.08}>
+            <Reveal delay={0.08} className="lp-calc-hide">
               <div style={{ background: C.bg, border: `1px solid ${C.line}`, borderRadius: 28, padding: 36, display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%' }}>
                 <h4 style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>Kalkulator Biaya</h4>
                 <p style={{ color: C.muted, fontSize: 14, marginBottom: 20 }}>Estimasi untuk keberangkatan Anda</p>
@@ -759,8 +912,8 @@ export default function LandingPage() {
       </section>
 
       {/* ══════════ TESTIMONIALS ══════════ */}
-      <section style={{ padding: '90px 0' }}>
-        <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
+      <section className="lp-section" style={{ padding: '90px 0' }}>
+        <div className="lp-inner" style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
           <Reveal><Eyebrow>Testimoni</Eyebrow></Reveal>
           <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 40px' }}>Dari travel yang sudah merasakan manfaatnya</h2></Reveal>
 
@@ -785,7 +938,7 @@ export default function LandingPage() {
       </section>
 
       {/* ══════════ FAQ ══════════ */}
-      <section style={{ background: C.soft, padding: '90px 0' }}>
+      <section className="lp-section" style={{ background: C.soft, padding: '90px 0' }}>
         <div style={{ maxWidth: 760, margin: '0 auto', padding: '0 24px' }}>
           <Reveal><Eyebrow>FAQ</Eyebrow></Reveal>
           <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4vw, 38px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', margin: '0 auto 40px' }}>Pertanyaan yang Sering Ditanyakan</h2></Reveal>
@@ -796,10 +949,10 @@ export default function LandingPage() {
       </section>
 
       {/* ══════════ FINAL CTA ══════════ */}
-      <section id="kontak" style={{ padding: '90px 24px' }}>
+      <section id="kontak" className="lp-section" style={{ padding: '90px 24px' }}>
         <div style={{ maxWidth: 1180, margin: '0 auto' }}>
           <Reveal>
-            <div style={{ background: `linear-gradient(165deg, ${C.primary}, ${C.primaryDark})`, color: '#fff', borderRadius: 32, padding: '64px 40px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+            <div className="lp-cta-box" style={{ background: `linear-gradient(165deg, ${C.primary}, ${C.primaryDark})`, color: '#fff', borderRadius: 32, padding: '64px 40px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
               <div style={{ position: 'absolute', width: 320, height: 320, background: `radial-gradient(circle, rgba(255,255,255,.12), transparent 70%)`, top: -120, right: -80, pointerEvents: 'none' }} />
               <h2 style={{ fontSize: 'clamp(28px, 4.5vw, 44px)', fontWeight: 800, marginBottom: 16, position: 'relative' }}>
                 Keberangkatan berikutnya bisa jauh lebih baik
@@ -807,7 +960,7 @@ export default function LandingPage() {
               <p style={{ color: 'rgba(255,255,255,.85)', maxWidth: 520, margin: '0 auto 28px', fontSize: 17, lineHeight: 1.7, position: 'relative' }}>
                 Jamaah lebih tenang. Muthowif lebih fokus. Travel Anda tampil lebih profesional. Semua ini hanya 10 SAR per jamaah. Mulai dengan demo gratis — kami setup langsung dengan nama travel Anda.
               </p>
-              <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap', position: 'relative' }}>
+              <div className="lp-cta-btns" style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap', position: 'relative' }}>
                 <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-btn lp-btn-accent">
                   Minta Demo Gratis via WhatsApp <span className="lp-arrow">→</span>
                 </a>
@@ -831,6 +984,7 @@ export default function LandingPage() {
               </div>
               <p style={{ color: C.muted, fontSize: 14, maxWidth: 280, lineHeight: 1.7 }}>Ganti buku doa cetak. Ringankan kerja muthowif. Tampil profesional. Hanya 10 SAR per jamaah.</p>
             </div>
+            <div className="lp-foot-links">
             {[
               { title: 'Produk', links: [['#fitur', 'Fitur'], ['#harga', 'Harga'], ['#cara', 'Cara Kerja']] },
               { title: 'Perusahaan', links: [['#kontak', 'Kontak'], [WA_LINK, 'WhatsApp']] },
@@ -847,6 +1001,7 @@ export default function LandingPage() {
                 ))}
               </div>
             ))}
+            </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 26, borderTop: `1px solid ${C.line}`, color: C.muted, fontSize: 13, flexWrap: 'wrap', gap: 12 }}>
             <span>© {new Date().getFullYear()} Umrahme. All rights reserved.</span>
