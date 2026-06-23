@@ -108,18 +108,30 @@ export default function LandingPage() {
   }, []);
 
   const features = [
-    { icon: '📖', num: '01', title: '55+ Doa Lengkap', desc: 'Arab, latin, terjemahan. Ganti buku doa cetak selamanya.' },
-    { icon: '🔢', num: '02', title: "Counter Tawaf & Sa'i", desc: 'Hitung putaran otomatis, doa muncul tiap putaran.' },
-    { icon: '🕋', num: '03', title: 'Panduan Ibadah', desc: 'Tuntunan step-by-step, bisa dipelajari sebelum berangkat.' },
-    { icon: '🗺️', num: '04', title: 'Peta & Lokasi', desc: '10 lokasi ziarah + sejarah + Google Maps.' },
-    { icon: '🕌', num: '05', title: 'Jadwal Sholat', desc: 'Otomatis sesuai lokasi jamaah, akurat.' },
-    { icon: '📢', num: '06', title: 'Pengumuman', desc: 'Broadcast instan ke semua jamaah, pasti terbaca.' },
-    { icon: '🗓️', num: '07', title: 'Agenda Harian', desc: 'Jadwal hari ini tampil otomatis di HP jamaah.' },
-    { icon: '🪪', num: '08', title: 'Kartu Jamaah', desc: 'Identitas digital lengkap, berguna saat darurat.' },
-    { icon: '📔', num: '09', title: 'Jurnal', desc: 'Jamaah simpan momen perjalanan suci mereka.' },
-    { icon: '🎖️', num: '10', title: 'Sertifikat', desc: 'Sertifikat digital bermerek travel Anda.' },
-    { icon: '🎨', num: '11', title: 'White-Label', desc: 'Logo & nama travel Anda di setiap halaman.' },
-    { icon: '📊', num: '12', title: 'Portal Travel', desc: 'Satu dashboard kelola jamaah, agenda, pengumuman.' },
+    { num: '01', title: '55+ Doa Lengkap', desc: 'Arab, latin, terjemahan — semua ada. Jamaah buka HP, langsung ikuti saat muthowif menjelaskan. Tidak perlu cetak buku lagi.',
+      icon: <><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></> },
+    { num: '02', title: "Counter Tawaf & Sa'i", desc: 'Hitung putaran otomatis, doa muncul sendiri di tiap putaran. Jamaah fokus ibadah, bukan sibuk hitung.',
+      icon: <><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></> },
+    { num: '03', title: 'Panduan Ibadah', desc: 'Panduan step-by-step yang bisa dipelajari jamaah sebelum berangkat. Mereka tiba di tanah suci sudah siap.',
+      icon: <><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></> },
+    { num: '04', title: 'Peta & Lokasi Bersejarah', desc: '10 lokasi ziarah lengkap dengan sejarah, tokoh, dalil, dan link Google Maps. Jamaah tidak perlu bertanya arah.',
+      icon: <><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></> },
+    { num: '05', title: 'Jadwal Sholat Real-time', desc: 'Waktu sholat otomatis sesuai lokasi — Makkah, Madinah, atau di perjalanan. Tidak ada alasan terlewat.',
+      icon: <><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M5 3 2 6"/><path d="m22 6-3-3"/></> },
+    { num: '06', title: 'Pengumuman Travel', desc: 'Kirim pengumuman dari portal travel — muncul langsung di HP semua jamaah. Lebih cepat dan pasti terbaca.',
+      icon: <><path d="M3 11l18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></> },
+    { num: '07', title: 'Agenda Harian', desc: 'Isi agenda sekali di portal, jamaah lihat jadwal hari ini otomatis. Tidak ada lagi pertanyaan "hari ini kita ke mana?".',
+      icon: <><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></> },
+    { num: '08', title: 'Kartu Jamaah Digital', desc: 'Nama, rombongan, hotel, nomor pembimbing — semua dalam satu kartu digital. Berguna saat jamaah terpisah atau darurat.',
+      icon: <><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2.5"/><path d="M14 10h5M14 14h5"/></> },
+    { num: '09', title: 'Jurnal Perjalanan', desc: 'Jamaah catat momen perjalanan suci mereka. Kenangan ibadah tersimpan rapi, bisa dibaca ulang kapan saja.',
+      icon: <><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></> },
+    { num: '10', title: 'Sertifikat Umrah Digital', desc: 'Sertifikat digital bermerek travel Anda — jamaah bisa simpan dan bagikan. Kenang-kenangan yang juga promosi.',
+      icon: <><circle cx="12" cy="9" r="6"/><path d="M9 14.5 8 22l4-2 4 2-1-7.5"/></> },
+    { num: '11', title: 'White-Label Penuh', desc: 'Logo Anda, warna Anda, nama Anda. Jamaah tidak tahu ini Umrahme — yang mereka tahu ini aplikasi travel Anda.',
+      icon: <><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="10.5" r="2.5"/><circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="12.5" r="2.5"/><path d="M12 2a10 10 0 1 0 0 20 2 2 0 0 0 2-2 2 2 0 0 1 2-2h2a4 4 0 0 0 4-4 10 10 0 0 0-10-10z"/></> },
+    { num: '12', title: 'Portal Travel Agency', desc: 'Satu dashboard untuk semua: kelola data jamaah, atur agenda, kirim pengumuman. Semua terkontrol dari satu tempat.',
+      icon: <><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></> },
   ];
 
   const faqs = [
@@ -718,7 +730,9 @@ export default function LandingPage() {
             {features.map((f, i) => (
               <Reveal key={i} delay={i * 0.03} className={i < 2 ? 'lp-feat-featured' : ''}>
                 <div className="lp-feat-card">
-                  <div style={{ width: 32, height: 32, borderRadius: 8, background: C.accent, color: C.greenDark, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 17, marginBottom: 10 }}>{f.icon}</div>
+                  <div style={{ width: 40, height: 40, borderRadius: 10, background: C.accent, color: C.greenDark, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">{f.icon}</svg>
+                  </div>
                   <div style={{ fontSize: 10, fontWeight: 700, color: C.accentDark, marginBottom: 3 }}>FITUR {f.num}</div>
                   <h3 style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}>{f.title}</h3>
                   <p style={{ fontSize: 12, color: C.muted, lineHeight: 1.5 }}>{f.desc}</p>
