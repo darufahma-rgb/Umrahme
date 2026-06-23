@@ -271,10 +271,10 @@ export default function LandingPage() {
           backgroundSize: 'cover', backgroundPosition: 'center center',
           opacity: 0.65,
         }} />
-        {/* overlay gradient */}
+        {/* fade to white at bottom only */}
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
-          background: `linear-gradient(180deg, rgba(20,83,160,.28) 0%, rgba(30,111,184,.22) 50%, rgba(255,255,255,.88) 100%)`,
+          background: `linear-gradient(180deg, transparent 60%, rgba(255,255,255,.95) 100%)`,
         }} />
 
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 2, textAlign: 'center' }}>
