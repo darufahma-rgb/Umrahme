@@ -201,8 +201,8 @@ export default function LandingPage() {
         .lp-nav-scrolled {
           background: #ffffff;
           backdrop-filter: none; -webkit-backdrop-filter: none;
-          border-color: rgba(0,0,0,0.07);
-          box-shadow: 0 2px 12px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
+          border-color: rgba(0,0,0,0.12);
+          box-shadow: 0 4px 20px rgba(0,0,0,0.13), 0 1px 4px rgba(0,0,0,0.08);
         }
         .lp-nav-inner {
           display: flex; align-items: center;
