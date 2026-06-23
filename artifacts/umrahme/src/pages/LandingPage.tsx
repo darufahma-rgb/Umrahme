@@ -216,14 +216,15 @@ export default function LandingPage() {
           text-decoration: none; flex-shrink: 0;
         }
         .lp-nav-logo-circle {
-          width: 36px; height: 36px; border-radius: 50%;
+          width: 36px; height: 36px;
           display: flex; align-items: center; justify-content: center;
           font-weight: 800; font-size: 15px; flex-shrink: 0;
-          background: #a3e635; color: #131313; overflow: hidden;
+          background: transparent; color: #fff;
           transition: background .3s;
         }
-        .lp-nav-scrolled .lp-nav-logo-circle { background: #a3e635; }
-        .lp-nav-logo-circle img { width: 22px; height: 22px; object-fit: contain; mix-blend-mode: screen; display: block; }
+        .lp-nav-scrolled .lp-nav-logo-circle { background: transparent; }
+        .lp-nav-logo-circle img { width: 32px; height: 32px; object-fit: contain; display: block; filter: brightness(0) invert(1); }
+        .lp-nav-scrolled .lp-nav-logo-circle img { filter: none; }
         .lp-nav-logo-text {
           font-size: 17px; font-weight: 700; color: #fff;
           font-family: ${F}; transition: color .3s;
