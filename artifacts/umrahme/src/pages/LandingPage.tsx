@@ -931,13 +931,13 @@ export default function LandingPage() {
 
           <div style={{ textAlign: 'center', marginBottom: 40 }}>
             <p style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase' as const, color: C.accent, marginBottom: 14, fontFamily: F }}>
-              Siap memulai?
+              Mulai hari ini, gratis.
             </p>
             <h2 style={{ fontSize: 'clamp(28px, 5vw, 52px)', fontWeight: 800, lineHeight: 1.08, letterSpacing: '-0.02em', color: '#fff', margin: '0 auto 20px', maxWidth: 640, fontFamily: F }}>
-              5 jamaah pertama Anda,<br />gratis tanpa syarat.
+              Coba dulu. Buktikan sendiri.<br />Baru putuskan.
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', marginBottom: 28, fontFamily: F }}>
-              Setup dalam menit. Bermerek nama travel Anda. Tanpa komitmen.
+              5 jamaah pertama gratis — kami setup aplikasi bermerek travel Anda dalam hitungan menit.
             </p>
             <a
               href={WA_LINK}
@@ -947,7 +947,7 @@ export default function LandingPage() {
               onMouseEnter={e => (e.currentTarget.style.opacity = '0.88')}
               onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
             >
-              Klaim via WhatsApp
+              Mulai Gratis — Hubungi Kami
               <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 24, height: 24, borderRadius: '50%', background: 'rgba(0,0,0,0.15)', fontSize: 13 }}>→</span>
             </a>
           </div>
@@ -956,7 +956,7 @@ export default function LandingPage() {
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <div style={{ width: 28, height: 28, borderRadius: 8, background: C.accent, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 800, color: C.greenDark, fontFamily: F, flexShrink: 0 }}>U</div>
+              <img src={logoImg} alt="Umrahme" style={{ width: 28, height: 28, objectFit: 'contain', display: 'block', flexShrink: 0, filter: 'brightness(0) invert(1)' }} />
               <span style={{ fontWeight: 700, fontSize: 15, fontFamily: F }}>Umrahme</span>
             </div>
             <nav style={{ display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
