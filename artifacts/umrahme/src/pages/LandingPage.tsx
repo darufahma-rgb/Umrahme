@@ -931,13 +931,13 @@ export default function LandingPage() {
 
           <div style={{ textAlign: 'center', marginBottom: 40 }}>
             <p style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase' as const, color: C.accent, marginBottom: 14, fontFamily: F }}>
-              Mulai hari ini, gratis.
+              Untuk travel yang ingin selangkah lebih maju.
             </p>
             <h2 style={{ fontSize: 'clamp(28px, 5vw, 52px)', fontWeight: 800, lineHeight: 1.08, letterSpacing: '-0.02em', color: '#fff', margin: '0 auto 20px', maxWidth: 640, fontFamily: F }}>
-              Coba dulu. Buktikan sendiri.<br />Baru putuskan.
+              Jamaah lebih tenang.<br />Muthowif lebih fokus.<br />Travel Anda lebih dipercaya.
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', marginBottom: 28, fontFamily: F }}>
-              5 jamaah pertama gratis — kami setup aplikasi bermerek travel Anda dalam hitungan menit.
+              Gratis untuk 5 jamaah pertama — kami setup aplikasi bermerek travel Anda dalam menit.
             </p>
             <a
               href={WA_LINK}
@@ -947,8 +947,7 @@ export default function LandingPage() {
               onMouseEnter={e => (e.currentTarget.style.opacity = '0.88')}
               onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
             >
-              Mulai Gratis — Hubungi Kami
-              <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 24, height: 24, borderRadius: '50%', background: 'rgba(0,0,0,0.15)', fontSize: 13 }}>→</span>
+              Klaim Akses Gratis →
             </a>
           </div>
 
