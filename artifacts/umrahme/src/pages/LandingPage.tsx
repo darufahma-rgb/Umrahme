@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { motion, useInView, AnimatePresence, LayoutGroup } from 'framer-motion';
 
 const F = "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif";
 
@@ -117,6 +117,7 @@ function FAQItem({ q, a }: { q: string; a: string }) {
 export default function LandingPage() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [navExpanded, setNavExpanded] = useState(false);
 
   useEffect(() => {
     document.title = 'Umrahme — Aplikasi Pendamping Umrah White-Label untuk Travel Agency';
@@ -194,11 +195,6 @@ export default function LandingPage() {
         }
         .lp-feat-card:hover { transform: translateY(-4px); box-shadow: 0px 8px 24px rgba(0,0,0,0.08); }
 
-        .lp-nav-link { font-weight: 500; font-size: 15px; color: rgba(255,255,255,.85); text-decoration: none; transition: color .2s; font-family: ${F}; }
-        .lp-nav-link:hover { color: #fff; }
-        .lp-nav-link-dark { font-weight: 500; font-size: 15px; color: #333333; text-decoration: none; transition: color .2s; font-family: ${F}; }
-        .lp-nav-link-dark:hover { color: ${C.primary}; }
-
         /* mobile drawer */
         .lp-drawer {
           position: fixed; top: 0; right: 0; bottom: 0; width: 80%; max-width: 300px;
@@ -217,17 +213,17 @@ export default function LandingPage() {
         }
         .lp-drawer-backdrop.open { opacity: 1; pointer-events: auto; }
 
-        /* hide desktop nav links on mobile */
-        @media (max-width: 760px) {
-          .lp-nav-desktop { display: none !important; }
-          .lp-nav-cta-btn { display: none !important; }
-          .lp-menu-toggle { display: flex !important; }
-        }
         /* hide hamburger on desktop */
         @media (min-width: 761px) {
           .lp-menu-toggle { display: none !important; }
           .lp-drawer { display: none !important; }
           .lp-drawer-backdrop { display: none !important; }
+        }
+        /* hide desktop nav island links on mobile, show hamburger */
+        @media (max-width: 760px) {
+          .lp-island-nav { display: none !important; }
+          .lp-island-cta { display: none !important; }
+          .lp-menu-toggle { display: flex !important; }
         }
 
         @media (max-width: 980px) {
@@ -287,48 +283,95 @@ export default function LandingPage() {
         </div>
       </div>
 
-      {/* ══════════ NAVBAR ══════════ */}
-      <header style={{
-        position: 'fixed', top: 20, left: '50%', transform: 'translateX(-50%)',
-        zIndex: 100,
-        background: 'rgba(255,255,255,0.92)',
-        backdropFilter: 'blur(16px)',
-        WebkitBackdropFilter: 'blur(16px)',
-        borderRadius: 999,
-        display: 'flex', alignItems: 'center',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.14)',
-        border: '1px solid rgba(255,255,255,0.6)',
-        padding: 6,
-        maxWidth: 'calc(100vw - 32px)',
-        whiteSpace: 'nowrap' as const,
-      }}>
-        {/* Logo circle */}
-        <a href="#" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 40, height: 40, borderRadius: '50%', background: C.ink, color: '#fff', fontWeight: 800, fontSize: 17, flexShrink: 0, textDecoration: 'none' }}>U</a>
+      {/* ══════════ DYNAMIC ISLAND NAVBAR ══════════ */}
+      <LayoutGroup>
+        <motion.header
+          layout
+          transition={{ type: 'spring', stiffness: 500, damping: 38, mass: 0.4 }}
+          onHoverStart={() => setNavExpanded(true)}
+          onHoverEnd={() => setNavExpanded(false)}
+          style={{
+            position: 'fixed', top: 20, left: '50%', translateX: '-50%',
+            zIndex: 100,
+            background: navExpanded
+              ? 'rgba(20,20,20,0.97)'
+              : 'rgba(10,10,10,0.92)',
+            backdropFilter: 'blur(24px)',
+            WebkitBackdropFilter: 'blur(24px)',
+            borderRadius: 999,
+            display: 'flex', alignItems: 'center',
+            boxShadow: navExpanded
+              ? '0 12px 48px rgba(0,0,0,0.38), 0 0 0 1px rgba(255,255,255,0.1)'
+              : '0 4px 24px rgba(0,0,0,0.28), 0 0 0 1px rgba(255,255,255,0.07)',
+            padding: 6,
+            cursor: 'default',
+            whiteSpace: 'nowrap' as const,
+          }}
+        >
+          {/* Logo */}
+          <motion.a
+            layout
+            href="#"
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 40, height: 40, borderRadius: '50%', background: '#fff', color: C.ink, fontWeight: 800, fontSize: 17, flexShrink: 0, textDecoration: 'none' }}
+          >U</motion.a>
 
-        {/* Desktop nav links */}
-        <nav className="lp-nav-desktop" style={{ display: 'flex', gap: 0, padding: '0 10px' }}>
-          {[['#fitur', 'Fitur'], ['#harga', 'Harga'], ['#cara', 'Cara Kerja'], ['#kontak', 'Kontak']].map(([h, l]) => (
-            <a key={h} href={h} className="lp-nav-link-dark" style={{ padding: '8px 12px', borderRadius: 999 }}>{l}</a>
-          ))}
-        </nav>
+          {/* Desktop: nav links — appear on expand */}
+          <AnimatePresence>
+            {navExpanded && (
+              <motion.nav
+                className="lp-island-nav"
+                key="island-nav"
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: 'auto' }}
+                exit={{ opacity: 0, width: 0 }}
+                transition={{ type: 'spring', stiffness: 500, damping: 38, mass: 0.4 }}
+                style={{ display: 'flex', gap: 0, padding: '0 6px', overflow: 'hidden' }}
+              >
+                {[['#fitur', 'Fitur'], ['#harga', 'Harga'], ['#cara', 'Cara Kerja'], ['#kontak', 'Kontak']].map(([h, l]) => (
+                  <a
+                    key={h} href={h}
+                    style={{ display: 'inline-block', padding: '8px 13px', borderRadius: 999, fontSize: 14, fontWeight: 500, color: 'rgba(255,255,255,0.82)', textDecoration: 'none', fontFamily: F, transition: 'color .15s, background .15s' }}
+                    onMouseEnter={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.82)'; e.currentTarget.style.background = 'transparent'; }}
+                  >{l}</a>
+                ))}
+              </motion.nav>
+            )}
+          </AnimatePresence>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-btn lp-nav-cta-btn" style={{ background: C.ink, color: '#fff', padding: '10px 20px', fontSize: 14 }}>
-            Daftar Sekarang
-          </a>
-          {/* Hamburger — mobile only */}
-          <button
-            className="lp-menu-toggle"
-            onClick={() => setMenuOpen(p => !p)}
-            style={{ display: 'none', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', cursor: 'pointer', padding: '6px 8px', gap: 4, flexDirection: 'column' as const }}
-            aria-label="Buka menu"
-          >
-            <span style={{ width: 20, height: 2, background: C.ink, borderRadius: 2, display: 'block', transition: 'all .25s', transform: menuOpen ? 'translateY(6px) rotate(45deg)' : 'none' }} />
-            <span style={{ width: 20, height: 2, background: C.ink, borderRadius: 2, display: 'block', transition: 'all .25s', opacity: menuOpen ? 0 : 1 }} />
-            <span style={{ width: 20, height: 2, background: C.ink, borderRadius: 2, display: 'block', transition: 'all .25s', transform: menuOpen ? 'translateY(-6px) rotate(-45deg)' : 'none' }} />
-          </button>
-        </div>
-      </header>
+          {/* Right side: CTA (desktop) + hamburger (mobile) */}
+          <motion.div layout style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <AnimatePresence>
+              {navExpanded && (
+                <motion.a
+                  className="lp-island-cta"
+                  key="island-cta"
+                  href={WA_LINK} target="_blank" rel="noopener noreferrer"
+                  initial={{ opacity: 0, scale: 0.85, width: 0 }}
+                  animate={{ opacity: 1, scale: 1, width: 'auto' }}
+                  exit={{ opacity: 0, scale: 0.85, width: 0 }}
+                  transition={{ type: 'spring', stiffness: 500, damping: 38, mass: 0.4 }}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 6, overflow: 'hidden', padding: '9px 18px', borderRadius: 999, background: '#fff', color: C.ink, fontSize: 13, fontWeight: 700, textDecoration: 'none', fontFamily: F, whiteSpace: 'nowrap' as const }}
+                >
+                  Daftar Sekarang →
+                </motion.a>
+              )}
+            </AnimatePresence>
+
+            {/* Hamburger — mobile only */}
+            <button
+              className="lp-menu-toggle"
+              onClick={() => setMenuOpen(p => !p)}
+              style={{ display: 'none', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', cursor: 'pointer', padding: '6px 8px', gap: 4, flexDirection: 'column' as const }}
+              aria-label="Buka menu"
+            >
+              <span style={{ width: 18, height: 2, background: '#fff', borderRadius: 2, display: 'block', transition: 'all .25s', transform: menuOpen ? 'translateY(6px) rotate(45deg)' : 'none' }} />
+              <span style={{ width: 18, height: 2, background: '#fff', borderRadius: 2, display: 'block', transition: 'all .25s', opacity: menuOpen ? 0 : 1 }} />
+              <span style={{ width: 18, height: 2, background: '#fff', borderRadius: 2, display: 'block', transition: 'all .25s', transform: menuOpen ? 'translateY(-6px) rotate(-45deg)' : 'none' }} />
+            </button>
+          </motion.div>
+        </motion.header>
+      </LayoutGroup>
 
       {/* ══════════ HERO ══════════ */}
       <section className="lp-hero-padding" style={{
