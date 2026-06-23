@@ -218,10 +218,11 @@ export default function LandingPage() {
           width: 36px; height: 36px; border-radius: 50%;
           display: flex; align-items: center; justify-content: center;
           font-weight: 800; font-size: 15px; flex-shrink: 0;
-          background: #131313; color: #fff;
+          background: #a3e635; color: #131313; overflow: hidden;
           transition: background .3s;
         }
-        .lp-nav-scrolled .lp-nav-logo-circle { background: #131313; }
+        .lp-nav-scrolled .lp-nav-logo-circle { background: #a3e635; }
+        .lp-nav-logo-circle img { width: 22px; height: 22px; object-fit: contain; mix-blend-mode: screen; display: block; }
         .lp-nav-logo-text {
           font-size: 17px; font-weight: 700; color: #fff;
           font-family: ${F}; transition: color .3s;
