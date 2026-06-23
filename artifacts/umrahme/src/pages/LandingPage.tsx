@@ -878,7 +878,7 @@ export default function LandingPage() {
                   Coba gratis untuk 5 jamaah pertama Anda — tanpa syarat.
                 </p>
                 <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-btn lp-btn-accent" style={{ width: '100%', justifyContent: 'center' }}>
-                  Mulai Gratis — 5 Jamaah Pertama <span className="lp-arrow">→</span>
+                  Dapatkan Sekarang <span className="lp-arrow">→</span>
                 </a>
               </motion.div>
             </Reveal>
