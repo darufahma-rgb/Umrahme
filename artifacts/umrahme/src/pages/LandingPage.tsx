@@ -187,18 +187,26 @@ export default function LandingPage() {
         /* mobile drawer */
         /* ─── NAVBAR ─── */
         .lp-nav {
-          position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-          transition: background .3s ease, box-shadow .3s ease, backdrop-filter .3s ease;
+          position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
+          z-index: 100;
+          width: calc(100% - 48px);
+          max-width: 820px;
+          border-radius: 999px;
+          background: rgba(255,255,255,0.12);
+          backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+          border: 1px solid rgba(255,255,255,0.22);
+          box-shadow: 0 4px 24px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.2);
+          transition: background .3s ease, box-shadow .3s ease, border-color .3s ease;
         }
         .lp-nav-scrolled {
-          background: rgba(255,255,255,0.96);
-          backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-          box-shadow: 0 1px 0 rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
+          background: rgba(255,255,255,0.82);
+          backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+          border-color: rgba(0,0,0,0.08);
+          box-shadow: 0 2px 16px rgba(0,0,0,0.10), 0 1px 0 rgba(0,0,0,0.04);
         }
         .lp-nav-inner {
-          max-width: 1180px; margin: 0 auto;
           display: flex; align-items: center;
-          padding: 0 24px; height: 68px;
+          padding: 0 8px 0 16px; height: 52px;
         }
         .lp-nav-logo {
           display: flex; align-items: center; gap: 10px;
@@ -224,7 +232,7 @@ export default function LandingPage() {
         }
         .lp-nav-link {
           padding: 8px 14px; border-radius: 999px;
-          font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.88);
+          font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.95);
           text-decoration: none; transition: color .15s, background .15s;
           font-family: ${F};
         }
@@ -234,7 +242,7 @@ export default function LandingPage() {
         .lp-nav-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
         .lp-nav-cta-btn {
           display: inline-flex; align-items: center; gap: 6px;
-          padding: 9px 20px; border-radius: 999px;
+          padding: 8px 18px; border-radius: 999px;
           font-size: 13.5px; font-weight: 700; cursor: pointer;
           border: none; text-decoration: none; font-family: ${F};
           transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
@@ -247,7 +255,8 @@ export default function LandingPage() {
         /* mobile logo-tap dropdown */
         .lp-mobile-dropdown {
           display: none;
-          position: fixed; top: 68px; left: 0; right: 0; z-index: 98;
+          position: fixed; top: 80px; left: 24px; right: 24px; z-index: 98;
+          border-radius: 20px;
           background: rgba(10,10,10,0.96);
           backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
           padding: 8px 20px 20px;
@@ -357,7 +366,7 @@ export default function LandingPage() {
           .lp-price-wrap { grid-template-columns: 1fr !important; }
           .lp-calc-hide { display: none !important; }
 
-          .lp-hero-padding { padding-top: 90px !important; }
+          .lp-hero-padding { padding-top: 88px !important; }
 
 
 
@@ -518,7 +527,7 @@ export default function LandingPage() {
       <section className="lp-hero-padding" style={{
         position: 'relative',
         background: `linear-gradient(180deg, ${C.blue1} 0%, ${C.blue2} 45%, ${C.blue3} 100%)`,
-        padding: '120px 0 90px',
+        padding: '100px 0 90px',
       }}>
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
