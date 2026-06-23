@@ -562,7 +562,7 @@ export default function LandingPage() {
             style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 26 }}
           >
             <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-btn lp-cta-pulse" style={{ background: C.ink, color: '#fff', padding: '14px 28px', fontSize: 15, fontWeight: 600 }}>
-              Coba Gratis Sekarang
+              Coba Gratis — 5 Jamaah Pertama
             </a>
             <a href="#cara" className="lp-btn" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff', border: '1px solid rgba(255,255,255,0.4)', padding: '14px 28px', fontSize: 15, fontWeight: 600 }}>
               Lihat Cara Kerjanya
@@ -839,7 +839,7 @@ export default function LandingPage() {
           </Reveal>
           <Reveal delay={0.14}>
             <p style={{ textAlign: 'center', color: C.muted, maxWidth: 520, margin: '0 auto 28px', fontSize: 14 }}>
-              Bandingkan: buku doa cetak hanya memberi jamaah satu buku. Umrahme memberi 12 fitur lengkap, bermerek travel Anda — dengan biaya yang justru lebih ringan.
+              Mulai gratis dengan 5 jamaah pertama. Tidak perlu kartu kredit, tidak perlu kontrak — cukup daftar dan rasakan langsung.
             </p>
           </Reveal>
 
@@ -855,7 +855,7 @@ export default function LandingPage() {
                 <p style={{ color: 'rgba(255,255,255,.55)', fontSize: 12, fontStyle: 'italic', marginBottom: 18 }}>
                   Balik modal hanya dari hemat biaya cetak buku doa.
                 </p>
-                <p style={{ color: 'rgba(255,255,255,.7)', fontSize: 13, marginBottom: 20 }}>Investasi kecil per jamaah yang langsung terbayar dari hemat biaya cetak — dan terus memberi nilai di setiap keberangkatan.</p>
+                <p style={{ color: 'rgba(255,255,255,.7)', fontSize: 13, marginBottom: 20 }}>Mulai dengan 5 jamaah pertama secara gratis. Rasakan sendiri sebelum memutuskan — tanpa risiko, tanpa komitmen.</p>
                 <ul style={{ listStyle: 'none', flex: 1 }}>
                   {['Lebih murah dari biaya cetak buku doa — langsung balik modal', 'Tanpa biaya setup, tanpa langganan bulanan, tanpa kontrak', 'Bayar hanya untuk jamaah yang benar-benar berangkat', '12 fitur premium aktif penuh — tanpa biaya tersembunyi', 'Aplikasi bermerek travel Anda — perkuat brand di mata jamaah', 'Tingkatkan kepuasan jamaah & dorong referral keberangkatan berikutnya', 'Pendampingan & support langsung via WhatsApp'].map(t => (
                     <li key={t} style={{ display: 'flex', gap: 9, alignItems: 'center', marginBottom: 9, fontSize: 13 }}>
@@ -865,10 +865,10 @@ export default function LandingPage() {
                   ))}
                 </ul>
                 <p style={{ fontSize: 12.5, color: C.accent, fontWeight: 600, marginBottom: 12, textAlign: 'center', marginTop: 20 }}>
-                  Coba gratis dulu — tanpa risiko, tanpa komitmen.
+                  Coba gratis untuk 5 jamaah pertama Anda — tanpa syarat.
                 </p>
                 <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-btn lp-btn-accent" style={{ width: '100%', justifyContent: 'center' }}>
-                  Mulai Sekarang — Gratis Dulu <span className="lp-arrow">→</span>
+                  Mulai Gratis — 5 Jamaah Pertama <span className="lp-arrow">→</span>
                 </a>
               </motion.div>
             </Reveal>
@@ -924,14 +924,14 @@ export default function LandingPage() {
                 Keberangkatan berikutnya, naik kelas.
               </h2>
               <p style={{ color: 'rgba(255,255,255,.85)', maxWidth: 500, margin: '0 auto 24px', fontSize: 15, lineHeight: 1.7, position: 'relative' }}>
-                Jamaah lebih tenang. Muthowif lebih fokus. Travel Anda tampil lebih profesional. Mulai dengan demo gratis — kami setup langsung dengan nama travel Anda.
+                Daftar sekarang dan dapatkan 5 jamaah pertama secara gratis. Kami setup aplikasi dengan nama dan logo travel Anda — tanpa biaya, tanpa komitmen.
               </p>
               <div className="lp-cta-btns" style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap', position: 'relative' }}>
                 <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-btn lp-btn-accent">
-                  Minta Demo Gratis via WhatsApp <span className="lp-arrow">→</span>
+                  Klaim 5 Jamaah Gratis via WhatsApp <span className="lp-arrow">→</span>
                 </a>
                 <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-btn lp-btn-ghost">
-                  Pelajari Lebih Lanjut
+                  Lihat Cara Kerjanya
                 </a>
               </div>
             </div>
