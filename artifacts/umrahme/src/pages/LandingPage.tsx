@@ -199,6 +199,37 @@ export default function LandingPage() {
         .lp-nav-link-dark { font-weight: 500; font-size: 15px; color: #333333; text-decoration: none; transition: color .2s; font-family: ${F}; }
         .lp-nav-link-dark:hover { color: ${C.primary}; }
 
+        /* mobile drawer */
+        .lp-drawer {
+          position: fixed; top: 0; right: 0; bottom: 0; width: 80%; max-width: 300px;
+          background: #fff; z-index: 500;
+          display: flex; flex-direction: column;
+          padding: 0; overflow: hidden;
+          box-shadow: -12px 0 48px rgba(0,0,0,.18);
+          transform: translateX(100%);
+          transition: transform .35s cubic-bezier(.22,1,.36,1);
+          border-radius: 24px 0 0 24px;
+        }
+        .lp-drawer.open { transform: translateX(0); }
+        .lp-drawer-backdrop {
+          position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 499;
+          opacity: 0; pointer-events: none; transition: opacity .3s;
+        }
+        .lp-drawer-backdrop.open { opacity: 1; pointer-events: auto; }
+
+        /* hide desktop nav links on mobile */
+        @media (max-width: 760px) {
+          .lp-nav-desktop { display: none !important; }
+          .lp-nav-cta-btn { display: none !important; }
+          .lp-menu-toggle { display: flex !important; }
+        }
+        /* hide hamburger on desktop */
+        @media (min-width: 761px) {
+          .lp-menu-toggle { display: none !important; }
+          .lp-drawer { display: none !important; }
+          .lp-drawer-backdrop { display: none !important; }
+        }
+
         @media (max-width: 980px) {
           .lp-bento { grid-template-columns: 1fr 1fr !important; }
           .lp-feat-grid { grid-template-columns: repeat(2, 1fr) !important; }
@@ -209,24 +240,52 @@ export default function LandingPage() {
           .lp-foot-top { grid-template-columns: 1fr 1fr !important; }
         }
         @media (max-width: 760px) {
-          /* pill navbar on mobile: hide links, show hamburger */
-          .lp-nav-menu { position: fixed; top: 0; right: 0; bottom: 0; width: 82%; max-width: 300px; background: #fff; flex-direction: column; padding: 56px 28px 40px; gap: 6px; box-shadow: -10px 0 40px -10px rgba(0,0,0,.25); transform: translateX(100%); transition: transform .35s ease; z-index: 200; }
-          .lp-nav-menu.open { transform: none; }
-          .lp-nav-menu a.lp-nav-link-dark { color: ${C.ink} !important; font-size: 17px !important; font-weight: 600 !important; padding: 12px 16px !important; border-radius: 12px; }
-          .lp-nav-menu a.lp-nav-link-dark:hover { background: ${C.soft}; }
-          .lp-menu-toggle { display: flex !important; }
-          .lp-nav-cta-btn { display: none !important; }
-          .lp-drawer-close { display: flex !important; }
-          .lp-drawer-cta { display: flex !important; }
-          /* grids */
           .lp-feat-grid { grid-template-columns: 1fr !important; }
           .lp-bento { grid-template-columns: 1fr !important; }
           .lp-foot-top { grid-template-columns: 1fr !important; }
           .lp-float-wrap { overflow-x: auto; justify-content: flex-start !important; padding: 0 20px 10px !important; }
-          /* hero top spacing for small pill navbar */
           .lp-hero-padding { padding: 100px 0 0 !important; }
         }
       `}</style>
+
+      {/* ══════════ MOBILE DRAWER (outside pill header) ══════════ */}
+      <div className={`lp-drawer-backdrop${menuOpen ? ' open' : ''}`} onClick={() => setMenuOpen(false)} />
+      <div className={`lp-drawer${menuOpen ? ' open' : ''}`} aria-hidden={!menuOpen}>
+        {/* Drawer header */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 20px 16px', borderBottom: `1px solid ${C.line}` }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ width: 34, height: 34, borderRadius: '50%', background: C.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 800, fontSize: 15 }}>U</div>
+            <span style={{ fontWeight: 700, fontSize: 16, color: C.ink, fontFamily: F }}>Umrahme</span>
+          </div>
+          <button
+            onClick={() => setMenuOpen(false)}
+            style={{ width: 34, height: 34, borderRadius: '50%', background: C.soft, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, color: C.muted }}
+            aria-label="Tutup menu"
+          >✕</button>
+        </div>
+
+        {/* Nav links */}
+        <nav style={{ flex: 1, padding: '12px 12px', display: 'flex', flexDirection: 'column', gap: 4 }}>
+          {[['#fitur', 'Fitur', '✦'], ['#harga', 'Harga', '✦'], ['#cara', 'Cara Kerja', '✦'], ['#kontak', 'Kontak', '✦']].map(([h, l]) => (
+            <a key={h} href={h}
+              onClick={() => setMenuOpen(false)}
+              style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', borderRadius: 14, color: C.ink, fontSize: 16, fontWeight: 600, textDecoration: 'none', fontFamily: F, transition: 'background .15s' }}
+              onMouseEnter={e => (e.currentTarget.style.background = C.soft)}
+              onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+            >{l}</a>
+          ))}
+        </nav>
+
+        {/* CTA at bottom */}
+        <div style={{ padding: '16px 20px 32px', borderTop: `1px solid ${C.line}` }}>
+          <a href={WA_LINK} target="_blank" rel="noopener noreferrer"
+            onClick={() => setMenuOpen(false)}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, width: '100%', padding: '15px 20px', borderRadius: 16, background: C.ink, color: '#fff', fontSize: 15, fontWeight: 700, textDecoration: 'none', fontFamily: F }}
+          >
+            Daftar Sekarang →
+          </a>
+        </div>
+      </div>
 
       {/* ══════════ NAVBAR ══════════ */}
       <header style={{
@@ -246,41 +305,29 @@ export default function LandingPage() {
         {/* Logo circle */}
         <a href="#" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 40, height: 40, borderRadius: '50%', background: C.ink, color: '#fff', fontWeight: 800, fontSize: 17, flexShrink: 0, textDecoration: 'none' }}>U</a>
 
-        <nav className={`lp-nav-menu${menuOpen ? ' open' : ''}`} style={{ display: 'flex', gap: 0, padding: '0 10px' }}>
-          {/* close button inside drawer (mobile only) */}
-          <button
-            className="lp-drawer-close"
-            onClick={() => setMenuOpen(false)}
-            style={{ display: 'none', position: 'absolute', top: 16, right: 16, background: C.soft, border: 'none', borderRadius: 999, width: 36, height: 36, alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 18, color: C.ink }}
-            aria-label="Tutup menu"
-          >✕</button>
-
+        {/* Desktop nav links */}
+        <nav className="lp-nav-desktop" style={{ display: 'flex', gap: 0, padding: '0 10px' }}>
           {[['#fitur', 'Fitur'], ['#harga', 'Harga'], ['#cara', 'Cara Kerja'], ['#kontak', 'Kontak']].map(([h, l]) => (
-            <a key={h} href={h} className="lp-nav-link-dark" style={{ padding: '8px 12px', borderRadius: 999 }} onClick={() => setMenuOpen(false)}>{l}</a>
+            <a key={h} href={h} className="lp-nav-link-dark" style={{ padding: '8px 12px', borderRadius: 999 }}>{l}</a>
           ))}
-
-          {/* CTA in drawer (mobile only) */}
-          <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-drawer-cta lp-btn"
-            style={{ display: 'none', background: C.ink, color: '#fff', borderRadius: 32, padding: '14px 20px', fontSize: 15, fontWeight: 600, textAlign: 'center', justifyContent: 'center', marginTop: 8 }}
-            onClick={() => setMenuOpen(false)}>
-            Daftar Sekarang →
-          </a>
         </nav>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-btn lp-nav-cta-btn" style={{ background: C.ink, color: '#fff', padding: '10px 20px', fontSize: 14 }}>
             Daftar Sekarang
           </a>
+          {/* Hamburger — mobile only */}
           <button
             className="lp-menu-toggle"
             onClick={() => setMenuOpen(p => !p)}
-            style={{ display: 'none', background: 'none', border: 'none', cursor: 'pointer', flexDirection: 'column' as const, gap: 4, padding: '8px 10px' }}
+            style={{ display: 'none', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', cursor: 'pointer', padding: '6px 8px', gap: 4, flexDirection: 'column' as const }}
             aria-label="Buka menu"
           >
-            {[0, 1, 2].map(i => <span key={i} style={{ width: 20, height: 2, background: C.ink, borderRadius: 2, display: 'block' }} />)}
+            <span style={{ width: 20, height: 2, background: C.ink, borderRadius: 2, display: 'block', transition: 'all .25s', transform: menuOpen ? 'translateY(6px) rotate(45deg)' : 'none' }} />
+            <span style={{ width: 20, height: 2, background: C.ink, borderRadius: 2, display: 'block', transition: 'all .25s', opacity: menuOpen ? 0 : 1 }} />
+            <span style={{ width: 20, height: 2, background: C.ink, borderRadius: 2, display: 'block', transition: 'all .25s', transform: menuOpen ? 'translateY(-6px) rotate(-45deg)' : 'none' }} />
           </button>
         </div>
-        {menuOpen && <div onClick={() => setMenuOpen(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.5)', zIndex: 198 }} />}
       </header>
 
       {/* ══════════ HERO ══════════ */}
