@@ -556,34 +556,43 @@ export default function LandingPage() {
         <div className="lp-inner" style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
           <Reveal><Eyebrow>Tentang Umrahme</Eyebrow></Reveal>
           <Reveal>
-            <h2 className="lp-h2" style={{ textAlign: 'center', fontSize: 'clamp(24px, 3.5vw, 36px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 700, margin: '0 auto 28px' }}>
-              Satu langkah kecil. Lompatan besar untuk travel Anda.
+            <h2 className="lp-h2" style={{ textAlign: 'center', fontSize: 'clamp(24px, 3.5vw, 36px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 700, margin: '0 auto 10px' }}>
+              Bukan sekadar aplikasi. Ini wajah baru travel Anda.
             </h2>
+          </Reveal>
+          <Reveal>
+            <p style={{ textAlign: 'center', color: C.muted, fontSize: 14, marginBottom: 28 }}>
+              Empat alasan kenapa travel modern memilih Umrahme.
+            </p>
           </Reveal>
 
           <div className="lp-bento" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
             <Reveal>
               <div style={{ background: `linear-gradient(165deg, ${C.blue2}, ${C.blue1})`, color: '#fff', borderRadius: 14, padding: 20 }}>
-                <div style={{ fontSize: 12.5, fontWeight: 600, opacity: 0.85, marginBottom: 8 }}>per jamaah, sekali bayar</div>
-                <div style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em' }}>10 SAR</div>
+                <div style={{ fontSize: 12.5, fontWeight: 600, opacity: 0.85, marginBottom: 8 }}>Tampil sebagai aplikasi travel Anda sendiri</div>
+                <div style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em' }}>100%</div>
+                <div style={{ fontSize: 12, opacity: 0.8, marginTop: 6 }}>Logo, nama, dan warna brand Anda — tanpa jejak pihak ketiga</div>
               </div>
             </Reveal>
             <Reveal delay={0.05}>
               <div style={{ background: C.bg, border: `1px solid ${C.line}`, borderRadius: 14, padding: 20 }}>
-                <div style={{ fontSize: 12.5, color: C.muted, fontWeight: 600, marginBottom: 8 }}>doa & panduan ibadah</div>
+                <div style={{ fontSize: 12.5, color: C.muted, fontWeight: 600, marginBottom: 8 }}>Doa & panduan ibadah siap pakai</div>
                 <div style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em', color: C.ink }}>55+</div>
+                <div style={{ fontSize: 12, color: C.muted, marginTop: 6 }}>Lengkap dengan Arab, latin, dan terjemahan</div>
               </div>
             </Reveal>
             <Reveal delay={0.08}>
               <div style={{ background: C.accent, borderRadius: 14, padding: 20 }}>
-                <div style={{ fontSize: 12.5, fontWeight: 600, color: C.greenDark, marginBottom: 8 }}>bermerek travel Anda</div>
-                <div style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em', color: C.greenDark }}>100%</div>
+                <div style={{ fontSize: 12.5, fontWeight: 600, color: C.greenDark, marginBottom: 8 }}>Fitur premium, langsung aktif</div>
+                <div style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em', color: C.greenDark }}>12</div>
+                <div style={{ fontSize: 12, color: C.greenDark, opacity: 0.8, marginTop: 6 }}>Semua termasuk — tanpa biaya tambahan</div>
               </div>
             </Reveal>
             <Reveal delay={0.11}>
               <div style={{ background: C.ink, color: '#fff', borderRadius: 14, padding: 20 }}>
-                <div style={{ fontSize: 12.5, color: '#94a3b8', fontWeight: 600, marginBottom: 8 }}>biaya setup & bulanan</div>
+                <div style={{ fontSize: 12.5, color: '#94a3b8', fontWeight: 600, marginBottom: 8 }}>Biaya setup & langganan bulanan</div>
                 <div style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em', color: C.accent }}>Rp 0</div>
+                <div style={{ fontSize: 12, color: '#94a3b8', marginTop: 6 }}>Bayar hanya saat jamaah berangkat</div>
               </div>
             </Reveal>
           </div>
