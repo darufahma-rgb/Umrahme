@@ -636,17 +636,6 @@ export default function LandingPage() {
             </a>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.48 }}
-            className="lp-hero-social"
-            style={{ display: 'flex', alignItems: 'center', gap: 10, justifyContent: 'center', color: '#fff', fontSize: 14, fontWeight: 600 }}
-          >
-            <div style={{ display: 'flex' }}>
-              {[0, 1, 2, 3].map(i => <span key={i} style={{ width: 28, height: 28, borderRadius: '50%', border: '2px solid #fff', marginLeft: i > 0 ? -8 : 0, background: C.accent, display: 'inline-block' }} />)}
-            </div>
-            <span style={{ color: C.accent, letterSpacing: 2 }}>★★★★★</span>
-            <span>Lebih hemat dari buku doa cetak. Lebih profesional dari grup WhatsApp.</span>
-          </motion.div>
         </div>
 
         {/* floating cards */}
