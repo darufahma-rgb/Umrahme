@@ -273,7 +273,7 @@ export default function LandingPage() {
         {/* dark scrim so headline stays legible */}
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
-          background: 'rgba(0,0,0,0.38)',
+          background: 'rgba(0,0,0,0.18)',
         }} />
 
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 2, textAlign: 'center' }}>
