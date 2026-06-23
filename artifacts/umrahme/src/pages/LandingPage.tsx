@@ -307,8 +307,31 @@ export default function LandingPage() {
             transform: scale(1.08);
             box-shadow: 0 0 0 3px rgba(255,255,255,0.25);
           }
+
+          /* ── MOBILE SCROLL: ganti full navbar bg jadi floating glass pill ── */
+          .lp-nav-scrolled {
+            background: transparent !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            box-shadow: none !important;
+          }
+          .lp-nav-scrolled .lp-nav-logo {
+            background: rgba(12, 12, 18, 0.62);
+            backdrop-filter: blur(22px) saturate(1.6);
+            -webkit-backdrop-filter: blur(22px) saturate(1.6);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            border-radius: 20px;
+            padding: 8px 18px 8px 10px;
+            box-shadow:
+              0 6px 28px rgba(0, 0, 0, 0.28),
+              inset 0 1px 0 rgba(255, 255, 255, 0.10);
+            transition: background .3s ease, border-color .3s ease, box-shadow .3s ease;
+          }
+          /* logo text & icon tetap putih di dalam pill */
+          .lp-nav-scrolled .lp-nav-logo-text { color: #fff !important; }
+          .lp-nav-scrolled .lp-nav-logo-circle img { filter: brightness(0) invert(1) !important; }
           .lp-nav-scrolled .lp-nav-logo-circle.open {
-            box-shadow: 0 0 0 3px rgba(0,0,0,0.1);
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.22);
           }
         }
 
