@@ -698,6 +698,13 @@ export default function LandingPage() {
             </motion.div>
           ))}
         </div>
+
+        {/* gradient fade ke white */}
+        <div style={{
+          position: 'absolute', bottom: 0, left: 0, right: 0,
+          height: 120, pointerEvents: 'none', zIndex: 4,
+          background: 'linear-gradient(to bottom, transparent 0%, #ffffff 100%)',
+        }} />
       </section>
 
       {/* ══════════ PARTNERS MARQUEE ══════════ */}
