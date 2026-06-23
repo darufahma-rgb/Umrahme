@@ -361,14 +361,14 @@ export default function LandingPage() {
           /* ── HERO ── */
           .lp-hero-padding { padding-top: 76px !important; }
 
-          /* ── FLOATING CARDS: 2x2 grid ── */
+          /* ── FLOATING CARDS: 1 row 4 kolom ── */
           .lp-float-wrap {
             display: grid !important;
-            grid-template-columns: 1fr 1fr !important;
-            gap: 10px !important;
-            padding: 0 16px !important;
-            margin-top: 28px !important;
-            margin-bottom: -32px !important;
+            grid-template-columns: repeat(4, 1fr) !important;
+            gap: 7px !important;
+            padding: 0 12px !important;
+            margin-top: 24px !important;
+            margin-bottom: -24px !important;
             overflow: visible !important;
             justify-content: unset !important;
             align-items: stretch !important;
@@ -382,9 +382,21 @@ export default function LandingPage() {
           }
           .lp-float-wrap > div > div {
             width: 100% !important;
-            border-radius: 14px !important;
-            padding: 14px !important;
+            border-radius: 12px !important;
+            padding: 10px 9px !important;
           }
+          /* sembunyikan teks sekunder biar konten muat di kolom sempit */
+          .lp-float-wrap > div > div > div:last-child { display: none !important; }
+          /* kecilkan angka besar (font-size: 30px di inline style) */
+          .lp-float-wrap > div > div > div[style*="font-size: 30px"],
+          .lp-float-wrap > div > div > div[style*="fontSize: 30"] { font-size: 18px !important; margin: 3px 0 !important; }
+          /* label header kecil */
+          .lp-float-wrap > div > div > div[style*="font-size: 11px"] { font-size: 10px !important; }
+          .lp-float-wrap > div > div > div[style*="font-size: 15px"] { font-size: 12px !important; }
+          /* span badge tawaf */
+          .lp-float-wrap > div > div > span { font-size: 9px !important; padding: 2px 6px !important; }
+          /* icon di card panduan */
+          .lp-float-wrap > div > div > div[style*="width: 40px"] { width: 28px !important; height: 28px !important; font-size: 14px !important; margin-bottom: 6px !important; }
           .lp-float-card-mid { display: none !important; }
 
           /* ── HERO CTA BUTTONS: stack vertikal ── */
@@ -499,7 +511,8 @@ export default function LandingPage() {
           .lp-feat-grid { grid-template-columns: 1fr !important; }
           .lp-pain-grid { grid-template-columns: 1fr !important; }
           .lp-bento-right { grid-template-columns: 1fr !important; }
-          .lp-float-wrap { grid-template-columns: 1fr 1fr !important; }
+          .lp-float-wrap { grid-template-columns: repeat(4, 1fr) !important; gap: 5px !important; padding: 0 8px !important; }
+          .lp-float-wrap > div > div { padding: 8px 7px !important; border-radius: 10px !important; }
           .lp-wl-phones > div { max-width: 150px !important; }
           .lp-wl-phones > div > div { height: 280px !important; }
           .lp-foot-links { grid-template-columns: 1fr 1fr !important; }
