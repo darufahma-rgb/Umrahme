@@ -392,14 +392,6 @@ export default function LandingPage() {
         }} />
 
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 2, textAlign: 'center' }}>
-          {/* eyebrow badge */}
-          <motion.div
-            initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(0,0,0,0.48)', color: '#fff', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', borderRadius: 999, padding: '7px 18px', marginBottom: 30, fontSize: 12, fontWeight: 600, letterSpacing: '0.1em', border: '1px solid rgba(255,255,255,0.22)', textTransform: 'uppercase' as const }}
-          >
-            <span style={{ fontSize: 11 }}>★</span> Pendamping Ibadah Umrah Terdepan
-          </motion.div>
 
           <motion.h1
             initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }}
