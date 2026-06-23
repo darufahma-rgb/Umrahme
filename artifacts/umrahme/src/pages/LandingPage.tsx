@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { motion, useInView, AnimatePresence, LayoutGroup } from 'framer-motion';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
 
 const F = "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif";
 
@@ -117,7 +117,6 @@ function FAQItem({ q, a }: { q: string; a: string }) {
 export default function LandingPage() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [navExpanded, setNavExpanded] = useState(false);
 
   useEffect(() => {
     document.title = 'Umrahme — Aplikasi Pendamping Umrah White-Label untuk Travel Agency';
@@ -196,14 +195,87 @@ export default function LandingPage() {
         .lp-feat-card:hover { transform: translateY(-4px); box-shadow: 0px 8px 24px rgba(0,0,0,0.08); }
 
         /* mobile drawer */
+        /* ─── NAVBAR ─── */
+        .lp-nav {
+          position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+          transition: background .3s ease, box-shadow .3s ease, backdrop-filter .3s ease;
+        }
+        .lp-nav-scrolled {
+          background: rgba(255,255,255,0.96);
+          backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+          box-shadow: 0 1px 0 rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
+        }
+        .lp-nav-inner {
+          max-width: 1180px; margin: 0 auto;
+          display: flex; align-items: center;
+          padding: 0 24px; height: 68px;
+        }
+        .lp-nav-logo {
+          display: flex; align-items: center; gap: 10px;
+          text-decoration: none; flex-shrink: 0;
+        }
+        .lp-nav-logo-circle {
+          width: 36px; height: 36px; border-radius: 50%;
+          display: flex; align-items: center; justify-content: center;
+          font-weight: 800; font-size: 15px; flex-shrink: 0;
+          background: #131313; color: #fff;
+          transition: background .3s;
+        }
+        .lp-nav-scrolled .lp-nav-logo-circle { background: #131313; }
+        .lp-nav-logo-text {
+          font-size: 17px; font-weight: 700; color: #fff;
+          font-family: ${F}; transition: color .3s;
+        }
+        .lp-nav-scrolled .lp-nav-logo-text { color: #131313; }
+        .lp-nav-links {
+          flex: 1; display: flex; align-items: center; justify-content: center; gap: 2px;
+        }
+        .lp-nav-link {
+          padding: 8px 14px; border-radius: 999px;
+          font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.88);
+          text-decoration: none; transition: color .15s, background .15s;
+          font-family: ${F};
+        }
+        .lp-nav-link:hover { color: #fff; background: rgba(255,255,255,0.12); }
+        .lp-nav-scrolled .lp-nav-link { color: #4C4C4C; }
+        .lp-nav-scrolled .lp-nav-link:hover { color: #131313; background: rgba(0,0,0,0.05); }
+        .lp-nav-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+        .lp-nav-cta-btn {
+          display: inline-flex; align-items: center; gap: 6px;
+          padding: 9px 20px; border-radius: 999px;
+          font-size: 13.5px; font-weight: 700; cursor: pointer;
+          border: none; text-decoration: none; font-family: ${F};
+          transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+          background: #fff; color: #131313;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        }
+        .lp-nav-cta-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.18); }
+        .lp-nav-scrolled .lp-nav-cta-btn { background: #131313; color: #fff; }
+        .lp-nav-scrolled .lp-nav-cta-btn:hover { background: #222; }
+        .lp-hamburger {
+          display: none; flex-direction: column; gap: 5px;
+          background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+          border-radius: 10px; cursor: pointer; padding: 9px 10px;
+          transition: background .2s;
+        }
+        .lp-hamburger:hover { background: rgba(255,255,255,0.2); }
+        .lp-hamburger span { width: 20px; height: 2px; background: #fff; border-radius: 2px; display: block; transition: all .25s; }
+        .lp-nav-scrolled .lp-hamburger { background: rgba(0,0,0,0.06); border-color: rgba(0,0,0,0.1); }
+        .lp-nav-scrolled .lp-hamburger:hover { background: rgba(0,0,0,0.1); }
+        .lp-nav-scrolled .lp-hamburger span { background: #131313; }
+        .lp-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .lp-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+        .lp-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        /* drawer */
         .lp-drawer {
-          position: fixed; top: 0; right: 0; bottom: 0; width: 80%; max-width: 300px;
+          position: fixed; top: 0; right: 0; bottom: 0; width: 82%; max-width: 320px;
           background: #fff; z-index: 500;
           display: flex; flex-direction: column;
           padding: 0; overflow: hidden;
-          box-shadow: -12px 0 48px rgba(0,0,0,.18);
+          box-shadow: -16px 0 60px rgba(0,0,0,.18);
           transform: translateX(100%);
-          transition: transform .35s cubic-bezier(.22,1,.36,1);
+          transition: transform .38s cubic-bezier(.22,1,.36,1);
           border-radius: 24px 0 0 24px;
         }
         .lp-drawer.open { transform: translateX(0); }
@@ -213,17 +285,10 @@ export default function LandingPage() {
         }
         .lp-drawer-backdrop.open { opacity: 1; pointer-events: auto; }
 
-        /* hide hamburger on desktop */
-        @media (min-width: 761px) {
-          .lp-menu-toggle { display: none !important; }
-          .lp-drawer { display: none !important; }
-          .lp-drawer-backdrop { display: none !important; }
-        }
-        /* hide desktop nav island links on mobile, show hamburger */
         @media (max-width: 760px) {
-          .lp-island-nav { display: none !important; }
-          .lp-island-cta { display: none !important; }
-          .lp-menu-toggle { display: flex !important; }
+          .lp-nav-links { display: none !important; }
+          .lp-nav-cta-btn { display: none !important; }
+          .lp-hamburger { display: flex !important; }
         }
 
         @media (max-width: 980px) {
@@ -244,134 +309,66 @@ export default function LandingPage() {
         }
       `}</style>
 
-      {/* ══════════ MOBILE DRAWER (outside pill header) ══════════ */}
+      {/* ══════════ MOBILE DRAWER ══════════ */}
       <div className={`lp-drawer-backdrop${menuOpen ? ' open' : ''}`} onClick={() => setMenuOpen(false)} />
       <div className={`lp-drawer${menuOpen ? ' open' : ''}`} aria-hidden={!menuOpen}>
-        {/* Drawer header */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 20px 16px', borderBottom: `1px solid ${C.line}` }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 20px 16px', borderBottom: `1px solid ${C.line}` }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{ width: 34, height: 34, borderRadius: '50%', background: C.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 800, fontSize: 15 }}>U</div>
             <span style={{ fontWeight: 700, fontSize: 16, color: C.ink, fontFamily: F }}>Umrahme</span>
           </div>
-          <button
-            onClick={() => setMenuOpen(false)}
-            style={{ width: 34, height: 34, borderRadius: '50%', background: C.soft, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, color: C.muted }}
-            aria-label="Tutup menu"
-          >✕</button>
+          <button onClick={() => setMenuOpen(false)}
+            style={{ width: 34, height: 34, borderRadius: '50%', background: C.soft, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, color: C.muted }}
+            aria-label="Tutup menu">✕</button>
         </div>
-
-        {/* Nav links */}
-        <nav style={{ flex: 1, padding: '12px 12px', display: 'flex', flexDirection: 'column', gap: 4 }}>
-          {[['#fitur', 'Fitur', '✦'], ['#harga', 'Harga', '✦'], ['#cara', 'Cara Kerja', '✦'], ['#kontak', 'Kontak', '✦']].map(([h, l]) => (
-            <a key={h} href={h}
-              onClick={() => setMenuOpen(false)}
-              style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', borderRadius: 14, color: C.ink, fontSize: 16, fontWeight: 600, textDecoration: 'none', fontFamily: F, transition: 'background .15s' }}
+        <nav style={{ flex: 1, padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 2 }}>
+          {[['#fitur', 'Fitur'], ['#harga', 'Harga'], ['#cara', 'Cara Kerja'], ['#kontak', 'Kontak']].map(([h, l]) => (
+            <a key={h} href={h} onClick={() => setMenuOpen(false)}
+              style={{ display: 'flex', alignItems: 'center', padding: '14px 16px', borderRadius: 14, color: C.ink, fontSize: 16, fontWeight: 600, textDecoration: 'none', fontFamily: F, transition: 'background .15s' }}
               onMouseEnter={e => (e.currentTarget.style.background = C.soft)}
               onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
             >{l}</a>
           ))}
         </nav>
-
-        {/* CTA at bottom */}
-        <div style={{ padding: '16px 20px 32px', borderTop: `1px solid ${C.line}` }}>
-          <a href={WA_LINK} target="_blank" rel="noopener noreferrer"
-            onClick={() => setMenuOpen(false)}
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, width: '100%', padding: '15px 20px', borderRadius: 16, background: C.ink, color: '#fff', fontSize: 15, fontWeight: 700, textDecoration: 'none', fontFamily: F }}
-          >
+        <div style={{ padding: '16px 20px 36px', borderTop: `1px solid ${C.line}` }}>
+          <a href={WA_LINK} target="_blank" rel="noopener noreferrer" onClick={() => setMenuOpen(false)}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, width: '100%', padding: '15px 20px', borderRadius: 16, background: C.ink, color: '#fff', fontSize: 15, fontWeight: 700, textDecoration: 'none', fontFamily: F }}>
             Daftar Sekarang →
           </a>
         </div>
       </div>
 
-      {/* ══════════ DYNAMIC ISLAND NAVBAR ══════════ */}
-      <LayoutGroup>
-        <motion.header
-          layout
-          transition={{ type: 'spring', stiffness: 500, damping: 38, mass: 0.4 }}
-          onHoverStart={() => setNavExpanded(true)}
-          onHoverEnd={() => setNavExpanded(false)}
-          style={{
-            position: 'fixed', top: 20, left: '50%', translateX: '-50%',
-            zIndex: 100,
-            background: navExpanded
-              ? 'rgba(20,20,20,0.97)'
-              : 'rgba(10,10,10,0.92)',
-            backdropFilter: 'blur(24px)',
-            WebkitBackdropFilter: 'blur(24px)',
-            borderRadius: 999,
-            display: 'flex', alignItems: 'center',
-            boxShadow: navExpanded
-              ? '0 12px 48px rgba(0,0,0,0.38), 0 0 0 1px rgba(255,255,255,0.1)'
-              : '0 4px 24px rgba(0,0,0,0.28), 0 0 0 1px rgba(255,255,255,0.07)',
-            padding: 6,
-            cursor: 'default',
-            whiteSpace: 'nowrap' as const,
-          }}
-        >
+      {/* ══════════ NAVBAR ══════════ */}
+      <header className={`lp-nav${scrolled ? ' lp-nav-scrolled' : ''}`}>
+        <div className="lp-nav-inner">
           {/* Logo */}
-          <motion.a
-            layout
-            href="#"
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 40, height: 40, borderRadius: '50%', background: '#fff', color: C.ink, fontWeight: 800, fontSize: 17, flexShrink: 0, textDecoration: 'none' }}
-          >U</motion.a>
+          <a href="#" className="lp-nav-logo">
+            <div className="lp-nav-logo-circle">U</div>
+            <span className="lp-nav-logo-text">Umrahme</span>
+          </a>
 
-          {/* Desktop: nav links — appear on expand */}
-          <AnimatePresence>
-            {navExpanded && (
-              <motion.nav
-                className="lp-island-nav"
-                key="island-nav"
-                initial={{ opacity: 0, width: 0 }}
-                animate={{ opacity: 1, width: 'auto' }}
-                exit={{ opacity: 0, width: 0 }}
-                transition={{ type: 'spring', stiffness: 500, damping: 38, mass: 0.4 }}
-                style={{ display: 'flex', gap: 0, padding: '0 6px', overflow: 'hidden' }}
-              >
-                {[['#fitur', 'Fitur'], ['#harga', 'Harga'], ['#cara', 'Cara Kerja'], ['#kontak', 'Kontak']].map(([h, l]) => (
-                  <a
-                    key={h} href={h}
-                    style={{ display: 'inline-block', padding: '8px 13px', borderRadius: 999, fontSize: 14, fontWeight: 500, color: 'rgba(255,255,255,0.82)', textDecoration: 'none', fontFamily: F, transition: 'color .15s, background .15s' }}
-                    onMouseEnter={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.82)'; e.currentTarget.style.background = 'transparent'; }}
-                  >{l}</a>
-                ))}
-              </motion.nav>
-            )}
-          </AnimatePresence>
+          {/* Desktop nav links */}
+          <nav className="lp-nav-links">
+            {[['#fitur', 'Fitur'], ['#harga', 'Harga'], ['#cara', 'Cara Kerja'], ['#kontak', 'Kontak']].map(([h, l]) => (
+              <a key={h} href={h} className="lp-nav-link">{l}</a>
+            ))}
+          </nav>
 
-          {/* Right side: CTA (desktop) + hamburger (mobile) */}
-          <motion.div layout style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <AnimatePresence>
-              {navExpanded && (
-                <motion.a
-                  className="lp-island-cta"
-                  key="island-cta"
-                  href={WA_LINK} target="_blank" rel="noopener noreferrer"
-                  initial={{ opacity: 0, scale: 0.85, width: 0 }}
-                  animate={{ opacity: 1, scale: 1, width: 'auto' }}
-                  exit={{ opacity: 0, scale: 0.85, width: 0 }}
-                  transition={{ type: 'spring', stiffness: 500, damping: 38, mass: 0.4 }}
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: 6, overflow: 'hidden', padding: '9px 18px', borderRadius: 999, background: '#fff', color: C.ink, fontSize: 13, fontWeight: 700, textDecoration: 'none', fontFamily: F, whiteSpace: 'nowrap' as const }}
-                >
-                  Daftar Sekarang →
-                </motion.a>
-              )}
-            </AnimatePresence>
-
-            {/* Hamburger — mobile only */}
+          {/* Right side */}
+          <div className="lp-nav-right">
+            <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-nav-cta-btn">
+              Daftar Sekarang →
+            </a>
             <button
-              className="lp-menu-toggle"
+              className={`lp-hamburger${menuOpen ? ' open' : ''}`}
               onClick={() => setMenuOpen(p => !p)}
-              style={{ display: 'none', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', cursor: 'pointer', padding: '6px 8px', gap: 4, flexDirection: 'column' as const }}
               aria-label="Buka menu"
             >
-              <span style={{ width: 18, height: 2, background: '#fff', borderRadius: 2, display: 'block', transition: 'all .25s', transform: menuOpen ? 'translateY(6px) rotate(45deg)' : 'none' }} />
-              <span style={{ width: 18, height: 2, background: '#fff', borderRadius: 2, display: 'block', transition: 'all .25s', opacity: menuOpen ? 0 : 1 }} />
-              <span style={{ width: 18, height: 2, background: '#fff', borderRadius: 2, display: 'block', transition: 'all .25s', transform: menuOpen ? 'translateY(-6px) rotate(-45deg)' : 'none' }} />
+              <span /><span /><span />
             </button>
-          </motion.div>
-        </motion.header>
-      </LayoutGroup>
+          </div>
+        </div>
+      </header>
 
       {/* ══════════ HERO ══════════ */}
       <section className="lp-hero-padding" style={{
