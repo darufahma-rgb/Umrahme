@@ -923,32 +923,6 @@ export default function LandingPage() {
       </section>
 
 
-      {/* ══════════ FINAL CTA ══════════ */}
-      <section id="kontak" className="lp-section" style={{ padding: '56px 24px' }}>
-        <div style={{ maxWidth: 1180, margin: '0 auto' }}>
-          <Reveal>
-            <div className="lp-cta-box" style={{ background: `linear-gradient(165deg, ${C.primary}, ${C.primaryDark})`, color: '#fff', borderRadius: 20, padding: '40px 32px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-              <div style={{ position: 'absolute', width: 280, height: 280, background: `radial-gradient(circle, rgba(255,255,255,.12), transparent 70%)`, top: -100, right: -60, pointerEvents: 'none' }} />
-              <h2 style={{ fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 800, marginBottom: 14, position: 'relative' }}>
-                Keberangkatan berikutnya, naik kelas.
-              </h2>
-              <p style={{ color: 'rgba(255,255,255,.85)', maxWidth: 500, margin: '0 auto 24px', fontSize: 15, lineHeight: 1.7, position: 'relative' }}>
-                Daftar sekarang dan dapatkan 5 jamaah pertama secara gratis. Kami setup aplikasi dengan nama dan logo travel Anda — tanpa biaya, tanpa komitmen.
-              </p>
-              <div className="lp-cta-btns" style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap', position: 'relative' }}>
-                <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-btn lp-btn-accent">
-                  Klaim 5 Jamaah Gratis via WhatsApp <span className="lp-arrow">→</span>
-                </a>
-                <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-btn lp-btn-ghost">
-                  Lihat Cara Kerjanya
-                </a>
-              </div>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-
       {/* ══════════ FOOTER ══════════ */}
       <footer style={{ background: C.ink, color: '#fff', padding: '64px 24px 32px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: -80, left: '50%', transform: 'translateX(-50%)', width: 600, height: 300, background: `radial-gradient(ellipse at center, ${C.primary}22 0%, transparent 70%)`, pointerEvents: 'none' }} />
