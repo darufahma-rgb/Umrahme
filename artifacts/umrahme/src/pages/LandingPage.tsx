@@ -97,14 +97,10 @@ function FAQItem({ q, a }: { q: string; a: string }) {
    MAIN
 ═══════════════════════════════════════ */
 export default function LandingPage() {
-  const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     document.title = 'Umrahme — Aplikasi Pendamping Umrah White-Label untuk Travel Agency';
-    const h = () => setScrolled(window.scrollY > 60);
-    window.addEventListener('scroll', h);
-    return () => window.removeEventListener('scroll', h);
   }, []);
 
   const features = [
@@ -187,7 +183,7 @@ export default function LandingPage() {
         /* mobile drawer */
         /* ─── NAVBAR ─── */
         .lp-nav {
-          position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
+          position: absolute; top: 16px; left: 50%; transform: translateX(-50%);
           z-index: 100;
           width: auto;
           max-width: fit-content;
@@ -255,7 +251,7 @@ export default function LandingPage() {
         /* mobile logo-tap dropdown */
         .lp-mobile-dropdown {
           display: none;
-          position: fixed; top: 80px; left: 24px; right: 24px; z-index: 98;
+          position: absolute; top: 80px; left: 24px; right: 24px; z-index: 98;
           border-radius: 20px;
           background: rgba(10,10,10,0.96);
           backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
@@ -471,65 +467,62 @@ export default function LandingPage() {
         }
       `}</style>
 
-      {/* ══════════ NAVBAR ══════════ */}
-      <header className={`lp-nav${scrolled ? ' lp-nav-scrolled' : ''}`}>
-        <div className="lp-nav-inner">
-          <a
-            href="#"
-            className="lp-nav-logo"
-            onClick={(e) => {
-              if (window.innerWidth <= 760) {
-                e.preventDefault();
-                setMenuOpen(p => !p);
-              }
-            }}
-          >
-            <div className={`lp-nav-logo-circle${menuOpen ? ' open' : ''}`}>
-              {menuOpen ? '✕' : <img src={logoImg} alt="Umrahme" />}
-            </div>
-            <span className="lp-nav-logo-text">Umrahme</span>
-          </a>
-
-          <nav className="lp-nav-links">
-            {[['#fitur', 'Fitur'], ['#harga', 'Harga'], ['#cara', 'Cara Kerja'], ['#kontak', 'Kontak']].map(([h, l]) => (
-              <a key={h} href={h} className="lp-nav-link">{l}</a>
-            ))}
-          </nav>
-
-          <div className="lp-nav-right">
-            <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-nav-cta-btn">
-              Daftar Sekarang →
-            </a>
-          </div>
-        </div>
-      </header>
-
-      {/* ══════════ MOBILE DROPDOWN ══════════ */}
-      <div className={`lp-mobile-dropdown${menuOpen ? ' open' : ''}${scrolled ? ' scrolled' : ''}`}>
-        {[['#fitur', 'Fitur'], ['#harga', 'Harga'], ['#cara', 'Cara Kerja'], ['#kontak', 'Kontak']].map(([h, l]) => (
-          <a
-            key={h} href={h}
-            className={`lp-md-link${scrolled ? ' scrolled' : ''}`}
-            onClick={() => setMenuOpen(false)}
-            style={scrolled ? { color: '#131313', borderBottomColor: 'rgba(0,0,0,0.06)' } : {}}
-          >{l}</a>
-        ))}
-        <a
-          href={WA_LINK} target="_blank" rel="noopener noreferrer"
-          className="lp-md-cta"
-          onClick={() => setMenuOpen(false)}
-          style={scrolled ? { background: '#131313', color: '#fff' } : {}}
-        >
-          Daftar Sekarang →
-        </a>
-      </div>
-
       {/* ══════════ HERO ══════════ */}
       <section className="lp-hero-padding" style={{
         position: 'relative',
         background: `linear-gradient(180deg, ${C.blue1} 0%, ${C.blue2} 45%, ${C.blue3} 100%)`,
         padding: '100px 0 90px',
       }}>
+        {/* ── NAVBAR (absolute, only in hero) ── */}
+        <header className="lp-nav">
+          <div className="lp-nav-inner">
+            <a
+              href="#"
+              className="lp-nav-logo"
+              onClick={(e) => {
+                if (window.innerWidth <= 760) {
+                  e.preventDefault();
+                  setMenuOpen(p => !p);
+                }
+              }}
+            >
+              <div className={`lp-nav-logo-circle${menuOpen ? ' open' : ''}`}>
+                {menuOpen ? '✕' : <img src={logoImg} alt="Umrahme" />}
+              </div>
+              <span className="lp-nav-logo-text">Umrahme</span>
+            </a>
+
+            <nav className="lp-nav-links">
+              {[['#fitur', 'Fitur'], ['#harga', 'Harga'], ['#cara', 'Cara Kerja'], ['#kontak', 'Kontak']].map(([h, l]) => (
+                <a key={h} href={h} className="lp-nav-link">{l}</a>
+              ))}
+            </nav>
+
+            <div className="lp-nav-right">
+              <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-nav-cta-btn">
+                Daftar Sekarang →
+              </a>
+            </div>
+          </div>
+        </header>
+
+        {/* ── MOBILE DROPDOWN ── */}
+        <div className={`lp-mobile-dropdown${menuOpen ? ' open' : ''}`}>
+          {[['#fitur', 'Fitur'], ['#harga', 'Harga'], ['#cara', 'Cara Kerja'], ['#kontak', 'Kontak']].map(([h, l]) => (
+            <a
+              key={h} href={h}
+              className="lp-md-link"
+              onClick={() => setMenuOpen(false)}
+            >{l}</a>
+          ))}
+          <a
+            href={WA_LINK} target="_blank" rel="noopener noreferrer"
+            className="lp-md-cta"
+            onClick={() => setMenuOpen(false)}
+          >
+            Daftar Sekarang →
+          </a>
+        </div>
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
           backgroundImage: 'url(/hero-bg.avif)',
