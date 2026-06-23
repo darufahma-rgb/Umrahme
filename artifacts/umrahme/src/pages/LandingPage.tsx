@@ -631,15 +631,15 @@ export default function LandingPage() {
       {/* ══════════ PAIN POINTS ══════════ */}
       <section className="lp-section" style={{ background: C.soft, padding: '56px 0' }}>
         <div className="lp-inner" style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
-          <Reveal delay={0}><Eyebrow>Masalah Anda Hari Ini</Eyebrow></Reveal>
+          <Reveal delay={0}><Eyebrow>Kenyataan di Lapangan</Eyebrow></Reveal>
           <Reveal delay={0.08}>
             <h2 className="lp-h2" style={{ textAlign: 'center', fontSize: 'clamp(24px, 3.5vw, 36px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 700, margin: '0 auto 10px' }}>
-              Kenali masalahnya. Rasakan bedanya.
+              Tiap keberangkatan, masalah yang sama.
             </h2>
           </Reveal>
           <Reveal delay={0.14}>
             <p style={{ textAlign: 'center', color: C.muted, maxWidth: 520, margin: '0 auto 28px', fontSize: 14 }}>
-              Setiap travel pernah mengalaminya. Bedanya, sekarang ada solusinya.
+              Bukan salah tim Anda — memang belum ada sistem yang pas. Sampai sekarang.
             </p>
           </Reveal>
 
