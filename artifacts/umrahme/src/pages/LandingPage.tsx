@@ -666,20 +666,12 @@ export default function LandingPage() {
                 <div style={{ background: '#fff', borderRadius: 16, padding: 16, boxShadow: '0 18px 50px -20px rgba(15,23,42,.25)', width: 130 }}>
                   <span style={{ display: 'inline-block', fontSize: 10, padding: '3px 8px', borderRadius: 999, background: C.soft, color: C.muted, fontWeight: 600 }}>Tawaf</span>
                   <div style={{ fontSize: 30, fontWeight: 800, margin: '6px 0' }}>4 / 7</div>
-                  <div style={{ fontSize: 11, color: C.muted }}>Jamaah tidak salah hitung</div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11, color: C.muted, marginTop: 8 }}>
-                    <span style={{ width: 8, height: 8, borderRadius: '50%', background: C.accentDark, display: 'inline-block' }} /> Doa per putaran otomatis
-                  </div>
                 </div>
               )}
               {i === 1 && (
                 <div style={{ background: '#fff', borderRadius: 16, padding: 16, boxShadow: '0 18px 50px -20px rgba(15,23,42,.25)', width: 148 }}>
                   <div style={{ fontSize: 11, color: C.muted, fontWeight: 600 }}>Buku Doa Digital</div>
                   <div style={{ fontSize: 30, fontWeight: 800, margin: '6px 0' }}>55+</div>
-                  <div style={{ fontSize: 11, color: C.muted }}>Doa · 9 kategori</div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11, color: C.muted, marginTop: 8 }}>
-                    <span style={{ width: 8, height: 8, borderRadius: '50%', background: C.accentDark, display: 'inline-block' }} /> Gratis cetak. Tidak hilang.
-                  </div>
                 </div>
               )}
               {i === 2 && (
