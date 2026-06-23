@@ -199,10 +199,10 @@ export default function LandingPage() {
           transition: background .3s ease, box-shadow .3s ease, border-color .3s ease;
         }
         .lp-nav-scrolled {
-          background: rgba(255,255,255,0.82);
-          backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-          border-color: rgba(0,0,0,0.08);
-          box-shadow: 0 2px 16px rgba(0,0,0,0.10), 0 1px 0 rgba(0,0,0,0.04);
+          background: #ffffff;
+          backdrop-filter: none; -webkit-backdrop-filter: none;
+          border-color: rgba(0,0,0,0.07);
+          box-shadow: 0 2px 12px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
         }
         .lp-nav-inner {
           display: flex; align-items: center;
