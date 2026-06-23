@@ -1,8 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 
-const F = "'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
-const FH = "'Libre Caslon Condensed', Georgia, serif";
+const F = "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif";
 
 const WA_NUMBER = '6281234567890';
 const WA_MSG = encodeURIComponent(
@@ -283,7 +282,7 @@ export default function LandingPage() {
           <motion.h1
             initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            style={{ fontSize: 'clamp(40px, 6.5vw, 80px)', fontWeight: 400, lineHeight: 1.0, color: '#fff', letterSpacing: '0em', maxWidth: 960, margin: '0 auto 22px', textShadow: '0 2px 24px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.4)', fontFamily: FH }}
+            style={{ fontSize: 'clamp(38px, 6vw, 74px)', fontWeight: 800, lineHeight: 1.05, color: '#fff', letterSpacing: '-0.02em', maxWidth: 900, margin: '0 auto 22px', textShadow: '0 2px 24px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.4)' }}
           >
             Jadikan Perjalanan Jamaah Anda{' '}
             <span style={{ color: C.accent }}>Lebih Bermakna</span>
@@ -393,7 +392,7 @@ export default function LandingPage() {
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
           <Reveal><Eyebrow>Tentang Umrahme</Eyebrow></Reveal>
           <Reveal>
-            <h2 style={{ textAlign: 'center', fontSize: 'clamp(30px, 4.5vw, 52px)', fontWeight: 400, lineHeight: 1.08, letterSpacing: '0em', maxWidth: 760, margin: '0 auto 40px', fontFamily: FH }}>
+            <h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 40px' }}>
               Platform pendamping umrah yang dirancang untuk travel modern dan jamaah
             </h2>
           </Reveal>
@@ -445,7 +444,7 @@ export default function LandingPage() {
       <section style={{ background: C.soft, padding: '90px 0' }}>
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
           <Reveal><Eyebrow>Masalah Anda Hari Ini</Eyebrow></Reveal>
-          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(30px, 4.5vw, 52px)', fontWeight: 400, lineHeight: 1.08, letterSpacing: '0em', maxWidth: 760, margin: '0 auto 16px', fontFamily: FH }}>Kenapa layanan umrah masih terasa repot?</h2></Reveal>
+          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 16px' }}>Kenapa layanan umrah masih terasa repot?</h2></Reveal>
           <Reveal><p style={{ textAlign: 'center', color: C.muted, maxWidth: 560, margin: '0 auto 40px', fontSize: 16 }}>Tantangan harian yang dialami hampir setiap travel agency umrah — dan jawabannya ada di Umrahme.</p></Reveal>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 18, marginTop: 10 }}>
@@ -473,7 +472,7 @@ export default function LandingPage() {
       <section id="fitur" style={{ padding: '90px 0' }}>
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
           <Reveal><Eyebrow>Fitur Lengkap</Eyebrow></Reveal>
-          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(30px, 4.5vw, 52px)', fontWeight: 400, lineHeight: 1.08, letterSpacing: '0em', maxWidth: 760, margin: '0 auto 16px', fontFamily: FH }}>Satu aplikasi untuk seluruh perjalanan ibadah jamaah</h2></Reveal>
+          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 16px' }}>Satu aplikasi untuk seluruh perjalanan ibadah jamaah</h2></Reveal>
           <Reveal><p style={{ textAlign: 'center', color: C.muted, maxWidth: 560, margin: '0 auto 40px', fontSize: 16 }}>Dua belas fitur inti yang menggantikan buku doa, panduan, dan koordinasi manual.</p></Reveal>
 
           <div className="lp-feat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 18 }}>
@@ -495,7 +494,7 @@ export default function LandingPage() {
       <section id="cara" style={{ background: C.soft, padding: '90px 0' }}>
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
           <Reveal><Eyebrow>Cara Kerja</Eyebrow></Reveal>
-          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(30px, 4.5vw, 52px)', fontWeight: 400, lineHeight: 1.08, letterSpacing: '0em', maxWidth: 760, margin: '0 auto 16px', fontFamily: FH }}>Siap pakai hanya dalam 3 langkah</h2></Reveal>
+          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 16px' }}>Siap pakai hanya dalam 3 langkah</h2></Reveal>
           <Reveal><p style={{ textAlign: 'center', color: C.muted, maxWidth: 560, margin: '0 auto 40px', fontSize: 16 }}>Tanpa biaya setup, tanpa tim IT. Travel langsung bisa pakai untuk keberangkatan berikutnya.</p></Reveal>
 
           <div className="lp-steps" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
@@ -523,7 +522,7 @@ export default function LandingPage() {
             <Reveal>
               <div>
                 <Eyebrow align="left">White-Label</Eyebrow>
-                <h2 style={{ fontSize: 'clamp(30px, 4vw, 48px)', fontWeight: 400, lineHeight: 1.08, letterSpacing: '0em', marginBottom: 18, fontFamily: FH }}>
+                <h2 style={{ fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', marginBottom: 18 }}>
                   Aplikasi yang terasa 100% milik travel Anda
                 </h2>
                 <p style={{ color: C.muted, fontSize: 16, marginBottom: 22, lineHeight: 1.7 }}>
@@ -578,7 +577,7 @@ export default function LandingPage() {
       <section id="harga" style={{ background: C.soft, padding: '90px 0' }}>
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
           <Reveal><Eyebrow>Harga</Eyebrow></Reveal>
-          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(30px, 4.5vw, 52px)', fontWeight: 400, lineHeight: 1.08, letterSpacing: '0em', maxWidth: 760, margin: '0 auto 16px', fontFamily: FH }}>Transparan, terjangkau, tanpa biaya tersembunyi</h2></Reveal>
+          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 16px' }}>Transparan, terjangkau, tanpa biaya tersembunyi</h2></Reveal>
           <Reveal><p style={{ textAlign: 'center', color: C.muted, maxWidth: 560, margin: '0 auto 40px', fontSize: 16 }}>Bayar hanya untuk jumlah jamaah yang berangkat. Tanpa biaya setup, tanpa langganan bulanan.</p></Reveal>
 
           <div className="lp-price-wrap" style={{ display: 'grid', gridTemplateColumns: '1.1fr .9fr', gap: 24, alignItems: 'stretch' }}>
@@ -633,7 +632,7 @@ export default function LandingPage() {
       <section style={{ padding: '90px 0' }}>
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
           <Reveal><Eyebrow>Testimoni</Eyebrow></Reveal>
-          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(30px, 4.5vw, 52px)', fontWeight: 400, lineHeight: 1.08, letterSpacing: '0em', maxWidth: 760, margin: '0 auto 40px', fontFamily: FH }}>Kata mereka yang sudah pakai</h2></Reveal>
+          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 40px' }}>Kata mereka yang sudah pakai</h2></Reveal>
 
           <div className="lp-testi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 18 }}>
             {testimonials.map((t, i) => (
@@ -659,7 +658,7 @@ export default function LandingPage() {
       <section style={{ background: C.soft, padding: '90px 0' }}>
         <div style={{ maxWidth: 760, margin: '0 auto', padding: '0 24px' }}>
           <Reveal><Eyebrow>FAQ</Eyebrow></Reveal>
-          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(30px, 4vw, 44px)', fontWeight: 400, lineHeight: 1.08, letterSpacing: '0em', margin: '0 auto 40px', fontFamily: FH }}>Pertanyaan yang Sering Ditanyakan</h2></Reveal>
+          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4vw, 38px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', margin: '0 auto 40px' }}>Pertanyaan yang Sering Ditanyakan</h2></Reveal>
           <Reveal delay={0.05}>
             {faqs.map((f, i) => <FAQItem key={i} q={f.q} a={f.a} />)}
           </Reveal>
@@ -672,7 +671,7 @@ export default function LandingPage() {
           <Reveal>
             <div style={{ background: `linear-gradient(165deg, ${C.primary}, ${C.primaryDark})`, color: '#fff', borderRadius: 32, padding: '64px 40px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
               <div style={{ position: 'absolute', width: 320, height: 320, background: `radial-gradient(circle, rgba(255,255,255,.12), transparent 70%)`, top: -120, right: -80, pointerEvents: 'none' }} />
-              <h2 style={{ fontSize: 'clamp(30px, 4.5vw, 52px)', fontWeight: 400, marginBottom: 16, position: 'relative', fontFamily: FH }}>
+              <h2 style={{ fontSize: 'clamp(28px, 4.5vw, 44px)', fontWeight: 800, marginBottom: 16, position: 'relative' }}>
                 Siap Upgrade Layanan Travel Anda?
               </h2>
               <p style={{ color: 'rgba(255,255,255,.85)', maxWidth: 520, margin: '0 auto 28px', fontSize: 17, lineHeight: 1.7, position: 'relative' }}>
