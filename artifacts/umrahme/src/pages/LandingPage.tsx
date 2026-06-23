@@ -472,7 +472,11 @@ export default function LandingPage() {
         }
 
         @media (max-width: 480px) {
-          .lp-feat-grid { grid-template-columns: 1fr !important; }
+          .lp-feat-grid { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+          .lp-feat-card { padding: 14px !important; border-radius: 12px !important; }
+          .lp-feat-card h3 { font-size: 13.5px !important; margin-bottom: 4px !important; }
+          .lp-feat-card p { font-size: 11.5px !important; line-height: 1.45 !important; }
+          .lp-feat-card > div:first-child { width: 30px !important; height: 30px !important; font-size: 15px !important; margin-bottom: 8px !important; }
           .lp-feat-featured { grid-column: span 1 !important; }
           .lp-pain-grid { grid-template-columns: 1fr !important; }
           .lp-float-wrap { grid-template-columns: repeat(4, 1fr) !important; gap: 5px !important; padding: 0 8px !important; }
