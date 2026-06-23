@@ -274,7 +274,7 @@ export default function LandingPage() {
         {/* overlay gradient */}
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
-          background: `linear-gradient(180deg, rgba(20,83,160,.55) 0%, rgba(30,111,184,.45) 50%, rgba(255,255,255,.92) 100%)`,
+          background: `linear-gradient(180deg, rgba(20,83,160,.28) 0%, rgba(30,111,184,.22) 50%, rgba(255,255,255,.88) 100%)`,
         }} />
 
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 2, textAlign: 'center' }}>
