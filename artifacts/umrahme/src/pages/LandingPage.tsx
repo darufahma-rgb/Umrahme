@@ -318,12 +318,15 @@ export default function LandingPage() {
           .lp-steps { grid-template-columns: 1fr !important; }
           .lp-wl { grid-template-columns: 1fr !important; }
           .lp-price-wrap { grid-template-columns: 1fr !important; }
-          .lp-testi-grid { grid-template-columns: 1fr !important; }
+          .lp-testi-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .lp-pain-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .lp-foot-top { grid-template-columns: 1fr 1fr !important; }
         }
         @media (max-width: 760px) {
           .lp-feat-grid { grid-template-columns: 1fr !important; }
           .lp-bento { grid-template-columns: 1fr !important; }
+          .lp-pain-grid { grid-template-columns: 1fr !important; }
+          .lp-testi-grid { grid-template-columns: 1fr !important; }
           .lp-foot-top { grid-template-columns: 1fr !important; }
           .lp-float-wrap { overflow-x: auto; justify-content: flex-start !important; padding: 0 20px 10px !important; }
           .lp-hero-padding { padding: 100px 0 0 !important; }
@@ -390,7 +393,7 @@ export default function LandingPage() {
       <section className="lp-hero-padding" style={{
         position: 'relative',
         background: `linear-gradient(180deg, ${C.blue1} 0%, ${C.blue2} 45%, ${C.blue3} 100%)`,
-        padding: '150px 0 0', overflow: 'hidden',
+        padding: '150px 0 0',
       }}>
         {/* hero photo */}
         <div style={{
@@ -507,7 +510,7 @@ export default function LandingPage() {
       </section>
 
       {/* ══════════ PARTNERS MARQUEE ══════════ */}
-      <div style={{ padding: '130px 0 50px', borderBottom: `1px solid ${C.line}`, overflow: 'hidden' }}>
+      <div style={{ padding: '90px 0 50px', borderBottom: `1px solid ${C.line}`, overflow: 'hidden' }}>
         <p style={{ textAlign: 'center', color: C.muted, fontSize: 13, fontWeight: 600, marginBottom: 26 }}>
           BERGABUNGLAH BERSAMA TRAVEL UMRAH YANG LEBIH MODERN
         </p>
@@ -529,15 +532,15 @@ export default function LandingPage() {
               <div style={{ borderRadius: 20, padding: 26, boxShadow: '0 8px 24px -12px rgba(15,23,42,.2)', background: `linear-gradient(165deg, ${C.blue2}, ${C.blue1})`, color: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 280, position: 'relative', overflow: 'hidden' }}>
                 <div style={{ fontWeight: 700, fontSize: 20 }}>Bermerek Travel Anda</div>
                 <div style={{ background: '#fff', color: C.ink, borderRadius: 14, padding: '16px 18px' }}>
-                  <div style={{ fontSize: 38, fontWeight: 800 }}>Beta</div>
-                  <div style={{ fontSize: 13, color: C.muted }}>Jamaah melihat nama Anda — bukan Umrahme — di setiap halaman</div>
+                  <div style={{ fontSize: 38, fontWeight: 800 }}>100%</div>
+                  <div style={{ fontSize: 13, color: C.muted }}>Bermerek travel Anda — jamaah tidak tahu ada pihak ketiga</div>
                 </div>
               </div>
             </Reveal>
 
             <Reveal delay={0.05}>
               <div style={{ borderRadius: 20, padding: 26, boxShadow: '0 8px 24px -12px rgba(15,23,42,.2)', background: '#fff', border: `1px solid ${C.line}`, minHeight: 280 }}>
-                <div style={{ fontSize: 13, fontWeight: 600, color: C.muted }}>Kepuasan jamaah</div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: C.muted }}>Harga per jamaah</div>
                 <div style={{ fontSize: 44, fontWeight: 800, margin: '8px 0' }}>10 SAR</div>
                 <p style={{ fontSize: 14, color: C.muted, marginTop: 14, borderTop: `1px solid ${C.line}`, paddingTop: 14, lineHeight: 1.6 }}>
                   "Pertanyaan jamaah berkurang drastis. Muthowif bisa fokus membimbing, bukan menjelaskan hal yang sama berulang kali."
@@ -545,7 +548,7 @@ export default function LandingPage() {
               </div>
             </Reveal>
 
-            <div style={{ display: 'grid', gap: 18 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
               <Reveal delay={0.08}>
                 <div style={{ borderRadius: 20, padding: 26, boxShadow: '0 8px 24px -12px rgba(15,23,42,.2)', background: C.accent, color: C.greenDark }}>
                   <div style={{ fontSize: 13, fontWeight: 600 }}>Total doa & panduan</div>
@@ -574,7 +577,7 @@ export default function LandingPage() {
           <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 16px' }}>Masih begini setiap keberangkatan?</h2></Reveal>
           <Reveal><p style={{ textAlign: 'center', color: C.muted, maxWidth: 560, margin: '0 auto 40px', fontSize: 16 }}>Jika iya, Anda tidak sendirian. Dan ada cara yang lebih baik.</p></Reveal>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 18, marginTop: 10 }}>
+          <div className="lp-pain-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 18, marginTop: 10 }}>
             {[
               { icon: '😕', title: '"Jadwal hari ini apa, Pak?"', desc: 'Pertanyaan yang sama dijawab berkali-kali. Oleh muthowif. Oleh tour leader. Oleh siapa saja yang bisa ditanya.' },
               { icon: '🔁', title: 'Muthowif lelah sebelum ibadah dimulai', desc: 'Energi terkuras untuk hal-hal teknis — padahal tugas utama muthowif adalah membimbing ibadah, bukan menjawab WhatsApp.' },
@@ -672,12 +675,12 @@ export default function LandingPage() {
             </Reveal>
 
             <Reveal delay={0.08}>
-              <div style={{ display: 'flex', gap: 18, justifyContent: 'center', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', gap: 18, justifyContent: 'center', flexWrap: 'wrap', overflow: 'hidden', padding: '10px 10px 20px' }}>
                 {[
-                  { name: 'Barokah Tour', sub: "Assalamu'alaikum, Ahmad 👋", bg: 'linear-gradient(160deg, #15803d, #14532d)', items: ['📖 Buku Doa', '🔢 Counter Tawaf', '🗓️ Agenda Hari Ini', '📢 Pengumuman'], accent: '#dcfce7', tilt: 'rotate(-5deg) translateY(10px)' },
-                  { name: 'Mabrur Travel', sub: "Assalamu'alaikum, Siti 👋", bg: 'linear-gradient(160deg, #b45309, #92400e)', items: ['🕌 Jadwal Sholat', '🗺️ Peta Lokasi', '🪪 Kartu Jamaah', '🎖️ Sertifikat'], accent: '#fef3c7', tilt: 'rotate(5deg)' },
+                  { name: 'Barokah Tour', sub: "Assalamu'alaikum, Ahmad 👋", bg: 'linear-gradient(160deg, #15803d, #14532d)', items: ['📖 Buku Doa', '🔢 Counter Tawaf', '🗓️ Agenda Hari Ini', '📢 Pengumuman'], accent: '#dcfce7', tilt: 'rotate(-4deg) translateY(8px)' },
+                  { name: 'Mabrur Travel', sub: "Assalamu'alaikum, Siti 👋", bg: 'linear-gradient(160deg, #b45309, #92400e)', items: ['🕌 Jadwal Sholat', '🗺️ Peta Lokasi', '🪪 Kartu Jamaah', '🎖️ Sertifikat'], accent: '#fef3c7', tilt: 'rotate(4deg)' },
                 ].map((ph) => (
-                  <div key={ph.name} style={{ width: 200, borderRadius: 32, padding: 12, background: C.ink, boxShadow: '0 18px 50px -20px rgba(15,23,42,.25)', transform: ph.tilt, transition: 'transform .3s' }}>
+                  <div key={ph.name} style={{ width: 190, borderRadius: 32, padding: 10, background: C.ink, boxShadow: '0 18px 50px -20px rgba(15,23,42,.4)', transform: ph.tilt, transition: 'transform .3s' }}>
                     <div style={{ borderRadius: 22, overflow: 'hidden', background: '#fff', height: 380, display: 'flex', flexDirection: 'column' }}>
                       <div style={{ padding: '18px 16px', color: '#fff', background: ph.bg }}>
                         <div style={{ fontWeight: 800, fontSize: 15, marginBottom: 4 }}>{ph.name}</div>
@@ -823,7 +826,7 @@ export default function LandingPage() {
           <div className="lp-foot-top" style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr 1fr 1fr', gap: 40, marginBottom: 46 }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontWeight: 800, fontSize: 21, color: C.ink, marginBottom: 14, textDecoration: 'none' }}>
-                <div style={{ width: 34, height: 34, borderRadius: 10, background: C.accent, color: C.greenDark, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, fontWeight: 800, flexShrink: 0 }}>U</div>
+                <img src={logoImg} alt="Umrahme" style={{ width: 34, height: 34, objectFit: 'contain', display: 'block', flexShrink: 0 }} />
                 Umrahme
               </div>
               <p style={{ color: C.muted, fontSize: 14, maxWidth: 280, lineHeight: 1.7 }}>Ganti buku doa cetak. Ringankan kerja muthowif. Tampil profesional. Hanya 10 SAR per jamaah.</p>
