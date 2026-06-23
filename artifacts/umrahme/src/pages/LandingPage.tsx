@@ -300,7 +300,20 @@ export default function LandingPage() {
           .lp-nav-links { display: none !important; }
           .lp-nav-right { display: none !important; }
           .lp-nav-inner { justify-content: center; }
-          .lp-nav-logo { cursor: pointer; user-select: none; }
+          .lp-nav-logo {
+            cursor: pointer; user-select: none;
+            /* base state — nilai awal untuk transisi smooth */
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 20px;
+            padding: 8px 18px 8px 10px;
+            box-shadow: none;
+            transition:
+              background .35s ease,
+              border-color .35s ease,
+              box-shadow .35s ease,
+              backdrop-filter .35s ease;
+          }
           .lp-mobile-dropdown { display: block; }
           .lp-nav-logo-circle { transition: transform .2s ease, box-shadow .2s ease; }
           .lp-nav-logo-circle.open {
@@ -308,7 +321,7 @@ export default function LandingPage() {
             box-shadow: 0 0 0 3px rgba(255,255,255,0.25);
           }
 
-          /* ── MOBILE SCROLL: ganti full navbar bg jadi floating glass pill ── */
+          /* ── MOBILE SCROLL: floating glass pill muncul smooth ── */
           .lp-nav-scrolled {
             background: transparent !important;
             backdrop-filter: none !important;
@@ -316,16 +329,13 @@ export default function LandingPage() {
             box-shadow: none !important;
           }
           .lp-nav-scrolled .lp-nav-logo {
-            background: rgba(12, 12, 18, 0.62);
-            backdrop-filter: blur(22px) saturate(1.6);
-            -webkit-backdrop-filter: blur(22px) saturate(1.6);
-            border: 1px solid rgba(255, 255, 255, 0.22);
-            border-radius: 20px;
-            padding: 8px 18px 8px 10px;
+            background: rgba(12, 12, 18, 0.65);
+            backdrop-filter: blur(24px) saturate(1.8);
+            -webkit-backdrop-filter: blur(24px) saturate(1.8);
+            border-color: rgba(255, 255, 255, 0.24);
             box-shadow:
-              0 6px 28px rgba(0, 0, 0, 0.28),
-              inset 0 1px 0 rgba(255, 255, 255, 0.10);
-            transition: background .3s ease, border-color .3s ease, box-shadow .3s ease;
+              0 6px 32px rgba(0, 0, 0, 0.30),
+              inset 0 1px 0 rgba(255, 255, 255, 0.12);
           }
           /* logo text & icon tetap putih di dalam pill */
           .lp-nav-scrolled .lp-nav-logo-text { color: #fff !important; }
