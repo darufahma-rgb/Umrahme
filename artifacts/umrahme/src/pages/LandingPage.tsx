@@ -494,7 +494,7 @@ export default function LandingPage() {
       <section className="lp-hero-padding" style={{
         position: 'relative',
         background: `linear-gradient(180deg, ${C.blue1} 0%, ${C.blue2} 45%, ${C.blue3} 100%)`,
-        padding: '120px 0 70px',
+        padding: '120px 0 0',
       }}>
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
@@ -505,10 +505,10 @@ export default function LandingPage() {
           position: 'absolute', inset: 0, pointerEvents: 'none',
           background: 'rgba(0,0,0,0.18)',
         }} />
-        {/* bottom fade overlay — tutup gradasi putih bawaan gambar */}
+        {/* fade mulus ke putih menyambung section berikutnya */}
         <div style={{
-          position: 'absolute', left: 0, right: 0, bottom: 0, height: '45%', pointerEvents: 'none',
-          background: `linear-gradient(180deg, transparent 0%, ${C.blue3} 75%, ${C.blue3} 100%)`,
+          position: 'absolute', left: 0, right: 0, bottom: 0, height: '38%', pointerEvents: 'none',
+          background: 'linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 55%, rgba(255,255,255,1) 100%)',
         }} />
 
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 2, textAlign: 'center' }}>
