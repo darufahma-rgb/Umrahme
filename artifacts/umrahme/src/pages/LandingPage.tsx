@@ -104,7 +104,7 @@ export default function LandingPage() {
   }, []);
 
   const features = [
-    { num: '01', title: '55+ Doa Lengkap', desc: 'Arab, latin, terjemahan — semua ada. Jamaah buka HP, langsung ikuti saat muthowif menjelaskan. Tidak perlu cetak buku lagi.',
+    { num: '01', title: '55+ Doa Lengkap', desc: 'Arab, latin, terjemahan. Semua ada. Jamaah buka HP, langsung ikuti saat muthowif menjelaskan. Tidak perlu cetak buku lagi.',
       icon: <><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></> },
     { num: '02', title: "Counter Tawaf & Sa'i", desc: 'Hitung putaran otomatis, doa muncul sendiri di tiap putaran. Jamaah fokus ibadah, bukan sibuk hitung.',
       icon: <><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></> },
@@ -112,31 +112,31 @@ export default function LandingPage() {
       icon: <><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></> },
     { num: '04', title: 'Peta & Lokasi Bersejarah', desc: '10 lokasi ziarah lengkap dengan sejarah, tokoh, dalil, dan link Google Maps. Jamaah tidak perlu bertanya arah.',
       icon: <><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></> },
-    { num: '05', title: 'Jadwal Sholat Real-time', desc: 'Waktu sholat otomatis sesuai lokasi — Makkah, Madinah, atau di perjalanan. Tidak ada alasan terlewat.',
+    { num: '05', title: 'Jadwal Sholat Real-time', desc: 'Waktu sholat otomatis sesuai lokasi: Makkah, Madinah, atau di perjalanan. Tidak ada alasan terlewat.',
       icon: <><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M5 3 2 6"/><path d="m22 6-3-3"/></> },
-    { num: '06', title: 'Pengumuman Travel', desc: 'Kirim pengumuman dari portal travel — muncul langsung di HP semua jamaah. Lebih cepat dan pasti terbaca.',
+    { num: '06', title: 'Pengumuman Travel', desc: 'Kirim pengumuman dari portal travel, muncul langsung di HP semua jamaah. Lebih cepat dan pasti terbaca.',
       icon: <><path d="M3 11l18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></> },
     { num: '07', title: 'Agenda Harian', desc: 'Isi agenda sekali di portal, jamaah lihat jadwal hari ini otomatis. Tidak ada lagi pertanyaan "hari ini kita ke mana?".',
       icon: <><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></> },
-    { num: '08', title: 'Kartu Jamaah Digital', desc: 'Nama, rombongan, hotel, nomor pembimbing — semua dalam satu kartu digital. Berguna saat jamaah terpisah atau darurat.',
+    { num: '08', title: 'Kartu Jamaah Digital', desc: 'Nama, rombongan, hotel, nomor pembimbing. Semua dalam satu kartu digital. Berguna saat jamaah terpisah atau darurat.',
       icon: <><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2.5"/><path d="M14 10h5M14 14h5"/></> },
     { num: '09', title: 'Jurnal Perjalanan', desc: 'Jamaah catat momen perjalanan suci mereka. Kenangan ibadah tersimpan rapi, bisa dibaca ulang kapan saja.',
       icon: <><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></> },
-    { num: '10', title: 'Sertifikat Umrah Digital', desc: 'Sertifikat digital bermerek travel Anda — jamaah bisa simpan dan bagikan. Kenang-kenangan yang juga promosi.',
+    { num: '10', title: 'Sertifikat Umrah Digital', desc: 'Sertifikat digital bermerek travel Anda, jamaah bisa simpan dan bagikan. Kenang-kenangan yang juga promosi.',
       icon: <><circle cx="12" cy="9" r="6"/><path d="M9 14.5 8 22l4-2 4 2-1-7.5"/></> },
-    { num: '11', title: 'White-Label Penuh', desc: 'Logo Anda, warna Anda, nama Anda. Jamaah tidak tahu ini Umrahme — yang mereka tahu ini aplikasi travel Anda.',
+    { num: '11', title: 'White-Label Penuh', desc: 'Logo Anda, warna Anda, nama Anda. Jamaah tidak tahu ini Umrahme. Yang mereka tahu ini aplikasi travel Anda.',
       icon: <><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="10.5" r="2.5"/><circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="12.5" r="2.5"/><path d="M12 2a10 10 0 1 0 0 20 2 2 0 0 0 2-2 2 2 0 0 1 2-2h2a4 4 0 0 0 4-4 10 10 0 0 0-10-10z"/></> },
     { num: '12', title: 'Portal Travel Agency', desc: 'Satu dashboard untuk semua: kelola data jamaah, atur agenda, kirim pengumuman. Semua terkontrol dari satu tempat.',
       icon: <><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></> },
   ];
 
   const faqs = [
-    { q: 'Jamaah kami rata-rata tidak terlalu melek teknologi. Bisa pakai?', a: 'Bisa, dan justru dirancang untuk itu. Tidak perlu install apapun — jamaah cukup buka browser, ketuk link yang Anda bagikan, masukkan kode dan nama. Selesai. Sudah banyak jamaah lansia 60+ yang pakai tanpa kesulitan.' },
-    { q: 'Seberapa cepat aplikasi bisa bermerek travel kami?', a: 'Kurang dari 10 menit. Upload logo, pilih warna, masukkan nama travel — dan aplikasi langsung tampil bermerek travel Anda. Tidak perlu menunggu, tidak perlu approval dari kami.' },
+    { q: 'Jamaah kami rata-rata tidak terlalu melek teknologi. Bisa pakai?', a: 'Bisa, dan justru dirancang untuk itu. Tidak perlu install apapun. Jamaah cukup buka browser, ketuk link yang Anda bagikan, masukkan kode dan nama. Selesai. Sudah banyak jamaah lansia 60+ yang pakai tanpa kesulitan.' },
+    { q: 'Seberapa cepat aplikasi bisa bermerek travel kami?', a: 'Kurang dari 10 menit. Upload logo, pilih warna, masukkan nama travel, dan aplikasi langsung tampil bermerek travel Anda. Tidak perlu menunggu, tidak perlu approval dari kami.' },
     { q: 'Apakah data jamaah kami aman?', a: 'Ya, aman. Data jamaah disimpan terenkripsi dan tidak pernah dibagikan ke pihak manapun. Hanya travel Anda yang bisa akses data jamaah Anda.' },
     { q: 'Sinyal di area Haram sering lemah. Tetap bisa dipakai?', a: 'Ya. Doa, panduan ibadah, kartu jamaah, dan konten yang sudah pernah dibuka tetap bisa diakses offline. Jamaah tidak akan tergantung sinyal saat tawaf atau sa\'i.' },
-    { q: 'Bagaimana cara mulai dan bayarnya?', a: 'Hubungi kami via WhatsApp, kami bantu setup demo gratis dengan nama travel Anda dulu. Kalau cocok, baru bicara soal pembayaran. Biaya dihitung per jamaah dan dibayar per keberangkatan — tanpa kontrak, tanpa minimum jamaah. Detail harga ada di bagian Harga.' },
-    { q: 'Bisa lihat dulu sebelum memutuskan?', a: 'Tentu. Kami siapkan demo lengkap dengan logo dan nama travel Anda — supaya Anda bisa rasakan sendiri seperti apa tampilannya sebelum memutuskan. Gratis, tanpa komitmen apapun.' },
+    { q: 'Bagaimana cara mulai dan bayarnya?', a: 'Hubungi kami via WhatsApp, kami bantu setup demo gratis dengan nama travel Anda dulu. Kalau cocok, baru bicara soal pembayaran. Biaya dihitung per jamaah dan dibayar per keberangkatan, tanpa kontrak, tanpa minimum jamaah. Detail harga ada di bagian Harga.' },
+    { q: 'Bisa lihat dulu sebelum memutuskan?', a: 'Tentu. Kami siapkan demo lengkap dengan logo dan nama travel Anda, supaya Anda bisa rasakan sendiri seperti apa tampilannya sebelum memutuskan. Gratis, tanpa komitmen apapun.' },
   ];
 
   return (
@@ -599,7 +599,7 @@ export default function LandingPage() {
               <motion.div whileHover={{ y: -4, transition: { duration: 0.2 } }} style={{ background: `linear-gradient(165deg, ${C.blue2}, ${C.blue1})`, color: '#fff', borderRadius: 16, padding: 22, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 200, boxSizing: 'border-box' }}>
                 <div style={{ fontSize: 13, fontWeight: 600, opacity: 0.85 }}>Tampil sebagai aplikasi travel Anda sendiri</div>
                 <motion.div initial={{ scale: 0.6, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} viewport={{ once: true, margin: '-40px' }} transition={{ type: 'spring', stiffness: 200, damping: 14, delay: 0.1 }} style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-0.03em', margin: '14px 0' }}>100%</motion.div>
-                <div style={{ fontSize: 12.5, opacity: 0.85 }}>Logo, nama, dan warna brand Anda — tanpa jejak pihak ketiga</div>
+                <div style={{ fontSize: 12.5, opacity: 0.85 }}>Logo, nama, dan warna brand Anda. Tanpa jejak pihak ketiga.</div>
               </motion.div>
             </Reveal>
             <Reveal delay={0.05}>
@@ -613,7 +613,7 @@ export default function LandingPage() {
               <motion.div whileHover={{ y: -4, transition: { duration: 0.2 } }} style={{ background: C.accent, borderRadius: 16, padding: 22, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 200, boxSizing: 'border-box' }}>
                 <div style={{ fontSize: 13, fontWeight: 600, color: C.greenDark }}>Fitur premium, langsung aktif</div>
                 <motion.div initial={{ scale: 0.6, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} viewport={{ once: true, margin: '-40px' }} transition={{ type: 'spring', stiffness: 200, damping: 14, delay: 0.1 }} style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-0.03em', color: C.greenDark, margin: '14px 0' }}>12</motion.div>
-                <div style={{ fontSize: 12.5, color: C.greenDark, opacity: 0.85 }}>Semua termasuk — tanpa biaya tambahan</div>
+                <div style={{ fontSize: 12.5, color: C.greenDark, opacity: 0.85 }}>Semua termasuk, tanpa biaya tambahan</div>
               </motion.div>
             </Reveal>
             <Reveal delay={0.11}>
@@ -639,7 +639,7 @@ export default function LandingPage() {
           </Reveal>
           <Reveal delay={0.14}>
             <p style={{ textAlign: 'center', color: C.muted, maxWidth: 520, margin: '0 auto 28px', fontSize: 14 }}>
-              Bukan salah tim Anda — memang belum ada sistem yang pas. Sampai sekarang.
+              Bukan salah tim Anda. Memang belum ada sistem yang pas. Sampai sekarang.
             </p>
           </Reveal>
 
@@ -688,7 +688,7 @@ export default function LandingPage() {
               },
               {
                 title: 'Semua serba manual',
-                desc: 'Excel, kertas, WA — tak ada sistem terpadu.',
+                desc: 'Excel, kertas, WA. Tak ada sistem terpadu.',
                 icon: (
                   <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="3" y="3" width="7" height="7" rx="1"/>
@@ -811,7 +811,7 @@ export default function LandingPage() {
                     'Logo & nama travel di setiap halaman',
                     'Warna brand Anda, konsisten & profesional',
                     'Terlihat sekelas travel besar yang punya app sendiri',
-                    'Semua kustomisasi termasuk — tanpa biaya ekstra',
+                    'Semua kustomisasi termasuk, tanpa biaya ekstra',
                   ].map((t) => (
                     <li key={t} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginBottom: 10, fontWeight: 600, fontSize: 13.5 }}>
                       <span style={{ flexShrink: 0, width: 20, height: 20, borderRadius: '50%', background: C.accent, color: C.greenDark, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800 }}>✓</span>
@@ -842,7 +842,7 @@ export default function LandingPage() {
           </Reveal>
           <Reveal delay={0.14}>
             <p style={{ textAlign: 'center', color: C.muted, maxWidth: 520, margin: '0 auto 28px', fontSize: 14 }}>
-              Mulai gratis dengan 5 jamaah pertama. Tidak perlu kartu kredit, tidak perlu kontrak — cukup daftar dan rasakan langsung.
+              Mulai gratis dengan 5 jamaah pertama. Tidak perlu kartu kredit, tidak perlu kontrak. Cukup daftar dan rasakan langsung.
             </p>
           </Reveal>
 
@@ -858,9 +858,9 @@ export default function LandingPage() {
                 <p style={{ color: 'rgba(255,255,255,.55)', fontSize: 12, fontStyle: 'italic', marginBottom: 18 }}>
                   Balik modal hanya dari hemat biaya cetak buku doa.
                 </p>
-                <p style={{ color: 'rgba(255,255,255,.7)', fontSize: 13, marginBottom: 20 }}>Mulai dengan 5 jamaah pertama secara gratis. Rasakan sendiri sebelum memutuskan — tanpa risiko, tanpa komitmen.</p>
+                <p style={{ color: 'rgba(255,255,255,.7)', fontSize: 13, marginBottom: 20 }}>Mulai dengan 5 jamaah pertama secara gratis. Rasakan sendiri sebelum memutuskan, tanpa risiko, tanpa komitmen.</p>
                 <ul style={{ listStyle: 'none', flex: 1 }}>
-                  {['Lebih murah dari biaya cetak buku doa — langsung balik modal', 'Tanpa biaya setup, tanpa langganan bulanan, tanpa kontrak', 'Bayar hanya untuk jamaah yang benar-benar berangkat', '12 fitur premium aktif penuh — tanpa biaya tersembunyi', 'Aplikasi bermerek travel Anda — perkuat brand di mata jamaah', 'Tingkatkan kepuasan jamaah & dorong referral keberangkatan berikutnya', 'Pendampingan & support langsung via WhatsApp'].map(t => (
+                  {['Lebih murah dari biaya cetak buku doa, langsung balik modal', 'Tanpa biaya setup, tanpa langganan bulanan, tanpa kontrak', 'Bayar hanya untuk jamaah yang benar-benar berangkat', '12 fitur premium aktif penuh, tanpa biaya tersembunyi', 'Aplikasi bermerek travel Anda, perkuat brand di mata jamaah', 'Tingkatkan kepuasan jamaah & dorong referral keberangkatan berikutnya', 'Pendampingan & support langsung via WhatsApp'].map(t => (
                     <li key={t} style={{ display: 'flex', gap: 9, alignItems: 'center', marginBottom: 9, fontSize: 13 }}>
                       <span style={{ width: 19, height: 19, borderRadius: '50%', background: C.accent, color: C.greenDark, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, flexShrink: 0 }}>✓</span>
                       {t}
@@ -868,7 +868,7 @@ export default function LandingPage() {
                   ))}
                 </ul>
                 <p style={{ fontSize: 12.5, color: C.accent, fontWeight: 600, marginBottom: 12, textAlign: 'center', marginTop: 20 }}>
-                  Coba gratis untuk 5 jamaah pertama Anda — tanpa syarat.
+                  Coba gratis untuk 5 jamaah pertama Anda, tanpa syarat.
                 </p>
                 <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-btn lp-btn-accent" style={{ width: '100%', justifyContent: 'center' }}>
                   Dapatkan Sekarang <span className="lp-arrow">→</span>
@@ -893,7 +893,7 @@ export default function LandingPage() {
                     <span style={{ display: 'inline-block', background: C.accent, color: C.greenDark, fontWeight: 800, padding: '2px 10px', borderRadius: 999, fontSize: 12, marginLeft: 8 }}>Hemat 60%</span>
                   </span>
                 </div>
-                <p style={{ fontSize: 12.5, color: C.muted, marginTop: 14, lineHeight: 1.6 }}>Untuk 40 jamaah, biaya cetak buku doa bisa sampai 1.000 SAR. Dengan Umrahme, 40 jamaah hanya 400 SAR — dan dapat 12 fitur, bukan sekadar buku.</p>
+                <p style={{ fontSize: 12.5, color: C.muted, marginTop: 14, lineHeight: 1.6 }}>Untuk 40 jamaah, biaya cetak buku doa bisa sampai 1.000 SAR. Dengan Umrahme, 40 jamaah hanya 400 SAR, dan dapat 12 fitur, bukan sekadar buku.</p>
               </div>
             </Reveal>
           </div>
@@ -931,7 +931,7 @@ export default function LandingPage() {
               Jamaah lebih tenang.<br />Muthowif lebih fokus.<br />Travel Anda lebih dipercaya.
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', marginBottom: 28, fontFamily: F }}>
-              Gratis untuk 5 jamaah pertama — kami setup aplikasi bermerek travel Anda dalam menit.
+              Gratis untuk 5 jamaah pertama. Kami setup aplikasi bermerek travel Anda dalam menit.
             </p>
             <a
               href={WA_LINK}
