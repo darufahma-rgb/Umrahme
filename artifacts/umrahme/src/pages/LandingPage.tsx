@@ -269,12 +269,6 @@ export default function LandingPage() {
           position: 'absolute', inset: 0, pointerEvents: 'none',
           backgroundImage: 'url(/hero-bg.avif)',
           backgroundSize: 'cover', backgroundPosition: 'center center',
-          opacity: 0.65,
-        }} />
-        {/* fade to white at bottom only */}
-        <div style={{
-          position: 'absolute', inset: 0, pointerEvents: 'none',
-          background: `linear-gradient(180deg, transparent 60%, rgba(255,255,255,.95) 100%)`,
         }} />
 
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 2, textAlign: 'center' }}>
