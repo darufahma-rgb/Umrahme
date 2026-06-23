@@ -499,11 +499,16 @@ export default function LandingPage() {
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
           backgroundImage: 'url(/hero-bg.avif)',
-          backgroundSize: 'cover', backgroundPosition: 'center center',
+          backgroundSize: 'cover', backgroundPosition: 'center top',
         }} />
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
           background: 'rgba(0,0,0,0.18)',
+        }} />
+        {/* bottom fade overlay — tutup gradasi putih bawaan gambar */}
+        <div style={{
+          position: 'absolute', left: 0, right: 0, bottom: 0, height: '45%', pointerEvents: 'none',
+          background: `linear-gradient(180deg, transparent 0%, ${C.blue3} 75%, ${C.blue3} 100%)`,
         }} />
 
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 2, textAlign: 'center' }}>
@@ -539,23 +544,8 @@ export default function LandingPage() {
             </a>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.48 }}
-            className="lp-hero-social"
-            style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center', color: 'rgba(255,255,255,.8)', fontSize: 13, fontWeight: 500 }}
-          >
-            <span style={{ color: C.accent, letterSpacing: 2 }}>★★★★★</span>
-            <span>Lebih hemat dari buku doa cetak. Lebih profesional dari grup WhatsApp.</span>
-          </motion.div>
 
         </div>
-
-        {/* gradient fade ke white */}
-        <div style={{
-          position: 'absolute', bottom: 0, left: 0, right: 0,
-          height: 120, pointerEvents: 'none', zIndex: 4,
-          background: 'linear-gradient(to bottom, transparent 0%, #ffffff 100%)',
-        }} />
       </section>
 
 
