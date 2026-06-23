@@ -189,8 +189,8 @@ export default function LandingPage() {
         .lp-nav {
           position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
           z-index: 100;
-          width: calc(100% - 48px);
-          max-width: 820px;
+          width: auto;
+          max-width: fit-content;
           border-radius: 999px;
           background: rgba(255,255,255,0.12);
           backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -206,7 +206,7 @@ export default function LandingPage() {
         }
         .lp-nav-inner {
           display: flex; align-items: center;
-          padding: 0 8px 0 16px; height: 52px;
+          padding: 0 8px 0 14px; height: 46px;
         }
         .lp-nav-logo {
           display: flex; align-items: center; gap: 10px;
@@ -295,6 +295,7 @@ export default function LandingPage() {
 
         /* mobile: center logo, hide desktop items, make logo clickable */
         @media (max-width: 760px) {
+          .lp-nav { width: auto !important; max-width: fit-content !important; }
           .lp-nav-links { display: none !important; }
           .lp-nav-right { display: none !important; }
           .lp-nav-inner { justify-content: center; }
