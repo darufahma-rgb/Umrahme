@@ -606,21 +606,80 @@ export default function LandingPage() {
             </p>
           </Reveal>
 
-          <div className="lp-pain-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10 }}>
+          <div className="lp-pain-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, marginTop: 10 }}>
             {[
-              { icon: '😕', title: '"Jadwal hari ini apa, Pak?"', desc: 'Pertanyaan sama, dijawab berulang sepanjang hari.' },
-              { icon: '🔁', title: 'Muthowif lelah sebelum ibadah dimulai', desc: 'Energi habis untuk hal teknis, bukan membimbing.' },
-              { icon: '📕', title: 'Buku doa cetak mahal dan percuma', desc: '15–25 SAR per buku. Hilang, rusak, jarang dibaca.' },
-              { icon: '📢', title: 'Info penting tenggelam di grup WA', desc: 'Pengumuman penting tertimbun ratusan chat.' },
-              { icon: '📱', title: 'Semua dikerjakan manual', desc: 'Excel, kertas, WA — tak ada sistem terpadu.' },
-              { icon: '🏷️', title: 'Travel lain sudah punya aplikasi', desc: 'Dan mereka terlihat lebih profesional di mata calon jamaah.' },
+              {
+                title: '"Jadwal hari ini apa, Pak?"',
+                desc: 'Pertanyaan sama, dijawab berulang sepanjang hari.',
+                icon: (
+                  <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                  </svg>
+                ),
+              },
+              {
+                title: 'Muthowif kelelahan',
+                desc: 'Energi habis untuk hal teknis, bukan membimbing.',
+                icon: (
+                  <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                  </svg>
+                ),
+              },
+              {
+                title: 'Buku doa cetak percuma',
+                desc: 'Mahal dicetak, sering hilang, jarang dibaca.',
+                icon: (
+                  <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                  </svg>
+                ),
+              },
+              {
+                title: 'Info tenggelam di grup WA',
+                desc: 'Pengumuman penting tertimbun ratusan chat.',
+                icon: (
+                  <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 11l18-5v12L3 14v-3z"/>
+                    <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>
+                  </svg>
+                ),
+              },
+              {
+                title: 'Semua serba manual',
+                desc: 'Excel, kertas, WA — tak ada sistem terpadu.',
+                icon: (
+                  <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="3" width="7" height="7" rx="1"/>
+                    <rect x="14" y="3" width="7" height="7" rx="1"/>
+                    <rect x="3" y="14" width="7" height="7" rx="1"/>
+                    <rect x="14" y="14" width="7" height="7" rx="1"/>
+                  </svg>
+                ),
+              },
+              {
+                title: 'Travel lain lebih maju',
+                desc: 'Mereka punya aplikasi sendiri, terlihat profesional.',
+                icon: (
+                  <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="5" y="2" width="14" height="20" rx="2"/>
+                    <line x1="12" y1="18" x2="12" y2="18"/>
+                  </svg>
+                ),
+              },
             ].map((p, i) => (
-              <Reveal key={i} delay={i * 0.04}>
-                <div style={{ background: C.bg, borderRadius: 12, padding: 16, border: `1px solid ${C.line}`, display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-                  <div style={{ width: 32, height: 32, borderRadius: 8, background: C.soft, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0, boxShadow: '0 4px 12px rgba(15,23,42,.1)' }}>{p.icon}</div>
-                  <div>
-                    <h3 style={{ fontSize: 14, fontWeight: 700, marginBottom: 3 }}>{p.title}</h3>
-                    <p style={{ fontSize: 12.5, color: C.muted, lineHeight: 1.5 }}>{p.desc}</p>
+              <Reveal key={i} delay={i * 0.05}>
+                <div style={{ background: C.bg, borderRadius: 14, padding: 16, border: `1px solid ${C.line}`, display: 'flex', gap: 12, alignItems: 'flex-start', height: '100%' }}>
+                  <div style={{ width: 36, height: 36, borderRadius: 10, background: C.soft, color: C.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <span style={{ width: 19, height: 19, display: 'block' }}>{p.icon}</span>
+                  </div>
+                  <div style={{ minWidth: 0 }}>
+                    <h3 style={{ fontSize: 14, fontWeight: 700, marginBottom: 3, lineHeight: 1.25 }}>{p.title}</h3>
+                    <p style={{ fontSize: 12.5, color: C.muted, lineHeight: 1.45 }}>{p.desc}</p>
                   </div>
                 </div>
               </Reveal>
