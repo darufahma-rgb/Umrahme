@@ -941,39 +941,67 @@ export default function LandingPage() {
 
 
       {/* ══════════ FOOTER ══════════ */}
-      <footer style={{ padding: '44px 0 28px', borderTop: `1px solid ${C.line}` }}>
-        <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
-          <div className="lp-foot-top" style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr 1fr 1fr', gap: 28, marginBottom: 32 }}>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 9, fontWeight: 800, fontSize: 18, color: C.ink, marginBottom: 12, textDecoration: 'none' }}>
-                <img src={logoImg} alt="Umrahme" style={{ width: 28, height: 28, objectFit: 'contain', display: 'block', flexShrink: 0 }} />
-                Umrahme
-              </div>
-              <p style={{ color: C.muted, fontSize: 13, maxWidth: 280, lineHeight: 1.7 }}>Ganti buku doa cetak. Ringankan kerja muthowif. Bawa travel Anda tampil lebih profesional.</p>
-            </div>
-            <div className="lp-foot-links">
-            {[
-              { title: 'Produk', links: [['#fitur', 'Fitur'], ['#harga', 'Harga'], ['#cara', 'Cara Kerja']] },
-              { title: 'Perusahaan', links: [['#kontak', 'Kontak'], [WA_LINK, 'WhatsApp']] },
-              { title: 'Legal', links: [['#', 'Kebijakan Privasi'], ['#', 'Syarat & Ketentuan']] },
-            ].map(col => (
-              <div key={col.title}>
-                <h4 style={{ fontSize: 13, fontWeight: 700, marginBottom: 14 }}>{col.title}</h4>
-                {col.links.map(([href, label]) => (
-                  <a key={label} href={href} target={href.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer"
-                    style={{ display: 'block', color: C.muted, fontSize: 13, marginBottom: 8, textDecoration: 'none', transition: 'color .2s' }}
-                    onMouseEnter={e => (e.currentTarget.style.color = C.primary)}
-                    onMouseLeave={e => (e.currentTarget.style.color = C.muted)}
-                  >{label}</a>
-                ))}
-              </div>
-            ))}
-            </div>
+      <footer style={{ background: C.ink, color: '#fff', padding: '64px 24px 32px', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: -80, left: '50%', transform: 'translateX(-50%)', width: 600, height: 300, background: `radial-gradient(ellipse at center, ${C.primary}22 0%, transparent 70%)`, pointerEvents: 'none' }} />
+
+        <div style={{ maxWidth: 960, margin: '0 auto', position: 'relative' }}>
+
+          <div style={{ textAlign: 'center', marginBottom: 40 }}>
+            <p style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase' as const, color: C.accent, marginBottom: 14, fontFamily: F }}>
+              Siap memulai?
+            </p>
+            <h2 style={{ fontSize: 'clamp(28px, 5vw, 52px)', fontWeight: 800, lineHeight: 1.08, letterSpacing: '-0.02em', color: '#fff', margin: '0 auto 20px', maxWidth: 640, fontFamily: F }}>
+              5 jamaah pertama Anda,<br />gratis tanpa syarat.
+            </h2>
+            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', marginBottom: 28, fontFamily: F }}>
+              Setup dalam menit. Bermerek nama travel Anda. Tanpa komitmen.
+            </p>
+            <a
+              href={WA_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 10, background: C.accent, color: C.greenDark, padding: '14px 28px', borderRadius: 999, fontSize: 15, fontWeight: 700, textDecoration: 'none', fontFamily: F, transition: 'opacity .2s' }}
+              onMouseEnter={e => (e.currentTarget.style.opacity = '0.88')}
+              onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+            >
+              Klaim via WhatsApp
+              <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 24, height: 24, borderRadius: '50%', background: 'rgba(0,0,0,0.15)', fontSize: 13 }}>→</span>
+            </a>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 18, borderTop: `1px solid ${C.line}`, color: C.muted, fontSize: 12, flexWrap: 'wrap', gap: 12 }}>
-            <span>© {new Date().getFullYear()} Umrahme. All rights reserved.</span>
-            <span>Dibuat untuk travel umrah Indonesia 🇮🇩</span>
+
+          <div style={{ height: 1, background: 'rgba(255,255,255,0.08)', margin: '0 0 28px' }} />
+
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div style={{ width: 28, height: 28, borderRadius: 8, background: C.accent, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 800, color: C.greenDark, fontFamily: F, flexShrink: 0 }}>U</div>
+              <span style={{ fontWeight: 700, fontSize: 15, fontFamily: F }}>Umrahme</span>
+            </div>
+            <nav style={{ display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
+              {[
+                ['#fitur', 'Fitur'],
+                ['#harga', 'Harga'],
+                ['#cara', 'Cara Kerja'],
+                ['#kontak', 'Kontak'],
+                [WA_LINK, 'WhatsApp'],
+              ].map(([href, label]) => (
+                <a
+                  key={label}
+                  href={href}
+                  target={href.startsWith('http') ? '_blank' : undefined}
+                  rel="noopener noreferrer"
+                  style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', textDecoration: 'none', fontFamily: F, transition: 'color .2s' }}
+                  onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
+                  onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.5)')}
+                >
+                  {label}
+                </a>
+              ))}
+            </nav>
+            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', fontFamily: F }}>
+              © {new Date().getFullYear()} Umrahme
+            </span>
           </div>
+
         </div>
       </footer>
     </div>
