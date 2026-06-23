@@ -447,6 +447,16 @@ export default function LandingPage() {
           .lp-wl-phones > div > div { height: 260px !important; }
           .lp-foot-links { grid-template-columns: 1fr 1fr !important; }
         }
+
+        @keyframes lpPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(0,84,249,0.0); } 50% { box-shadow: 0 0 0 6px rgba(0,84,249,0.08); } }
+        .lp-cta-pulse { animation: lpPulse 2.8s ease-in-out infinite; }
+
+        .lp-feat-card .lp-feat-icon { transition: transform .25s ease; }
+        .lp-feat-card:hover .lp-feat-icon { transform: scale(1.08) rotate(-3deg); }
+
+        @media (prefers-reduced-motion: reduce) {
+          *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+        }
       `}</style>
 
       {/* ══════════ NAVBAR ══════════ */}
@@ -549,7 +559,7 @@ export default function LandingPage() {
             className="lp-hero-btns"
             style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 26 }}
           >
-            <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-btn" style={{ background: C.ink, color: '#fff', padding: '14px 28px', fontSize: 15, fontWeight: 600 }}>
+            <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-btn lp-cta-pulse" style={{ background: C.ink, color: '#fff', padding: '14px 28px', fontSize: 15, fontWeight: 600 }}>
               Coba Gratis Sekarang
             </a>
             <a href="#cara" className="lp-btn" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff', border: '1px solid rgba(255,255,255,0.4)', padding: '14px 28px', fontSize: 15, fontWeight: 600 }}>
@@ -567,13 +577,13 @@ export default function LandingPage() {
       {/* ══════════ ABOUT / BENTO ══════════ */}
       <section className="lp-section" style={{ padding: '56px 0' }}>
         <div className="lp-inner" style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
-          <Reveal><Eyebrow>Tentang Umrahme</Eyebrow></Reveal>
-          <Reveal>
+          <Reveal delay={0}><Eyebrow>Tentang Umrahme</Eyebrow></Reveal>
+          <Reveal delay={0.08}>
             <h2 className="lp-h2" style={{ textAlign: 'center', fontSize: 'clamp(24px, 3.5vw, 36px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 700, margin: '0 auto 10px' }}>
               Bukan sekadar aplikasi. Ini wajah baru travel Anda.
             </h2>
           </Reveal>
-          <Reveal>
+          <Reveal delay={0.14}>
             <p style={{ textAlign: 'center', color: C.muted, fontSize: 14, marginBottom: 28 }}>
               Empat alasan kenapa travel modern memilih Umrahme.
             </p>
@@ -581,32 +591,32 @@ export default function LandingPage() {
 
           <div className="lp-bento" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
             <Reveal>
-              <div style={{ background: `linear-gradient(165deg, ${C.blue2}, ${C.blue1})`, color: '#fff', borderRadius: 14, padding: 20 }}>
+              <motion.div whileHover={{ y: -4, transition: { duration: 0.2 } }} style={{ background: `linear-gradient(165deg, ${C.blue2}, ${C.blue1})`, color: '#fff', borderRadius: 14, padding: 20 }}>
                 <div style={{ fontSize: 12.5, fontWeight: 600, opacity: 0.85, marginBottom: 8 }}>Tampil sebagai aplikasi travel Anda sendiri</div>
-                <div style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em' }}>100%</div>
+                <motion.div initial={{ scale: 0.6, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} viewport={{ once: true, margin: '-40px' }} transition={{ type: 'spring', stiffness: 200, damping: 14, delay: 0.1 }} style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em' }}>100%</motion.div>
                 <div style={{ fontSize: 12, opacity: 0.8, marginTop: 6 }}>Logo, nama, dan warna brand Anda — tanpa jejak pihak ketiga</div>
-              </div>
+              </motion.div>
             </Reveal>
             <Reveal delay={0.05}>
-              <div style={{ background: C.bg, border: `1px solid ${C.line}`, borderRadius: 14, padding: 20 }}>
+              <motion.div whileHover={{ y: -4, transition: { duration: 0.2 } }} style={{ background: C.bg, border: `1px solid ${C.line}`, borderRadius: 14, padding: 20 }}>
                 <div style={{ fontSize: 12.5, color: C.muted, fontWeight: 600, marginBottom: 8 }}>Doa & panduan ibadah siap pakai</div>
-                <div style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em', color: C.ink }}>55+</div>
+                <motion.div initial={{ scale: 0.6, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} viewport={{ once: true, margin: '-40px' }} transition={{ type: 'spring', stiffness: 200, damping: 14, delay: 0.1 }} style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em', color: C.ink }}>55+</motion.div>
                 <div style={{ fontSize: 12, color: C.muted, marginTop: 6 }}>Lengkap dengan Arab, latin, dan terjemahan</div>
-              </div>
+              </motion.div>
             </Reveal>
             <Reveal delay={0.08}>
-              <div style={{ background: C.accent, borderRadius: 14, padding: 20 }}>
+              <motion.div whileHover={{ y: -4, transition: { duration: 0.2 } }} style={{ background: C.accent, borderRadius: 14, padding: 20 }}>
                 <div style={{ fontSize: 12.5, fontWeight: 600, color: C.greenDark, marginBottom: 8 }}>Fitur premium, langsung aktif</div>
-                <div style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em', color: C.greenDark }}>12</div>
+                <motion.div initial={{ scale: 0.6, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} viewport={{ once: true, margin: '-40px' }} transition={{ type: 'spring', stiffness: 200, damping: 14, delay: 0.1 }} style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em', color: C.greenDark }}>12</motion.div>
                 <div style={{ fontSize: 12, color: C.greenDark, opacity: 0.8, marginTop: 6 }}>Semua termasuk — tanpa biaya tambahan</div>
-              </div>
+              </motion.div>
             </Reveal>
             <Reveal delay={0.11}>
-              <div style={{ background: C.ink, color: '#fff', borderRadius: 14, padding: 20 }}>
+              <motion.div whileHover={{ y: -4, transition: { duration: 0.2 } }} style={{ background: C.ink, color: '#fff', borderRadius: 14, padding: 20 }}>
                 <div style={{ fontSize: 12.5, color: '#94a3b8', fontWeight: 600, marginBottom: 8 }}>Biaya setup & langganan bulanan</div>
-                <div style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em', color: C.accent }}>Rp 0</div>
+                <motion.div initial={{ scale: 0.6, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} viewport={{ once: true, margin: '-40px' }} transition={{ type: 'spring', stiffness: 200, damping: 14, delay: 0.1 }} style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em', color: C.accent }}>Rp 0</motion.div>
                 <div style={{ fontSize: 12, color: '#94a3b8', marginTop: 6 }}>Bayar hanya saat jamaah berangkat</div>
-              </div>
+              </motion.div>
             </Reveal>
           </div>
         </div>
@@ -616,13 +626,13 @@ export default function LandingPage() {
       {/* ══════════ PAIN POINTS ══════════ */}
       <section className="lp-section" style={{ background: C.soft, padding: '56px 0' }}>
         <div className="lp-inner" style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
-          <Reveal><Eyebrow>Masalah Anda Hari Ini</Eyebrow></Reveal>
-          <Reveal>
+          <Reveal delay={0}><Eyebrow>Masalah Anda Hari Ini</Eyebrow></Reveal>
+          <Reveal delay={0.08}>
             <h2 className="lp-h2" style={{ textAlign: 'center', fontSize: 'clamp(24px, 3.5vw, 36px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 700, margin: '0 auto 10px' }}>
               Kenali masalahnya. Rasakan bedanya.
             </h2>
           </Reveal>
-          <Reveal>
+          <Reveal delay={0.14}>
             <p style={{ textAlign: 'center', color: C.muted, maxWidth: 520, margin: '0 auto 28px', fontSize: 14 }}>
               Setiap travel pernah mengalaminya. Bedanya, sekarang ada solusinya.
             </p>
@@ -695,7 +705,7 @@ export default function LandingPage() {
               },
             ].map((p, i) => (
               <Reveal key={i} delay={i * 0.05}>
-                <div style={{ background: C.bg, borderRadius: 14, padding: 16, border: `1px solid ${C.line}`, display: 'flex', gap: 12, alignItems: 'flex-start', height: '100%' }}>
+                <motion.div whileHover={{ y: -3, transition: { duration: 0.2 } }} style={{ background: C.bg, borderRadius: 14, padding: 16, border: `1px solid ${C.line}`, display: 'flex', gap: 12, alignItems: 'flex-start', height: '100%' }}>
                   <div style={{ width: 36, height: 36, borderRadius: 10, background: C.soft, color: C.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                     <span style={{ width: 19, height: 19, display: 'block' }}>{p.icon}</span>
                   </div>
@@ -703,7 +713,7 @@ export default function LandingPage() {
                     <h3 style={{ fontSize: 14, fontWeight: 700, marginBottom: 3, lineHeight: 1.25 }}>{p.title}</h3>
                     <p style={{ fontSize: 12.5, color: C.muted, lineHeight: 1.45 }}>{p.desc}</p>
                   </div>
-                </div>
+                </motion.div>
               </Reveal>
             ))}
           </div>
@@ -714,13 +724,13 @@ export default function LandingPage() {
       {/* ══════════ FEATURES ══════════ */}
       <section id="fitur" className="lp-section" style={{ padding: '56px 0' }}>
         <div className="lp-inner" style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
-          <Reveal><Eyebrow>Fitur Lengkap</Eyebrow></Reveal>
-          <Reveal>
+          <Reveal delay={0}><Eyebrow>Fitur Lengkap</Eyebrow></Reveal>
+          <Reveal delay={0.08}>
             <h2 className="lp-h2" style={{ textAlign: 'center', fontSize: 'clamp(24px, 3.5vw, 36px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 700, margin: '0 auto 10px' }}>
               Semua yang jamaah butuhkan. Sudah termasuk.
             </h2>
           </Reveal>
-          <Reveal>
+          <Reveal delay={0.14}>
             <p style={{ textAlign: 'center', color: C.muted, maxWidth: 520, margin: '0 auto 28px', fontSize: 14 }}>
               12 fitur lengkap, aktif begitu Anda daftar. Tanpa biaya tambahan, tanpa tim IT.
             </p>
@@ -730,7 +740,7 @@ export default function LandingPage() {
             {features.map((f, i) => (
               <Reveal key={i} delay={i * 0.03} className={i < 2 ? 'lp-feat-featured' : ''}>
                 <div className="lp-feat-card">
-                  <div style={{ width: 40, height: 40, borderRadius: 10, background: C.accent, color: C.greenDark, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
+                  <div className="lp-feat-icon" style={{ width: 40, height: 40, borderRadius: 10, background: C.accent, color: C.greenDark, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">{f.icon}</svg>
                   </div>
                   <div style={{ fontSize: 10, fontWeight: 700, color: C.accentDark, marginBottom: 3 }}>FITUR {f.num}</div>
@@ -747,13 +757,13 @@ export default function LandingPage() {
       {/* ══════════ HOW IT WORKS ══════════ */}
       <section id="cara" className="lp-section" style={{ background: C.soft, padding: '56px 0' }}>
         <div className="lp-inner" style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
-          <Reveal><Eyebrow>Cara Kerja</Eyebrow></Reveal>
-          <Reveal>
+          <Reveal delay={0}><Eyebrow>Cara Kerja</Eyebrow></Reveal>
+          <Reveal delay={0.08}>
             <h2 className="lp-h2" style={{ textAlign: 'center', fontSize: 'clamp(24px, 3.5vw, 36px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 700, margin: '0 auto 10px' }}>
               Dari daftar sampai jalan, cuma 3 langkah
             </h2>
           </Reveal>
-          <Reveal>
+          <Reveal delay={0.14}>
             <p style={{ textAlign: 'center', color: C.muted, maxWidth: 500, margin: '0 auto 28px', fontSize: 14 }}>
               Tanpa tim IT, tanpa training. Siap untuk keberangkatan berikutnya.
             </p>
@@ -766,11 +776,11 @@ export default function LandingPage() {
               { title: 'Bagikan Kode, Jamaah Langsung Pakai', desc: 'Jamaah buka link, masukkan kode. Tanpa install.' },
             ].map((s, i) => (
               <Reveal key={i} delay={i * 0.08}>
-                <div style={{ background: '#fff', borderRadius: 12, padding: 20, border: `1px solid ${C.line}` }}>
+                <motion.div whileHover={{ y: -4, transition: { duration: 0.2 } }} style={{ background: '#fff', borderRadius: 12, padding: 20, border: `1px solid ${C.line}` }}>
                   <div style={{ width: 36, height: 36, borderRadius: 10, background: C.ink, color: C.accent, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, fontWeight: 800, marginBottom: 14 }}>{i + 1}</div>
                   <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 5 }}>{s.title}</h3>
                   <p style={{ fontSize: 12.5, color: C.muted, lineHeight: 1.55 }}>{s.desc}</p>
-                </div>
+                </motion.div>
               </Reveal>
             ))}
           </div>
@@ -819,13 +829,13 @@ export default function LandingPage() {
       {/* ══════════ PRICING ══════════ */}
       <section id="harga" className="lp-section" style={{ background: C.soft, padding: '56px 0' }}>
         <div className="lp-inner" style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
-          <Reveal><Eyebrow>Harga</Eyebrow></Reveal>
-          <Reveal>
+          <Reveal delay={0}><Eyebrow>Harga</Eyebrow></Reveal>
+          <Reveal delay={0.08}>
             <h2 className="lp-h2" style={{ textAlign: 'center', fontSize: 'clamp(24px, 3.5vw, 36px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 700, margin: '0 auto 10px' }}>
               Harga yang bikin Anda untung sejak hari pertama.
             </h2>
           </Reveal>
-          <Reveal>
+          <Reveal delay={0.14}>
             <p style={{ textAlign: 'center', color: C.muted, maxWidth: 520, margin: '0 auto 28px', fontSize: 14 }}>
               Bandingkan: buku doa cetak hanya memberi jamaah satu buku. Umrahme memberi 12 fitur lengkap, bermerek travel Anda — dengan biaya yang justru lebih ringan.
             </p>
@@ -833,7 +843,7 @@ export default function LandingPage() {
 
           <div className="lp-price-wrap" style={{ display: 'grid', gridTemplateColumns: '1.1fr .9fr', gap: 20, alignItems: 'stretch' }}>
             <Reveal>
-              <div className="lp-price-card" style={{ background: C.ink, color: '#fff', borderRadius: 18, padding: 28, position: 'relative', overflow: 'hidden', height: '100%', display: 'flex', flexDirection: 'column' }}>
+              <motion.div whileHover={{ y: -3, transition: { duration: 0.2 } }} className="lp-price-card" style={{ background: C.ink, color: '#fff', borderRadius: 18, padding: 28, position: 'relative', overflow: 'hidden', height: '100%', display: 'flex', flexDirection: 'column' }}>
                 <div style={{ position: 'absolute', top: 22, right: -34, background: C.accent, color: C.greenDark, fontWeight: 800, fontSize: 11, padding: '5px 44px', transform: 'rotate(45deg)' }}>POPULER</div>
                 <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 5 }}>Harga Per Jamaah</h3>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, margin: '10px 0 2px' }}>
@@ -858,7 +868,7 @@ export default function LandingPage() {
                 <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-btn lp-btn-accent" style={{ width: '100%', justifyContent: 'center' }}>
                   Mulai Sekarang — Gratis Dulu <span className="lp-arrow">→</span>
                 </a>
-              </div>
+              </motion.div>
             </Reveal>
 
             <Reveal delay={0.08} className="lp-calc-hide">
@@ -889,8 +899,8 @@ export default function LandingPage() {
       {/* ══════════ FAQ ══════════ */}
       <section className="lp-section" style={{ background: C.soft, padding: '56px 0' }}>
         <div style={{ maxWidth: 760, margin: '0 auto', padding: '0 24px' }}>
-          <Reveal><Eyebrow>FAQ</Eyebrow></Reveal>
-          <Reveal>
+          <Reveal delay={0}><Eyebrow>FAQ</Eyebrow></Reveal>
+          <Reveal delay={0.08}>
             <h2 className="lp-h2" style={{ textAlign: 'center', fontSize: 'clamp(23px, 3vw, 32px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', margin: '0 auto 28px' }}>
               Masih ragu? Ini jawabannya.
             </h2>
