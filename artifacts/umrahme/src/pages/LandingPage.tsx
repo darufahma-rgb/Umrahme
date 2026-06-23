@@ -572,7 +572,7 @@ export default function LandingPage() {
             style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 26 }}
           >
             <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-btn lp-cta-pulse" style={{ background: C.ink, color: '#fff', padding: '14px 28px', fontSize: 15, fontWeight: 600 }}>
-              Saya Mau Coba Gratis →
+              Dapatkan Sekarang
             </a>
             <a href="#cara" className="lp-btn" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff', border: '1px solid rgba(255,255,255,0.4)', padding: '14px 28px', fontSize: 15, fontWeight: 600 }}>
               Bagaimana Cara Kerjanya?
