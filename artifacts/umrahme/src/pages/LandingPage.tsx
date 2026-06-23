@@ -141,12 +141,6 @@ export default function LandingPage() {
     { icon: '📊', num: '12', title: 'Portal Travel', desc: 'Satu dashboard kelola jamaah, agenda, pengumuman.' },
   ];
 
-  const testimonials = [
-    { name: 'H. Ridwan Effendi', travel: 'PT. Barokah Safar Abadi', init: 'RE', text: 'Dulu muthowif kami kelelahan sebelum tawaf dimulai — menjawab pertanyaan yang itu-itu saja. Sekarang jamaah sudah tahu sendiri dari aplikasi. Perjalanan jauh lebih tenang.' },
-    { name: 'Ibu Siti Nurhaliza', travel: 'Yayasan Al-Haramain Tour', init: 'SN', text: 'Kami khawatir jamaah lansia tidak bisa pakai. Ternyata mereka langsung bisa — cukup buka link, masukkan nama. Tidak ada yang komplain kesulitan.' },
-    { name: 'Ust. Farid Amanullah', travel: 'CV. Bintang Madinah Travel', init: 'FA', text: 'Kami biasa cetak buku doa 20 SAR per jamaah. Dengan Umrahme 10 SAR, dapat jauh lebih banyak — dan jamaah benar-benar pakai. Keputusan terbaik musim ini.' },
-  ];
-
   const faqs = [
     { q: 'Jamaah kami rata-rata tidak terlalu melek teknologi. Bisa pakai?', a: 'Bisa, dan justru dirancang untuk itu. Tidak perlu install apapun — jamaah cukup buka browser, ketuk link yang Anda bagikan, masukkan kode dan nama. Selesai. Sudah banyak jamaah lansia 60+ yang pakai tanpa kesulitan.' },
     { q: 'Seberapa cepat aplikasi bisa bermerek travel kami?', a: 'Kurang dari 10 menit. Upload logo, pilih warna, masukkan nama travel — dan aplikasi langsung tampil bermerek travel Anda. Tidak perlu menunggu, tidak perlu approval dari kami.' },
@@ -591,56 +585,15 @@ export default function LandingPage() {
             </a>
           </motion.div>
 
-        </div>
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.48 }}
+            className="lp-hero-social"
+            style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center', color: 'rgba(255,255,255,.8)', fontSize: 13, fontWeight: 500 }}
+          >
+            <span style={{ color: C.accent, letterSpacing: 2 }}>★★★★★</span>
+            <span>Lebih hemat dari buku doa cetak. Lebih profesional dari grup WhatsApp.</span>
+          </motion.div>
 
-        {/* floating cards */}
-        <div className="lp-float-wrap" style={{ position: 'relative', zIndex: 3, marginTop: 36, marginBottom: -56, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', gap: 12, perspective: 1400, minHeight: 170, padding: '0 24px' }}>
-          {[
-            { delay: 0 },
-            { delay: 0.6 },
-            { delay: 1.1 },
-            { delay: 0.3 },
-            { delay: 0.9 },
-          ].map((_, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 + i * 0.1, duration: 0.7 }}
-              className={i === 2 ? 'lp-float-card-mid' : ''}
-              style={{ animation: `lpFloat 5s ease-in-out ${_.delay}s infinite`, flexShrink: 0 }}
-            >
-              {i === 0 && (
-                <div style={{ background: '#fff', borderRadius: 12, padding: 13, boxShadow: '0 18px 50px -20px rgba(15,23,42,.25)', width: 112 }}>
-                  <span style={{ display: 'inline-block', fontSize: 10, padding: '3px 8px', borderRadius: 999, background: C.soft, color: C.muted, fontWeight: 600 }}>Tawaf</span>
-                  <div style={{ fontSize: 26, fontWeight: 800, margin: '5px 0' }}>4 / 7</div>
-                </div>
-              )}
-              {i === 1 && (
-                <div style={{ background: '#fff', borderRadius: 12, padding: 13, boxShadow: '0 18px 50px -20px rgba(15,23,42,.25)', width: 126 }}>
-                  <div style={{ fontSize: 11, color: C.muted, fontWeight: 600 }}>Buku Doa Digital</div>
-                  <div style={{ fontSize: 26, fontWeight: 800, margin: '5px 0' }}>55+</div>
-                </div>
-              )}
-              {i === 2 && (
-                <div style={{ background: `linear-gradient(160deg, ${C.blue2}, ${C.blue1})`, color: '#fff', borderRadius: 12, padding: '20px 13px', boxShadow: '0 18px 50px -20px rgba(15,23,42,.25)', width: 112, textAlign: 'center' }}>
-                  <div style={{ width: 34, height: 34, borderRadius: '50%', background: 'rgba(255,255,255,.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 8px', fontSize: 17 }}>🕋</div>
-                  <div style={{ fontWeight: 800, fontSize: 13 }}>Panduan Ibadah</div>
-                  <div style={{ fontSize: 11, opacity: 0.85, marginTop: 3 }}>Step by step</div>
-                </div>
-              )}
-              {i === 3 && (
-                <div style={{ background: C.ink, color: '#fff', borderRadius: 12, padding: 13, boxShadow: '0 18px 50px -20px rgba(15,23,42,.25)', width: 112 }}>
-                  <div style={{ fontSize: 11, color: '#cbd5e1', fontWeight: 600 }}>Pengumuman</div>
-                  <div style={{ fontSize: 26, fontWeight: 800, margin: '5px 0', color: C.accent }}>Instan</div>
-                  <div style={{ fontSize: 11, color: '#cbd5e1' }}>Semua jamaah langsung terima</div>
-                </div>
-              )}
-              {i === 4 && (
-                <div style={{ background: C.accent, color: C.greenDark, borderRadius: 12, padding: 13, boxShadow: '0 18px 50px -20px rgba(15,23,42,.25)', width: 108 }}>
-                  <div style={{ fontSize: 11, fontWeight: 600, color: C.greenDark }}>Jadwal Sholat</div>
-                  <div style={{ fontSize: 26, fontWeight: 800, margin: '5px 0' }}>05:12</div>
-                  <div style={{ fontSize: 11, color: C.greenDark }}>Otomatis · Akurat</div>
-                </div>
-              )}
-            </motion.div>
-          ))}
         </div>
 
         {/* gradient fade ke white */}
@@ -808,9 +761,9 @@ export default function LandingPage() {
       {/* ══════════ WHITE-LABEL SHOWCASE ══════════ */}
       <section className="lp-section" style={{ padding: '56px 0' }}>
         <div className="lp-inner" style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
-          <div className="lp-wl" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 36, alignItems: 'center' }}>
+          <div className="lp-wl" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 36 }}>
             <Reveal>
-              <div>
+              <div style={{ maxWidth: 680, margin: '0 auto' }}>
                 <Eyebrow align="left">White-Label</Eyebrow>
                 <h2 style={{ fontSize: 'clamp(24px, 3.2vw, 34px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', marginBottom: 14 }}>
                   Jamaah lihat nama Anda. Bukan kami.
@@ -836,32 +789,6 @@ export default function LandingPage() {
                     Lihat Demo dengan Nama Travel Anda <span className="lp-arrow" style={{ background: C.accent, color: C.ink }}>→</span>
                   </a>
                 </div>
-              </div>
-            </Reveal>
-
-            <Reveal delay={0.08}>
-              <div className="lp-wl-phones" style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap', overflow: 'hidden', padding: '8px 8px 16px' }}>
-                {[
-                  { name: 'Barokah Tour', sub: "Assalamu'alaikum, Ahmad 👋", bg: 'linear-gradient(160deg, #15803d, #14532d)', items: ['📖 Buku Doa', '🔢 Counter Tawaf', '🗓️ Agenda Hari Ini', '📢 Pengumuman'], accent: '#dcfce7', tilt: 'rotate(-4deg) translateY(8px)' },
-                  { name: 'Mabrur Travel', sub: "Assalamu'alaikum, Siti 👋", bg: 'linear-gradient(160deg, #b45309, #92400e)', items: ['🕌 Jadwal Sholat', '🗺️ Peta Lokasi', '🪪 Kartu Jamaah', '🎖️ Sertifikat'], accent: '#fef3c7', tilt: 'rotate(4deg)' },
-                ].map((ph) => (
-                  <div key={ph.name} style={{ width: 152, borderRadius: 24, padding: 8, background: C.ink, boxShadow: '0 18px 50px -20px rgba(15,23,42,.4)', transform: ph.tilt, transition: 'transform .3s' }}>
-                    <div style={{ borderRadius: 18, overflow: 'hidden', background: '#fff', height: 300, display: 'flex', flexDirection: 'column' }}>
-                      <div style={{ padding: '13px 14px', color: '#fff', background: ph.bg }}>
-                        <div style={{ fontWeight: 800, fontSize: 13, marginBottom: 3 }}>{ph.name}</div>
-                        <div style={{ fontSize: 11, opacity: 0.85 }}>{ph.sub}</div>
-                      </div>
-                      <div style={{ padding: 11, display: 'grid', gap: 8 }}>
-                        {ph.items.map(item => (
-                          <div key={item} style={{ background: C.soft, borderRadius: 10, padding: '8px 11px', fontSize: 11.5, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 7 }}>
-                            <span style={{ width: 22, height: 22, borderRadius: 7, display: 'flex', alignItems: 'center', justifyContent: 'center', background: ph.accent, fontSize: 13 }}>{item.split(' ')[0]}</span>
-                            {item.split(' ').slice(1).join(' ')}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                ))}
               </div>
             </Reveal>
           </div>
@@ -931,37 +858,6 @@ export default function LandingPage() {
                 <p style={{ fontSize: 12.5, color: C.muted, marginTop: 14, lineHeight: 1.6 }}>Untuk 40 jamaah, biaya cetak buku doa bisa sampai 1.000 SAR. Dengan Umrahme, 40 jamaah hanya 400 SAR — dan dapat 12 fitur, bukan sekadar buku.</p>
               </div>
             </Reveal>
-          </div>
-        </div>
-      </section>
-
-
-      {/* ══════════ TESTIMONIALS ══════════ */}
-      <section className="lp-section" style={{ padding: '56px 0' }}>
-        <div className="lp-inner" style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
-          <Reveal><Eyebrow>Testimoni</Eyebrow></Reveal>
-          <Reveal>
-            <h2 className="lp-h2" style={{ textAlign: 'center', fontSize: 'clamp(24px, 3.5vw, 36px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 700, margin: '0 auto 28px' }}>
-              Mereka sudah membuktikannya
-            </h2>
-          </Reveal>
-
-          <div className="lp-testi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
-            {testimonials.map((t, i) => (
-              <Reveal key={i} delay={i * 0.07}>
-                <div style={{ background: '#fff', border: `1px solid ${C.line}`, borderRadius: 14, padding: 20, height: '100%' }}>
-                  <div style={{ color: C.accentDark, marginBottom: 10, letterSpacing: 2, fontSize: 13 }}>★★★★★</div>
-                  <p style={{ fontSize: 13.5, color: C.ink, marginBottom: 14, lineHeight: 1.65 }}>"{t.text}"</p>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <div style={{ width: 36, height: 36, borderRadius: '50%', background: C.green, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, flexShrink: 0, fontSize: 13 }}>{t.init}</div>
-                    <div>
-                      <div style={{ fontWeight: 700, fontSize: 13 }}>{t.name}</div>
-                      <div style={{ fontSize: 11.5, color: C.muted }}>{t.travel}</div>
-                    </div>
-                  </div>
-                </div>
-              </Reveal>
-            ))}
           </div>
         </div>
       </section>
