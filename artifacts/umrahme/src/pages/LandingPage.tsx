@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
+import logoImg from '@assets/Umrahme_1782205247965.png';
 
 const F = "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif";
 
@@ -343,7 +344,7 @@ export default function LandingPage() {
             }}
           >
             <div className={`lp-nav-logo-circle${menuOpen ? ' open' : ''}`}>
-              {menuOpen ? '✕' : 'U'}
+              {menuOpen ? '✕' : <img src={logoImg} alt="Umrahme" />}
             </div>
             <span className="lp-nav-logo-text">Umrahme</span>
           </a>
