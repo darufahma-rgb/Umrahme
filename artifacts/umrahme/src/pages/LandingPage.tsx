@@ -252,43 +252,61 @@ export default function LandingPage() {
         .lp-nav-cta-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.18); }
         .lp-nav-scrolled .lp-nav-cta-btn { background: #131313; color: #fff; }
         .lp-nav-scrolled .lp-nav-cta-btn:hover { background: #222; }
-        .lp-hamburger {
-          display: none; flex-direction: column; gap: 5px;
-          background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
-          border-radius: 10px; cursor: pointer; padding: 9px 10px;
-          transition: background .2s;
+        /* mobile logo-tap dropdown */
+        .lp-mobile-dropdown {
+          display: none;
+          position: fixed; top: 68px; left: 0; right: 0; z-index: 98;
+          background: rgba(10,10,10,0.96);
+          backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+          padding: 8px 20px 20px;
+          pointer-events: none;
+          opacity: 0;
+          transform: translateY(-8px);
+          transition: opacity .28s ease, transform .28s ease;
         }
-        .lp-hamburger:hover { background: rgba(255,255,255,0.2); }
-        .lp-hamburger span { width: 20px; height: 2px; background: #fff; border-radius: 2px; display: block; transition: all .25s; }
-        .lp-nav-scrolled .lp-hamburger { background: rgba(0,0,0,0.06); border-color: rgba(0,0,0,0.1); }
-        .lp-nav-scrolled .lp-hamburger:hover { background: rgba(0,0,0,0.1); }
-        .lp-nav-scrolled .lp-hamburger span { background: #131313; }
-        .lp-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-        .lp-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-        .lp-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+        .lp-mobile-dropdown.open {
+          opacity: 1; transform: translateY(0); pointer-events: auto;
+        }
+        .lp-nav-scrolled ~ .lp-mobile-dropdown,
+        .lp-mobile-dropdown.scrolled {
+          background: rgba(255,255,255,0.97);
+          backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+          box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+        }
+        .lp-md-link {
+          display: flex; align-items: center; justify-content: center;
+          padding: 15px 16px; border-radius: 14px;
+          font-size: 17px; font-weight: 600; color: rgba(255,255,255,0.9);
+          text-decoration: none; font-family: ${F};
+          transition: background .15s, color .15s;
+          border-bottom: 1px solid rgba(255,255,255,0.07);
+        }
+        .lp-md-link:last-of-type { border-bottom: none; }
+        .lp-md-link:hover { background: rgba(255,255,255,0.08); color: #fff; }
+        .lp-md-cta {
+          display: flex; align-items: center; justify-content: center; gap: 8px;
+          margin-top: 12px; width: 100%; padding: 15px 20px;
+          border-radius: 16px; background: #fff; color: #131313;
+          font-size: 15px; font-weight: 700; text-decoration: none; font-family: ${F};
+          transition: background .15s;
+        }
+        .lp-md-cta:hover { background: #f0f0f0; }
 
-        /* drawer */
-        .lp-drawer {
-          position: fixed; top: 0; right: 0; bottom: 0; width: 82%; max-width: 320px;
-          background: #fff; z-index: 500;
-          display: flex; flex-direction: column;
-          padding: 0; overflow: hidden;
-          box-shadow: -16px 0 60px rgba(0,0,0,.18);
-          transform: translateX(100%);
-          transition: transform .38s cubic-bezier(.22,1,.36,1);
-          border-radius: 24px 0 0 24px;
-        }
-        .lp-drawer.open { transform: translateX(0); }
-        .lp-drawer-backdrop {
-          position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 499;
-          opacity: 0; pointer-events: none; transition: opacity .3s;
-        }
-        .lp-drawer-backdrop.open { opacity: 1; pointer-events: auto; }
-
+        /* mobile: center logo, hide desktop items, make logo clickable */
         @media (max-width: 760px) {
           .lp-nav-links { display: none !important; }
-          .lp-nav-cta-btn { display: none !important; }
-          .lp-hamburger { display: flex !important; }
+          .lp-nav-right { display: none !important; }
+          .lp-nav-inner { justify-content: center; }
+          .lp-nav-logo { cursor: pointer; user-select: none; }
+          .lp-mobile-dropdown { display: block; }
+          .lp-nav-logo-circle { transition: transform .2s ease, box-shadow .2s ease; }
+          .lp-nav-logo-circle.open {
+            transform: scale(1.08);
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.25);
+          }
+          .lp-nav-scrolled .lp-nav-logo-circle.open {
+            box-shadow: 0 0 0 3px rgba(0,0,0,0.1);
+          }
         }
 
         @media (max-width: 980px) {
@@ -309,41 +327,23 @@ export default function LandingPage() {
         }
       `}</style>
 
-      {/* ══════════ MOBILE DRAWER ══════════ */}
-      <div className={`lp-drawer-backdrop${menuOpen ? ' open' : ''}`} onClick={() => setMenuOpen(false)} />
-      <div className={`lp-drawer${menuOpen ? ' open' : ''}`} aria-hidden={!menuOpen}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 20px 16px', borderBottom: `1px solid ${C.line}` }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ width: 34, height: 34, borderRadius: '50%', background: C.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 800, fontSize: 15 }}>U</div>
-            <span style={{ fontWeight: 700, fontSize: 16, color: C.ink, fontFamily: F }}>Umrahme</span>
-          </div>
-          <button onClick={() => setMenuOpen(false)}
-            style={{ width: 34, height: 34, borderRadius: '50%', background: C.soft, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, color: C.muted }}
-            aria-label="Tutup menu">✕</button>
-        </div>
-        <nav style={{ flex: 1, padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 2 }}>
-          {[['#fitur', 'Fitur'], ['#harga', 'Harga'], ['#cara', 'Cara Kerja'], ['#kontak', 'Kontak']].map(([h, l]) => (
-            <a key={h} href={h} onClick={() => setMenuOpen(false)}
-              style={{ display: 'flex', alignItems: 'center', padding: '14px 16px', borderRadius: 14, color: C.ink, fontSize: 16, fontWeight: 600, textDecoration: 'none', fontFamily: F, transition: 'background .15s' }}
-              onMouseEnter={e => (e.currentTarget.style.background = C.soft)}
-              onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-            >{l}</a>
-          ))}
-        </nav>
-        <div style={{ padding: '16px 20px 36px', borderTop: `1px solid ${C.line}` }}>
-          <a href={WA_LINK} target="_blank" rel="noopener noreferrer" onClick={() => setMenuOpen(false)}
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, width: '100%', padding: '15px 20px', borderRadius: 16, background: C.ink, color: '#fff', fontSize: 15, fontWeight: 700, textDecoration: 'none', fontFamily: F }}>
-            Daftar Sekarang →
-          </a>
-        </div>
-      </div>
-
       {/* ══════════ NAVBAR ══════════ */}
       <header className={`lp-nav${scrolled ? ' lp-nav-scrolled' : ''}`}>
         <div className="lp-nav-inner">
-          {/* Logo */}
-          <a href="#" className="lp-nav-logo">
-            <div className="lp-nav-logo-circle">U</div>
+          {/* Logo — desktop: link to top | mobile: toggle menu */}
+          <a
+            href="#"
+            className="lp-nav-logo"
+            onClick={(e) => {
+              if (window.innerWidth <= 760) {
+                e.preventDefault();
+                setMenuOpen(p => !p);
+              }
+            }}
+          >
+            <div className={`lp-nav-logo-circle${menuOpen ? ' open' : ''}`}>
+              {menuOpen ? '✕' : 'U'}
+            </div>
             <span className="lp-nav-logo-text">Umrahme</span>
           </a>
 
@@ -354,21 +354,34 @@ export default function LandingPage() {
             ))}
           </nav>
 
-          {/* Right side */}
+          {/* Desktop CTA */}
           <div className="lp-nav-right">
             <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-nav-cta-btn">
               Daftar Sekarang →
             </a>
-            <button
-              className={`lp-hamburger${menuOpen ? ' open' : ''}`}
-              onClick={() => setMenuOpen(p => !p)}
-              aria-label="Buka menu"
-            >
-              <span /><span /><span />
-            </button>
           </div>
         </div>
       </header>
+
+      {/* ══════════ MOBILE DROPDOWN (logo-tap) ══════════ */}
+      <div className={`lp-mobile-dropdown${menuOpen ? ' open' : ''}${scrolled ? ' scrolled' : ''}`}>
+        {[['#fitur', 'Fitur'], ['#harga', 'Harga'], ['#cara', 'Cara Kerja'], ['#kontak', 'Kontak']].map(([h, l]) => (
+          <a
+            key={h} href={h}
+            className={`lp-md-link${scrolled ? ' scrolled' : ''}`}
+            onClick={() => setMenuOpen(false)}
+            style={scrolled ? { color: '#131313', borderBottomColor: 'rgba(0,0,0,0.06)' } : {}}
+          >{l}</a>
+        ))}
+        <a
+          href={WA_LINK} target="_blank" rel="noopener noreferrer"
+          className="lp-md-cta"
+          onClick={() => setMenuOpen(false)}
+          style={scrolled ? { background: '#131313', color: '#fff' } : {}}
+        >
+          Daftar Sekarang →
+        </a>
+      </div>
 
       {/* ══════════ HERO ══════════ */}
       <section className="lp-hero-padding" style={{
