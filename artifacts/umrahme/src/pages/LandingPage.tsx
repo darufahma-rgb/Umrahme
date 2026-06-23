@@ -59,25 +59,6 @@ function Eyebrow({ children, align = 'center' }: { children: React.ReactNode; al
   );
 }
 
-/* ─── MARQUEE ─── */
-const PARTNERS = ['Barokah Tour', 'Al-Madinah Travel', 'Safa Marwah', 'Arrahman Wisata', 'Mabrur Travel', 'Nur Hidayah', 'Baitullah Tour', 'Arminareka Perdana', 'Al-Haramain Tour', 'Bintang Madinah'];
-
-function MarqueeStrip() {
-  const items = [...PARTNERS, ...PARTNERS];
-  return (
-    <div style={{ overflow: 'hidden', WebkitMaskImage: 'linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent)', maskImage: 'linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent)' }}>
-      <div style={{ display: 'flex', gap: 44, width: 'max-content', animation: 'lpScroll 28s linear infinite' }}>
-        {items.map((p, i) => (
-          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 9, color: '#9aa6b2', fontWeight: 700, fontSize: 15, whiteSpace: 'nowrap' as const, opacity: 0.8, fontFamily: F }}>
-            <div style={{ width: 18, height: 18, borderRadius: 6, background: '#d7dde4', flexShrink: 0 }} />
-            {p}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 /* ─── FAQ ITEM ─── */
 function FAQItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
@@ -366,36 +347,7 @@ export default function LandingPage() {
 
           .lp-hero-padding { padding-top: 90px !important; }
 
-          .lp-float-wrap {
-            display: grid !important;
-            grid-template-columns: repeat(4, 1fr) !important;
-            gap: 7px !important;
-            padding: 0 12px !important;
-            margin-top: 24px !important;
-            margin-bottom: -24px !important;
-            overflow: visible !important;
-            justify-content: unset !important;
-            align-items: stretch !important;
-            min-height: unset !important;
-            perspective: none !important;
-          }
-          .lp-float-wrap > div {
-            width: 100% !important;
-            animation: none !important;
-            flex-shrink: unset !important;
-          }
-          .lp-float-wrap > div > div {
-            width: 100% !important;
-            border-radius: 10px !important;
-            padding: 10px 9px !important;
-          }
-          .lp-float-wrap > div > div > div:last-child { display: none !important; }
-          .lp-float-wrap > div > div > div[style*="font-size: 26px"] { font-size: 16px !important; margin: 3px 0 !important; }
-          .lp-float-wrap > div > div > div[style*="font-size: 11px"] { font-size: 10px !important; }
-          .lp-float-wrap > div > div > div[style*="font-size: 13px"] { font-size: 11px !important; }
-          .lp-float-wrap > div > div > span { font-size: 9px !important; padding: 2px 6px !important; }
-          .lp-float-wrap > div > div > div[style*="width: 34px"] { width: 24px !important; height: 24px !important; font-size: 13px !important; margin-bottom: 5px !important; }
-          .lp-float-card-mid { display: none !important; }
+
 
           .lp-hero-btns {
             flex-direction: column !important;
@@ -479,8 +431,6 @@ export default function LandingPage() {
           .lp-feat-card > div:first-child { width: 30px !important; height: 30px !important; font-size: 15px !important; margin-bottom: 8px !important; }
           .lp-feat-featured { grid-column: span 1 !important; }
           .lp-pain-grid { grid-template-columns: 1fr !important; }
-          .lp-float-wrap { grid-template-columns: repeat(4, 1fr) !important; gap: 5px !important; padding: 0 8px !important; }
-          .lp-float-wrap > div > div { padding: 8px 7px !important; border-radius: 8px !important; }
           .lp-wl-phones > div { max-width: 150px !important; }
           .lp-wl-phones > div > div { height: 260px !important; }
           .lp-foot-links { grid-template-columns: 1fr 1fr !important; }
@@ -544,7 +494,7 @@ export default function LandingPage() {
       <section className="lp-hero-padding" style={{
         position: 'relative',
         background: `linear-gradient(180deg, ${C.blue1} 0%, ${C.blue2} 45%, ${C.blue3} 100%)`,
-        padding: '120px 0 0',
+        padding: '120px 0 70px',
       }}>
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
@@ -563,8 +513,8 @@ export default function LandingPage() {
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             style={{ fontSize: 'clamp(34px, 5vw, 60px)', fontWeight: 800, lineHeight: 1.05, color: '#fff', letterSpacing: '-0.02em', maxWidth: 900, margin: '0 auto 20px', textShadow: '0 2px 24px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.4)' }}
           >
-            Aplikasi Umrah{' '}
-            <span style={{ color: C.accent, fontStyle: 'italic' }}>Bermerek Travel Anda</span>
+            Pendamping Umrah Digital{' '}
+            <span style={{ color: C.accent, fontStyle: 'italic' }}>untuk Travel Anda</span>
           </motion.h1>
 
           <motion.p
@@ -572,7 +522,7 @@ export default function LandingPage() {
             transition={{ delay: 0.18, duration: 0.65 }}
             style={{ color: 'rgba(255,255,255,.88)', fontSize: 'clamp(14px, 1.8vw, 16px)', maxWidth: 560, margin: '0 auto 26px', fontWeight: 400, textShadow: '0 1px 12px rgba(0,0,0,0.5)', lineHeight: 1.7 }}
           >
-            Satu aplikasi menggantikan buku doa, grup WA, dan koordinasi manual. Bermerek nama travel Anda — hanya <strong>10 SAR</strong> per jamaah.
+            Doa, panduan ibadah, jadwal, dan komunikasi travel — semua dalam satu aplikasi bermerek nama Anda. Cukup <strong>10 SAR</strong> per jamaah.
           </motion.p>
 
           <motion.div
@@ -609,13 +559,6 @@ export default function LandingPage() {
       </section>
 
 
-      {/* ══════════ PARTNERS MARQUEE ══════════ */}
-      <section className="lp-marquee-wrap" style={{ padding: '44px 0 32px' }}>
-        <p style={{ textAlign: 'center', fontSize: 12, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: C.muted, marginBottom: 18, fontFamily: F }}>
-          Bergabunglah bersama travel umrah yang lebih modern
-        </p>
-        <MarqueeStrip />
-      </section>
 
 
       {/* ══════════ ABOUT / BENTO ══════════ */}
