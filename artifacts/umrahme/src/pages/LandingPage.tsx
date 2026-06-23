@@ -707,46 +707,21 @@ export default function LandingPage() {
             </h2>
           </Reveal>
 
-          <div className="lp-bento" style={{ display: 'grid', gridTemplateColumns: '1fr 1.3fr 1fr', gap: 18 }}>
-            <Reveal>
-              <div style={{ borderRadius: 14, padding: 20, boxShadow: '0 8px 24px -12px rgba(15,23,42,.2)', background: `linear-gradient(165deg, ${C.blue2}, ${C.blue1})`, color: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 200, position: 'relative', overflow: 'hidden' }}>
-                <div style={{ fontWeight: 700, fontSize: 20 }}>Bermerek Travel Anda</div>
-                <div style={{ background: '#fff', color: C.ink, borderRadius: 14, padding: '16px 18px' }}>
-                  <div style={{ fontSize: 32, fontWeight: 800 }}>100%</div>
-                  <div style={{ fontSize: 13, color: C.muted }}>Bermerek travel Anda — jamaah tidak tahu ada pihak ketiga</div>
+          <Reveal delay={0.05}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 1, background: C.line, borderRadius: 16, overflow: 'hidden', border: `1px solid ${C.line}` }}>
+              {[
+                { num: '10 SAR', label: 'Harga per jamaah' },
+                { num: '55+', label: 'Doa & panduan ibadah' },
+                { num: '100%', label: 'Bermerek travel Anda' },
+                { num: 'Rp 0', label: 'Biaya setup & langganan' },
+              ].map((s, i) => (
+                <div key={i} style={{ background: C.bg, padding: '28px 24px', textAlign: 'center' }}>
+                  <div style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-0.03em', color: C.ink }}>{s.num}</div>
+                  <div style={{ fontSize: 13, color: C.muted, marginTop: 6 }}>{s.label}</div>
                 </div>
-              </div>
-            </Reveal>
-
-            <Reveal delay={0.05}>
-              <div style={{ borderRadius: 14, padding: 20, boxShadow: '0 8px 24px -12px rgba(15,23,42,.2)', background: '#fff', border: `1px solid ${C.line}`, minHeight: 200 }}>
-                <div style={{ fontSize: 13, fontWeight: 600, color: C.muted }}>Harga per jamaah</div>
-                <div style={{ fontSize: 36, fontWeight: 800, margin: '6px 0' }}>10 SAR</div>
-                <p style={{ fontSize: 14, color: C.muted, marginTop: 14, borderTop: `1px solid ${C.line}`, paddingTop: 14, lineHeight: 1.6 }}>
-                  "Pertanyaan jamaah berkurang drastis. Muthowif bisa fokus membimbing, bukan menjelaskan hal yang sama berulang kali."
-                </p>
-              </div>
-            </Reveal>
-
-            <div className="lp-bento-right" style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-              <Reveal delay={0.08}>
-                <div style={{ borderRadius: 14, padding: 20, boxShadow: '0 8px 24px -12px rgba(15,23,42,.2)', background: C.accent, color: C.greenDark }}>
-                  <div style={{ fontSize: 13, fontWeight: 600 }}>Total doa & panduan</div>
-                  <div style={{ fontSize: 32, fontWeight: 800, margin: '4px 0' }}>55+</div>
-                  <div style={{ fontSize: 13, marginTop: 6 }}>Doa lengkap siap pakai — jamaah tidak perlu buku cetak lagi.</div>
-                </div>
-              </Reveal>
-              <Reveal delay={0.11}>
-                <div style={{ borderRadius: 14, padding: 20, boxShadow: '0 8px 24px -12px rgba(15,23,42,.2)', background: C.ink, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div>
-                    <div style={{ fontSize: 13, color: '#cbd5e1' }}>Biaya setup &</div>
-                    <div style={{ fontSize: 14, color: '#cbd5e1' }}>langganan bulanan</div>
-                  </div>
-                  <div style={{ fontSize: 32, fontWeight: 800, color: C.accent }}>Rp 0</div>
-                </div>
-              </Reveal>
+              ))}
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
