@@ -553,7 +553,7 @@ export default function LandingPage() {
           <motion.p
             initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.18, duration: 0.65 }}
-            style={{ color: 'rgba(255,255,255,.88)', fontSize: 'clamp(14px, 1.8vw, 16px)', maxWidth: 560, margin: '0 auto 26px', fontWeight: 400, textShadow: '0 1px 12px rgba(0,0,0,0.5)', lineHeight: 1.7 }}
+            style={{ color: 'rgba(255,255,255,.88)', fontSize: 'clamp(14px, 1.8vw, 16px)', maxWidth: 560, margin: '0 auto 26px', fontWeight: 400, textShadow: '0 1px 3px rgba(0,0,0,0.6), 0 2px 5px rgba(0,0,0,0.35)', lineHeight: 1.7 }}
           >
             Jamaah Anda pegang HP, semua ada — doa, jadwal, panduan ibadah, sampai info hotel. Bermerek nama travel Anda. Tanpa ribet, tanpa cetak buku.
           </motion.p>
