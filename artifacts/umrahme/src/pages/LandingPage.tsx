@@ -707,13 +707,6 @@ export default function LandingPage() {
         }} />
       </section>
 
-      {/* ══════════ PARTNERS MARQUEE ══════════ */}
-      <div className="lp-marquee-wrap lp-section-sm" style={{ padding: '60px 0 36px', borderBottom: `1px solid ${C.line}`, overflow: 'hidden' }}>
-        <p style={{ textAlign: 'center', color: C.muted, fontSize: 13, fontWeight: 600, marginBottom: 16 }}>
-          BERGABUNGLAH BERSAMA TRAVEL UMRAH YANG LEBIH MODERN
-        </p>
-        <MarqueeStrip />
-      </div>
 
       {/* ══════════ ABOUT / BENTO ══════════ */}
       <section className="lp-section" style={{ padding: '60px 0' }}>
