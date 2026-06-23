@@ -224,38 +224,40 @@ export default function LandingPage() {
 
       {/* ══════════ NAVBAR ══════════ */}
       <header style={{
-        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
-        transition: 'background .3s ease, box-shadow .3s ease, padding .3s ease',
-        background: scrolled ? 'rgba(255,255,255,.92)' : 'transparent',
-        backdropFilter: scrolled ? 'blur(12px)' : 'none',
-        boxShadow: scrolled ? '0 4px 20px -12px rgba(15,23,42,.2)' : 'none',
-        padding: scrolled ? '12px 0' : '18px 0',
+        position: 'fixed', top: 20, left: '50%', transform: 'translateX(-50%)',
+        zIndex: 100,
+        background: 'rgba(255,255,255,0.92)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        borderRadius: 999,
+        display: 'flex', alignItems: 'center',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.14)',
+        border: '1px solid rgba(255,255,255,0.6)',
+        padding: 6,
+        maxWidth: 'calc(100vw - 32px)',
+        whiteSpace: 'nowrap' as const,
       }}>
-        <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <a href="#" style={{ display: 'flex', alignItems: 'center', gap: 10, fontWeight: 800, fontSize: 21, color: scrolled ? C.ink : '#fff', transition: 'color .3s', textDecoration: 'none' }}>
-            <div style={{ width: 34, height: 34, borderRadius: 10, background: C.accent, color: C.greenDark, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, fontWeight: 800 }}>U</div>
-            Umrahme
+        {/* Logo circle */}
+        <a href="#" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 40, height: 40, borderRadius: '50%', background: C.ink, color: '#fff', fontWeight: 800, fontSize: 17, flexShrink: 0, textDecoration: 'none' }}>U</a>
+
+        <nav className={`lp-nav-menu${menuOpen ? ' open' : ''}`} style={{ display: 'flex', gap: 0, padding: '0 10px' }}>
+          {[['#fitur', 'Fitur'], ['#harga', 'Harga'], ['#cara', 'Cara Kerja'], ['#kontak', 'Kontak']].map(([h, l]) => (
+            <a key={h} href={h} className="lp-nav-link-dark" style={{ padding: '8px 12px', borderRadius: 999 }} onClick={() => setMenuOpen(false)}>{l}</a>
+          ))}
+        </nav>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-btn lp-nav-cta-btn" style={{ background: C.ink, color: '#fff', padding: '10px 20px', fontSize: 14 }}>
+            Daftar Sekarang
           </a>
-
-          <nav className={`lp-nav-menu${menuOpen ? ' open' : ''}`} style={{ display: 'flex', gap: 34 }}>
-            {[['#fitur', 'Fitur'], ['#harga', 'Harga'], ['#cara', 'Cara Kerja'], ['#kontak', 'Kontak']].map(([h, l]) => (
-              <a key={h} href={h} className={scrolled ? 'lp-nav-link-dark' : 'lp-nav-link'} onClick={() => setMenuOpen(false)}>{l}</a>
-            ))}
-          </nav>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-btn lp-btn-accent lp-nav-cta-btn">
-              Daftar Sekarang <span className="lp-arrow">→</span>
-            </a>
-            <button
-              className="lp-menu-toggle"
-              onClick={() => setMenuOpen(p => !p)}
-              style={{ display: 'none', background: 'none', border: 'none', cursor: 'pointer', flexDirection: 'column' as const, gap: 5 }}
-              aria-label="Buka menu"
-            >
-              {[0, 1, 2].map(i => <span key={i} style={{ width: 24, height: 2, background: scrolled ? C.ink : '#fff', borderRadius: 2, display: 'block', transition: 'background .3s' }} />)}
-            </button>
-          </div>
+          <button
+            className="lp-menu-toggle"
+            onClick={() => setMenuOpen(p => !p)}
+            style={{ display: 'none', background: 'none', border: 'none', cursor: 'pointer', flexDirection: 'column' as const, gap: 4, padding: '8px 10px' }}
+            aria-label="Buka menu"
+          >
+            {[0, 1, 2].map(i => <span key={i} style={{ width: 20, height: 2, background: C.ink, borderRadius: 2, display: 'block' }} />)}
+          </button>
         </div>
         {menuOpen && <div onClick={() => setMenuOpen(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.4)', zIndex: 98 }} />}
       </header>
@@ -279,20 +281,29 @@ export default function LandingPage() {
         }} />
 
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 2, textAlign: 'center' }}>
+          {/* eyebrow badge */}
+          <motion.div
+            initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(0,0,0,0.48)', color: '#fff', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', borderRadius: 999, padding: '7px 18px', marginBottom: 30, fontSize: 12, fontWeight: 600, letterSpacing: '0.1em', border: '1px solid rgba(255,255,255,0.22)', textTransform: 'uppercase' as const }}
+          >
+            <span style={{ fontSize: 11 }}>★</span> Pendamping Ibadah Umrah Terdepan
+          </motion.div>
+
           <motion.h1
             initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             style={{ fontSize: 'clamp(38px, 6vw, 74px)', fontWeight: 800, lineHeight: 1.05, color: '#fff', letterSpacing: '-0.02em', maxWidth: 900, margin: '0 auto 22px', textShadow: '0 2px 24px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.4)' }}
           >
             Jadikan Perjalanan Jamaah Anda{' '}
-            <span style={{ color: C.accent }}>Lebih Bermakna</span>
+            <span style={{ color: C.accent, fontStyle: 'italic' }}>Lebih Bermakna</span>
             {' '}— Tanpa Repot
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.18, duration: 0.65 }}
-            style={{ color: 'rgba(255,255,255,.92)', fontSize: 'clamp(15px, 2vw, 18px)', maxWidth: 640, margin: '0 auto 30px', fontWeight: 500, textShadow: '0 1px 12px rgba(0,0,0,0.5)' }}
+            style={{ color: 'rgba(255,255,255,.88)', fontSize: 'clamp(15px, 2vw, 17px)', maxWidth: 580, margin: '0 auto 30px', fontWeight: 400, textShadow: '0 1px 12px rgba(0,0,0,0.5)', lineHeight: 1.7 }}
           >
             Pengganti buku doa digital, panduan ibadah lengkap, dan sistem komunikasi travel dalam satu aplikasi.
             White-label penuh, siap pakai, hanya <strong>10 SAR per jamaah</strong>.
@@ -301,12 +312,14 @@ export default function LandingPage() {
           <motion.div
             initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.32, duration: 0.55 }}
-            style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 26 }}
+            style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 26 }}
           >
-            <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-btn lp-btn-accent">
-              Daftar Sekarang <span className="lp-arrow">→</span>
+            <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-btn" style={{ background: C.ink, color: '#fff', padding: '14px 28px', fontSize: 15, fontWeight: 600 }}>
+              Daftar Sekarang
             </a>
-            <a href="#cara" className="lp-btn lp-btn-ghost">Lihat Cara Kerja</a>
+            <a href="#cara" className="lp-btn" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff', border: '1px solid rgba(255,255,255,0.4)', padding: '14px 28px', fontSize: 15, fontWeight: 600 }}>
+              Lihat Cara Kerja
+            </a>
           </motion.div>
 
           <motion.div
