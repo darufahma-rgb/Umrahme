@@ -127,7 +127,7 @@ export default function LandingPage() {
   }, []);
 
   const features = [
-    { icon: '📖', num: '01', title: 'Buku Doa Digital', desc: '45 doa lengkap Arab, latin, dan terjemahan dalam 9 kategori. Jamaah mengikuti langsung saat muthowif menjelaskan.' },
+    { icon: '📖', num: '01', title: 'Buku Doa Digital', desc: '55+ doa lengkap Arab, latin, dan terjemahan. Jamaah mengikuti langsung saat muthowif menjelaskan — tanpa buku cetak.' },
     { icon: '🔢', num: '02', title: "Counter Tawaf & Sa'i", desc: 'Penghitung otomatis putaran 1–7 lengkap dengan doa di setiap putaran, agar ibadah lebih khusyuk.' },
     { icon: '🕋', num: '03', title: 'Panduan Ibadah', desc: 'Tuntunan step by step dari manasik interaktif hingga panduan ihram, mudah diikuti siapa saja.' },
     { icon: '🗺️', num: '04', title: 'Peta & Lokasi Bersejarah', desc: 'Info dan peta tempat bersejarah di Makkah dan Madinah, lengkap dengan keterangan.' },
@@ -398,9 +398,8 @@ export default function LandingPage() {
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             style={{ fontSize: 'clamp(38px, 6vw, 74px)', fontWeight: 800, lineHeight: 1.05, color: '#fff', letterSpacing: '-0.02em', maxWidth: 900, margin: '0 auto 22px', textShadow: '0 2px 24px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.4)' }}
           >
-            Jadikan Perjalanan Jamaah Anda{' '}
-            <span style={{ color: C.accent, fontStyle: 'italic' }}>Lebih Bermakna</span>
-            {' '}— Tanpa Repot
+            Aplikasi Umrah{' '}
+            <span style={{ color: C.accent, fontStyle: 'italic' }}>Nama Travel Anda</span>
           </motion.h1>
 
           <motion.p
@@ -408,8 +407,7 @@ export default function LandingPage() {
             transition={{ delay: 0.18, duration: 0.65 }}
             style={{ color: 'rgba(255,255,255,.88)', fontSize: 'clamp(15px, 2vw, 17px)', maxWidth: 580, margin: '0 auto 30px', fontWeight: 400, textShadow: '0 1px 12px rgba(0,0,0,0.5)', lineHeight: 1.7 }}
           >
-            Pengganti buku doa digital, panduan ibadah lengkap, dan sistem komunikasi travel dalam satu aplikasi.
-            White-label penuh, siap pakai, hanya <strong>10 SAR per jamaah</strong>.
+            Ganti buku doa cetak. Ringankan kerja muthowif. Beri jamaah panduan ibadah lengkap — langsung di HP mereka. White-label penuh, hanya <strong>10 SAR per jamaah</strong>.
           </motion.p>
 
           <motion.div
@@ -421,7 +419,7 @@ export default function LandingPage() {
               Daftar Sekarang
             </a>
             <a href="#cara" className="lp-btn" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff', border: '1px solid rgba(255,255,255,0.4)', padding: '14px 28px', fontSize: 15, fontWeight: 600 }}>
-              Lihat Cara Kerja
+              Lihat Demo →
             </a>
           </motion.div>
 
@@ -433,7 +431,7 @@ export default function LandingPage() {
               {[0, 1, 2, 3].map(i => <span key={i} style={{ width: 28, height: 28, borderRadius: '50%', border: '2px solid #fff', marginLeft: i > 0 ? -8 : 0, background: C.accent, display: 'inline-block' }} />)}
             </div>
             <span style={{ color: C.accent, letterSpacing: 2 }}>★★★★★</span>
-            <span>Dipercaya travel agency umrah Indonesia</span>
+            <span>Siap untuk keberangkatan umrah Anda berikutnya</span>
           </motion.div>
         </div>
 
@@ -462,7 +460,7 @@ export default function LandingPage() {
               {i === 1 && (
                 <div style={{ background: '#fff', borderRadius: 16, padding: 16, boxShadow: '0 18px 50px -20px rgba(15,23,42,.25)', width: 168 }}>
                   <div style={{ fontSize: 11, color: C.muted, fontWeight: 600 }}>Buku Doa Digital</div>
-                  <div style={{ fontSize: 30, fontWeight: 800, margin: '6px 0' }}>45</div>
+                  <div style={{ fontSize: 30, fontWeight: 800, margin: '6px 0' }}>55+</div>
                   <div style={{ fontSize: 11, color: C.muted }}>Doa · 9 kategori</div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11, color: C.muted, marginTop: 8 }}>
                     <span style={{ width: 8, height: 8, borderRadius: '50%', background: C.accentDark, display: 'inline-block' }} /> Arab · Latin · Terjemah
@@ -516,10 +514,10 @@ export default function LandingPage() {
           <div className="lp-bento" style={{ display: 'grid', gridTemplateColumns: '1fr 1.3fr 1fr', gap: 18 }}>
             <Reveal>
               <div style={{ borderRadius: 20, padding: 26, boxShadow: '0 8px 24px -12px rgba(15,23,42,.2)', background: `linear-gradient(165deg, ${C.blue2}, ${C.blue1})`, color: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 280, position: 'relative', overflow: 'hidden' }}>
-                <div style={{ fontWeight: 700, fontSize: 20 }}>Umrahme</div>
+                <div style={{ fontWeight: 700, fontSize: 20 }}>White-Label Penuh</div>
                 <div style={{ background: '#fff', color: C.ink, borderRadius: 14, padding: '16px 18px' }}>
-                  <div style={{ fontSize: 38, fontWeight: 800 }}>120+</div>
-                  <div style={{ fontSize: 13, color: C.muted }}>Travel agency telah bergabung memodernisasi layanan</div>
+                  <div style={{ fontSize: 38, fontWeight: 800 }}>Beta</div>
+                  <div style={{ fontSize: 13, color: C.muted }}>Logo & nama travel Anda tampil di seluruh aplikasi jamaah</div>
                 </div>
               </div>
             </Reveal>
@@ -527,9 +525,9 @@ export default function LandingPage() {
             <Reveal delay={0.05}>
               <div style={{ borderRadius: 20, padding: 26, boxShadow: '0 8px 24px -12px rgba(15,23,42,.2)', background: '#fff', border: `1px solid ${C.line}`, minHeight: 280 }}>
                 <div style={{ fontSize: 13, fontWeight: 600, color: C.muted }}>Kepuasan jamaah</div>
-                <div style={{ fontSize: 44, fontWeight: 800, margin: '8px 0' }}>100%</div>
+                <div style={{ fontSize: 44, fontWeight: 800, margin: '8px 0' }}>10 SAR</div>
                 <p style={{ fontSize: 14, color: C.muted, marginTop: 14, borderTop: `1px solid ${C.line}`, paddingTop: 14, lineHeight: 1.6 }}>
-                  "Jamaah kami tidak lagi bingung. Semua info ibadah, jadwal, dan doa ada di satu aplikasi yang terasa milik travel kami sendiri."
+                  "Muthowif kami tidak lagi kewalahan menjawab pertanyaan berulang. Semua sudah terjawab di aplikasi."
                 </p>
               </div>
             </Reveal>
@@ -538,7 +536,7 @@ export default function LandingPage() {
               <Reveal delay={0.08}>
                 <div style={{ borderRadius: 20, padding: 26, boxShadow: '0 8px 24px -12px rgba(15,23,42,.2)', background: C.accent, color: C.greenDark }}>
                   <div style={{ fontSize: 13, fontWeight: 600 }}>Total doa & panduan</div>
-                  <div style={{ fontSize: 38, fontWeight: 800, margin: '4px 0' }}>45+</div>
+                  <div style={{ fontSize: 38, fontWeight: 800, margin: '4px 0' }}>55+</div>
                   <div style={{ fontSize: 13, marginTop: 6 }}>Doa lengkap dalam 9 kategori, siap dibaca jamaah.</div>
                 </div>
               </Reveal>
@@ -560,17 +558,17 @@ export default function LandingPage() {
       <section style={{ background: C.soft, padding: '90px 0' }}>
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
           <Reveal><Eyebrow>Masalah Anda Hari Ini</Eyebrow></Reveal>
-          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 16px' }}>Kenapa layanan umrah masih terasa repot?</h2></Reveal>
-          <Reveal><p style={{ textAlign: 'center', color: C.muted, maxWidth: 560, margin: '0 auto 40px', fontSize: 16 }}>Tantangan harian yang dialami hampir setiap travel agency umrah — dan jawabannya ada di Umrahme.</p></Reveal>
+          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 16px' }}>Tantangan yang dihadapi hampir semua travel umrah</h2></Reveal>
+          <Reveal><p style={{ textAlign: 'center', color: C.muted, maxWidth: 560, margin: '0 auto 40px', fontSize: 16 }}>Masalah yang sama, berulang setiap keberangkatan. Umrahme hadir untuk mengatasinya.</p></Reveal>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 18, marginTop: 10 }}>
             {[
               { icon: '😕', title: 'Jamaah bingung & ketinggalan info', desc: 'Info penting tersebar di mana-mana, banyak jamaah yang tertinggal dan terus bertanya.' },
               { icon: '🔁', title: 'Muthowif menjelaskan berulang', desc: 'Hal yang sama dijelaskan berkali-kali ke jamaah berbeda sepanjang perjalanan.' },
               { icon: '📕', title: 'Buku doa fisik hilang', desc: 'Buku doa cetak sering tertinggal, rusak, atau tidak pernah dibaca jamaah.' },
-              { icon: '📢', title: 'Susah broadcast mendadak', desc: 'Pengumuman penting harus dikirim satu per satu, tidak semua jamaah membacanya.' },
-              { icon: '📱', title: 'Semua manual lewat WhatsApp', desc: 'Grup WA penuh, pesan tenggelam, dan koordinasi jadi melelahkan.' },
-              { icon: '🏷️', title: 'Tak ada identitas digital', desc: 'Travel belum punya wajah digital yang membangun kepercayaan calon jamaah.' },
+              { icon: '📢', title: 'Susah broadcast mendadak', desc: 'Broadcast mendadak lewat WA grup sering tertimbun pesan lain — tidak semua jamaah membaca.' },
+              { icon: '📱', title: 'Koordinasi melelahkan', desc: 'Info hotel, jadwal, doa — semua mesti dikirim ulang tiap ada jamaah yang tanya.' },
+              { icon: '🏷️', title: 'Tak ada identitas digital', desc: 'Travel lain sudah punya aplikasi bermerek sendiri. Calon jamaah menilai profesionalisme dari sana.' },
             ].map((p, i) => (
               <Reveal key={i} delay={i * 0.05}>
                 <div style={{ background: C.bg, borderRadius: 20, padding: 26, border: `1px solid ${C.line}` }}>
@@ -588,8 +586,8 @@ export default function LandingPage() {
       <section id="fitur" style={{ padding: '90px 0' }}>
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
           <Reveal><Eyebrow>Fitur Lengkap</Eyebrow></Reveal>
-          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 16px' }}>Satu aplikasi untuk seluruh perjalanan ibadah jamaah</h2></Reveal>
-          <Reveal><p style={{ textAlign: 'center', color: C.muted, maxWidth: 560, margin: '0 auto 40px', fontSize: 16 }}>Dua belas fitur inti yang menggantikan buku doa, panduan, dan koordinasi manual.</p></Reveal>
+          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 16px' }}>Semua yang jamaah butuhkan, dalam satu aplikasi</h2></Reveal>
+          <Reveal><p style={{ textAlign: 'center', color: C.muted, maxWidth: 560, margin: '0 auto 40px', fontSize: 16 }}>Sudah jadi, siap pakai. Tinggal aktifkan untuk keberangkatan Anda.</p></Reveal>
 
           <div className="lp-feat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 18 }}>
             {features.map((f, i) => (
@@ -611,13 +609,13 @@ export default function LandingPage() {
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
           <Reveal><Eyebrow>Cara Kerja</Eyebrow></Reveal>
           <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 16px' }}>Siap pakai hanya dalam 3 langkah</h2></Reveal>
-          <Reveal><p style={{ textAlign: 'center', color: C.muted, maxWidth: 560, margin: '0 auto 40px', fontSize: 16 }}>Tanpa biaya setup, tanpa tim IT. Travel langsung bisa pakai untuk keberangkatan berikutnya.</p></Reveal>
+          <Reveal><p style={{ textAlign: 'center', color: C.muted, maxWidth: 560, margin: '0 auto 40px', fontSize: 16 }}>Tidak butuh tim IT. Tidak ada biaya setup. Langsung aktif untuk keberangkatan berikutnya.</p></Reveal>
 
           <div className="lp-steps" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
             {[
-              { title: 'Daftar & Kustomisasi', desc: 'Daftar travel Anda, lalu atur logo, warna, dan nama. Aplikasi langsung tampil seperti milik travel sendiri.' },
-              { title: 'Input Data Jamaah', desc: 'Masukkan data jamaah dan agenda perjalanan melalui portal travel yang mudah digunakan.' },
-              { title: 'Jamaah Siap Berangkat', desc: 'Jamaah mengakses aplikasi, mengikuti panduan ibadah, dan tetap terhubung dengan travel.' },
+              { title: 'Daftar & Atur Branding', desc: 'Upload logo, pilih warna brand, atur nama. Dalam hitungan menit aplikasi sudah bermerek travel Anda.' },
+              { title: 'Input Data Jamaah', desc: 'Input data jamaah dan agenda perjalanan lewat portal. Semua tersinkron otomatis ke aplikasi jamaah.' },
+              { title: 'Jamaah Siap Berangkat', desc: 'Jamaah buka link, masukkan kode, langsung pakai. Panduan ibadah, doa, jadwal — semua siap.' },
             ].map((s, i) => (
               <Reveal key={i} delay={i * 0.1}>
                 <div style={{ background: '#fff', borderRadius: 20, padding: '32px 28px', border: `1px solid ${C.line}` }}>
