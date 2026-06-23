@@ -264,15 +264,17 @@ export default function LandingPage() {
         background: `linear-gradient(180deg, ${C.blue1} 0%, ${C.blue2} 45%, ${C.blue3} 100%)`,
         padding: '150px 0 0', overflow: 'hidden',
       }}>
-        {/* clouds */}
+        {/* hero photo */}
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
-          background: `
-            radial-gradient(ellipse 600px 240px at 12% 78%, rgba(255,255,255,.85), transparent 70%),
-            radial-gradient(ellipse 520px 200px at 85% 70%, rgba(255,255,255,.7), transparent 70%),
-            radial-gradient(ellipse 700px 260px at 50% 100%, rgba(255,255,255,.95), transparent 65%),
-            radial-gradient(ellipse 380px 160px at 30% 30%, rgba(255,255,255,.45), transparent 70%)
-          `,
+          backgroundImage: 'url(/hero-bg.avif)',
+          backgroundSize: 'cover', backgroundPosition: 'center center',
+          opacity: 0.65,
+        }} />
+        {/* overlay gradient */}
+        <div style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          background: `linear-gradient(180deg, rgba(20,83,160,.55) 0%, rgba(30,111,184,.45) 50%, rgba(255,255,255,.92) 100%)`,
         }} />
 
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 2, textAlign: 'center' }}>
