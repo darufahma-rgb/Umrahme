@@ -85,7 +85,7 @@ function FAQItem({ q, a }: { q: string; a: string }) {
     <div style={{ border: `1px solid ${C.line}`, borderRadius: 16, marginBottom: 12, overflow: 'hidden', background: '#fff' }}>
       <button
         onClick={() => setOpen(p => !p)}
-        style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', padding: '20px 22px', fontSize: 16, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, color: C.ink, fontFamily: F }}
+        style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', padding: '16px 20px', fontSize: 14, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, color: C.ink, fontFamily: F }}
       >
         {q}
         <span style={{
@@ -104,7 +104,7 @@ function FAQItem({ q, a }: { q: string; a: string }) {
             exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.32 }}
             style={{ overflow: 'hidden' }}
           >
-            <p style={{ padding: '0 22px 20px', color: C.muted, fontSize: 15, lineHeight: 1.75, fontFamily: F }}>{a}</p>
+            <p style={{ padding: '0 20px 16px', color: C.muted, fontSize: 13.5, lineHeight: 1.75, fontFamily: F }}>{a}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -168,8 +168,8 @@ export default function LandingPage() {
 
         .lp-btn {
           display: inline-flex; align-items: center; gap: 8px;
-          padding: 12px 24px; border-radius: 32px;
-          font-weight: 600; font-size: 15px; cursor: pointer;
+          padding: 10px 20px; border-radius: 32px;
+          font-weight: 600; font-size: 14px; cursor: pointer;
           border: none; transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
           white-space: nowrap; font-family: ${F};
         }
@@ -189,7 +189,7 @@ export default function LandingPage() {
         .lp-btn-dark .lp-arrow { background: #131313; color: #fff; }
 
         .lp-feat-card {
-          background: #fff; border: 1px solid ${C.line}; border-radius: 24px; padding: 28px;
+          background: #fff; border: 1px solid ${C.line}; border-radius: 16px; padding: 20px;
           transition: transform .25s ease, box-shadow .25s ease; height: 100%;
           box-shadow: 0px 4px 12px rgba(0,0,0,0.04);
         }
@@ -589,7 +589,7 @@ export default function LandingPage() {
       <section className="lp-hero-padding" style={{
         position: 'relative',
         background: `linear-gradient(180deg, ${C.blue1} 0%, ${C.blue2} 45%, ${C.blue3} 100%)`,
-        padding: '150px 0 0',
+        padding: '120px 0 0',
       }}>
         {/* hero photo */}
         <div style={{
@@ -650,7 +650,7 @@ export default function LandingPage() {
         </div>
 
         {/* floating cards */}
-        <div className="lp-float-wrap" style={{ position: 'relative', zIndex: 3, marginTop: 50, marginBottom: -90, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', gap: 14, perspective: 1400, minHeight: 220, padding: '0 24px' }}>
+        <div className="lp-float-wrap" style={{ position: 'relative', zIndex: 3, marginTop: 36, marginBottom: -60, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', gap: 14, perspective: 1400, minHeight: 180, padding: '0 24px' }}>
           {[
             { delay: 0 },
             { delay: 0.6 },
@@ -663,7 +663,7 @@ export default function LandingPage() {
               style={{ animation: `lpFloat 5s ease-in-out ${_.delay}s infinite`, flexShrink: 0 }}
             >
               {i === 0 && (
-                <div style={{ background: '#fff', borderRadius: 16, padding: 16, boxShadow: '0 18px 50px -20px rgba(15,23,42,.25)', width: 150 }}>
+                <div style={{ background: '#fff', borderRadius: 16, padding: 16, boxShadow: '0 18px 50px -20px rgba(15,23,42,.25)', width: 130 }}>
                   <span style={{ display: 'inline-block', fontSize: 10, padding: '3px 8px', borderRadius: 999, background: C.soft, color: C.muted, fontWeight: 600 }}>Tawaf</span>
                   <div style={{ fontSize: 30, fontWeight: 800, margin: '6px 0' }}>4 / 7</div>
                   <div style={{ fontSize: 11, color: C.muted }}>Jamaah tidak salah hitung</div>
@@ -673,7 +673,7 @@ export default function LandingPage() {
                 </div>
               )}
               {i === 1 && (
-                <div style={{ background: '#fff', borderRadius: 16, padding: 16, boxShadow: '0 18px 50px -20px rgba(15,23,42,.25)', width: 168 }}>
+                <div style={{ background: '#fff', borderRadius: 16, padding: 16, boxShadow: '0 18px 50px -20px rgba(15,23,42,.25)', width: 148 }}>
                   <div style={{ fontSize: 11, color: C.muted, fontWeight: 600 }}>Buku Doa Digital</div>
                   <div style={{ fontSize: 30, fontWeight: 800, margin: '6px 0' }}>55+</div>
                   <div style={{ fontSize: 11, color: C.muted }}>Doa · 9 kategori</div>
@@ -683,21 +683,21 @@ export default function LandingPage() {
                 </div>
               )}
               {i === 2 && (
-                <div style={{ background: `linear-gradient(160deg, ${C.blue2}, ${C.blue1})`, color: '#fff', borderRadius: 16, padding: '26px 16px', boxShadow: '0 18px 50px -20px rgba(15,23,42,.25)', width: 150, textAlign: 'center' }}>
+                <div style={{ background: `linear-gradient(160deg, ${C.blue2}, ${C.blue1})`, color: '#fff', borderRadius: 16, padding: '26px 16px', boxShadow: '0 18px 50px -20px rgba(15,23,42,.25)', width: 130, textAlign: 'center' }}>
                   <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(255,255,255,.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 10px', fontSize: 20 }}>🕋</div>
                   <div style={{ fontWeight: 800, fontSize: 15 }}>Panduan Ibadah</div>
                   <div style={{ fontSize: 11, opacity: 0.85, marginTop: 4 }}>Step by step</div>
                 </div>
               )}
               {i === 3 && (
-                <div style={{ background: C.ink, color: '#fff', borderRadius: 16, padding: 16, boxShadow: '0 18px 50px -20px rgba(15,23,42,.25)', width: 150 }}>
+                <div style={{ background: C.ink, color: '#fff', borderRadius: 16, padding: 16, boxShadow: '0 18px 50px -20px rgba(15,23,42,.25)', width: 130 }}>
                   <div style={{ fontSize: 11, color: '#cbd5e1', fontWeight: 600 }}>Pengumuman</div>
                   <div style={{ fontSize: 30, fontWeight: 800, margin: '6px 0', color: C.accent }}>Instan</div>
                   <div style={{ fontSize: 11, color: '#cbd5e1' }}>Semua jamaah langsung terima</div>
                 </div>
               )}
               {i === 4 && (
-                <div style={{ background: C.accent, color: C.greenDark, borderRadius: 16, padding: 16, boxShadow: '0 18px 50px -20px rgba(15,23,42,.25)', width: 140 }}>
+                <div style={{ background: C.accent, color: C.greenDark, borderRadius: 16, padding: 16, boxShadow: '0 18px 50px -20px rgba(15,23,42,.25)', width: 124 }}>
                   <div style={{ fontSize: 11, fontWeight: 600, color: C.greenDark }}>Jadwal Sholat</div>
                   <div style={{ fontSize: 30, fontWeight: 800, margin: '6px 0' }}>05:12</div>
                   <div style={{ fontSize: 11, color: C.greenDark }}>Otomatis · Akurat</div>
@@ -709,38 +709,38 @@ export default function LandingPage() {
       </section>
 
       {/* ══════════ PARTNERS MARQUEE ══════════ */}
-      <div className="lp-marquee-wrap lp-section-sm" style={{ padding: '90px 0 50px', borderBottom: `1px solid ${C.line}`, overflow: 'hidden' }}>
-        <p style={{ textAlign: 'center', color: C.muted, fontSize: 13, fontWeight: 600, marginBottom: 26 }}>
+      <div className="lp-marquee-wrap lp-section-sm" style={{ padding: '60px 0 36px', borderBottom: `1px solid ${C.line}`, overflow: 'hidden' }}>
+        <p style={{ textAlign: 'center', color: C.muted, fontSize: 13, fontWeight: 600, marginBottom: 16 }}>
           BERGABUNGLAH BERSAMA TRAVEL UMRAH YANG LEBIH MODERN
         </p>
         <MarqueeStrip />
       </div>
 
       {/* ══════════ ABOUT / BENTO ══════════ */}
-      <section className="lp-section" style={{ padding: '90px 0' }}>
+      <section className="lp-section" style={{ padding: '60px 0' }}>
         <div className="lp-inner" style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
           <Reveal><Eyebrow>Tentang Umrahme</Eyebrow></Reveal>
           <Reveal>
-            <h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 40px' }}>
+            <h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 24px' }}>
               Satu keputusan. Jamaah lebih tenang. Travel lebih profesional.
             </h2>
           </Reveal>
 
           <div className="lp-bento" style={{ display: 'grid', gridTemplateColumns: '1fr 1.3fr 1fr', gap: 18 }}>
             <Reveal>
-              <div style={{ borderRadius: 20, padding: 26, boxShadow: '0 8px 24px -12px rgba(15,23,42,.2)', background: `linear-gradient(165deg, ${C.blue2}, ${C.blue1})`, color: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 280, position: 'relative', overflow: 'hidden' }}>
+              <div style={{ borderRadius: 14, padding: 20, boxShadow: '0 8px 24px -12px rgba(15,23,42,.2)', background: `linear-gradient(165deg, ${C.blue2}, ${C.blue1})`, color: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 200, position: 'relative', overflow: 'hidden' }}>
                 <div style={{ fontWeight: 700, fontSize: 20 }}>Bermerek Travel Anda</div>
                 <div style={{ background: '#fff', color: C.ink, borderRadius: 14, padding: '16px 18px' }}>
-                  <div style={{ fontSize: 38, fontWeight: 800 }}>100%</div>
+                  <div style={{ fontSize: 32, fontWeight: 800 }}>100%</div>
                   <div style={{ fontSize: 13, color: C.muted }}>Bermerek travel Anda — jamaah tidak tahu ada pihak ketiga</div>
                 </div>
               </div>
             </Reveal>
 
             <Reveal delay={0.05}>
-              <div style={{ borderRadius: 20, padding: 26, boxShadow: '0 8px 24px -12px rgba(15,23,42,.2)', background: '#fff', border: `1px solid ${C.line}`, minHeight: 280 }}>
+              <div style={{ borderRadius: 14, padding: 20, boxShadow: '0 8px 24px -12px rgba(15,23,42,.2)', background: '#fff', border: `1px solid ${C.line}`, minHeight: 200 }}>
                 <div style={{ fontSize: 13, fontWeight: 600, color: C.muted }}>Harga per jamaah</div>
-                <div style={{ fontSize: 44, fontWeight: 800, margin: '8px 0' }}>10 SAR</div>
+                <div style={{ fontSize: 36, fontWeight: 800, margin: '6px 0' }}>10 SAR</div>
                 <p style={{ fontSize: 14, color: C.muted, marginTop: 14, borderTop: `1px solid ${C.line}`, paddingTop: 14, lineHeight: 1.6 }}>
                   "Pertanyaan jamaah berkurang drastis. Muthowif bisa fokus membimbing, bukan menjelaskan hal yang sama berulang kali."
                 </p>
@@ -749,19 +749,19 @@ export default function LandingPage() {
 
             <div className="lp-bento-right" style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
               <Reveal delay={0.08}>
-                <div style={{ borderRadius: 20, padding: 26, boxShadow: '0 8px 24px -12px rgba(15,23,42,.2)', background: C.accent, color: C.greenDark }}>
+                <div style={{ borderRadius: 14, padding: 20, boxShadow: '0 8px 24px -12px rgba(15,23,42,.2)', background: C.accent, color: C.greenDark }}>
                   <div style={{ fontSize: 13, fontWeight: 600 }}>Total doa & panduan</div>
-                  <div style={{ fontSize: 38, fontWeight: 800, margin: '4px 0' }}>55+</div>
+                  <div style={{ fontSize: 32, fontWeight: 800, margin: '4px 0' }}>55+</div>
                   <div style={{ fontSize: 13, marginTop: 6 }}>Doa lengkap siap pakai — jamaah tidak perlu buku cetak lagi.</div>
                 </div>
               </Reveal>
               <Reveal delay={0.11}>
-                <div style={{ borderRadius: 20, padding: 26, boxShadow: '0 8px 24px -12px rgba(15,23,42,.2)', background: C.ink, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ borderRadius: 14, padding: 20, boxShadow: '0 8px 24px -12px rgba(15,23,42,.2)', background: C.ink, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <div>
                     <div style={{ fontSize: 13, color: '#cbd5e1' }}>Biaya setup &</div>
                     <div style={{ fontSize: 14, color: '#cbd5e1' }}>langganan bulanan</div>
                   </div>
-                  <div style={{ fontSize: 40, fontWeight: 800, color: C.accent }}>Rp 0</div>
+                  <div style={{ fontSize: 32, fontWeight: 800, color: C.accent }}>Rp 0</div>
                 </div>
               </Reveal>
             </div>
@@ -770,11 +770,11 @@ export default function LandingPage() {
       </section>
 
       {/* ══════════ PAIN POINTS ══════════ */}
-      <section className="lp-section" style={{ background: C.soft, padding: '90px 0' }}>
+      <section className="lp-section" style={{ background: C.soft, padding: '60px 0' }}>
         <div className="lp-inner" style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
           <Reveal><Eyebrow>Masalah Anda Hari Ini</Eyebrow></Reveal>
-          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 16px' }}>Masih begini setiap keberangkatan?</h2></Reveal>
-          <Reveal><p style={{ textAlign: 'center', color: C.muted, maxWidth: 560, margin: '0 auto 40px', fontSize: 16 }}>Jika iya, Anda tidak sendirian. Dan ada cara yang lebih baik.</p></Reveal>
+          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 10px' }}>Masih begini setiap keberangkatan?</h2></Reveal>
+          <Reveal><p style={{ textAlign: 'center', color: C.muted, maxWidth: 560, margin: '0 auto 24px', fontSize: 16 }}>Jika iya, Anda tidak sendirian. Dan ada cara yang lebih baik.</p></Reveal>
 
           <div className="lp-pain-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 18, marginTop: 10 }}>
             {[
@@ -786,10 +786,10 @@ export default function LandingPage() {
               { icon: '🏷️', title: 'Travel lain sudah punya aplikasi', desc: 'Calon jamaah membandingkan. Travel yang punya aplikasi sendiri terlihat lebih siap, lebih profesional, lebih dipercaya.' },
             ].map((p, i) => (
               <Reveal key={i} delay={i * 0.05}>
-                <div style={{ background: C.bg, borderRadius: 20, padding: 26, border: `1px solid ${C.line}` }}>
-                  <div style={{ width: 44, height: 44, borderRadius: 12, background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, marginBottom: 14, boxShadow: '0 8px 24px -12px rgba(15,23,42,.2)' }}>{p.icon}</div>
-                  <h3 style={{ fontSize: 17, fontWeight: 700, marginBottom: 6 }}>{p.title}</h3>
-                  <p style={{ fontSize: 14, color: C.muted }}>{p.desc}</p>
+                <div style={{ background: C.bg, borderRadius: 14, padding: 18, border: `1px solid ${C.line}` }}>
+                  <div style={{ width: 36, height: 36, borderRadius: 10, background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, marginBottom: 12, boxShadow: '0 8px 24px -12px rgba(15,23,42,.2)' }}>{p.icon}</div>
+                  <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 4 }}>{p.title}</h3>
+                  <p style={{ fontSize: 13, color: C.muted }}>{p.desc}</p>
                 </div>
               </Reveal>
             ))}
@@ -798,20 +798,20 @@ export default function LandingPage() {
       </section>
 
       {/* ══════════ FEATURES ══════════ */}
-      <section id="fitur" className="lp-section" style={{ padding: '90px 0' }}>
+      <section id="fitur" className="lp-section" style={{ padding: '60px 0' }}>
         <div className="lp-inner" style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
           <Reveal><Eyebrow>Fitur Lengkap</Eyebrow></Reveal>
-          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 16px' }}>12 fitur siap pakai. Tanpa biaya tambahan.</h2></Reveal>
-          <Reveal><p style={{ textAlign: 'center', color: C.muted, maxWidth: 560, margin: '0 auto 40px', fontSize: 16 }}>Semuanya sudah ada dan langsung aktif begitu Anda daftar. Tidak perlu pengembangan, tidak perlu tim IT.</p></Reveal>
+          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 10px' }}>12 fitur siap pakai. Tanpa biaya tambahan.</h2></Reveal>
+          <Reveal><p style={{ textAlign: 'center', color: C.muted, maxWidth: 560, margin: '0 auto 24px', fontSize: 16 }}>Semuanya sudah ada dan langsung aktif begitu Anda daftar. Tidak perlu pengembangan, tidak perlu tim IT.</p></Reveal>
 
           <div className="lp-feat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 18 }}>
             {features.map((f, i) => (
               <Reveal key={i} delay={i * 0.035}>
                 <div className="lp-feat-card">
-                  <div style={{ width: 46, height: 46, borderRadius: 12, background: C.accent, color: C.greenDark, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, marginBottom: 16 }}>{f.icon}</div>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: C.accentDark, marginBottom: 6 }}>FITUR {f.num}</div>
-                  <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>{f.title}</h3>
-                  <p style={{ fontSize: 14, color: C.muted }}>{f.desc}</p>
+                  <div style={{ width: 36, height: 36, borderRadius: 10, background: C.accent, color: C.greenDark, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, marginBottom: 12 }}>{f.icon}</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: C.accentDark, marginBottom: 4 }}>FITUR {f.num}</div>
+                  <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 5 }}>{f.title}</h3>
+                  <p style={{ fontSize: 13, color: C.muted }}>{f.desc}</p>
                 </div>
               </Reveal>
             ))}
@@ -820,11 +820,11 @@ export default function LandingPage() {
       </section>
 
       {/* ══════════ HOW IT WORKS ══════════ */}
-      <section id="cara" className="lp-section" style={{ background: C.soft, padding: '90px 0' }}>
+      <section id="cara" className="lp-section" style={{ background: C.soft, padding: '60px 0' }}>
         <div className="lp-inner" style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
           <Reveal><Eyebrow>Cara Kerja</Eyebrow></Reveal>
-          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 16px' }}>Aktif dalam hitungan menit</h2></Reveal>
-          <Reveal><p style={{ textAlign: 'center', color: C.muted, maxWidth: 560, margin: '0 auto 40px', fontSize: 16 }}>Tidak perlu tim IT. Tidak perlu training panjang. Travel Anda bisa langsung pakai untuk keberangkatan berikutnya.</p></Reveal>
+          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 10px' }}>Aktif dalam hitungan menit</h2></Reveal>
+          <Reveal><p style={{ textAlign: 'center', color: C.muted, maxWidth: 560, margin: '0 auto 24px', fontSize: 16 }}>Tidak perlu tim IT. Tidak perlu training panjang. Travel Anda bisa langsung pakai untuk keberangkatan berikutnya.</p></Reveal>
 
           <div className="lp-steps" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
             {[
@@ -833,9 +833,9 @@ export default function LandingPage() {
               { title: 'Bagikan Kode, Jamaah Langsung Pakai', desc: 'Bagikan kode aktivasi ke jamaah — via WA, selebaran, atau saat manasik. Mereka buka browser, masukkan kode, langsung masuk. Tidak perlu install apapun.' },
             ].map((s, i) => (
               <Reveal key={i} delay={i * 0.1}>
-                <div style={{ background: '#fff', borderRadius: 20, padding: '32px 28px', border: `1px solid ${C.line}` }}>
-                  <div style={{ width: 48, height: 48, borderRadius: 14, background: C.ink, color: C.accent, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, fontWeight: 800, marginBottom: 18 }}>{i + 1}</div>
-                  <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 8 }}>{s.title}</h3>
+                <div style={{ background: '#fff', borderRadius: 14, padding: '22px 20px', border: `1px solid ${C.line}` }}>
+                  <div style={{ width: 38, height: 38, borderRadius: 10, background: C.ink, color: C.accent, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, fontWeight: 800, marginBottom: 14 }}>{i + 1}</div>
+                  <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 6 }}>{s.title}</h3>
                   <p style={{ fontSize: 14, color: C.muted }}>{s.desc}</p>
                 </div>
               </Reveal>
@@ -845,7 +845,7 @@ export default function LandingPage() {
       </section>
 
       {/* ══════════ WHITE-LABEL SHOWCASE ══════════ */}
-      <section className="lp-section" style={{ padding: '90px 0' }}>
+      <section className="lp-section" style={{ padding: '60px 0' }}>
         <div className="lp-inner" style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
           <div className="lp-wl" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 50, alignItems: 'center' }}>
             <Reveal>
@@ -879,9 +879,9 @@ export default function LandingPage() {
                   { name: 'Barokah Tour', sub: "Assalamu'alaikum, Ahmad 👋", bg: 'linear-gradient(160deg, #15803d, #14532d)', items: ['📖 Buku Doa', '🔢 Counter Tawaf', '🗓️ Agenda Hari Ini', '📢 Pengumuman'], accent: '#dcfce7', tilt: 'rotate(-4deg) translateY(8px)' },
                   { name: 'Mabrur Travel', sub: "Assalamu'alaikum, Siti 👋", bg: 'linear-gradient(160deg, #b45309, #92400e)', items: ['🕌 Jadwal Sholat', '🗺️ Peta Lokasi', '🪪 Kartu Jamaah', '🎖️ Sertifikat'], accent: '#fef3c7', tilt: 'rotate(4deg)' },
                 ].map((ph) => (
-                  <div key={ph.name} style={{ width: 190, borderRadius: 32, padding: 10, background: C.ink, boxShadow: '0 18px 50px -20px rgba(15,23,42,.4)', transform: ph.tilt, transition: 'transform .3s' }}>
-                    <div style={{ borderRadius: 22, overflow: 'hidden', background: '#fff', height: 380, display: 'flex', flexDirection: 'column' }}>
-                      <div style={{ padding: '18px 16px', color: '#fff', background: ph.bg }}>
+                  <div key={ph.name} style={{ width: 170, borderRadius: 24, padding: 8, background: C.ink, boxShadow: '0 18px 50px -20px rgba(15,23,42,.4)', transform: ph.tilt, transition: 'transform .3s' }}>
+                    <div style={{ borderRadius: 18, overflow: 'hidden', background: '#fff', height: 320, display: 'flex', flexDirection: 'column' }}>
+                      <div style={{ padding: '14px 14px', color: '#fff', background: ph.bg }}>
                         <div style={{ fontWeight: 800, fontSize: 15, marginBottom: 4 }}>{ph.name}</div>
                         <div style={{ fontSize: 11, opacity: 0.85 }}>{ph.sub}</div>
                       </div>
@@ -903,19 +903,19 @@ export default function LandingPage() {
       </section>
 
       {/* ══════════ PRICING ══════════ */}
-      <section id="harga" className="lp-section" style={{ background: C.soft, padding: '90px 0' }}>
+      <section id="harga" className="lp-section" style={{ background: C.soft, padding: '60px 0' }}>
         <div className="lp-inner" style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
           <Reveal><Eyebrow>Harga</Eyebrow></Reveal>
-          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 16px' }}>Lebih murah dari buku doa cetak. Jauh lebih lengkap.</h2></Reveal>
-          <Reveal><p style={{ textAlign: 'center', color: C.muted, maxWidth: 560, margin: '0 auto 40px', fontSize: 16 }}>Buku doa cetak 15–25 SAR per jamaah — dan itu hanya buku doa. Umrahme 10 SAR, dapat 12 fitur lengkap, bermerek travel Anda.</p></Reveal>
+          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 10px' }}>Lebih murah dari buku doa cetak. Jauh lebih lengkap.</h2></Reveal>
+          <Reveal><p style={{ textAlign: 'center', color: C.muted, maxWidth: 560, margin: '0 auto 24px', fontSize: 16 }}>Buku doa cetak 15–25 SAR per jamaah — dan itu hanya buku doa. Umrahme 10 SAR, dapat 12 fitur lengkap, bermerek travel Anda.</p></Reveal>
 
           <div className="lp-price-wrap" style={{ display: 'grid', gridTemplateColumns: '1.1fr .9fr', gap: 24, alignItems: 'stretch' }}>
             <Reveal>
-              <div className="lp-price-card" style={{ background: C.ink, color: '#fff', borderRadius: 28, padding: 40, position: 'relative', overflow: 'hidden', height: '100%', display: 'flex', flexDirection: 'column' }}>
+              <div className="lp-price-card" style={{ background: C.ink, color: '#fff', borderRadius: 20, padding: 28, position: 'relative', overflow: 'hidden', height: '100%', display: 'flex', flexDirection: 'column' }}>
                 <div style={{ position: 'absolute', top: 24, right: -34, background: C.accent, color: C.greenDark, fontWeight: 800, fontSize: 12, padding: '6px 44px', transform: 'rotate(45deg)' }}>POPULER</div>
                 <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 6 }}>Harga Per Jamaah</h3>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, margin: '18px 0 6px' }}>
-                  <span className="lp-price-num" style={{ fontSize: 64, fontWeight: 800, lineHeight: 1, color: C.accent }}>10</span>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, margin: '12px 0 4px' }}>
+                  <span className="lp-price-num" style={{ fontSize: 52, fontWeight: 800, lineHeight: 1, color: C.accent }}>10</span>
                   <span style={{ fontSize: 16, color: 'rgba(255,255,255,.8)' }}>SAR saja / jamaah</span>
                 </div>
                 <p style={{ color: 'rgba(255,255,255,.75)', fontSize: 14, marginBottom: 26 }}>Bayar per keberangkatan, sesuai jumlah jamaah aktif. Tidak ada biaya bulanan, tidak ada biaya setup, tidak ada kontrak.</p>
@@ -934,16 +934,16 @@ export default function LandingPage() {
             </Reveal>
 
             <Reveal delay={0.08} className="lp-calc-hide">
-              <div style={{ background: C.bg, border: `1px solid ${C.line}`, borderRadius: 28, padding: 36, display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%' }}>
+              <div style={{ background: C.bg, border: `1px solid ${C.line}`, borderRadius: 20, padding: 24, display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%' }}>
                 <h4 style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>Kalkulator Biaya</h4>
                 <p style={{ color: C.muted, fontSize: 14, marginBottom: 20 }}>Estimasi untuk keberangkatan Anda</p>
                 {[['Jumlah Jamaah', '40 orang'], ['Harga per Jamaah', '10 SAR'], ['Biaya Setup', 'Rp 0']].map(([l, v]) => (
-                  <div key={l} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 0', borderBottom: `1px dashed ${C.line}`, fontSize: 15 }}>
+                  <div key={l} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0', borderBottom: `1px dashed ${C.line}`, fontSize: 15 }}>
                     <span>{l}</span>
                     <span style={{ fontWeight: 600 }}>{v}</span>
                   </div>
                 ))}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 0 0', fontSize: 22, fontWeight: 800 }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 0 0', fontSize: 18, fontWeight: 800 }}>
                   <span>Total</span>
                   <span style={{ color: C.green }}>
                     400 SAR
@@ -958,19 +958,19 @@ export default function LandingPage() {
       </section>
 
       {/* ══════════ TESTIMONIALS ══════════ */}
-      <section className="lp-section" style={{ padding: '90px 0' }}>
+      <section className="lp-section" style={{ padding: '60px 0' }}>
         <div className="lp-inner" style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
           <Reveal><Eyebrow>Testimoni</Eyebrow></Reveal>
-          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 40px' }}>Dari travel yang sudah merasakan manfaatnya</h2></Reveal>
+          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 24px' }}>Dari travel yang sudah merasakan manfaatnya</h2></Reveal>
 
           <div className="lp-testi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 18 }}>
             {testimonials.map((t, i) => (
               <Reveal key={i} delay={i * 0.08}>
-                <div style={{ background: '#fff', border: `1px solid ${C.line}`, borderRadius: 20, padding: 28, height: '100%' }}>
-                  <div style={{ color: C.accentDark, marginBottom: 14, letterSpacing: 2, fontSize: 16 }}>★★★★★</div>
-                  <p style={{ fontSize: 15, color: C.ink, marginBottom: 20, lineHeight: 1.7 }}>"{t.text}"</p>
+                <div style={{ background: '#fff', border: `1px solid ${C.line}`, borderRadius: 14, padding: 20, height: '100%' }}>
+                  <div style={{ color: C.accentDark, marginBottom: 12, letterSpacing: 2, fontSize: 14 }}>★★★★★</div>
+                  <p style={{ fontSize: 13.5, color: C.ink, marginBottom: 14, lineHeight: 1.7 }}>"{t.text}"</p>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <div style={{ width: 44, height: 44, borderRadius: '50%', background: C.green, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, flexShrink: 0 }}>{t.init}</div>
+                    <div style={{ width: 36, height: 36, borderRadius: '50%', background: C.green, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, flexShrink: 0 }}>{t.init}</div>
                     <div>
                       <div style={{ fontWeight: 700, fontSize: 14 }}>{t.name}</div>
                       <div style={{ fontSize: 12, color: C.muted }}>{t.travel}</div>
@@ -984,10 +984,10 @@ export default function LandingPage() {
       </section>
 
       {/* ══════════ FAQ ══════════ */}
-      <section className="lp-section" style={{ background: C.soft, padding: '90px 0' }}>
+      <section className="lp-section" style={{ background: C.soft, padding: '60px 0' }}>
         <div style={{ maxWidth: 760, margin: '0 auto', padding: '0 24px' }}>
           <Reveal><Eyebrow>FAQ</Eyebrow></Reveal>
-          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4vw, 38px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', margin: '0 auto 40px' }}>Pertanyaan yang Sering Ditanyakan</h2></Reveal>
+          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4vw, 38px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', margin: '0 auto 24px' }}>Pertanyaan yang Sering Ditanyakan</h2></Reveal>
           <Reveal delay={0.05}>
             {faqs.map((f, i) => <FAQItem key={i} q={f.q} a={f.a} />)}
           </Reveal>
@@ -995,10 +995,10 @@ export default function LandingPage() {
       </section>
 
       {/* ══════════ FINAL CTA ══════════ */}
-      <section id="kontak" className="lp-section" style={{ padding: '90px 24px' }}>
+      <section id="kontak" className="lp-section" style={{ padding: '60px 24px' }}>
         <div style={{ maxWidth: 1180, margin: '0 auto' }}>
           <Reveal>
-            <div className="lp-cta-box" style={{ background: `linear-gradient(165deg, ${C.primary}, ${C.primaryDark})`, color: '#fff', borderRadius: 32, padding: '64px 40px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+            <div className="lp-cta-box" style={{ background: `linear-gradient(165deg, ${C.primary}, ${C.primaryDark})`, color: '#fff', borderRadius: 20, padding: '44px 32px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
               <div style={{ position: 'absolute', width: 320, height: 320, background: `radial-gradient(circle, rgba(255,255,255,.12), transparent 70%)`, top: -120, right: -80, pointerEvents: 'none' }} />
               <h2 style={{ fontSize: 'clamp(28px, 4.5vw, 44px)', fontWeight: 800, marginBottom: 16, position: 'relative' }}>
                 Keberangkatan berikutnya bisa jauh lebih baik
@@ -1006,7 +1006,7 @@ export default function LandingPage() {
               <p style={{ color: 'rgba(255,255,255,.85)', maxWidth: 520, margin: '0 auto 28px', fontSize: 17, lineHeight: 1.7, position: 'relative' }}>
                 Jamaah lebih tenang. Muthowif lebih fokus. Travel Anda tampil lebih profesional. Semua ini hanya 10 SAR per jamaah. Mulai dengan demo gratis — kami setup langsung dengan nama travel Anda.
               </p>
-              <div className="lp-cta-btns" style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap', position: 'relative' }}>
+              <div className="lp-cta-btns" style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap', position: 'relative' }}>
                 <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-btn lp-btn-accent">
                   Minta Demo Gratis via WhatsApp <span className="lp-arrow">→</span>
                 </a>
@@ -1020,9 +1020,9 @@ export default function LandingPage() {
       </section>
 
       {/* ══════════ FOOTER ══════════ */}
-      <footer style={{ padding: '70px 0 36px', borderTop: `1px solid ${C.line}` }}>
+      <footer style={{ padding: '48px 0 28px', borderTop: `1px solid ${C.line}` }}>
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
-          <div className="lp-foot-top" style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr 1fr 1fr', gap: 40, marginBottom: 46 }}>
+          <div className="lp-foot-top" style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr 1fr 1fr', gap: 28, marginBottom: 32 }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontWeight: 800, fontSize: 21, color: C.ink, marginBottom: 14, textDecoration: 'none' }}>
                 <img src={logoImg} alt="Umrahme" style={{ width: 34, height: 34, objectFit: 'contain', display: 'block', flexShrink: 0 }} />
@@ -1049,7 +1049,7 @@ export default function LandingPage() {
             ))}
             </div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 26, borderTop: `1px solid ${C.line}`, color: C.muted, fontSize: 13, flexWrap: 'wrap', gap: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 18, borderTop: `1px solid ${C.line}`, color: C.muted, fontSize: 13, flexWrap: 'wrap', gap: 12 }}>
             <span>© {new Date().getFullYear()} Umrahme. All rights reserved.</span>
             <span>Dibuat untuk travel umrah Indonesia 🇮🇩</span>
           </div>
