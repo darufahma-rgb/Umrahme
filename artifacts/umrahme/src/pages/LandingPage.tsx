@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 
-const F = "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif";
+const F = "'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+const FH = "'Libre Caslon Condensed', Georgia, serif";
 
 const WA_NUMBER = '6281234567890';
 const WA_MSG = encodeURIComponent(
@@ -14,11 +15,13 @@ const C = {
   greenDark: '#14532d',
   accent: '#a3e635',
   accentDark: '#84cc16',
-  ink: '#0f172a',
-  muted: '#64748b',
-  line: '#e7eaf0',
+  primary: '#0054F9',
+  primaryDark: '#003BC9',
+  ink: '#131313',
+  muted: '#4C4C4C',
+  line: '#E0E0E0',
   bg: '#ffffff',
-  soft: '#f5f7f9',
+  soft: '#F5F5F5',
   blue1: '#1e6fb8',
   blue2: '#3a8fd4',
   blue3: '#7cb8e8',
@@ -165,37 +168,37 @@ export default function LandingPage() {
 
         .lp-btn {
           display: inline-flex; align-items: center; gap: 8px;
-          padding: 14px 24px; border-radius: 999px;
-          font-weight: 700; font-size: 15px; cursor: pointer;
+          padding: 12px 24px; border-radius: 32px;
+          font-weight: 600; font-size: 15px; cursor: pointer;
           border: none; transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
           white-space: nowrap; font-family: ${F};
         }
         .lp-btn:hover { transform: translateY(-2px); }
-        .lp-btn-accent { background: ${C.accent}; color: ${C.ink}; }
-        .lp-btn-accent:hover { background: ${C.accentDark}; }
+        .lp-btn-accent { background: ${C.primary}; color: #fff; border: none; }
+        .lp-btn-accent:hover { background: ${C.primaryDark}; }
         .lp-btn-ghost { background: rgba(255,255,255,.15); color: #fff; border: 1px solid rgba(255,255,255,.35); }
-        .lp-btn-ghost:hover { background: rgba(255,255,255,.22); }
-        .lp-btn-dark { background: ${C.ink}; color: #fff; }
-        .lp-btn-dark:hover { background: #1e293b; }
+        .lp-btn-ghost:hover { background: rgba(255,255,255,.25); }
+        .lp-btn-dark { background: #fff; color: #131313; border: 1px solid #131313; }
+        .lp-btn-dark:hover { background: #F5F5F5; }
 
         .lp-arrow {
           display: inline-flex; align-items: center; justify-content: center;
           width: 24px; height: 24px; border-radius: 50%;
-          background: ${C.ink}; color: ${C.accent}; font-size: 13px; flex-shrink: 0;
+          background: rgba(255,255,255,0.25); color: #fff; font-size: 13px; flex-shrink: 0;
         }
-        .lp-btn-accent .lp-arrow { background: ${C.ink}; color: ${C.accent}; }
-        .lp-btn-dark .lp-arrow { background: ${C.accent}; color: ${C.ink}; }
+        .lp-btn-dark .lp-arrow { background: #131313; color: #fff; }
 
         .lp-feat-card {
-          background: #fff; border: 1px solid ${C.line}; border-radius: 20px; padding: 26px;
+          background: #fff; border: 1px solid ${C.line}; border-radius: 24px; padding: 28px;
           transition: transform .25s ease, box-shadow .25s ease; height: 100%;
+          box-shadow: 0px 4px 12px rgba(0,0,0,0.04);
         }
-        .lp-feat-card:hover { transform: translateY(-6px); box-shadow: 0 18px 50px -20px rgba(15,23,42,.25); }
+        .lp-feat-card:hover { transform: translateY(-4px); box-shadow: 0px 8px 24px rgba(0,0,0,0.08); }
 
-        .lp-nav-link { font-weight: 600; font-size: 14px; color: rgba(255,255,255,.85); text-decoration: none; transition: color .2s; font-family: ${F}; }
+        .lp-nav-link { font-weight: 500; font-size: 15px; color: rgba(255,255,255,.85); text-decoration: none; transition: color .2s; font-family: ${F}; }
         .lp-nav-link:hover { color: #fff; }
-        .lp-nav-link-dark { font-weight: 600; font-size: 14px; color: ${C.muted}; text-decoration: none; transition: color .2s; font-family: ${F}; }
-        .lp-nav-link-dark:hover { color: ${C.ink}; }
+        .lp-nav-link-dark { font-weight: 500; font-size: 15px; color: #333333; text-decoration: none; transition: color .2s; font-family: ${F}; }
+        .lp-nav-link-dark:hover { color: ${C.primary}; }
 
         @media (max-width: 980px) {
           .lp-bento { grid-template-columns: 1fr 1fr !important; }
@@ -280,7 +283,7 @@ export default function LandingPage() {
           <motion.h1
             initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            style={{ fontSize: 'clamp(38px, 6vw, 74px)', fontWeight: 800, lineHeight: 1.05, color: '#fff', letterSpacing: '-0.02em', maxWidth: 900, margin: '0 auto 22px', textShadow: '0 2px 24px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.4)' }}
+            style={{ fontSize: 'clamp(40px, 6.5vw, 80px)', fontWeight: 400, lineHeight: 1.0, color: '#fff', letterSpacing: '0em', maxWidth: 960, margin: '0 auto 22px', textShadow: '0 2px 24px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.4)', fontFamily: FH }}
           >
             Jadikan Perjalanan Jamaah Anda{' '}
             <span style={{ color: C.accent }}>Lebih Bermakna</span>
@@ -390,7 +393,7 @@ export default function LandingPage() {
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
           <Reveal><Eyebrow>Tentang Umrahme</Eyebrow></Reveal>
           <Reveal>
-            <h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 40px' }}>
+            <h2 style={{ textAlign: 'center', fontSize: 'clamp(30px, 4.5vw, 52px)', fontWeight: 400, lineHeight: 1.08, letterSpacing: '0em', maxWidth: 760, margin: '0 auto 40px', fontFamily: FH }}>
               Platform pendamping umrah yang dirancang untuk travel modern dan jamaah
             </h2>
           </Reveal>
@@ -442,7 +445,7 @@ export default function LandingPage() {
       <section style={{ background: C.soft, padding: '90px 0' }}>
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
           <Reveal><Eyebrow>Masalah Anda Hari Ini</Eyebrow></Reveal>
-          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 16px' }}>Kenapa layanan umrah masih terasa repot?</h2></Reveal>
+          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(30px, 4.5vw, 52px)', fontWeight: 400, lineHeight: 1.08, letterSpacing: '0em', maxWidth: 760, margin: '0 auto 16px', fontFamily: FH }}>Kenapa layanan umrah masih terasa repot?</h2></Reveal>
           <Reveal><p style={{ textAlign: 'center', color: C.muted, maxWidth: 560, margin: '0 auto 40px', fontSize: 16 }}>Tantangan harian yang dialami hampir setiap travel agency umrah — dan jawabannya ada di Umrahme.</p></Reveal>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 18, marginTop: 10 }}>
@@ -470,7 +473,7 @@ export default function LandingPage() {
       <section id="fitur" style={{ padding: '90px 0' }}>
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
           <Reveal><Eyebrow>Fitur Lengkap</Eyebrow></Reveal>
-          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 16px' }}>Satu aplikasi untuk seluruh perjalanan ibadah jamaah</h2></Reveal>
+          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(30px, 4.5vw, 52px)', fontWeight: 400, lineHeight: 1.08, letterSpacing: '0em', maxWidth: 760, margin: '0 auto 16px', fontFamily: FH }}>Satu aplikasi untuk seluruh perjalanan ibadah jamaah</h2></Reveal>
           <Reveal><p style={{ textAlign: 'center', color: C.muted, maxWidth: 560, margin: '0 auto 40px', fontSize: 16 }}>Dua belas fitur inti yang menggantikan buku doa, panduan, dan koordinasi manual.</p></Reveal>
 
           <div className="lp-feat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 18 }}>
@@ -492,7 +495,7 @@ export default function LandingPage() {
       <section id="cara" style={{ background: C.soft, padding: '90px 0' }}>
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
           <Reveal><Eyebrow>Cara Kerja</Eyebrow></Reveal>
-          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 16px' }}>Siap pakai hanya dalam 3 langkah</h2></Reveal>
+          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(30px, 4.5vw, 52px)', fontWeight: 400, lineHeight: 1.08, letterSpacing: '0em', maxWidth: 760, margin: '0 auto 16px', fontFamily: FH }}>Siap pakai hanya dalam 3 langkah</h2></Reveal>
           <Reveal><p style={{ textAlign: 'center', color: C.muted, maxWidth: 560, margin: '0 auto 40px', fontSize: 16 }}>Tanpa biaya setup, tanpa tim IT. Travel langsung bisa pakai untuk keberangkatan berikutnya.</p></Reveal>
 
           <div className="lp-steps" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
@@ -520,7 +523,7 @@ export default function LandingPage() {
             <Reveal>
               <div>
                 <Eyebrow align="left">White-Label</Eyebrow>
-                <h2 style={{ fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', marginBottom: 18 }}>
+                <h2 style={{ fontSize: 'clamp(30px, 4vw, 48px)', fontWeight: 400, lineHeight: 1.08, letterSpacing: '0em', marginBottom: 18, fontFamily: FH }}>
                   Aplikasi yang terasa 100% milik travel Anda
                 </h2>
                 <p style={{ color: C.muted, fontSize: 16, marginBottom: 22, lineHeight: 1.7 }}>
@@ -575,7 +578,7 @@ export default function LandingPage() {
       <section id="harga" style={{ background: C.soft, padding: '90px 0' }}>
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
           <Reveal><Eyebrow>Harga</Eyebrow></Reveal>
-          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 16px' }}>Transparan, terjangkau, tanpa biaya tersembunyi</h2></Reveal>
+          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(30px, 4.5vw, 52px)', fontWeight: 400, lineHeight: 1.08, letterSpacing: '0em', maxWidth: 760, margin: '0 auto 16px', fontFamily: FH }}>Transparan, terjangkau, tanpa biaya tersembunyi</h2></Reveal>
           <Reveal><p style={{ textAlign: 'center', color: C.muted, maxWidth: 560, margin: '0 auto 40px', fontSize: 16 }}>Bayar hanya untuk jumlah jamaah yang berangkat. Tanpa biaya setup, tanpa langganan bulanan.</p></Reveal>
 
           <div className="lp-price-wrap" style={{ display: 'grid', gridTemplateColumns: '1.1fr .9fr', gap: 24, alignItems: 'stretch' }}>
@@ -630,7 +633,7 @@ export default function LandingPage() {
       <section style={{ padding: '90px 0' }}>
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
           <Reveal><Eyebrow>Testimoni</Eyebrow></Reveal>
-          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', maxWidth: 760, margin: '0 auto 40px' }}>Kata mereka yang sudah pakai</h2></Reveal>
+          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(30px, 4.5vw, 52px)', fontWeight: 400, lineHeight: 1.08, letterSpacing: '0em', maxWidth: 760, margin: '0 auto 40px', fontFamily: FH }}>Kata mereka yang sudah pakai</h2></Reveal>
 
           <div className="lp-testi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 18 }}>
             {testimonials.map((t, i) => (
@@ -656,7 +659,7 @@ export default function LandingPage() {
       <section style={{ background: C.soft, padding: '90px 0' }}>
         <div style={{ maxWidth: 760, margin: '0 auto', padding: '0 24px' }}>
           <Reveal><Eyebrow>FAQ</Eyebrow></Reveal>
-          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(28px, 4vw, 38px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', margin: '0 auto 40px' }}>Pertanyaan yang Sering Ditanyakan</h2></Reveal>
+          <Reveal><h2 style={{ textAlign: 'center', fontSize: 'clamp(30px, 4vw, 44px)', fontWeight: 400, lineHeight: 1.08, letterSpacing: '0em', margin: '0 auto 40px', fontFamily: FH }}>Pertanyaan yang Sering Ditanyakan</h2></Reveal>
           <Reveal delay={0.05}>
             {faqs.map((f, i) => <FAQItem key={i} q={f.q} a={f.a} />)}
           </Reveal>
@@ -667,9 +670,9 @@ export default function LandingPage() {
       <section id="kontak" style={{ padding: '90px 24px' }}>
         <div style={{ maxWidth: 1180, margin: '0 auto' }}>
           <Reveal>
-            <div style={{ background: `linear-gradient(165deg, ${C.green}, ${C.greenDark})`, color: '#fff', borderRadius: 32, padding: '64px 40px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-              <div style={{ position: 'absolute', width: 320, height: 320, background: `radial-gradient(circle, rgba(163,230,53,.35), transparent 70%)`, top: -120, right: -80, pointerEvents: 'none' }} />
-              <h2 style={{ fontSize: 'clamp(28px, 4.5vw, 44px)', fontWeight: 800, marginBottom: 16, position: 'relative' }}>
+            <div style={{ background: `linear-gradient(165deg, ${C.primary}, ${C.primaryDark})`, color: '#fff', borderRadius: 32, padding: '64px 40px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', width: 320, height: 320, background: `radial-gradient(circle, rgba(255,255,255,.12), transparent 70%)`, top: -120, right: -80, pointerEvents: 'none' }} />
+              <h2 style={{ fontSize: 'clamp(30px, 4.5vw, 52px)', fontWeight: 400, marginBottom: 16, position: 'relative', fontFamily: FH }}>
                 Siap Upgrade Layanan Travel Anda?
               </h2>
               <p style={{ color: 'rgba(255,255,255,.85)', maxWidth: 520, margin: '0 auto 28px', fontSize: 17, lineHeight: 1.7, position: 'relative' }}>
@@ -709,7 +712,7 @@ export default function LandingPage() {
                 {col.links.map(([href, label]) => (
                   <a key={label} href={href} target={href.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer"
                     style={{ display: 'block', color: C.muted, fontSize: 14, marginBottom: 10, textDecoration: 'none', transition: 'color .2s' }}
-                    onMouseEnter={e => (e.currentTarget.style.color = C.green)}
+                    onMouseEnter={e => (e.currentTarget.style.color = C.primary)}
                     onMouseLeave={e => (e.currentTarget.style.color = C.muted)}
                   >{label}</a>
                 ))}
