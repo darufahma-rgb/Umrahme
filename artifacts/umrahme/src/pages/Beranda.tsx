@@ -302,6 +302,14 @@ const faseBadge: Record<string, string> = {
   selesai:      '✨ Ibadah Selesai',
 };
 
+function hexToRgba(hex: string, alpha: number): string {
+  const h = hex.replace('#', '');
+  const r = parseInt(h.substring(0, 2), 16);
+  const g = parseInt(h.substring(2, 4), 16);
+  const b = parseInt(h.substring(4, 6), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
 export default function Beranda() {
   const { jamaah, tenant } = useAuth();
 
@@ -322,6 +330,13 @@ export default function Beranda() {
   const showHitung  = hariMenuju !== null && hariMenuju >= 1 && hariMenuju <= 30;
   const phaseActions = getPhaseActions(jamaah.fase);
 
+  const heroOverlayTop = tenant?.primary_deep_color
+    ? hexToRgba(tenant.primary_deep_color, 0.60)
+    : 'rgba(5,10,20,0.55)';
+  const heroOverlayBottom = tenant?.primary_color
+    ? hexToRgba(tenant.primary_color, 0.85)
+    : 'rgba(5,10,20,0.92)';
+
   return (
     <>
       {/* ==================== MOBILE ==================== */}
@@ -334,7 +349,7 @@ export default function Beranda() {
             style={{ objectPosition: 'center 38%' }} />
 
           <div className="pointer-events-none absolute inset-0"
-            style={{ background: 'linear-gradient(to top, rgba(5,10,20,0.92) 0%, rgba(5,10,20,0.40) 40%, transparent 70%)' }} />
+            style={{ background: `linear-gradient(to top, ${heroOverlayBottom} 0%, rgba(5,10,20,0.20) 40%, transparent 70%)` }} />
 
           {/* Greeting */}
           <div className="absolute inset-x-0 bottom-0 px-5 pb-14">
@@ -479,7 +494,7 @@ export default function Beranda() {
         <div className="flex flex-col">
           <div className="relative flex-none" style={{ height: '220px' }}>
             <img src={heroBg} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: 'center 30%' }} />
-            <div className="pointer-events-none absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(5,10,20,0.4) 0%, rgba(5,10,20,0.82) 100%)' }} />
+            <div className="pointer-events-none absolute inset-0" style={{ background: `linear-gradient(to bottom, ${heroOverlayTop} 0%, ${heroOverlayBottom} 100%)` }} />
             <div className="absolute inset-x-0 bottom-0 p-5">
               <p className="font-mono text-[9px] uppercase tracking-[0.28em] text-white/40">Jamaah</p>
               <p className="mt-0.5 font-display text-[24px] font-bold text-white leading-tight">{jamaah.nama}</p>
