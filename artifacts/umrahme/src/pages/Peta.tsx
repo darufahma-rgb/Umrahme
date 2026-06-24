@@ -1,26 +1,25 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { lokasiByTipe, daftarLokasi } from '../data/lokasi';
-import type { Lokasi, TipeLokasi } from '../types';
+import { lokasiByKota, daftarLokasi, type KotaFilter } from '../data/lokasi';
+import type { Lokasi } from '../types';
 import PageHeader from '../components/PageHeader';
 import { IconPeta } from '../components/icons';
 
-const tabs: { id: TipeLokasi; label: string }[] = [
-  { id: 'masjid', label: 'Masjid' },
-  { id: 'sejarah', label: 'Tempat Bersejarah' },
+const tabs: { id: KotaFilter; label: string }[] = [
+  { id: 'Makkah', label: 'Makkah' },
+  { id: 'Madinah', label: 'Madinah' },
 ];
 
-const KOTA_ORDER: Record<string, number> = { Makkah: 0, Arafah: 1, Madinah: 2 };
 const PRIORITY_IDS = ['masjidil-haram', 'masjid-nabawi'];
 
-function sortLokasi(list: ReturnType<typeof lokasiByTipe>) {
+function sortLokasi(list: Lokasi[]) {
   return [...list].sort((a, b) => {
     const ai = PRIORITY_IDS.indexOf(a.id);
     const bi = PRIORITY_IDS.indexOf(b.id);
     if (ai !== -1 && bi !== -1) return ai - bi;
     if (ai !== -1) return -1;
     if (bi !== -1) return 1;
-    return (KOTA_ORDER[a.kota] ?? 3) - (KOTA_ORDER[b.kota] ?? 3);
+    return 0;
   });
 }
 
@@ -32,17 +31,18 @@ function BookmarkIcon({ className }: { className?: string }) {
   );
 }
 
-function KotaDot({ kota }: { kota: string }) {
-  const isMakkah = kota === 'Makkah' || kota === 'Arafah';
+function TipeBadge({ tipe }: { tipe: string }) {
+  const isMasjid = tipe === 'masjid';
   return (
     <span
-      className="inline-flex h-4 w-4 flex-none items-center justify-center rounded-full"
-      style={{ background: isMakkah ? '#d4a24e' : 'var(--color-primary,#4338ca)' }}
-      title={kota}
+      className="inline-flex h-5 flex-none items-center rounded-full px-2 font-mono text-[9px] uppercase tracking-wider"
+      style={{
+        background: isMasjid ? 'rgba(67,56,202,0.09)' : 'rgba(212,162,78,0.14)',
+        color: isMasjid ? 'var(--color-primary,#4338ca)' : '#a07020',
+        border: `1px solid ${isMasjid ? 'rgba(67,56,202,0.15)' : 'rgba(212,162,78,0.25)'}`,
+      }}
     >
-      <svg viewBox="0 0 10 10" className="h-2.5 w-2.5 fill-white">
-        <path d="M4.3 7.4 2 5.1l.9-.9 1.4 1.4L7.1 3l.9.9z" />
-      </svg>
+      {isMasjid ? 'Masjid' : 'Bersejarah'}
     </span>
   );
 }
@@ -92,12 +92,12 @@ function LokasiCard({ l }: { l: Lokasi }) {
 
       {/* ── Konten bawah ──────────────────────────────── */}
       <div className="flex flex-1 flex-col px-3.5 pt-3 pb-3.5">
-        {/* Nama + badge kota */}
+        {/* Nama + badge tipe */}
         <div className="flex items-start justify-between gap-1">
           <h2 className="text-[16px] font-bold leading-snug text-ink" style={{ wordBreak: 'break-word' }}>
             {l.nama}
           </h2>
-          <KotaDot kota={l.kota} />
+          <TipeBadge tipe={l.tipe} />
         </div>
 
         {/* Deskripsi singkat */}
@@ -145,11 +145,8 @@ function LokasiCard({ l }: { l: Lokasi }) {
 }
 
 export default function Peta() {
-  const [tab, setTab] = useState<TipeLokasi>('masjid');
-  const lokasi = sortLokasi(lokasiByTipe(tab));
-
-  const totalMasjid = daftarLokasi.filter((l) => l.tipe === 'masjid').length;
-  const totalSejarah = daftarLokasi.filter((l) => l.tipe === 'sejarah').length;
+  const [tab, setTab] = useState<KotaFilter>('Makkah');
+  const lokasi = sortLokasi(lokasiByKota(tab));
 
   return (
     <div>
@@ -174,7 +171,7 @@ export default function Peta() {
 
         {/* Jumlah lokasi */}
         <p className="mb-3 font-mono text-[11px] text-mute">
-          {tab === 'masjid' ? totalMasjid : totalSejarah} lokasi
+          {lokasi.length} lokasi
         </p>
 
         {/* Grid kartu */}

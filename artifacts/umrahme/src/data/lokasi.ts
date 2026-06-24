@@ -771,6 +771,15 @@ export function lokasiById(id: string): Lokasi | undefined {
   return daftarLokasi.find((l) => l.id === id);
 }
 
+export type KotaFilter = 'Makkah' | 'Madinah';
+
+export function lokasiByKota(kota: KotaFilter): Lokasi[] {
+  return daftarLokasi.filter((l) => {
+    if (kota === 'Makkah') return l.kota === 'Makkah' || l.kota === 'Arafah';
+    return l.kota === 'Madinah';
+  });
+}
+
 /** Bangun deep-link Google Maps dari koordinat (membuka app Maps di HP, web di desktop). */
 export function gmapsUrl(l: Lokasi): string {
   const q = encodeURIComponent(`${l.nama} ${l.kota}`);
