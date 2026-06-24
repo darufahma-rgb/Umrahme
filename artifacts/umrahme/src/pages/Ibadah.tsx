@@ -8,24 +8,18 @@ function NavigatorHero() {
       <div
         className="relative overflow-hidden rounded-[28px]"
         style={{
-          background: 'linear-gradient(145deg, #0d1f3c 0%, #0f3460 50%, #1a4a7a 100%)',
+          background: 'linear-gradient(145deg, var(--color-primary-deep) 0%, var(--color-primary) 100%)',
           padding: '1px',
         }}
       >
         <div
           className="relative overflow-hidden rounded-[27px] p-6"
-          style={{ background: 'linear-gradient(145deg, #0d1f3c 0%, #0f3460 50%, #1a4a7a 100%)' }}
+          style={{ background: 'linear-gradient(145deg, var(--color-primary-deep) 0%, var(--color-primary) 100%)' }}
         >
-          {/* Lingkaran dekorasi subtle */}
-          <div className="pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full"
-            style={{ background: 'radial-gradient(circle, rgba(14,165,233,0.12) 0%, transparent 70%)' }} />
-          <div className="pointer-events-none absolute -bottom-16 left-1/2 h-40 w-40 rounded-full"
-            style={{ background: 'radial-gradient(circle, rgba(99,179,237,0.08) 0%, transparent 70%)' }} />
-
           {/* Badge */}
           <div className="relative inline-flex items-center gap-2 mb-5">
-            <span className="h-1.5 w-1.5 rounded-full bg-sky-400 animate-pulse" />
-            <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-sky-300/70">Panduan Utama</span>
+            <span className="h-1.5 w-1.5 rounded-full animate-pulse" style={{ background: 'rgba(255,255,255,0.6)' }} />
+            <span className="font-mono text-[9px] uppercase tracking-[0.3em]" style={{ color: 'rgba(255,255,255,0.55)' }}>Panduan Utama</span>
           </div>
 
           {/* Body */}
@@ -51,7 +45,7 @@ function NavigatorHero() {
                 backdropFilter: 'blur(8px)',
               }}
             >
-              <IconNavigator className="h-5 w-5 text-sky-300" />
+              <IconNavigator className="h-5 w-5 text-white/70" />
             </div>
           </div>
 
