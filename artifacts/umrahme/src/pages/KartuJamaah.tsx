@@ -32,8 +32,6 @@ export default function KartuJamaah() {
 
   const info         = getOperationalInfo(tenant ?? null);
   const rombongan    = jamaah.rombongan  ?? info.groupCode;
-  const bus          = jamaah.nomorBus   ?? info.busNumber;
-  const kamar        = jamaah.nomorKamar ?? info.roomNumber;
   const hotelMakkah  = jamaah.hotelMakkah  ?? info.hotelMakkah;
   const hotelMadinah = jamaah.hotelMadinah ?? info.hotelMadinah;
   const pembimbing   = jamaah.pembimbingNama     ?? info.guideName;
@@ -104,9 +102,9 @@ export default function KartuJamaah() {
               <div className="absolute -right-5 h-4 w-4 rounded-full" style={{ background: 'rgba(255,255,255,0.08)' }} />
             </div>
 
-            {/* Rombongan · Bus · Kamar */}
+            {/* Rombongan */}
             <div className="flex flex-wrap gap-2 mb-3">
-              {[{ l: 'Rombongan', v: rombongan }, { l: 'Bus', v: bus }, { l: 'Kamar', v: kamar }].map(({ l, v }) => (
+              {[{ l: 'Rombongan', v: rombongan }].map(({ l, v }) => (
                 <div key={l} className="flex flex-col items-center rounded-xl px-3.5 py-2 text-center"
                   style={{ background: 'rgba(0,0,0,0.22)', border: '1px solid rgba(255,255,255,0.07)', minWidth: '68px' }}>
                   <p className="font-mono text-[7px] uppercase tracking-[0.14em] text-white/35">{l}</p>
