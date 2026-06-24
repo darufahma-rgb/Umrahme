@@ -332,8 +332,7 @@ export default function Beranda() {
           <img src={heroBg} alt="" aria-hidden
             className="absolute inset-0 h-full w-full object-cover"
             style={{ objectPosition: 'center 38%' }} />
-          <div className="pointer-events-none absolute inset-0"
-            style={{ background: 'linear-gradient(to bottom, rgba(5,10,20,0.55) 0%, transparent 45%)' }} />
+
           <div className="pointer-events-none absolute inset-0"
             style={{ background: 'linear-gradient(to top, rgba(5,10,20,0.92) 0%, rgba(5,10,20,0.40) 40%, transparent 70%)' }} />
 
