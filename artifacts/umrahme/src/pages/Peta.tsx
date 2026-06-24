@@ -69,9 +69,23 @@ function LokasiThumbLarge({ gambar, nama }: { gambar?: string; nama: string }) {
   );
 }
 
+const KOTA_ORDER: Record<string, number> = { Makkah: 0, Arafah: 1, Madinah: 2 };
+const PRIORITY_IDS = ['masjidil-haram', 'masjid-nabawi'];
+
+function sortLokasi(list: ReturnType<typeof lokasiByTipe>) {
+  return [...list].sort((a, b) => {
+    const ai = PRIORITY_IDS.indexOf(a.id);
+    const bi = PRIORITY_IDS.indexOf(b.id);
+    if (ai !== -1 && bi !== -1) return ai - bi;
+    if (ai !== -1) return -1;
+    if (bi !== -1) return 1;
+    return (KOTA_ORDER[a.kota] ?? 3) - (KOTA_ORDER[b.kota] ?? 3);
+  });
+}
+
 export default function Peta() {
   const [tab, setTab] = useState<TipeLokasi>('masjid');
-  const lokasi = lokasiByTipe(tab);
+  const lokasi = sortLokasi(lokasiByTipe(tab));
 
   const totalMasjid = daftarLokasi.filter((l) => l.tipe === 'masjid').length;
   const totalSejarah = daftarLokasi.filter((l) => l.tipe === 'sejarah').length;
