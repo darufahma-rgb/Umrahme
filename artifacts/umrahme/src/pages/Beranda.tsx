@@ -344,7 +344,7 @@ export default function Beranda() {
 
         {/* ── HERO HEADER ─────────────────────────────── */}
         <div className="relative overflow-hidden" style={{ height: 'clamp(240px, 58vw, 340px)' }}>
-          <img src={heroBg} alt="" aria-hidden
+          <img src={tenant?.hero_image_url || heroBg} alt="" aria-hidden
             className="absolute inset-0 h-full w-full object-cover"
             style={{ objectPosition: 'center 38%' }} />
 
@@ -493,7 +493,7 @@ export default function Beranda() {
         {/* Kolom kanan */}
         <div className="flex flex-col">
           <div className="relative flex-none" style={{ height: '220px' }}>
-            <img src={heroBg} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: 'center 30%' }} />
+            <img src={tenant?.hero_image_url || heroBg} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: 'center 30%' }} />
             <div className="pointer-events-none absolute inset-0" style={{ background: `linear-gradient(to bottom, ${heroOverlayTop} 0%, ${heroOverlayBottom} 100%)` }} />
             <div className="absolute inset-x-0 bottom-0 p-5">
               <p className="font-mono text-[9px] uppercase tracking-[0.28em] text-white/40">Jamaah</p>

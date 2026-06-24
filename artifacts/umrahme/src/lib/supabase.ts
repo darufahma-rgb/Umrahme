@@ -33,6 +33,7 @@ export type TenantRow = {
   tour_leader_whatsapp: string | null;
   emergency_note: string | null;
   fase_override: 'persiapan' | 'tanah-suci' | 'selesai' | null;
+  hero_image_url: string | null;
 };
 
 export type AgendaItemRow = {
@@ -302,6 +303,19 @@ export async function revokeTravelAccess(tenantId: string, mappingId: string): P
 export async function uploadLogo(file: File): Promise<string> {
   const ext = file.type === 'image/png' ? 'png' : file.type === 'image/webp' ? 'webp' : 'jpg';
   const filename = `logos/${crypto.randomUUID()}.${ext}`;
+  const { data, error } = await supabase.storage
+    .from('logos')
+    .upload(filename, file, { upsert: false, contentType: file.type });
+  if (error) throw new Error(error.message);
+  const { data: { publicUrl } } = supabase.storage.from('logos').getPublicUrl(data.path);
+  return publicUrl;
+}
+
+// ── Hero Image Upload ──────────────────────────────────────────
+
+export async function uploadHeroImage(file: File): Promise<string> {
+  const ext = file.type === 'image/png' ? 'png' : file.type === 'image/webp' ? 'webp' : 'jpg';
+  const filename = `hero/${crypto.randomUUID()}.${ext}`;
   const { data, error } = await supabase.storage
     .from('logos')
     .upload(filename, file, { upsert: false, contentType: file.type });

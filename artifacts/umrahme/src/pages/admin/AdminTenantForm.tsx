@@ -8,6 +8,7 @@ import {
   fetchJamaah, createJamaah, updateJamaah, deleteJamaah,
   fetchTravelAccounts, createTravelAccount, revokeTravelAccess,
   uploadLogo as apiUploadLogo,
+  uploadHeroImage as apiUploadHeroImage,
   type TenantRow, type AgendaItemRow, type TravelAnnouncementRow, type JamaahAccountRow, type TenantUserRow,
 } from '../../lib/supabase';
 import { darkenHex, generateActivationCode } from '../../lib/colorUtils';
@@ -90,6 +91,12 @@ export default function AdminTenantForm() {
   const [tanggalKeberangkatan, setTanggalKeberangkatan] = useState('');
   const [tanggalKepulangan, setTanggalKepulangan] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [heroFile, setHeroFile] = useState<File | null>(null);
+  const [heroPreview, setHeroPreview] = useState<string>('');
+  const [existingHeroUrl, setExistingHeroUrl] = useState<string>('');
+  const heroInputRef = useRef<HTMLInputElement>(null);
+  const MAX_HERO_SIZE = 3 * 1024 * 1024;
 
   const [opHotelMakkah, setOpHotelMakkah] = useState('');
   const [opHotelMadinah, setOpHotelMadinah] = useState('');
@@ -177,6 +184,7 @@ export default function AdminTenantForm() {
           setPrimaryDeepColor(t.primary_deep_color);
           setPageTitle(t.page_title);
           setExistingLogoUrl(t.logo_url);
+          setExistingHeroUrl(t.hero_image_url ?? '');
           setTanggalKeberangkatan(t.tanggal_keberangkatan ?? '');
           setTanggalKepulangan(t.tanggal_kepulangan ?? '');
           setOpHotelMakkah(t.hotel_makkah ?? '');
@@ -261,6 +269,21 @@ export default function AdminTenantForm() {
     reader.readAsDataURL(file);
   }
 
+  function handleHeroChange(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > MAX_HERO_SIZE) { setError('Ukuran hero image maksimal 3MB.'); return; }
+    const allowedTypes = ['image/png', 'image/jpeg', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      setError('Hero image harus berupa PNG, JPG, atau WEBP.');
+      return;
+    }
+    setHeroFile(file);
+    const reader = new FileReader();
+    reader.onload = ev => setHeroPreview(ev.target?.result as string);
+    reader.readAsDataURL(file);
+  }
+
   function validateDates(): boolean {
     if (tanggalKeberangkatan && tanggalKepulangan && tanggalKepulangan < tanggalKeberangkatan) {
       setDateError('Tanggal kepulangan harus setelah atau sama dengan tanggal keberangkatan.');
@@ -282,6 +305,8 @@ export default function AdminTenantForm() {
     try {
       let logoUrl = existingLogoUrl;
       if (logoFile) logoUrl = await apiUploadLogo(logoFile);
+      let heroImageUrl = existingHeroUrl;
+      if (heroFile) heroImageUrl = await apiUploadHeroImage(heroFile);
       const deepColor = primaryDeepColor || darkenHex(primaryColor);
       const finalTitle = pageTitle || buildDefaultTitle(namaTravel);
       const payload = {
@@ -289,6 +314,7 @@ export default function AdminTenantForm() {
         primary_color: primaryColor,
         primary_deep_color: deepColor,
         logo_url: logoUrl,
+        hero_image_url: heroImageUrl || null,
         page_title: finalTitle,
         tanggal_keberangkatan: tanggalKeberangkatan || null,
         tanggal_kepulangan: tanggalKepulangan || null,
@@ -561,6 +587,66 @@ export default function AdminTenantForm() {
                     onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#9ca3af'; }}>Hapus logo</button>
                 )}
               </div>
+            </div>
+
+            <div style={{ height: '1px', background: 'rgba(0,0,0,0.05)', margin: '0 -24px' }} />
+
+            {/* ── Hero Image ─────────────────────────────── */}
+            <div className="pt-5">
+              <label className="block text-[11px] font-semibold uppercase tracking-widest mb-2" style={{ color: '#9ca3af' }}>
+                Hero Image (Background Beranda)
+              </label>
+
+              {(heroPreview || existingHeroUrl) && (
+                <div className="mb-3 rounded-xl overflow-hidden" style={{ height: '120px' }}>
+                  <img
+                    src={heroPreview || existingHeroUrl}
+                    alt="Hero preview"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => heroInputRef.current?.click()}
+                  className="flex items-center gap-2 px-4 py-2.5 text-[12px] font-semibold rounded-xl transition-all duration-150"
+                  style={{ background: 'rgba(67,56,202,0.07)', color: '#4338ca', border: '1px solid rgba(67,56,202,0.15)' }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(67,56,202,0.12)'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(67,56,202,0.07)'; }}
+                >
+                  <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="17 8 12 3 7 8"/>
+                    <line x1="12" y1="3" x2="12" y2="15"/>
+                  </svg>
+                  {existingHeroUrl || heroPreview ? 'Ganti Hero Image' : 'Upload Hero Image'}
+                </button>
+                {(heroPreview || existingHeroUrl) && (
+                  <button
+                    type="button"
+                    onClick={() => { setHeroFile(null); setHeroPreview(''); setExistingHeroUrl(''); }}
+                    className="text-[11px] transition-colors"
+                    style={{ color: '#f87171' }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#dc2626'; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#f87171'; }}
+                  >
+                    Hapus
+                  </button>
+                )}
+              </div>
+
+              <input
+                ref={heroInputRef}
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+                onChange={handleHeroChange}
+                className="hidden"
+              />
+              <p className="mt-1.5 text-[10px]" style={{ color: '#9ca3af' }}>
+                Maks 3MB · PNG, JPG, WEBP · Rekomendasi: 1200×600px landscape
+              </p>
             </div>
           </div>
 
