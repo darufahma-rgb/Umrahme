@@ -27,47 +27,6 @@ function CityBadge({ kota }: { kota: string }) {
   );
 }
 
-function LokasiThumb({ gambar, nama }: { gambar?: string; nama: string }) {
-  return (
-    <div className="relative h-16 w-16 flex-none overflow-hidden rounded-md border border-hairline bg-surface-bone">
-      {gambar ? (
-        <img src={gambar} alt={nama} className="h-full w-full object-cover" />
-      ) : (
-        <>
-          <div
-            className="absolute inset-0 opacity-[0.18]"
-            style={{ backgroundImage: 'repeating-linear-gradient(45deg, #d4a24e 0 1px, transparent 1px 8px)' }}
-            aria-hidden
-          />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <IconPeta className="h-5 w-5 text-gold/60" />
-          </div>
-        </>
-      )}
-    </div>
-  );
-}
-
-function LokasiThumbLarge({ gambar, nama }: { gambar?: string; nama: string }) {
-  return (
-    <div className="relative w-full overflow-hidden rounded-t-md bg-surface-bone" style={{ height: '100px' }}>
-      {gambar ? (
-        <img src={gambar} alt={nama} className="h-full w-full object-cover" />
-      ) : (
-        <>
-          <div
-            className="absolute inset-0 opacity-[0.15]"
-            style={{ backgroundImage: 'repeating-linear-gradient(45deg, #d4a24e 0 1px, transparent 1px 10px)' }}
-            aria-hidden
-          />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <IconPeta className="h-7 w-7 text-gold/50" />
-          </div>
-        </>
-      )}
-    </div>
-  );
-}
 
 const KOTA_ORDER: Record<string, number> = { Makkah: 0, Arafah: 1, Madinah: 2 };
 const PRIORITY_IDS = ['masjidil-haram', 'masjid-nabawi'];
@@ -137,104 +96,106 @@ export default function Peta() {
             <Link
               key={l.id}
               to={`/peta/${l.id}`}
-              className="flex items-center gap-3 rounded-md border border-hairline bg-surface-card p-3 active:scale-[0.99] hover:shadow-drop-soft transition-shadow"
+              className="group flex gap-3.5 rounded-xl border border-hairline bg-surface-card p-3 active:scale-[0.99] hover:border-hairline-strong hover:shadow-drop-soft transition-all"
             >
-              <LokasiThumb gambar={l.gambar} nama={l.nama} />
+              {/* Thumbnail kiri — ukuran tetap, tidak menyusut */}
+              <div className="relative h-[72px] w-[72px] flex-none overflow-hidden rounded-lg bg-surface-bone">
+                {l.gambar ? (
+                  <img src={l.gambar} alt={l.nama} className="h-full w-full object-cover" loading="lazy" />
+                ) : (
+                  <>
+                    <div className="absolute inset-0 opacity-[0.18]" style={{ backgroundImage: 'repeating-linear-gradient(45deg, #d4a24e 0 1px, transparent 1px 8px)' }} aria-hidden />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <IconPeta className="h-5 w-5 text-gold/60" />
+                    </div>
+                  </>
+                )}
+              </div>
 
-              <div className="min-w-0 flex-1">
-                <div className="flex items-start justify-between gap-1">
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-1.5 mb-0.5">
-                      <h2 className="text-[15px] font-semibold text-ink leading-tight">{l.nama}</h2>
-                      <CityBadge kota={l.kota} />
-                    </div>
-                    {l.namaArab && (
-                      <p className="font-arab text-sm text-gold leading-loose" dir="rtl">
-                        {l.namaArab}
-                      </p>
-                    )}
-                    <p className="mt-0.5 text-xs text-charcoal line-clamp-2 leading-relaxed">{l.ringkas}</p>
-                    <div className="mt-1.5 flex items-center gap-2 font-mono text-[11px] text-mute">
-                      <span>{l.jarakKm} km</span>
-                      {l.jamKunjungan && (
-                        <>
-                          <span className="text-ash">·</span>
-                          <span className="truncate">{l.jamKunjungan}</span>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                  <IconChevron className="h-4 w-4 flex-none text-ash mt-1" />
+              {/* Konten kanan */}
+              <div className="flex min-w-0 flex-1 flex-col justify-center py-0.5">
+                {/* Baris 1: nama + badge kota */}
+                <div className="flex items-center gap-2">
+                  <h2 className="truncate text-[15px] font-bold leading-tight text-ink">{l.nama}</h2>
+                  <span className={`flex-none rounded-md px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider ${
+                    l.kota === 'Madinah' ? 'bg-primary/10 text-primary' : 'bg-gold/15 text-gold'
+                  }`}>
+                    {l.kota}
+                  </span>
                 </div>
+
+                {/* Baris 2: nama arab */}
+                {l.namaArab && (
+                  <p className="mt-0.5 font-arab text-[15px] leading-snug text-gold" dir="rtl">
+                    {l.namaArab}
+                  </p>
+                )}
+
+                {/* Baris 3: ringkas (maks 2 baris) */}
+                <p className="mt-1 line-clamp-2 text-[12.5px] leading-snug text-charcoal">{l.ringkas}</p>
+
+                {/* Baris 4: meta — jarak saja, ringkas, tidak wrap */}
+                <div className="mt-1.5 flex items-center gap-1.5 font-mono text-[10.5px] text-mute">
+                  <IconPeta className="h-3 w-3 text-gold/70" />
+                  <span>{l.jarakKm} km dari pusat</span>
+                </div>
+              </div>
+
+              {/* Chevron */}
+              <div className="flex flex-none items-center">
+                <IconChevron className="h-4 w-4 text-ash group-hover:text-charcoal transition-colors" />
               </div>
             </Link>
           ))}
         </div>
 
         {/* ── Grid DESKTOP ─────────────────────────────────────────── */}
-        <div className="hidden lg:grid lg:grid-cols-3 lg:gap-3">
-          {lokasi.map((l) => {
-            const isFeatured = l.id === 'masjidil-haram' || l.id === 'masjid-nabawi';
-            return (
-              <Link
-                key={l.id}
-                to={`/peta/${l.id}`}
-                className={`group relative overflow-hidden rounded-md border transition-shadow hover:shadow-drop-soft ${
-                  isFeatured
-                    ? 'lg:col-span-2 border-hairline-strong bg-surface-card'
-                    : 'lg:col-span-1 border-hairline bg-surface-card'
-                }`}
-              >
-                {/* Thumbnail desktop */}
-                <LokasiThumbLarge gambar={l.gambar} nama={l.nama} />
-
-                <div className={`flex flex-col gap-1.5 ${isFeatured ? 'px-5 pb-5 pt-3' : 'px-4 py-3'}`}>
-                  {isFeatured && (
-                    <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-primary/70">
-                      Lokasi Utama
-                    </span>
-                  )}
-
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-center gap-1.5 mb-0.5">
-                        <h2
-                          className={`font-semibold leading-tight text-ink ${isFeatured ? 'text-[17px]' : 'text-[14px]'}`}
-                        >
-                          {l.nama}
-                        </h2>
-                        <CityBadge kota={l.kota} />
-                      </div>
-                      {l.namaArab && (
-                        <p className="font-arab text-sm text-gold leading-loose" dir="rtl">
-                          {l.namaArab}
-                        </p>
-                      )}
+        <div className="hidden lg:grid lg:grid-cols-2 lg:gap-3">
+          {lokasi.map((l) => (
+            <Link
+              key={l.id}
+              to={`/peta/${l.id}`}
+              className="group flex gap-4 rounded-xl border border-hairline bg-surface-card p-3.5 transition-all hover:border-hairline-strong hover:shadow-drop-soft"
+            >
+              {/* Thumbnail */}
+              <div className="relative h-24 w-24 flex-none overflow-hidden rounded-lg bg-surface-bone">
+                {l.gambar ? (
+                  <img src={l.gambar} alt={l.nama} className="h-full w-full object-cover transition-transform group-hover:scale-105" loading="lazy" />
+                ) : (
+                  <>
+                    <div className="absolute inset-0 opacity-[0.18]" style={{ backgroundImage: 'repeating-linear-gradient(45deg, #d4a24e 0 1px, transparent 1px 8px)' }} aria-hidden />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <IconPeta className="h-6 w-6 text-gold/60" />
                     </div>
-                    <IconChevron className="h-4 w-4 flex-none text-ash mt-0.5 group-hover:text-charcoal transition-colors" />
-                  </div>
+                  </>
+                )}
+              </div>
 
-                  <p
-                    className={`leading-relaxed text-charcoal ${
-                      isFeatured ? 'text-[13px] line-clamp-2' : 'text-[12px] line-clamp-2'
-                    }`}
-                  >
-                    {l.ringkas}
-                  </p>
-
-                  <div className="flex items-center gap-2 font-mono text-[11px] text-mute mt-0.5">
-                    <span>{l.jarakKm} km</span>
-                    {l.jamKunjungan && (
-                      <>
-                        <span className="text-ash">·</span>
-                        <span className="truncate">{l.jamKunjungan}</span>
-                      </>
-                    )}
-                  </div>
+              {/* Konten */}
+              <div className="flex min-w-0 flex-1 flex-col justify-center">
+                <div className="flex items-center gap-2">
+                  <h2 className="truncate text-[16px] font-bold leading-tight text-ink">{l.nama}</h2>
+                  <span className={`flex-none rounded-md px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider ${
+                    l.kota === 'Madinah' ? 'bg-primary/10 text-primary' : 'bg-gold/15 text-gold'
+                  }`}>
+                    {l.kota}
+                  </span>
                 </div>
-              </Link>
-            );
-          })}
+                {l.namaArab && (
+                  <p className="mt-0.5 font-arab text-[15px] leading-snug text-gold" dir="rtl">{l.namaArab}</p>
+                )}
+                <p className="mt-1 line-clamp-2 text-[13px] leading-snug text-charcoal">{l.ringkas}</p>
+                <div className="mt-1.5 flex items-center gap-1.5 font-mono text-[11px] text-mute">
+                  <IconPeta className="h-3 w-3 text-gold/70" />
+                  <span>{l.jarakKm} km dari pusat</span>
+                </div>
+              </div>
+
+              <div className="flex flex-none items-center">
+                <IconChevron className="h-4 w-4 text-ash group-hover:text-charcoal transition-colors" />
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
     </div>
