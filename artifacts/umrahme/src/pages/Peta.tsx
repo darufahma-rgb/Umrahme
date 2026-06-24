@@ -1,32 +1,14 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { lokasiByTipe, daftarLokasi } from '../data/lokasi';
-import type { TipeLokasi } from '../types';
+import type { Lokasi, TipeLokasi } from '../types';
 import PageHeader from '../components/PageHeader';
-import { IconChevron, IconPeta } from '../components/icons';
+import { IconPeta } from '../components/icons';
 
 const tabs: { id: TipeLokasi; label: string }[] = [
   { id: 'masjid', label: 'Masjid' },
   { id: 'sejarah', label: 'Tempat Bersejarah' },
 ];
-
-function CityBadge({ kota }: { kota: string }) {
-  const isMakkah = kota === 'Makkah';
-  const isArafah = kota === 'Arafah';
-  return (
-    <span
-      className="inline-flex items-center rounded px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wide"
-      style={{
-        background: isMakkah ? 'rgba(212,162,78,0.14)' : isArafah ? 'rgba(212,162,78,0.08)' : 'rgba(var(--color-primary-rgb,67,56,202),0.09)',
-        color: isMakkah ? '#a07020' : isArafah ? '#8a6010' : 'var(--color-primary)',
-        border: `1px solid ${isMakkah ? 'rgba(212,162,78,0.25)' : isArafah ? 'rgba(212,162,78,0.15)' : 'rgba(var(--color-primary-rgb,67,56,202),0.15)'}`,
-      }}
-    >
-      {kota}
-    </span>
-  );
-}
-
 
 const KOTA_ORDER: Record<string, number> = { Makkah: 0, Arafah: 1, Madinah: 2 };
 const PRIORITY_IDS = ['masjidil-haram', 'masjid-nabawi'];
@@ -42,6 +24,116 @@ function sortLokasi(list: ReturnType<typeof lokasiByTipe>) {
   });
 }
 
+function BookmarkIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+    </svg>
+  );
+}
+
+function KotaDot({ kota }: { kota: string }) {
+  const isMakkah = kota === 'Makkah' || kota === 'Arafah';
+  return (
+    <span
+      className="inline-flex h-4 w-4 flex-none items-center justify-center rounded-full"
+      style={{ background: isMakkah ? '#d4a24e' : 'var(--color-primary,#4338ca)' }}
+      title={kota}
+    >
+      <svg viewBox="0 0 10 10" className="h-2.5 w-2.5 fill-white">
+        <path d="M4.3 7.4 2 5.1l.9-.9 1.4 1.4L7.1 3l.9.9z" />
+      </svg>
+    </span>
+  );
+}
+
+function LokasiCard({ l }: { l: Lokasi }) {
+  const tipeLabel = l.tipe === 'masjid' ? 'Masjid' : 'Bersejarah';
+
+  return (
+    <Link
+      to={`/peta/${l.id}`}
+      className="group flex flex-col overflow-hidden rounded-2xl border border-hairline bg-surface-card shadow-drop-soft transition-all hover:shadow-md hover:-translate-y-0.5 active:scale-[0.99]"
+    >
+      {/* ── Foto atas ─────────────────────────────────── */}
+      <div className="relative aspect-[4/3] w-full overflow-hidden bg-surface-bone">
+        {l.gambar ? (
+          <img
+            src={l.gambar}
+            alt={l.nama}
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            loading="lazy"
+          />
+        ) : (
+          <>
+            <div
+              className="absolute inset-0 opacity-[0.18]"
+              style={{ backgroundImage: 'repeating-linear-gradient(45deg, #d4a24e 0 1px, transparent 1px 10px)' }}
+              aria-hidden
+            />
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-1">
+              <IconPeta className="h-7 w-7 text-gold/50" />
+              {l.namaArab && (
+                <span className="font-arab text-[13px] text-gold/60" dir="rtl">{l.namaArab}</span>
+              )}
+            </div>
+          </>
+        )}
+        {/* Bookmark button */}
+        <button
+          type="button"
+          aria-label="Simpan"
+          onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+          className="absolute right-2.5 top-2.5 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur-sm shadow-sm transition hover:bg-white"
+        >
+          <BookmarkIcon className="h-4 w-4 text-ink" />
+        </button>
+      </div>
+
+      {/* ── Konten bawah ──────────────────────────────── */}
+      <div className="flex flex-1 flex-col gap-2 p-3.5">
+        {/* Nama + kota checkmark */}
+        <div className="flex items-center gap-1.5">
+          <h2 className="line-clamp-1 flex-1 text-[14px] font-bold leading-tight text-ink sm:text-[15px]">
+            {l.nama}
+          </h2>
+          <KotaDot kota={l.kota} />
+        </div>
+
+        {/* Deskripsi singkat */}
+        <p className="line-clamp-2 text-[12px] leading-snug text-charcoal sm:text-[12.5px]">
+          {l.ringkas}
+        </p>
+
+        {/* ── Statistik 3 kolom ─────────────────────── */}
+        <div className="mt-auto flex items-start divide-x divide-hairline pt-2">
+          <div className="flex flex-1 flex-col items-center gap-0.5 px-1">
+            <span className="flex items-center gap-0.5 text-[13px] font-semibold text-ink">
+              <IconPeta className="h-3 w-3 text-gold/80" />
+              {l.jarakKm}
+            </span>
+            <span className="font-mono text-[9px] uppercase tracking-wide text-mute">km</span>
+          </div>
+          <div className="flex flex-1 flex-col items-center gap-0.5 px-1">
+            <span className="line-clamp-1 text-[12px] font-semibold text-ink">{l.kota}</span>
+            <span className="font-mono text-[9px] uppercase tracking-wide text-mute">Kota</span>
+          </div>
+          <div className="flex flex-1 flex-col items-center gap-0.5 px-1">
+            <span className="line-clamp-1 text-[12px] font-semibold text-ink">{tipeLabel}</span>
+            <span className="font-mono text-[9px] uppercase tracking-wide text-mute">Tipe</span>
+          </div>
+        </div>
+
+        {/* ── Tombol CTA ────────────────────────────── */}
+        <div className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-full bg-ink py-2 text-[12.5px] font-semibold text-white transition group-hover:bg-ink/90">
+          <IconPeta className="h-3.5 w-3.5 text-white/70" />
+          Lihat Detail
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 export default function Peta() {
   const [tab, setTab] = useState<TipeLokasi>('masjid');
   const lokasi = sortLokasi(lokasiByTipe(tab));
@@ -53,22 +145,7 @@ export default function Peta() {
     <div>
       <PageHeader title="Peta Lokasi" eyebrow="Panduan" backTo="/panduan" />
 
-      <div className="px-5 pt-4 pb-8 lg:px-8 lg:max-w-5xl lg:mx-auto">
-        {/* Banner informasi */}
-        <div className="relative mb-4 flex h-28 lg:h-36 items-center justify-center overflow-hidden rounded-md border border-hairline bg-surface-bone">
-          <div
-            className="absolute inset-0 opacity-[0.20]"
-            style={{ backgroundImage: 'repeating-linear-gradient(45deg, var(--color-primary,#4338ca) 0 1px, transparent 1px 14px)' }}
-            aria-hidden
-          />
-          <div className="relative text-center">
-            <IconPeta className="mx-auto h-6 w-6 text-primary" />
-            <p className="mt-1.5 font-mono text-[11px] uppercase tracking-wider text-mute">
-              Ketuk lokasi untuk lihat detail &amp; Google Maps
-            </p>
-          </div>
-        </div>
-
+      <div className="px-4 pt-4 pb-8 sm:px-5 lg:px-8 lg:max-w-5xl lg:mx-auto">
         {/* Tab kategori */}
         <div className="mb-3 flex gap-1.5 rounded-full border border-hairline bg-surface-bone p-1">
           {tabs.map((t) => (
@@ -85,116 +162,15 @@ export default function Peta() {
           ))}
         </div>
 
-        {/* Jumlah lokasi per tab */}
+        {/* Jumlah lokasi */}
         <p className="mb-3 font-mono text-[11px] text-mute">
           {tab === 'masjid' ? totalMasjid : totalSejarah} lokasi
         </p>
 
-        {/* ── List MOBILE ─────────────────────────────────────────── */}
-        <div className="space-y-2.5 lg:hidden">
+        {/* Grid kartu */}
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {lokasi.map((l) => (
-            <Link
-              key={l.id}
-              to={`/peta/${l.id}`}
-              className="group flex gap-3.5 rounded-xl border border-hairline bg-surface-card p-3 active:scale-[0.99] hover:border-hairline-strong hover:shadow-drop-soft transition-all"
-            >
-              {/* Thumbnail kiri — ukuran tetap, tidak menyusut */}
-              <div className="relative h-[72px] w-[72px] flex-none overflow-hidden rounded-lg bg-surface-bone">
-                {l.gambar ? (
-                  <img src={l.gambar} alt={l.nama} className="h-full w-full object-cover" loading="lazy" />
-                ) : (
-                  <>
-                    <div className="absolute inset-0 opacity-[0.18]" style={{ backgroundImage: 'repeating-linear-gradient(45deg, #d4a24e 0 1px, transparent 1px 8px)' }} aria-hidden />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <IconPeta className="h-5 w-5 text-gold/60" />
-                    </div>
-                  </>
-                )}
-              </div>
-
-              {/* Konten kanan */}
-              <div className="flex min-w-0 flex-1 flex-col justify-center py-0.5">
-                {/* Baris 1: nama + badge kota */}
-                <div className="flex items-center gap-2">
-                  <h2 className="truncate text-[15px] font-bold leading-tight text-ink">{l.nama}</h2>
-                  <span className={`flex-none rounded-md px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider ${
-                    l.kota === 'Madinah' ? 'bg-primary/10 text-primary' : 'bg-gold/15 text-gold'
-                  }`}>
-                    {l.kota}
-                  </span>
-                </div>
-
-                {/* Baris 2: nama arab */}
-                {l.namaArab && (
-                  <p className="mt-0.5 font-arab text-[15px] leading-snug text-gold" dir="rtl">
-                    {l.namaArab}
-                  </p>
-                )}
-
-                {/* Baris 3: ringkas (maks 2 baris) */}
-                <p className="mt-1 line-clamp-2 text-[12.5px] leading-snug text-charcoal">{l.ringkas}</p>
-
-                {/* Baris 4: meta — jarak saja, ringkas, tidak wrap */}
-                <div className="mt-1.5 flex items-center gap-1.5 font-mono text-[10.5px] text-mute">
-                  <IconPeta className="h-3 w-3 text-gold/70" />
-                  <span>{l.jarakKm} km dari pusat</span>
-                </div>
-              </div>
-
-              {/* Chevron */}
-              <div className="flex flex-none items-center">
-                <IconChevron className="h-4 w-4 text-ash group-hover:text-charcoal transition-colors" />
-              </div>
-            </Link>
-          ))}
-        </div>
-
-        {/* ── Grid DESKTOP ─────────────────────────────────────────── */}
-        <div className="hidden lg:grid lg:grid-cols-2 lg:gap-3">
-          {lokasi.map((l) => (
-            <Link
-              key={l.id}
-              to={`/peta/${l.id}`}
-              className="group flex gap-4 rounded-xl border border-hairline bg-surface-card p-3.5 transition-all hover:border-hairline-strong hover:shadow-drop-soft"
-            >
-              {/* Thumbnail */}
-              <div className="relative h-24 w-24 flex-none overflow-hidden rounded-lg bg-surface-bone">
-                {l.gambar ? (
-                  <img src={l.gambar} alt={l.nama} className="h-full w-full object-cover transition-transform group-hover:scale-105" loading="lazy" />
-                ) : (
-                  <>
-                    <div className="absolute inset-0 opacity-[0.18]" style={{ backgroundImage: 'repeating-linear-gradient(45deg, #d4a24e 0 1px, transparent 1px 8px)' }} aria-hidden />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <IconPeta className="h-6 w-6 text-gold/60" />
-                    </div>
-                  </>
-                )}
-              </div>
-
-              {/* Konten */}
-              <div className="flex min-w-0 flex-1 flex-col justify-center">
-                <div className="flex items-center gap-2">
-                  <h2 className="truncate text-[16px] font-bold leading-tight text-ink">{l.nama}</h2>
-                  <span className={`flex-none rounded-md px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider ${
-                    l.kota === 'Madinah' ? 'bg-primary/10 text-primary' : 'bg-gold/15 text-gold'
-                  }`}>
-                    {l.kota}
-                  </span>
-                </div>
-                {l.namaArab && (
-                  <p className="mt-0.5 font-arab text-[15px] leading-snug text-gold" dir="rtl">{l.namaArab}</p>
-                )}
-                <p className="mt-1 line-clamp-2 text-[13px] leading-snug text-charcoal">{l.ringkas}</p>
-                <div className="mt-1.5 flex items-center gap-1.5 font-mono text-[11px] text-mute">
-                  <IconPeta className="h-3 w-3 text-gold/70" />
-                  <span>{l.jarakKm} km dari pusat</span>
-                </div>
-              </div>
-
-              <div className="flex flex-none items-center">
-                <IconChevron className="h-4 w-4 text-ash group-hover:text-charcoal transition-colors" />
-              </div>
-            </Link>
+            <LokasiCard key={l.id} l={l} />
           ))}
         </div>
       </div>
