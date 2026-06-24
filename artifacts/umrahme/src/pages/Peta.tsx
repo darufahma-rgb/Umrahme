@@ -91,44 +91,54 @@ function LokasiCard({ l }: { l: Lokasi }) {
       </div>
 
       {/* ── Konten bawah ──────────────────────────────── */}
-      <div className="flex flex-1 flex-col gap-2 p-3.5">
-        {/* Nama + kota checkmark */}
-        <div className="flex items-center gap-1.5">
-          <h2 className="line-clamp-1 flex-1 text-[14px] font-bold leading-tight text-ink sm:text-[15px]">
+      <div className="flex flex-1 flex-col px-3.5 pt-3 pb-3.5">
+        {/* Nama + badge kota */}
+        <div className="flex items-start justify-between gap-1">
+          <h2 className="text-[16px] font-bold leading-snug text-ink" style={{ wordBreak: 'break-word' }}>
             {l.nama}
           </h2>
           <KotaDot kota={l.kota} />
         </div>
 
         {/* Deskripsi singkat */}
-        <p className="line-clamp-2 text-[12px] leading-snug text-charcoal sm:text-[12.5px]">
+        <p className="mt-1.5 line-clamp-2 text-[12.5px] leading-[1.45] text-[#6b7280]">
           {l.ringkas}
         </p>
 
-        {/* ── Statistik 3 kolom ─────────────────────── */}
-        <div className="mt-auto flex items-start divide-x divide-hairline pt-2">
-          <div className="flex flex-1 flex-col items-center gap-0.5 px-1">
-            <span className="flex items-center gap-0.5 text-[13px] font-semibold text-ink">
-              <IconPeta className="h-3 w-3 text-gold/80" />
+        {/* ── Garis pemisah + Statistik 3 kolom ───── */}
+        <div className="mt-3 border-t border-hairline pt-2.5 flex items-start">
+          {/* Kolom 1: Jarak */}
+          <div className="flex flex-1 flex-col gap-[3px]">
+            <span className="flex items-center gap-0.5 text-[14px] font-bold leading-none text-ink">
+              <IconPeta className="h-3 w-3 flex-none text-gold" />
               {l.jarakKm}
             </span>
-            <span className="font-mono text-[9px] uppercase tracking-wide text-mute">km</span>
+            <span className="font-mono text-[9.5px] uppercase tracking-widest text-[#9ca3af]">KM</span>
           </div>
-          <div className="flex flex-1 flex-col items-center gap-0.5 px-1">
-            <span className="line-clamp-1 text-[12px] font-semibold text-ink">{l.kota}</span>
-            <span className="font-mono text-[9px] uppercase tracking-wide text-mute">Kota</span>
+          {/* Divider */}
+          <div className="mx-1 h-8 w-px bg-hairline self-center" />
+          {/* Kolom 2: Kota */}
+          <div className="flex flex-1 flex-col gap-[3px]">
+            <span className="text-[13px] font-bold leading-none text-ink">{l.kota}</span>
+            <span className="font-mono text-[9.5px] uppercase tracking-widest text-[#9ca3af]">Kota</span>
           </div>
-          <div className="flex flex-1 flex-col items-center gap-0.5 px-1">
-            <span className="line-clamp-1 text-[12px] font-semibold text-ink">{tipeLabel}</span>
-            <span className="font-mono text-[9px] uppercase tracking-wide text-mute">Tipe</span>
+          {/* Divider */}
+          <div className="mx-1 h-8 w-px bg-hairline self-center" />
+          {/* Kolom 3: Tipe */}
+          <div className="flex flex-1 flex-col gap-[3px]">
+            <span className="text-[13px] font-bold leading-none text-ink">{tipeLabel}</span>
+            <span className="font-mono text-[9.5px] uppercase tracking-widest text-[#9ca3af]">Tipe</span>
           </div>
         </div>
 
         {/* ── Tombol CTA ────────────────────────────── */}
-        <div className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-full bg-ink py-2 text-[12.5px] font-semibold text-white transition group-hover:bg-ink/90">
-          <IconPeta className="h-3.5 w-3.5 text-white/70" />
+        <button
+          type="button"
+          className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-full bg-[#111] py-2.5 text-[13px] font-semibold text-white transition group-hover:bg-[#222]"
+        >
+          <IconPeta className="h-3.5 w-3.5 text-white/60" />
           Lihat Detail
-        </div>
+        </button>
       </div>
     </Link>
   );
