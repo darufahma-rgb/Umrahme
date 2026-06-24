@@ -2,7 +2,9 @@
   "installCommand": "pnpm install",
   "buildCommand": "pnpm run build",
   "outputDirectory": "dist/public",
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+  "routes": [
+    { "src": "/assets/(.*)", "dest": "/assets/$1" },
+    { "src": "/(.*)\\.(.+)", "dest": "/$1.$2" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
