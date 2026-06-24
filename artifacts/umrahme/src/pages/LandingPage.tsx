@@ -4,7 +4,7 @@ import logoImg from '@assets/Umrahme_1782205247965.png';
 
 const F = "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif";
 
-const WA_NUMBER = '6281234567890';
+const WA_NUMBER = '6281311506025';
 const WA_MSG = encodeURIComponent(
   "Assalamu'alaikum, saya pemilik travel umrah dan tertarik dengan Umrahme. Boleh minta info demo?"
 );
