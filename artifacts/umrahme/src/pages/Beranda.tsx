@@ -5,6 +5,7 @@ import heroBg from '@assets/Temanumrah_BG_1782267839246.png';
 import GlobalSearch from '../components/GlobalSearch';
 import { TravelCompanionFlow } from '../components/dashboard/TravelCompanionFlow';
 import { checklistItems } from '../data/checklist';
+import { daftarLokasi } from '../data/lokasi';
 import { fetchAgenda, type AgendaItemRow } from '../lib/supabase';
 import type { Fase } from '../types';
 import {
@@ -57,6 +58,69 @@ function hitungHariMenuju(tanggalISO: string): number {
   const sekarang = new Date();
   sekarang.setHours(0, 0, 0, 0);
   return Math.ceil((target.getTime() - sekarang.getTime()) / (1000 * 60 * 60 * 24));
+}
+
+function KartuTempatBersejarah() {
+  const preview = daftarLokasi.slice(0, 8);
+  return (
+    <div>
+      <div className="mb-3 flex items-center justify-between">
+        <div>
+          <p className="font-mono text-[8.5px] uppercase tracking-[0.18em] text-mute">Jelajahi</p>
+          <h2 className="mt-0.5 text-[15px] font-bold text-ink">Tempat Bersejarah</h2>
+        </div>
+        <Link to="/peta" className="inline-flex items-center gap-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-primary">
+          Lihat Semua
+          <IconChevron className="h-3 w-3" />
+        </Link>
+      </div>
+
+      <div className="-mx-5 flex gap-3 overflow-x-auto px-5 pb-1 lg:mx-0 lg:px-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+        {preview.map((l) => (
+          <Link
+            key={l.id}
+            to={`/peta/${l.id}`}
+            className="group relative flex-none overflow-hidden rounded-xl border border-hairline bg-surface-card active:scale-[0.98] transition-transform"
+            style={{ width: 150 }}
+          >
+            <div className="relative h-24 w-full overflow-hidden bg-surface-bone">
+              {l.gambar ? (
+                <img src={l.gambar} alt={l.nama} className="h-full w-full object-cover transition-transform group-hover:scale-105" loading="lazy" />
+              ) : (
+                <>
+                  <div className="absolute inset-0 opacity-[0.18]" style={{ backgroundImage: 'repeating-linear-gradient(45deg, #d4a24e 0 1px, transparent 1px 8px)' }} aria-hidden />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <IconPeta className="h-5 w-5 text-gold/60" />
+                  </div>
+                </>
+              )}
+              <span className="absolute left-1.5 top-1.5 rounded-md bg-black/55 px-1.5 py-0.5 font-mono text-[8px] uppercase tracking-wider text-white backdrop-blur-sm">
+                {l.kota}
+              </span>
+            </div>
+            <div className="p-2.5">
+              <h3 className="truncate text-[12.5px] font-bold leading-tight text-ink">{l.nama}</h3>
+              {l.namaArab && (
+                <p className="mt-0.5 truncate text-right font-arab text-[12px] text-gold" dir="rtl">{l.namaArab}</p>
+              )}
+              <p className="mt-1 line-clamp-2 text-[10.5px] leading-snug text-charcoal">{l.ringkas}</p>
+            </div>
+          </Link>
+        ))}
+
+        <Link
+          to="/peta"
+          className="flex-none flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-hairline bg-surface-bone active:scale-[0.98] transition-transform"
+          style={{ width: 110 }}
+        >
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10">
+            <IconChevron className="h-4 w-4 text-primary" />
+          </div>
+          <span className="px-2 text-center text-[11px] font-semibold text-primary leading-tight">Lihat Semua Lokasi</span>
+        </Link>
+      </div>
+    </div>
+  );
 }
 
 function QuickAction({ to, label, icon, accent = false }: {
@@ -415,6 +479,9 @@ export default function Beranda() {
             </Link>
           )}
 
+          {/* Tempat Bersejarah */}
+          <KartuTempatBersejarah />
+
           {/* Pemisah */}
           <div className="flex items-center gap-3">
             <div className="flex-1 h-px bg-hairline" />
@@ -475,6 +542,9 @@ export default function Beranda() {
               </div>
             </Link>
           )}
+
+          {/* Tempat Bersejarah */}
+          <KartuTempatBersejarah />
 
           <div>
             <div className="flex items-center gap-3 mb-4">
