@@ -36,9 +36,9 @@ export default function BottomNav() {
                     style={{
                       marginTop: '-28px',
                       background: isActive
-                        ? 'linear-gradient(145deg, #0284c7 0%, #0369a1 100%)'
-                        : 'linear-gradient(145deg, #0ea5e9 0%, #0284c7 100%)',
-                      boxShadow: '0 4px 16px rgba(14,165,233,0.40), 0 1px 4px rgba(0,0,0,0.16)',
+                        ? 'linear-gradient(145deg, var(--color-primary-deep) 0%, var(--color-primary) 100%)'
+                        : 'linear-gradient(145deg, var(--color-primary) 0%, var(--color-primary-deep) 100%)',
+                      boxShadow: '0 4px 16px color-mix(in srgb, var(--color-primary) 40%, transparent), 0 1px 4px rgba(0,0,0,0.16)',
                     }}
                   >
                     <Icon className="h-[20px] w-[20px] text-white" />
