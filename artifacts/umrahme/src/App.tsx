@@ -6,6 +6,7 @@ import TravelProtectedRoute from './components/travel/TravelProtectedRoute';
 import { TravelAuthProvider } from './context/TravelAuthContext';
 
 import Login from './pages/Login';
+import LoginSlug from './pages/LoginSlug';
 import Beranda from './pages/Beranda';
 import Panduan from './pages/Panduan';
 import TataCara from './pages/TataCara';
@@ -43,6 +44,7 @@ export default function App() {
   return (
     <Routes>
       {/* ── App jamaah ── */}
+      <Route path="/t/:slug" element={<LoginSlug />} />
       <Route path="/login" element={<Login />} />
 
       <Route

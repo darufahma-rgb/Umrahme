@@ -1,4 +1,4 @@
-import { useState, useEffect, type FormEvent } from 'react';
+import { useState, useEffect, useCallback, type FormEvent } from 'react';
 import { useTravelAuth } from '../../context/TravelAuthContext';
 import TravelLayout from '../../components/travel/TravelLayout';
 import { fetchJamaah, createJamaah, deleteJamaah, updateJamaah, type JamaahAccountRow } from '../../lib/supabase';
@@ -49,6 +49,19 @@ export default function TravelDashboard() {
 
   const [jamaahList, setJamaahList] = useState<JamaahAccountRow[]>([]);
   const [jamaahLoading, setJamaahLoading] = useState(true);
+  const [copied, setCopied] = useState(false);
+
+  const slugUrl = tenant?.slug
+    ? `${window.location.origin}/t/${tenant.slug}`
+    : null;
+
+  const handleCopySlug = useCallback(() => {
+    if (!slugUrl) return;
+    navigator.clipboard.writeText(slugUrl).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }, [slugUrl]);
 
   // Form tambah jamaah
   const [jmNama, setJmNama] = useState('');
@@ -157,6 +170,46 @@ export default function TravelDashboard() {
             Bagikan kode ini ke jamaah untuk login ke aplikasi.
           </p>
         </div>
+
+        {/* Link slug branded — tampil hanya jika tenant punya slug */}
+        {slugUrl && (
+          <div className="mt-3 flex items-center gap-3 rounded-xl px-4 py-3"
+            style={{ background: 'rgba(16,185,129,0.06)', border: '1px solid rgba(16,185,129,0.18)' }}>
+            <div className="flex-1 min-w-0">
+              <p className="font-mono text-[9px] uppercase tracking-[0.18em]" style={{ color: '#059669' }}>
+                Link Login Branded
+              </p>
+              <p className="font-mono text-[12px] font-semibold truncate mt-0.5" style={{ color: '#047857' }}>
+                {slugUrl}
+              </p>
+            </div>
+            <button
+              onClick={handleCopySlug}
+              className="flex-none flex items-center gap-1.5 rounded-lg px-3 py-2 text-[12px] font-semibold transition-all active:scale-95"
+              style={{
+                background: copied ? 'rgba(16,185,129,0.18)' : 'rgba(16,185,129,0.12)',
+                color: '#059669',
+                border: '1px solid rgba(16,185,129,0.22)',
+              }}
+            >
+              {copied ? (
+                <>
+                  <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  Tersalin!
+                </>
+              ) : (
+                <>
+                  <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                  </svg>
+                  Salin Link
+                </>
+              )}
+            </button>
+          </div>
+        )}
       </div>
 
       {/* ── Form Tambah Jamaah ── */}

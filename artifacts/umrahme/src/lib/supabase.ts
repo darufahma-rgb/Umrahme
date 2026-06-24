@@ -15,6 +15,7 @@ export const SUPABASE_FUNCTIONS_URL = `${supabaseUrl}/functions/v1`;
 export type TenantRow = {
   id: string;
   activation_code: string;
+  slug: string | null;
   nama_travel: string;
   primary_color: string;
   primary_deep_color: string;
@@ -116,6 +117,16 @@ export async function updateTenant(id: string, payload: Partial<TenantRow>): Pro
     .single();
   if (error) throw new Error(error.message);
   return data as TenantRow;
+}
+
+export async function fetchTenantBySlug(slug: string): Promise<TenantRow | null> {
+  const { data, error } = await supabase
+    .from('tenants')
+    .select('*')
+    .eq('slug', slug.toLowerCase())
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+  return data as TenantRow | null;
 }
 
 export async function checkActivationCode(code: string, excludeId?: string): Promise<{ taken: boolean }> {
