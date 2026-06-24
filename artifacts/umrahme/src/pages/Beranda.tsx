@@ -67,7 +67,7 @@ function QuickAction({ to, label, icon, accent = false }: {
       <div
         className="flex h-[52px] w-[52px] items-center justify-center rounded-2xl"
         style={accent
-          ? { background: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)', boxShadow: '0 4px 12px rgba(14,165,233,0.30)' }
+          ? { background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-deep) 100%)', boxShadow: '0 4px 12px color-mix(in srgb, var(--color-primary) 30%, transparent)' }
           : { background: '#ffffff', border: '1px solid rgba(0,0,0,0.07)', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }
         }
       >
