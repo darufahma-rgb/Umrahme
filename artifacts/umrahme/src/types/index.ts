@@ -65,6 +65,12 @@ export interface Doa {
 
 export type TipeLokasi = 'masjid' | 'sejarah';
 
+/** Pintu/gerbang penting pada masjid besar. */
+export interface PintuMasjid {
+  nama: string;
+  fungsi: string;
+}
+
 /** Satu sub-bagian sejarah berstruktur (heading + paragraf). */
 export interface SejarahSeksi {
   judul: string;
@@ -109,6 +115,10 @@ export interface Lokasi {
   adab?: string[];
   /** Catatan riwayat lemah / perlu di-flag. */
   catatan?: string;
+  /** Daftar pintu/gerbang penting (hanya untuk masjid besar). */
+  pintu?: PintuMasjid[];
+  /** URL ke peta atau denah resmi. */
+  petaResmiUrl?: string;
 }
 
 export type KategoriChecklist = 'dokumen' | 'kesehatan' | 'barang' | 'mental';

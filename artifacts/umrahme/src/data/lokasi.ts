@@ -61,6 +61,15 @@ export const daftarLokasi: Lokasi[] = [
       'Hati-hati terhadap \u201cjoki\u201d Hajar Aswad yang meminta uang; mencium Hajar Aswad sunnah tetapi jangan sampai menyakiti atau berdesakan membahayakan.',
       'Perhatikan sistem lampu pintu (hijau = ada ruang, merah = penuh).',
     ],
+    petaResmiUrl: 'https://alharamain.gov.sa/public/?site=en',
+    pintu: [
+      { nama: 'Bab Malik Abdul Aziz (Gerbang 1)', fungsi: 'Salah satu gerbang terbesar dan terpopuler, akses langsung ke area Mataf dari sisi selatan.' },
+      { nama: 'Bab Malik Fahd', fungsi: 'Sering dipakai karena dekat dengan area tawaf (Mataf).' },
+      { nama: 'Bab As-Salam', fungsi: 'Pintu bersejarah, dianjurkan masuk dengan mendahulukan kaki kanan dan berdoa.' },
+      { nama: 'Bab Umrah (Gerbang 63)', fungsi: 'Pintu yang menurut riwayat dilalui Nabi \ufdfa saat memasuki Makkah untuk umrah. Akses langsung ke Mataf dari arah barat laut.' },
+      { nama: 'Bab Ajyad', fungsi: 'Gerbang di sisi tenggara, sering dipakai jamaah; tersedia eskalator ke lantai atas.' },
+      { nama: 'Bab Al-Fath', fungsi: 'Dinamai untuk mengenang Fathu Makkah (pembebasan Makkah).' },
+    ],
   },
   {
     id: 'masjid-nabawi',
@@ -114,6 +123,16 @@ export const daftarLokasi: Lokasi[] = [
       'Untuk masuk Raudhah, pesan tasrih lebih dulu lewat aplikasi Nusuk sesuai jadwal.',
       'Ucapkan salam dengan tenang saat melewati makam; jangan mengusap pagar atau meminta kepada penghuni kubur.',
       'Jaga ketertiban \u2014 area Raudhah sangat padat.',
+    ],
+    petaResmiUrl: 'https://alharamain.gov.sa/public/?site=en',
+    pintu: [
+      { nama: 'Bab As-Salam', fungsi: 'Pintu utama yang dahulu sering dilalui Nabi \ufdfa. Banyak peziarah pria masuk dari sini menuju arah Raudhah.' },
+      { nama: 'Bab Jibril', fungsi: 'Pintu bersejarah; dinamai Malaikat Jibril yang membawa wahyu.' },
+      { nama: 'Bab Ar-Rahmah', fungsi: 'Salah satu dari tiga pintu asli masjid pada masa Nabi \ufdfa. Dikaitkan dengan rahmat dan ampunan.' },
+      { nama: 'Bab An-Nisa (Gerbang 39)', fungsi: 'Pintu yang ditetapkan Khalifah Umar bin Khattab untuk jamaah wanita.' },
+      { nama: 'Bab Al-Baqi', fungsi: 'Menghadap pemakaman Jannatul Baqi di sisi timur; jalur menuju ziarah Baqi.' },
+      { nama: 'Gerbang 333', fungsi: 'Penanda populer di sisi selatan (dekat food street), sering jadi titik kumpul rombongan.' },
+      { nama: 'Gerbang King Fahd', fungsi: 'Gerbang besar dari perluasan modern, melayani area perluasan masjid.' },
     ],
   },
   {

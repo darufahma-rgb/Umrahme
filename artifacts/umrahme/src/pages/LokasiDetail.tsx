@@ -293,7 +293,48 @@ export default function LokasiDetail() {
           </div>
         )}
 
-        {/* ── 9. CATATAN / DISCLAIMER ───────────────────────────── */}
+        {/* ── 9. PINTU & DENAH ──────────────────────────────────── */}
+        {lokasi.pintu && lokasi.pintu.length > 0 && (
+          <div className="rounded-md border border-hairline bg-surface-card px-5 py-4 shadow-drop-card">
+            <div className="flex items-center gap-2.5 mb-3">
+              <div className="h-7 w-7 rounded-sm flex items-center justify-center bg-gold/15 flex-shrink-0">
+                <IconPeta className="h-4 w-4 text-gold" />
+              </div>
+              <h2 className="font-display text-[14px] font-bold text-ink">Pintu Penting &amp; Denah</h2>
+            </div>
+            <div className="space-y-2">
+              {lokasi.pintu.map((p, i) => (
+                <div key={i} className="rounded-xl border border-hairline bg-surface p-3">
+                  <div className="flex items-start gap-2.5">
+                    <div className="mt-0.5 flex h-6 w-6 flex-none items-center justify-center rounded-md bg-gold/15">
+                      <IconPeta className="h-3.5 w-3.5 text-gold" />
+                    </div>
+                    <div className="min-w-0">
+                      <h4 className="text-[13px] font-bold leading-tight text-ink">{p.nama}</h4>
+                      <p className="mt-0.5 text-[12px] leading-snug text-charcoal">{p.fungsi}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {lokasi.petaResmiUrl && (
+              <a
+                href={lokasi.petaResmiUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 flex items-center justify-center gap-2 rounded-xl border border-primary/30 bg-primary/5 px-4 py-3 text-[13px] font-semibold text-primary transition-colors hover:bg-primary/10"
+              >
+                <IconPeta className="h-4 w-4" />
+                Lihat Denah Resmi (alharamain.gov.sa)
+              </a>
+            )}
+            <p className="mt-2 text-center font-mono text-[9px] uppercase tracking-wider text-mute">
+              Sumber: General Authority for the Care of the Two Holy Mosques
+            </p>
+          </div>
+        )}
+
+        {/* ── 10. CATATAN / DISCLAIMER ──────────────────────────── */}
         {lokasi.catatan && (
           <div
             className="rounded-md border px-4 py-3.5 flex items-start gap-3"
