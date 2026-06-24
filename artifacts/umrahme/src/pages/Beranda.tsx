@@ -1,7 +1,7 @@
 import { useState, useEffect, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import heroBg from '@assets/Temanumrah_BG_1782267672802.png';
+import heroBg from '@assets/Temanumrah_BG_1782267711833.png';
 import GlobalSearch from '../components/GlobalSearch';
 import { TravelCompanionFlow } from '../components/dashboard/TravelCompanionFlow';
 import { checklistItems } from '../data/checklist';
