@@ -330,7 +330,7 @@ export default function Beranda() {
         {/* ── HERO HEADER ─────────────────────────────── */}
         <div className="relative overflow-hidden" style={{ height: 'clamp(240px, 58vw, 340px)' }}>
           <img src={heroBg} alt="" aria-hidden
-            className="absolute inset-0 h-full w-full object-cover animate-ken-burns"
+            className="absolute inset-0 h-full w-full object-cover"
             style={{ objectPosition: 'center 38%' }} />
           <div className="pointer-events-none absolute inset-0"
             style={{ background: 'linear-gradient(to bottom, rgba(5,10,20,0.55) 0%, transparent 45%)' }} />
