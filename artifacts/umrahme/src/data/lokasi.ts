@@ -300,7 +300,7 @@ export const daftarLokasi: Lokasi[] = [
     jarakKm: 0.3,
     jamKunjungan: 'Kadang dibuka sore hari',
     ringkas: 'Tempat Rasulullah \ufdfa pertama kali memimpin shalat Id dan shalat Istisqa (minta hujan).',
-    gambar: '',
+    gambar: '/lokasi/masjid-ghamamah.jpg',
     koordinat: { lat: 24.4681, lng: 39.6097 },
     sejarah:
       'Masjid Ghamamah terletak sekitar 300 meter di barat daya Masjid Nabawi. Dahulu kawasan ini adalah tanah lapang (al-Mushalla) tempat Rasulullah \ufdfa dan para sahabat menunaikan shalat Id dan shalat Istisqa. Nama \u201cGhamamah\u201d berarti awan/mendung, merujuk peristiwa turunnya hujan setelah Nabi \ufdfa memimpin shalat Istisqa.',
@@ -344,7 +344,7 @@ export const daftarLokasi: Lokasi[] = [
     jarakKm: 0.33,
     jamKunjungan: 'Umumnya terkunci, untuk ziarah luar',
     ringkas: 'Masjid bersejarah dekat Masjid Nabawi, dikaitkan dengan Khalifah Abu Bakar \u0631\u0636\u064a \u0627\u0644\u0644\u0647 \u0639\u0646\u0647.',
-    gambar: '',
+    gambar: '/lokasi/masjid-abu-bakar.jpg',
     koordinat: { lat: 24.4676, lng: 39.6101 },
     sejarah:
       'Masjid Abu Bakar Ash-Shiddiq adalah salah satu dari masjid-masjid tua bersejarah di barat daya Masjid Nabawi, berjarak sekitar 330 meter. Masjid ini dikaitkan dengan dua hal: tempat Abu Bakar \u0631\u0636\u064a \u0627\u0644\u0644\u0647 \u0639\u0646\u0647 pernah memimpin shalat Id, dan lokasi yang dinisbahkan kepada beliau.',
@@ -381,7 +381,7 @@ export const daftarLokasi: Lokasi[] = [
     jarakKm: 0.3,
     jamKunjungan: 'Kadang dibuka untuk peziarah',
     ringkas: 'Masjid bersejarah dekat Masjid Nabawi, dinisbahkan kepada Ali bin Abi Thalib \u0631\u0636\u064a \u0627\u0644\u0644\u0647 \u0639\u0646\u0647.',
-    gambar: '',
+    gambar: '/lokasi/masjid-ali.jpg',
     koordinat: { lat: 24.4679, lng: 39.6094 },
     sejarah:
       'Masjid Ali bin Abi Thalib terletak sekitar 300 meter di arah barat Masjid Nabawi, di kawasan masjid-masjid tua bersama Masjid Ghamamah dan Masjid Abu Bakar. Masjid ini dinisbahkan kepada Ali bin Abi Thalib \u0631\u0636\u064a \u0627\u0644\u0644\u0647 \u0639\u0646\u0647 dan pernah digunakan untuk shalat Id.',
@@ -413,7 +413,7 @@ export const daftarLokasi: Lokasi[] = [
     jarakKm: 3,
     jamKunjungan: 'Area terbuka, masjid utama buka',
     ringkas: 'Kompleks masjid kecil bersejarah di lokasi Perang Khandaq (Perang Parit).',
-    gambar: '',
+    gambar: '/lokasi/sabu-masajid.jpg',
     koordinat: { lat: 24.4847, lng: 39.6028 },
     sejarah:
       'Sab\u2019u Masajid (\u201cTujuh Masjid\u201d) adalah kompleks beberapa masjid kecil bersejarah di sisi barat Gunung Sala\u2019, Madinah. Lokasi ini terhubung dengan Perang Khandaq (Perang Parit) tahun 5 H/627 M, ketika kaum muslimin menggali parit untuk mempertahankan Madinah dari pasukan gabungan (Al-Ahzab).',
@@ -819,7 +819,7 @@ export const daftarLokasi: Lokasi[] = [
     jarakKm: 1.5,
     jamKunjungan: 'Dilihat dari area sekitar',
     ringkas: 'Gunung di pusat Madinah, titik strategis pertahanan dalam Perang Khandaq.',
-    gambar: '',
+    gambar: '/lokasi/jabal-sala.jpg',
     koordinat: { lat: 24.4772, lng: 39.6053 },
     sejarah:
       'Jabal Sala\u2019 adalah gunung yang terletak di bagian dalam Kota Madinah, dekat kompleks Sab\u2019u Masajid. Gunung ini menjadi titik strategis pertahanan kaum muslimin saat Perang Khandaq, karena parit digali di sisi-sisi yang rawan sementara Jabal Sala\u2019 menjadi benteng alami di belakang pasukan.',
