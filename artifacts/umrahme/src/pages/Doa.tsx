@@ -6,6 +6,15 @@ import { IconSearch, IconChevron, IconDoa, IconBack } from '../components/icons'
 import EmptyState from '../components/EmptyState';
 import MihrabCard from '../components/MihrabCard';
 
+const accents = ['maroon', 'gold', 'green', 'blue', 'plum'] as const;
+const accentMap: Record<string, { tile: string; icon: string; count: string }> = {
+  maroon: { tile: 'bg-gradient-to-br from-primary/15 to-primary/5', icon: 'text-primary', count: 'bg-primary/10 text-primary' },
+  gold:   { tile: 'bg-gradient-to-br from-gold/20 to-gold/5',       icon: 'text-gold',    count: 'bg-gold/15 text-gold' },
+  green:  { tile: 'bg-gradient-to-br from-emerald-500/15 to-emerald-500/5', icon: 'text-emerald-600', count: 'bg-emerald-500/10 text-emerald-600' },
+  blue:   { tile: 'bg-gradient-to-br from-sky-500/15 to-sky-500/5', icon: 'text-sky-600', count: 'bg-sky-500/10 text-sky-600' },
+  plum:   { tile: 'bg-gradient-to-br from-fuchsia-500/12 to-fuchsia-500/5', icon: 'text-fuchsia-700', count: 'bg-fuchsia-500/10 text-fuchsia-700' },
+};
+
 function useIsDesktop() {
   const [isDesktop, setIsDesktop] = useState(() =>
     typeof window !== 'undefined' ? window.innerWidth >= 1024 : false,
@@ -167,12 +176,12 @@ function DoaRow({
 function SearchBox({ q, setQ }: { q: string; setQ: (v: string) => void }) {
   return (
     <div className="relative">
-      <IconSearch className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-ash" />
+      <IconSearch className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-mute" />
       <input
         value={q}
         onChange={(e) => setQ(e.target.value)}
         placeholder="Cari doa… (mis. talbiyah, ka'bah)"
-        className="w-full rounded-full border border-hairline bg-surface-card py-3.5 pl-12 pr-4 text-[15px] text-ink placeholder:text-ash focus:border-hairline-strong focus:outline-none focus:ring-2 focus:ring-[rgba(59,130,246,0.5)]"
+        className="w-full rounded-full border border-hairline bg-surface-card px-4 py-3 pl-12 text-[15px] text-ink placeholder:text-ash shadow-drop-soft focus:outline-none focus:ring-2 focus:ring-primary/20"
       />
     </div>
   );
@@ -281,21 +290,27 @@ export default function DoaPage() {
           <SearchBox q={q} setQ={setQ} />
         </div>
         <div className="mt-5 space-y-3 px-5 pb-6">
-          {kategoriDoaMeta.map((k) => {
+          {kategoriDoaMeta.map((k, i) => {
             const jumlah = daftarDoa.filter((d) => d.kategori === k.id).length;
+            const a = accentMap[accents[i % accents.length]];
             return (
               <button
                 key={k.id}
                 type="button"
                 onClick={() => setParams({ kategori: k.id })}
-                className="flex w-full items-center gap-3 rounded-md border border-hairline bg-surface-card px-4 py-4 text-left active:scale-[0.99] hover:bg-surface-bone transition-colors"
+                className="group flex w-full items-center gap-4 rounded-2xl border border-hairline bg-surface-card p-4 text-left shadow-drop-soft transition-all hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.99]"
               >
-                <div className="min-w-0 flex-1">
-                  <p className="text-[15px] font-semibold text-ink">{k.judul}</p>
-                  <p className="truncate text-xs text-charcoal">{k.deskripsi}</p>
+                <div className={`flex h-12 w-12 flex-none items-center justify-center rounded-xl ${a.tile}`}>
+                  <IconDoa className={`h-6 w-6 ${a.icon}`} />
                 </div>
-                <span className="font-mono text-xs text-mute">{jumlah}</span>
-                <IconChevron className="h-4 w-4 flex-none text-ash" />
+                <div className="min-w-0 flex-1">
+                  <h2 className="font-display text-[16px] font-bold leading-tight text-ink">{k.judul}</h2>
+                  <p className="mt-0.5 line-clamp-1 text-[12.5px] text-charcoal">{k.deskripsi}</p>
+                </div>
+                <div className="flex flex-none items-center gap-2">
+                  <span className={`rounded-full px-2 py-0.5 font-mono text-[11px] font-semibold ${a.count}`}>{jumlah}</span>
+                  <IconChevron className="h-4 w-4 text-ash transition-transform group-hover:translate-x-0.5" />
+                </div>
               </button>
             );
           })}
@@ -340,9 +355,10 @@ export default function DoaPage() {
             </div>
           ) : (
             <div className="space-y-5">
-              {kategoriDoaMeta.map((k) => {
+              {kategoriDoaMeta.map((k, i) => {
                 const doaList = doaByKategori(k.id);
                 if (!doaList.length) return null;
+                const a = accentMap[accents[i % accents.length]];
                 return (
                   <div key={k.id}>
                     <button
@@ -355,10 +371,10 @@ export default function DoaPage() {
                         kategori === k.id ? 'text-ink' : 'text-mute hover:text-body'
                       } transition-colors`}
                     >
-                      <span className="font-mono text-[11px] uppercase tracking-widest">
+                      <span className={`font-mono text-[11px] uppercase tracking-widest ${kategori === k.id ? a.icon : ''}`}>
                         {k.judul}
                       </span>
-                      <span className="font-mono text-[11px] text-ash">{doaList.length}</span>
+                      <span className={`rounded-full px-1.5 py-0.5 font-mono text-[10px] font-semibold ${kategori === k.id ? a.count : 'text-ash'}`}>{doaList.length}</span>
                     </button>
 
                     <div className="space-y-2">
@@ -389,7 +405,7 @@ export default function DoaPage() {
           </div>
         ) : (
           <div className="flex h-full flex-col items-center justify-center px-12 text-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-md border border-hairline bg-surface-card text-ash shadow-drop-card">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-hairline bg-gradient-to-br from-primary/15 to-primary/5 text-primary shadow-drop-card">
               <IconDoa className="h-7 w-7" />
             </div>
             <p className="mt-4 font-display text-xl font-bold text-ink">
