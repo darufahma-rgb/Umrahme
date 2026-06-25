@@ -37,15 +37,17 @@ const inputBase: React.CSSProperties = {
   boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.04)',
 };
 
-function StyledInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
-  return (
-    <input {...props}
-      className={`w-full rounded-xl px-4 py-3 text-sm transition-all duration-150 focus:outline-none ${props.className ?? ''}`}
-      style={{ ...inputBase, ...props.style }}
-      onFocus={e => { e.currentTarget.style.border = '1px solid #4338ca'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(67,56,202,0.10)'; e.currentTarget.style.background = '#ffffff'; props.onFocus?.(e); }}
-      onBlur={e => { e.currentTarget.style.border = '1px solid rgba(0,0,0,0.09)'; e.currentTarget.style.boxShadow = 'inset 0 1px 2px rgba(0,0,0,0.04)'; e.currentTarget.style.background = '#fafaf9'; props.onBlur?.(e); }} />
-  );
-}
+const StyledInput = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
+  function StyledInput(props, ref) {
+    return (
+      <input {...props} ref={ref}
+        className={`w-full rounded-xl px-4 py-3 text-sm transition-all duration-150 focus:outline-none ${props.className ?? ''}`}
+        style={{ ...inputBase, ...props.style }}
+        onFocus={e => { e.currentTarget.style.border = '1px solid #4338ca'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(67,56,202,0.10)'; e.currentTarget.style.background = '#ffffff'; props.onFocus?.(e); }}
+        onBlur={e => { e.currentTarget.style.border = '1px solid rgba(0,0,0,0.09)'; e.currentTarget.style.boxShadow = 'inset 0 1px 2px rgba(0,0,0,0.04)'; e.currentTarget.style.background = '#fafaf9'; props.onBlur?.(e); }} />
+    );
+  }
+);
 
 function StyledTextarea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return (
@@ -71,10 +73,23 @@ const FASE_OPTIONS: { value: JamaahAccountRow['fase']; label: string }[] = [
   { value: 'selesai', label: 'Selesai' },
 ];
 
+type TabId = 'profil' | 'operasional' | 'jamaah' | 'agenda' | 'pengumuman' | 'akun';
+
+const TABS: { id: TabId; label: string }[] = [
+  { id: 'profil', label: 'Profil & Branding' },
+  { id: 'operasional', label: 'Operasional' },
+  { id: 'jamaah', label: 'Jamaah' },
+  { id: 'agenda', label: 'Agenda' },
+  { id: 'pengumuman', label: 'Pengumuman' },
+  { id: 'akun', label: 'Akun Travel' },
+];
+
 export default function AdminTenantForm() {
   const { id } = useParams<{ id: string }>();
   const isNew = id === 'baru';
   const navigate = useNavigate();
+
+  const [activeTab, setActiveTab] = useState<TabId>('profil');
 
   const [loading, setLoading] = useState(!isNew);
   const [submitting, setSubmitting] = useState(false);
@@ -146,6 +161,8 @@ export default function AdminTenantForm() {
   const [jmFase, setJmFase] = useState<JamaahAccountRow['fase']>('persiapan');
   const [jmSubmitting, setJmSubmitting] = useState(false);
   const [jmError, setJmError] = useState('');
+  const [showDetailJamaah, setShowDetailJamaah] = useState(false);
+  const namaRef = useRef<HTMLInputElement>(null);
 
   const [editingJamaahId, setEditingJamaahId] = useState<string | null>(null);
   const [editNama, setEditNama] = useState('');
@@ -441,6 +458,7 @@ export default function AdminTenantForm() {
       await createJamaah(id!, { nama: jmNama.trim(), nomor_jamaah: jmNomorJamaah.trim(), rombongan: jmRombongan.trim() || null, nomor_bus: jmBus.trim() || null, nomor_kamar: jmKamar.trim() || null, nomor_paspor: jmPaspor.trim() || null, fase: jmFase });
       setJmNama(''); setJmNomorJamaah(''); setJmRombongan(''); setJmBus(''); setJmKamar(''); setJmPaspor(''); setJmFase('persiapan');
       await loadJamaah();
+      namaRef.current?.focus();
     } catch (err: unknown) { setJmError(err instanceof Error ? err.message : 'Gagal menambah jamaah.'); }
     setJmSubmitting(false);
   }
@@ -611,6 +629,27 @@ export default function AdminTenantForm() {
   function formatTanggal(iso: string) { return new Date(iso + 'T00:00:00').toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }); }
   function formatDatetime(iso: string) { return new Date(iso).toLocaleString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }); }
 
+  function SaveButton({ label }: { label?: string }) {
+    return (
+      <div className="flex items-center gap-3 pt-7">
+        <button type="submit" disabled={submitting}
+          className="font-semibold text-[13px] px-7 py-3 rounded-xl transition-all duration-150 active:scale-[0.98] disabled:opacity-60"
+          style={{ background: submitting ? '#6366f1' : 'linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)', color: '#ffffff', boxShadow: submitting ? 'none' : '0 2px 8px rgba(67,56,202,0.26), 0 1px 2px rgba(67,56,202,0.18)' }}>
+          {submitting
+            ? <span className="flex items-center gap-2"><svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeOpacity="0.3" /><path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" /></svg>Menyimpan...</span>
+            : (label ?? (isNew ? 'Buat Tenant' : 'Simpan Perubahan'))}
+        </button>
+        <button type="button" onClick={() => navigate('/admin')}
+          className="text-[13px] font-medium px-4 py-3 rounded-xl transition-all duration-150"
+          style={{ color: '#9ca3af' }}
+          onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#374151'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(0,0,0,0.04)'; }}
+          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#9ca3af'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}>
+          Batal
+        </button>
+      </div>
+    );
+  }
+
   if (loading) {
     return <AdminLayout><div className="font-mono text-[12px] py-16 text-center" style={{ color: '#d1d5db' }}>Memuat data tenant...</div></AdminLayout>;
   }
@@ -618,7 +657,9 @@ export default function AdminTenantForm() {
   return (
     <AdminLayout>
       <div className="max-w-2xl">
-        <div className="flex items-center gap-4 mb-8">
+
+        {/* ── Header ── */}
+        <div className="flex items-center gap-4 mb-6">
           <button onClick={() => navigate('/admin')} className="flex items-center gap-1.5 text-[13px] font-medium transition-all duration-150" style={{ color: '#9ca3af' }}
             onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#4338ca'; }}
             onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#9ca3af'; }}>
@@ -636,653 +677,748 @@ export default function AdminTenantForm() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-0">
+        {/* ── Tab Bar ── */}
+        <div
+          className="sticky top-0 z-10 -mx-1 mb-6 flex gap-1 overflow-x-auto border-b px-1 pb-0"
+          style={{ background: '#f9f7f3', borderColor: 'rgba(0,0,0,0.06)' }}
+        >
+          {TABS.map(t => {
+            const disabled = isNew && t.id !== 'profil';
+            const active = activeTab === t.id;
+            return (
+              <button
+                key={t.id}
+                type="button"
+                disabled={disabled}
+                onClick={() => setActiveTab(t.id)}
+                className="relative flex-none whitespace-nowrap px-4 py-3 text-[13px] font-semibold transition-colors"
+                style={{
+                  color: disabled ? '#d1d5db' : active ? '#4338ca' : '#6b7280',
+                  cursor: disabled ? 'not-allowed' : 'pointer',
+                  background: 'transparent',
+                  border: 'none',
+                }}
+              >
+                {t.label}
+                {active && (
+                  <span
+                    className="absolute inset-x-2 -bottom-px h-0.5 rounded-full"
+                    style={{ background: '#4338ca' }}
+                  />
+                )}
+              </button>
+            );
+          })}
+        </div>
 
-          {/* ── Import dari Poster ── */}
-          <div className="rounded-t-2xl px-6 py-5 mb-0" style={{ background: 'rgba(67,56,202,0.03)', border: '2px dashed rgba(67,56,202,0.22)', borderRadius: '16px 16px 0 0' }}>
-            <p className="font-mono text-[10px] uppercase tracking-widest mb-1" style={{ color: '#4338ca' }}>
-              ✨ Import dari Poster
+        {/* ── Hint untuk tenant baru ── */}
+        {isNew && activeTab !== 'profil' && (
+          <div className="py-16 text-center">
+            <p className="text-[14px]" style={{ color: '#9ca3af' }}>
+              Simpan tenant terlebih dahulu untuk mengelola <strong>{activeTab}</strong>.
             </p>
-            <p className="text-[12px] mb-3" style={{ color: '#6b7280' }}>
-              Upload foto poster/brosur keberangkatan — AI akan membaca dan mengisi form secara otomatis.
-            </p>
-            <input
-              type="file"
-              accept="image/png,image/jpeg,image/webp"
-              onChange={e => {
-                const file = e.target.files?.[0];
-                if (file) handleOcrPoster(file);
-              }}
-              className="hidden"
-              id="poster-upload"
-            />
-            <label
-              htmlFor="poster-upload"
-              className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[12px] font-semibold transition-all"
-              style={{ background: '#4338ca', color: '#ffffff' }}
-            >
-              {ocrLoading ? '⏳ Membaca poster...' : '📎 Pilih Foto Poster'}
-            </label>
-            {ocrLoading && (
-              <p className="mt-2 text-[11px] animate-pulse" style={{ color: '#4338ca' }}>
-                AI sedang membaca poster, mohon tunggu...
-              </p>
-            )}
-            {ocrError && (
-              <p className="mt-2 text-[11px]" style={{ color: '#dc2626' }}>{ocrError}</p>
-            )}
-            {ocrResult && !ocrLoading && (
-              <p className="mt-2 text-[11px]" style={{ color: '#16a34a' }}>
-                ✓ Data berhasil diekstrak dan form telah diisi otomatis. Periksa dan sesuaikan jika perlu.
-              </p>
-            )}
           </div>
+        )}
 
-          <SectionDivider />
+        {/* ══════════════════════════════════════════════
+            TAB: PROFIL & BRANDING  +  OPERASIONAL
+            Keduanya dalam satu form handleSubmit
+        ══════════════════════════════════════════════ */}
+        {(activeTab === 'profil' || activeTab === 'operasional') && (
+          <form onSubmit={handleSubmit} className="space-y-0">
 
-          <div className="px-6 py-6" style={cardStyle}>
-            <FieldLabel>Kode Aktivasi{!isNew && <span className="ml-2 normal-case" style={{ color: '#d1d5db', fontFamily: 'inherit', letterSpacing: 'normal', textTransform: 'none', fontSize: '10px' }}>(tidak dapat diubah)</span>}</FieldLabel>
-            {isNew ? (
-              <div className="flex gap-2">
-                <input type="text" value={activationCode} onChange={e => { setActivationCode(e.target.value.toUpperCase()); setCodeError(''); }} placeholder="Ketik atau klik Generate" maxLength={20} required
-                  className="flex-1 font-mono rounded-xl px-4 py-3 text-sm uppercase transition-all duration-150 focus:outline-none" style={{ ...inputBase, letterSpacing: '0.08em' }}
-                  onFocus={e => { e.currentTarget.style.border = '1px solid #4338ca'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(67,56,202,0.10)'; e.currentTarget.style.background = '#ffffff'; }}
-                  onBlur={e => { e.currentTarget.style.border = '1px solid rgba(0,0,0,0.09)'; e.currentTarget.style.boxShadow = 'inset 0 1px 2px rgba(0,0,0,0.04)'; e.currentTarget.style.background = '#fafaf9'; }} />
-                <button type="button" onClick={() => { setActivationCode(generateActivationCode()); setCodeError(''); }}
-                  className="px-4 text-[12px] font-semibold rounded-xl transition-all duration-150 whitespace-nowrap"
-                  style={{ background: 'rgba(67,56,202,0.07)', color: '#4338ca', border: '1px solid rgba(67,56,202,0.15)' }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(67,56,202,0.12)'; }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(67,56,202,0.07)'; }}>Generate</button>
-              </div>
-            ) : (
-              <div className="font-mono text-sm px-4 py-3 rounded-xl" style={{ background: 'rgba(67,56,202,0.05)', color: '#4338ca', border: '1px solid rgba(67,56,202,0.12)', letterSpacing: '0.08em' }}>{activationCode}</div>
-            )}
-            {codeError && <p className="mt-2 text-[12px]" style={{ color: '#dc2626' }}>{codeError}</p>}
-          </div>
-
-          <SectionDivider />
-
-          <div className="px-6 py-6" style={cardStyle}>
-            <FieldLabel>Nama Travel <span style={{ color: '#f87171' }}>*</span></FieldLabel>
-            <StyledInput type="text" value={namaTravel} onChange={e => handleNamaChange(e.target.value)} required placeholder="Barakah Mulia Wisata" maxLength={80} />
-          </div>
-
-          <SectionDivider />
-
-          <div className="px-6 py-6" style={cardStyle}>
-            <p className="font-mono text-[10px] uppercase tracking-[0.14em] mb-4" style={{ color: '#6b7280' }}>Warna Brand</p>
-            <div className="rounded-xl p-4 space-y-5" style={{ background: '#fafaf9', border: '1px solid rgba(0,0,0,0.05)' }}>
-              <div>
-                <p className="text-[11px] font-semibold mb-2.5" style={{ color: '#374151' }}>Primary <span className="ml-2 font-normal" style={{ color: '#9ca3af' }}>— warna brand utama</span></p>
-                <div className="flex items-center gap-3">
-                  <input type="color" value={primaryColor} onChange={e => handleColorChange(e.target.value)} className="h-10 w-14 rounded-lg cursor-pointer flex-none" style={{ border: '1px solid rgba(0,0,0,0.10)' }} />
-                  <input type="text" value={primaryColor} onChange={e => { if (/^#[0-9a-fA-F]{0,6}$/.test(e.target.value)) handleColorChange(e.target.value); }} className="font-mono rounded-xl px-3 py-2.5 text-[13px] transition-all duration-150 focus:outline-none" style={{ ...inputBase, width: '120px', letterSpacing: '0.04em' }} onFocus={e => { e.currentTarget.style.border = '1px solid #4338ca'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(67,56,202,0.10)'; e.currentTarget.style.background = '#ffffff'; }} onBlur={e => { e.currentTarget.style.border = '1px solid rgba(0,0,0,0.09)'; e.currentTarget.style.boxShadow = 'inset 0 1px 2px rgba(0,0,0,0.04)'; e.currentTarget.style.background = '#fafaf9'; }} />
-                  <div className="flex-1 h-8 rounded-lg" style={{ background: primaryColor, opacity: 0.25 }} />
-                </div>
-              </div>
-              <div style={{ height: '1px', background: 'rgba(0,0,0,0.06)' }} />
-              <div>
-                <p className="text-[11px] font-semibold mb-2.5" style={{ color: '#374151' }}>Primary-Deep <span className="ml-2 font-normal" style={{ color: '#9ca3af' }}>— hover/active (auto jika kosong)</span></p>
-                <div className="flex items-center gap-3">
-                  <input type="color" value={primaryDeepColor || darkenHex(primaryColor)} onChange={e => setPrimaryDeepColor(e.target.value)} className="h-10 w-14 rounded-lg cursor-pointer flex-none" style={{ border: '1px solid rgba(0,0,0,0.10)' }} />
-                  <input type="text" value={primaryDeepColor} onChange={e => { if (/^#[0-9a-fA-F]{0,6}$/.test(e.target.value)) setPrimaryDeepColor(e.target.value); }} placeholder={darkenHex(primaryColor)} className="font-mono rounded-xl px-3 py-2.5 text-[13px] transition-all duration-150 focus:outline-none" style={{ ...inputBase, width: '120px', letterSpacing: '0.04em' }} onFocus={e => { e.currentTarget.style.border = '1px solid #4338ca'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(67,56,202,0.10)'; e.currentTarget.style.background = '#ffffff'; }} onBlur={e => { e.currentTarget.style.border = '1px solid rgba(0,0,0,0.09)'; e.currentTarget.style.boxShadow = 'inset 0 1px 2px rgba(0,0,0,0.04)'; e.currentTarget.style.background = '#fafaf9'; }} />
-                  {primaryDeepColor && (
-                    <button type="button" onClick={() => setPrimaryDeepColor('')} className="text-[11px] transition-all duration-150" style={{ color: '#9ca3af' }} onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#4338ca'; }} onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#9ca3af'; }}>Reset ke auto</button>
+            {/* ── TAB PROFIL ── */}
+            {activeTab === 'profil' && (
+              <>
+                {/* Import dari Poster */}
+                <div className="rounded-t-2xl px-6 py-5 mb-0" style={{ background: 'rgba(67,56,202,0.03)', border: '2px dashed rgba(67,56,202,0.22)', borderRadius: '16px 16px 0 0' }}>
+                  <p className="font-mono text-[10px] uppercase tracking-widest mb-1" style={{ color: '#4338ca' }}>
+                    ✨ Import dari Poster
+                  </p>
+                  <p className="text-[12px] mb-3" style={{ color: '#6b7280' }}>
+                    Upload foto poster/brosur keberangkatan — AI akan membaca dan mengisi form secara otomatis.
+                  </p>
+                  <input
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp"
+                    onChange={e => {
+                      const file = e.target.files?.[0];
+                      if (file) handleOcrPoster(file);
+                    }}
+                    className="hidden"
+                    id="poster-upload"
+                  />
+                  <label
+                    htmlFor="poster-upload"
+                    className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[12px] font-semibold transition-all"
+                    style={{ background: '#4338ca', color: '#ffffff' }}
+                  >
+                    {ocrLoading ? '⏳ Membaca poster...' : '📎 Pilih Foto Poster'}
+                  </label>
+                  {ocrLoading && (
+                    <p className="mt-2 text-[11px] animate-pulse" style={{ color: '#4338ca' }}>
+                      AI sedang membaca poster, mohon tunggu...
+                    </p>
+                  )}
+                  {ocrError && (
+                    <p className="mt-2 text-[11px]" style={{ color: '#dc2626' }}>{ocrError}</p>
+                  )}
+                  {ocrResult && !ocrLoading && (
+                    <p className="mt-2 text-[11px]" style={{ color: '#16a34a' }}>
+                      ✓ Data berhasil diekstrak dan form telah diisi otomatis. Periksa dan sesuaikan jika perlu.
+                    </p>
                   )}
                 </div>
-              </div>
-            </div>
-          </div>
 
-          <SectionDivider />
+                <SectionDivider />
 
-          <div className="px-6 py-6" style={cardStyle}>
-            <FieldLabel>Logo Tenant</FieldLabel>
-            <div className="flex items-start gap-4">
-              <div className="flex-none w-28 rounded-xl flex items-center justify-center overflow-hidden cursor-pointer transition-all duration-150" style={{ border: logoPreview || existingLogoUrl ? '1px solid rgba(0,0,0,0.08)' : '2px dashed rgba(0,0,0,0.12)', background: '#fafaf9', height: '72px' }} onClick={() => fileInputRef.current?.click()}
-                onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = '#4338ca'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = logoPreview || existingLogoUrl ? 'rgba(0,0,0,0.08)' : 'rgba(0,0,0,0.12)'; }}>
-                {logoPreview ? <img src={logoPreview} alt="Preview" className="max-w-full max-h-full object-contain p-2" /> : existingLogoUrl ? <img src={existingLogoUrl} alt="Logo" className="max-w-full max-h-full object-contain p-2" /> : <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" /></svg>}
-              </div>
-              <div className="flex-1">
-                <button type="button" onClick={() => fileInputRef.current?.click()} className="flex items-center gap-2 px-4 py-2.5 text-[12px] font-semibold rounded-xl transition-all duration-150" style={{ background: 'rgba(67,56,202,0.07)', color: '#4338ca', border: '1px solid rgba(67,56,202,0.15)' }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(67,56,202,0.12)'; }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(67,56,202,0.07)'; }}>
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 16 12 12 8 16" /><line x1="12" y1="12" x2="12" y2="21" /><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" /></svg>
-                  Pilih File
-                </button>
-                <input ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/webp" onChange={handleLogoChange} className="hidden" />
-                <p className="mt-2 text-[11px]" style={{ color: '#9ca3af' }}>PNG, JPG, WebP — maks. 1MB. SVG tidak didukung.</p>
-                {(logoPreview || existingLogoUrl) && (
-                  <button type="button" onClick={() => { setLogoFile(null); setLogoPreview(null); setExistingLogoUrl(null); }} className="mt-1 text-[11px] transition-all duration-150" style={{ color: '#9ca3af' }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#dc2626'; }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#9ca3af'; }}>Hapus logo</button>
-                )}
-              </div>
-            </div>
-
-            <div style={{ height: '1px', background: 'rgba(0,0,0,0.05)', margin: '0 -24px' }} />
-
-            {/* ── Hero Image ─────────────────────────────── */}
-            <div className="pt-5">
-              <label className="block text-[11px] font-semibold uppercase tracking-widest mb-2" style={{ color: '#9ca3af' }}>
-                Hero Image (Background Beranda)
-              </label>
-
-              {(heroPreview || existingHeroUrl) && (
-                <div className="mb-3 rounded-xl overflow-hidden" style={{ height: '120px' }}>
-                  <img
-                    src={heroPreview || existingHeroUrl}
-                    alt="Hero preview"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              )}
-
-              <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => heroInputRef.current?.click()}
-                  className="flex items-center gap-2 px-4 py-2.5 text-[12px] font-semibold rounded-xl transition-all duration-150"
-                  style={{ background: 'rgba(67,56,202,0.07)', color: '#4338ca', border: '1px solid rgba(67,56,202,0.15)' }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(67,56,202,0.12)'; }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(67,56,202,0.07)'; }}
-                >
-                  <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                    <polyline points="17 8 12 3 7 8"/>
-                    <line x1="12" y1="3" x2="12" y2="15"/>
-                  </svg>
-                  {existingHeroUrl || heroPreview ? 'Ganti Hero Image' : 'Upload Hero Image'}
-                </button>
-                {(heroPreview || existingHeroUrl) && (
-                  <button
-                    type="button"
-                    onClick={() => { setHeroFile(null); setHeroPreview(''); setExistingHeroUrl(''); }}
-                    className="text-[11px] transition-colors"
-                    style={{ color: '#f87171' }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#dc2626'; }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#f87171'; }}
-                  >
-                    Hapus
-                  </button>
-                )}
-              </div>
-
-              <input
-                ref={heroInputRef}
-                type="file"
-                accept="image/png,image/jpeg,image/webp"
-                onChange={handleHeroChange}
-                className="hidden"
-              />
-              <p className="mt-1.5 text-[10px]" style={{ color: '#9ca3af' }}>
-                Maks 3MB · PNG, JPG, WEBP · Rekomendasi: 1200×600px landscape
-              </p>
-            </div>
-
-            <div style={{ height: '1px', background: 'rgba(0,0,0,0.05)', margin: '20px -24px' }} />
-
-            {/* ── Template Sertifikat ─────────────────────────── */}
-            <div>
-              <label className="block text-[11px] font-semibold uppercase tracking-widest mb-2" style={{ color: '#9ca3af' }}>
-                Template Sertifikat
-              </label>
-
-              {(sertifikatPreview || existingSertifikatUrl) && (
-                <div className="mb-3 rounded-xl overflow-hidden border border-slate-200" style={{ aspectRatio: '16/9', maxHeight: '120px' }}>
-                  <img
-                    src={sertifikatPreview || existingSertifikatUrl}
-                    alt="Preview template sertifikat"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              )}
-
-              <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => sertifikatInputRef.current?.click()}
-                  className="flex items-center gap-2 px-4 py-2.5 text-[12px] font-semibold rounded-xl transition-all duration-150"
-                  style={{ background: 'rgba(67,56,202,0.07)', color: '#4338ca', border: '1px solid rgba(67,56,202,0.15)' }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(67,56,202,0.12)'; }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(67,56,202,0.07)'; }}
-                >
-                  <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                    <polyline points="17 8 12 3 7 8"/>
-                    <line x1="12" y1="3" x2="12" y2="15"/>
-                  </svg>
-                  {existingSertifikatUrl || sertifikatPreview ? 'Ganti Template' : 'Upload Template'}
-                </button>
-                {(sertifikatPreview || existingSertifikatUrl) && (
-                  <button
-                    type="button"
-                    onClick={() => { setSertifikatFile(null); setSertifikatPreview(''); setExistingSertifikatUrl(''); }}
-                    className="text-[11px] transition-colors"
-                    style={{ color: '#f87171' }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#dc2626'; }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#f87171'; }}
-                  >
-                    Hapus
-                  </button>
-                )}
-              </div>
-
-              <input
-                ref={sertifikatInputRef}
-                type="file"
-                accept="image/png,image/jpeg,image/webp"
-                onChange={handleSertifikatChange}
-                className="hidden"
-              />
-              <p className="mt-1.5 text-[10px]" style={{ color: '#9ca3af' }}>
-                Maks 5MB · PNG, JPG, WEBP · Rekomendasi: landscape 1200×848px
-              </p>
-              <p className="mt-1 text-[10px]" style={{ color: '#d97706' }}>
-                Pastikan template punya area kosong untuk nama jamaah di tengah
-              </p>
-            </div>
-          </div>
-
-          <SectionDivider />
-
-          <div className="px-6 py-6" style={cardStyle}>
-            <FieldLabel>Judul Halaman</FieldLabel>
-            <StyledInput type="text" value={pageTitle} onChange={e => setPageTitle(e.target.value)} placeholder={buildDefaultTitle(namaTravel) || 'Nama Travel — Pendamping Umrah Anda'} />
-            <p className="mt-2 text-[11px]" style={{ color: '#9ca3af' }}>Muncul di tab browser jamaah. Kosongkan untuk pakai default.</p>
-          </div>
-
-          <SectionDivider />
-
-          <div className="px-6 py-6" style={cardStyle}>
-            <p className="font-mono text-[10px] uppercase tracking-[0.14em] mb-4" style={{ color: '#6b7280' }}>Jadwal Perjalanan</p>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-[11px] font-semibold mb-2" style={{ color: '#374151' }}>Tanggal Keberangkatan</p>
-                <StyledInput type="date" value={tanggalKeberangkatan} onChange={e => { setTanggalKeberangkatan(e.target.value); setDateError(''); }} />
-              </div>
-              <div>
-                <p className="text-[11px] font-semibold mb-2" style={{ color: '#374151' }}>Tanggal Kepulangan</p>
-                <StyledInput type="date" value={tanggalKepulangan} onChange={e => { setTanggalKepulangan(e.target.value); setDateError(''); }} />
-              </div>
-            </div>
-            {dateError && <p className="mt-2 text-[12px] flex items-center gap-1.5" style={{ color: '#d97706' }}>{dateError}</p>}
-          </div>
-
-          <SectionDivider />
-
-          <div className="rounded-b-2xl px-6 py-6" style={cardStyle}>
-            <p className="font-mono text-[10px] uppercase tracking-[0.14em] mb-4" style={{ color: '#6b7280' }}>Info Operasional</p>
-            <p className="text-[11px] mb-4" style={{ color: '#9ca3af' }}>Semua field optional — kosong berarti tampilkan nilai default.</p>
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Hotel Makkah</p><StyledInput type="text" value={opHotelMakkah} onChange={e => setOpHotelMakkah(e.target.value)} placeholder="Nama & no kamar hotel" maxLength={120} /></div>
-                <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Hotel Madinah</p><StyledInput type="text" value={opHotelMadinah} onChange={e => setOpHotelMadinah(e.target.value)} placeholder="Nama & no kamar hotel" maxLength={120} /></div>
-              </div>
-              <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Titik Kumpul</p><StyledInput type="text" value={opMeetingPoint} onChange={e => setOpMeetingPoint(e.target.value)} placeholder="Cth: Lobby hotel lantai 1" maxLength={160} /></div>
-              <div style={{ height: '1px', background: 'rgba(0,0,0,0.05)' }} />
-              <div className="grid grid-cols-2 gap-4">
-                <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Nama Muthowwif</p><StyledInput type="text" value={opGuideName} onChange={e => setOpGuideName(e.target.value)} placeholder="Ust. Ahmad" maxLength={80} /></div>
-                <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>WhatsApp Muthowwif</p><StyledInput type="text" value={opGuideWhatsapp} onChange={e => setOpGuideWhatsapp(normalizePhone(e.target.value))} placeholder="628xxxxxxxxxx" /></div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Nama Tour Leader</p><StyledInput type="text" value={opTourLeaderName} onChange={e => setOpTourLeaderName(e.target.value)} placeholder="Bpk. Budi" maxLength={80} /></div>
-                <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>WhatsApp Tour Leader</p><StyledInput type="text" value={opTourLeaderWhatsapp} onChange={e => setOpTourLeaderWhatsapp(normalizePhone(e.target.value))} placeholder="628xxxxxxxxxx" /></div>
-              </div>
-              <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Catatan Darurat</p><StyledTextarea rows={2} value={opEmergencyNote} onChange={e => setOpEmergencyNote(e.target.value)} placeholder="Instruksi jika jamaah tersesat atau butuh bantuan darurat..." /></div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3 pt-7">
-            <button type="submit" disabled={submitting} className="font-semibold text-[13px] px-7 py-3 rounded-xl transition-all duration-150 active:scale-[0.98] disabled:opacity-60"
-              style={{ background: submitting ? '#6366f1' : 'linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)', color: '#ffffff', boxShadow: submitting ? 'none' : '0 2px 8px rgba(67,56,202,0.26), 0 1px 2px rgba(67,56,202,0.18)' }}>
-              {submitting ? <span className="flex items-center gap-2"><svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeOpacity="0.3" /><path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" /></svg>Menyimpan...</span> : isNew ? 'Buat Tenant' : 'Simpan Perubahan'}
-            </button>
-            <button type="button" onClick={() => navigate('/admin')} className="text-[13px] font-medium px-4 py-3 rounded-xl transition-all duration-150" style={{ color: '#9ca3af' }}
-              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#374151'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(0,0,0,0.04)'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#9ca3af'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}>Batal</button>
-          </div>
-        </form>
-
-        {!isNew && (
-          <>
-            {/* Agenda */}
-            <div className="mt-10">
-              <div className="flex items-center gap-3 mb-5">
-                <h2 className="font-bold" style={{ fontSize: '18px', color: '#111827', letterSpacing: '-0.02em' }}>Agenda Perjalanan</h2>
-                <span className="font-mono text-[10px] uppercase tracking-widest px-2 py-1 rounded-full" style={{ background: 'rgba(67,56,202,0.07)', color: '#4338ca' }}>{agendaItems.length} item</span>
-                <button type="button" onClick={handleInsertDummy} disabled={dummyLoading} className="ml-auto text-[11px] font-semibold px-3 py-1.5 rounded-lg transition-all duration-150 disabled:opacity-60" style={{ color: '#6b7280', border: '1px solid rgba(0,0,0,0.10)' }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#4338ca'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(67,56,202,0.25)'; }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#6b7280'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,0,0,0.10)'; }}>
-                  {dummyLoading ? 'Memasukkan...' : '+ Itinerary Demo'}
-                </button>
-              </div>
-
-              <div className="rounded-2xl px-6 py-6 mb-4" style={{ ...cardStyle, border: '1px solid rgba(67,56,202,0.12)' }}>
-                <p className="font-mono text-[10px] uppercase tracking-[0.14em] mb-4" style={{ color: '#6b7280' }}>Tambah Agenda Baru</p>
-                <form onSubmit={handleAddAgenda} className="space-y-3">
-                  <div className="grid grid-cols-2 gap-3">
-                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Tanggal <span style={{ color: '#f87171' }}>*</span></p><StyledInput type="date" value={agTanggal} onChange={e => setAgTanggal(e.target.value)} required /></div>
-                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Jam Mulai</p><StyledInput type="time" value={agJam} onChange={e => setAgJam(e.target.value)} /></div>
-                  </div>
-                  <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Judul Kegiatan <span style={{ color: '#f87171' }}>*</span></p><StyledInput type="text" value={agJudul} onChange={e => setAgJudul(e.target.value)} placeholder="Cth: Perjalanan ke Madinah" required /></div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Lokasi</p><StyledInput type="text" value={agLokasi} onChange={e => setAgLokasi(e.target.value)} placeholder="Bandara Soekarno-Hatta" /></div>
-                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Deskripsi</p><StyledTextarea rows={1} value={agDeskripsi} onChange={e => setAgDeskripsi(e.target.value)} placeholder="Keterangan tambahan..." /></div>
-                  </div>
-                  {agError && <p className="text-[12px]" style={{ color: '#dc2626' }}>{agError}</p>}
-                  <button type="submit" disabled={agSubmitting} className="flex items-center gap-2 px-5 py-2.5 text-[12px] font-semibold rounded-xl transition-all duration-150 disabled:opacity-60"
-                    style={{ background: 'linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)', color: '#ffffff', boxShadow: '0 2px 8px rgba(67,56,202,0.22)' }}>
-                    {agSubmitting ? <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeOpacity="0.3" /><path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" /></svg> : <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>}
-                    Tambah Agenda
-                  </button>
-                </form>
-              </div>
-
-              <div className="rounded-2xl overflow-hidden" style={cardStyle}>
-                {agendaLoading ? <div className="py-10 text-center font-mono text-[12px]" style={{ color: '#d1d5db' }}>Memuat agenda...</div> : agendaItems.length === 0 ? <div className="py-10 text-center"><p className="text-[13px]" style={{ color: '#9ca3af' }}>Belum ada agenda.</p></div> : (
-                  <table className="w-full">
-                    <thead><tr style={{ borderBottom: '1px solid rgba(0,0,0,0.06)', background: '#fafaf9' }}>
-                      {['Tanggal', 'Jam', 'Judul', 'Lokasi', ''].map(h => <th key={h} className="text-left font-mono text-[10px] uppercase tracking-[0.12em] px-5 py-3" style={{ color: '#9ca3af' }}>{h}</th>)}
-                    </tr></thead>
-                    <tbody>
-                      {agendaItems.map((item, i) => (
-                        <tr key={item.id} style={{ borderBottom: i < agendaItems.length - 1 ? '1px solid rgba(0,0,0,0.04)' : 'none' }}>
-                          <td className="px-5 py-3.5 text-[13px] font-medium whitespace-nowrap" style={{ color: '#374151' }}>{formatTanggal(item.tanggal)}</td>
-                          <td className="px-5 py-3.5 font-mono text-[12px]" style={{ color: '#6b7280' }}>{item.jam_mulai ? item.jam_mulai.slice(0, 5) : '—'}</td>
-                          <td className="px-5 py-3.5"><p className="text-[13px] font-semibold" style={{ color: '#111827' }}>{item.judul}</p>{item.deskripsi && <p className="text-[11px] mt-0.5" style={{ color: '#9ca3af' }}>{item.deskripsi}</p>}</td>
-                          <td className="px-5 py-3.5 text-[12px]" style={{ color: '#6b7280' }}>{item.lokasi ?? '—'}</td>
-                          <td className="px-5 py-3.5 text-right">
-                            <button type="button" onClick={() => handleDeleteAgenda(item.id, item.judul)} className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150" style={{ color: '#9ca3af', border: '1px solid rgba(0,0,0,0.07)' }}
-                              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#dc2626'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(220,38,38,0.25)'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(220,38,38,0.05)'; }}
-                              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#9ca3af'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,0,0,0.07)'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}>Hapus</button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                )}
-              </div>
-            </div>
-
-            {/* Pengumuman */}
-            <div className="mt-10">
-              <div className="flex items-center gap-3 mb-5">
-                <h2 className="font-bold" style={{ fontSize: '18px', color: '#111827', letterSpacing: '-0.02em' }}>Pengumuman Travel</h2>
-                <span className="font-mono text-[10px] uppercase tracking-widest px-2 py-1 rounded-full" style={{ background: 'rgba(67,56,202,0.07)', color: '#4338ca' }}>{announcements.length} item</span>
-              </div>
-              <div className="rounded-2xl px-6 py-6 mb-4" style={{ ...cardStyle, border: '1px solid rgba(67,56,202,0.12)' }}>
-                <form onSubmit={handleAddAnnouncement} className="space-y-3">
-                  <div className="grid grid-cols-2 gap-3">
-                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Label</p><StyledInput type="text" value={annLabel} onChange={e => setAnnLabel(e.target.value)} placeholder="Info / Penting / Darurat" /></div>
-                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Judul <span style={{ color: '#f87171' }}>*</span></p><StyledInput type="text" value={annTitle} onChange={e => setAnnTitle(e.target.value)} required placeholder="Perubahan jadwal..." maxLength={120} /></div>
-                  </div>
-                  <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Isi Pengumuman <span style={{ color: '#f87171' }}>*</span></p><StyledTextarea rows={3} value={annContent} onChange={e => setAnnContent(e.target.value)} required placeholder="Detail pengumuman untuk jamaah..." maxLength={1000} /></div>
-                  <label className="flex items-center gap-2.5 cursor-pointer">
-                    <input type="checkbox" checked={annImportant} onChange={e => setAnnImportant(e.target.checked)} className="rounded" />
-                    <span className="text-[12px]" style={{ color: '#374151' }}>Tandai sebagai penting</span>
-                  </label>
-                  {annError && <p className="text-[12px]" style={{ color: '#dc2626' }}>{annError}</p>}
-                  <button type="submit" disabled={annSubmitting} className="flex items-center gap-2 px-5 py-2.5 text-[12px] font-semibold rounded-xl transition-all duration-150 disabled:opacity-60"
-                    style={{ background: 'linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)', color: '#ffffff', boxShadow: '0 2px 8px rgba(67,56,202,0.22)' }}>
-                    Kirim Pengumuman
-                  </button>
-                </form>
-              </div>
-              <div className="rounded-2xl overflow-hidden" style={cardStyle}>
-                {annLoading ? <div className="py-8 text-center font-mono text-[12px]" style={{ color: '#d1d5db' }}>Memuat...</div> : announcements.length === 0 ? <div className="py-8 text-center text-[13px]" style={{ color: '#9ca3af' }}>Belum ada pengumuman.</div> : (
-                  <div className="divide-y" style={{ borderColor: 'rgba(0,0,0,0.04)' }}>
-                    {announcements.map(ann => (
-                      <div key={ann.id} className="px-5 py-4 flex items-start justify-between gap-4">
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="font-mono text-[10px] px-2 py-0.5 rounded-full" style={{ background: ann.important ? 'rgba(239,68,68,0.08)' : 'rgba(67,56,202,0.07)', color: ann.important ? '#dc2626' : '#4338ca' }}>{ann.label}</span>
-                            <span className="font-mono text-[10px]" style={{ color: '#9ca3af' }}>{formatDatetime(ann.published_at)}</span>
-                          </div>
-                          <p className="text-[13px] font-semibold truncate" style={{ color: '#111827' }}>{ann.title}</p>
-                          <p className="text-[12px] mt-0.5 truncate" style={{ color: '#6b7280' }}>{ann.content}</p>
-                        </div>
-                        <button type="button" onClick={() => handleDeleteAnnouncement(ann.id, ann.title)} className="flex-none font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150" style={{ color: '#9ca3af', border: '1px solid rgba(0,0,0,0.07)' }}
-                          onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#dc2626'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(220,38,38,0.25)'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(220,38,38,0.05)'; }}
-                          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#9ca3af'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,0,0,0.07)'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}>Hapus</button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Daftar Jamaah */}
-            <div className="mt-10">
-              <div className="flex items-center gap-3 mb-5">
-                <h2 className="font-bold" style={{ fontSize: '18px', color: '#111827', letterSpacing: '-0.02em' }}>Daftar Jamaah</h2>
-                <span className="font-mono text-[10px] uppercase tracking-widest px-2 py-1 rounded-full" style={{ background: 'rgba(67,56,202,0.07)', color: '#4338ca' }}>{jamaahList.length} jamaah</span>
-                <button type="button" onClick={() => { setImportOpen(o => !o); setImportError(''); setImportPreview([]); }}
-                  className="ml-auto inline-flex items-center gap-2 px-4 py-2 text-[12px] font-semibold rounded-xl transition-all duration-150"
-                  style={{ background: 'rgba(67,56,202,0.07)', color: '#4338ca', border: '1px solid rgba(67,56,202,0.15)' }}>
-                  <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                  Import dari Excel/PDF
-                </button>
-              </div>
-
-              {importOpen && (
-                <div className="rounded-2xl px-6 py-6 mb-4" style={{ ...cardStyle, border: '1px solid rgba(67,56,202,0.12)' }}>
-                  <div className="flex items-center gap-2 mb-3">
-                    <p className="font-mono text-[10px] uppercase tracking-[0.14em]" style={{ color: '#4338ca' }}>Import Jamaah dengan AI</p>
-                  </div>
-                  <p className="text-[12px] mb-4" style={{ color: '#6b7280' }}>
-                    Upload file Excel (.xlsx/.csv) atau PDF berisi daftar jamaah. AI akan membaca & merapikan datanya, lalu Anda bisa review sebelum menyimpan.
-                  </p>
-
-                  {importPreview.length === 0 ? (
-                    <div>
-                      <button type="button" onClick={() => importFileRef.current?.click()} disabled={importLoading}
-                        className="inline-flex items-center gap-2 px-5 py-2.5 text-[12px] font-semibold rounded-xl transition-all disabled:opacity-60"
-                        style={{ background: 'linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)', color: '#fff' }}>
-                        {importLoading ? 'AI sedang membaca...' : 'Pilih File'}
-                      </button>
-                      <input ref={importFileRef} type="file" accept=".xlsx,.xls,.csv,application/pdf,image/png,image/jpeg,image/webp" onChange={handleImportFile} className="hidden" />
-                      <p className="mt-2 text-[10px]" style={{ color: '#9ca3af' }}>Format: Excel, CSV, atau PDF. Maks ~10MB.</p>
+                {/* Kode Aktivasi */}
+                <div className="px-6 py-6" style={cardStyle}>
+                  <FieldLabel>Kode Aktivasi{!isNew && <span className="ml-2 normal-case" style={{ color: '#d1d5db', fontFamily: 'inherit', letterSpacing: 'normal', textTransform: 'none', fontSize: '10px' }}>(tidak dapat diubah)</span>}</FieldLabel>
+                  {isNew ? (
+                    <div className="flex gap-2">
+                      <input type="text" value={activationCode} onChange={e => { setActivationCode(e.target.value.toUpperCase()); setCodeError(''); }} placeholder="Ketik atau klik Generate" maxLength={20} required
+                        className="flex-1 font-mono rounded-xl px-4 py-3 text-sm uppercase transition-all duration-150 focus:outline-none" style={{ ...inputBase, letterSpacing: '0.08em' }}
+                        onFocus={e => { e.currentTarget.style.border = '1px solid #4338ca'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(67,56,202,0.10)'; e.currentTarget.style.background = '#ffffff'; }}
+                        onBlur={e => { e.currentTarget.style.border = '1px solid rgba(0,0,0,0.09)'; e.currentTarget.style.boxShadow = 'inset 0 1px 2px rgba(0,0,0,0.04)'; e.currentTarget.style.background = '#fafaf9'; }} />
+                      <button type="button" onClick={() => { setActivationCode(generateActivationCode()); setCodeError(''); }}
+                        className="px-4 text-[12px] font-semibold rounded-xl transition-all duration-150 whitespace-nowrap"
+                        style={{ background: 'rgba(67,56,202,0.07)', color: '#4338ca', border: '1px solid rgba(67,56,202,0.15)' }}
+                        onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(67,56,202,0.12)'; }}
+                        onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(67,56,202,0.07)'; }}>Generate</button>
                     </div>
                   ) : (
+                    <div className="font-mono text-sm px-4 py-3 rounded-xl" style={{ background: 'rgba(67,56,202,0.05)', color: '#4338ca', border: '1px solid rgba(67,56,202,0.12)', letterSpacing: '0.08em' }}>{activationCode}</div>
+                  )}
+                  {codeError && <p className="mt-2 text-[12px]" style={{ color: '#dc2626' }}>{codeError}</p>}
+                </div>
+
+                <SectionDivider />
+
+                {/* Nama Travel */}
+                <div className="px-6 py-6" style={cardStyle}>
+                  <FieldLabel>Nama Travel <span style={{ color: '#f87171' }}>*</span></FieldLabel>
+                  <StyledInput type="text" value={namaTravel} onChange={e => handleNamaChange(e.target.value)} required placeholder="Barakah Mulia Wisata" maxLength={80} />
+                </div>
+
+                <SectionDivider />
+
+                {/* Warna Brand */}
+                <div className="px-6 py-6" style={cardStyle}>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] mb-4" style={{ color: '#6b7280' }}>Warna Brand</p>
+                  <div className="rounded-xl p-4 space-y-5" style={{ background: '#fafaf9', border: '1px solid rgba(0,0,0,0.05)' }}>
                     <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <p className="text-[12px] font-semibold" style={{ color: '#374151' }}>{importPreview.length} jamaah terbaca — review & edit sebelum simpan:</p>
-                      </div>
-                      <div className="overflow-x-auto rounded-xl" style={{ border: '1px solid rgba(0,0,0,0.06)' }}>
-                        <table className="w-full text-[12px]">
-                          <thead><tr style={{ background: '#fafaf9' }}>
-                            {['Nama', 'No. Jamaah', 'Rombongan', 'No. Paspor', ''].map(h => <th key={h} className="text-left px-3 py-2 font-mono text-[10px] uppercase" style={{ color: '#9ca3af' }}>{h}</th>)}
-                          </tr></thead>
-                          <tbody>
-                            {importPreview.map((r, idx) => (
-                              <tr key={idx} style={{ borderTop: '1px solid rgba(0,0,0,0.04)' }}>
-                                <td className="px-2 py-1.5"><input value={r.nama} onChange={e => updatePreviewRow(idx, 'nama', e.target.value)} className="w-full rounded px-2 py-1 text-[12px]" style={{ border: '1px solid rgba(0,0,0,0.1)' }} /></td>
-                                <td className="px-2 py-1.5"><input value={r.nomor_jamaah} onChange={e => updatePreviewRow(idx, 'nomor_jamaah', e.target.value)} className="w-full rounded px-2 py-1 text-[12px] font-mono" style={{ border: '1px solid rgba(0,0,0,0.1)' }} /></td>
-                                <td className="px-2 py-1.5"><input value={r.rombongan} onChange={e => updatePreviewRow(idx, 'rombongan', e.target.value)} className="w-full rounded px-2 py-1 text-[12px]" style={{ border: '1px solid rgba(0,0,0,0.1)' }} /></td>
-                                <td className="px-2 py-1.5"><input value={r.nomor_paspor} onChange={e => updatePreviewRow(idx, 'nomor_paspor', e.target.value)} className="w-full rounded px-2 py-1 text-[12px] font-mono" style={{ border: '1px solid rgba(0,0,0,0.1)' }} /></td>
-                                <td className="px-2 py-1.5 text-right"><button type="button" onClick={() => removePreviewRow(idx)} className="text-[11px] px-2 py-1 rounded" style={{ color: '#dc2626' }}>Hapus</button></td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                      <div className="flex gap-2 mt-4">
-                        <button type="button" onClick={confirmImport} disabled={importSaving}
-                          className="px-5 py-2.5 text-[12px] font-semibold rounded-xl disabled:opacity-60"
-                          style={{ background: 'linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)', color: '#fff' }}>
-                          {importSaving ? 'Menyimpan...' : `Simpan ${importPreview.length} Jamaah`}
-                        </button>
-                        <button type="button" onClick={() => { setImportPreview([]); setImportError(''); }}
-                          className="px-5 py-2.5 text-[12px] font-semibold rounded-xl" style={{ color: '#6b7280', border: '1px solid rgba(0,0,0,0.1)' }}>
-                          Batal / Pilih Ulang
-                        </button>
+                      <p className="text-[11px] font-semibold mb-2.5" style={{ color: '#374151' }}>Primary <span className="ml-2 font-normal" style={{ color: '#9ca3af' }}>— warna brand utama</span></p>
+                      <div className="flex items-center gap-3">
+                        <input type="color" value={primaryColor} onChange={e => handleColorChange(e.target.value)} className="h-10 w-14 rounded-lg cursor-pointer flex-none" style={{ border: '1px solid rgba(0,0,0,0.10)' }} />
+                        <input type="text" value={primaryColor} onChange={e => { if (/^#[0-9a-fA-F]{0,6}$/.test(e.target.value)) handleColorChange(e.target.value); }} className="font-mono rounded-xl px-3 py-2.5 text-[13px] transition-all duration-150 focus:outline-none" style={{ ...inputBase, width: '120px', letterSpacing: '0.04em' }} onFocus={e => { e.currentTarget.style.border = '1px solid #4338ca'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(67,56,202,0.10)'; e.currentTarget.style.background = '#ffffff'; }} onBlur={e => { e.currentTarget.style.border = '1px solid rgba(0,0,0,0.09)'; e.currentTarget.style.boxShadow = 'inset 0 1px 2px rgba(0,0,0,0.04)'; e.currentTarget.style.background = '#fafaf9'; }} />
+                        <div className="flex-1 h-8 rounded-lg" style={{ background: primaryColor, opacity: 0.25 }} />
                       </div>
                     </div>
-                  )}
-
-                  {importError && <p className="mt-3 text-[12px]" style={{ color: '#dc2626' }}>{importError}</p>}
+                    <div style={{ height: '1px', background: 'rgba(0,0,0,0.06)' }} />
+                    <div>
+                      <p className="text-[11px] font-semibold mb-2.5" style={{ color: '#374151' }}>Primary-Deep <span className="ml-2 font-normal" style={{ color: '#9ca3af' }}>— hover/active (auto jika kosong)</span></p>
+                      <div className="flex items-center gap-3">
+                        <input type="color" value={primaryDeepColor || darkenHex(primaryColor)} onChange={e => setPrimaryDeepColor(e.target.value)} className="h-10 w-14 rounded-lg cursor-pointer flex-none" style={{ border: '1px solid rgba(0,0,0,0.10)' }} />
+                        <input type="text" value={primaryDeepColor} onChange={e => { if (/^#[0-9a-fA-F]{0,6}$/.test(e.target.value)) setPrimaryDeepColor(e.target.value); }} placeholder={darkenHex(primaryColor)} className="font-mono rounded-xl px-3 py-2.5 text-[13px] transition-all duration-150 focus:outline-none" style={{ ...inputBase, width: '120px', letterSpacing: '0.04em' }} onFocus={e => { e.currentTarget.style.border = '1px solid #4338ca'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(67,56,202,0.10)'; e.currentTarget.style.background = '#ffffff'; }} onBlur={e => { e.currentTarget.style.border = '1px solid rgba(0,0,0,0.09)'; e.currentTarget.style.boxShadow = 'inset 0 1px 2px rgba(0,0,0,0.04)'; e.currentTarget.style.background = '#fafaf9'; }} />
+                        {primaryDeepColor && (
+                          <button type="button" onClick={() => setPrimaryDeepColor('')} className="text-[11px] transition-all duration-150" style={{ color: '#9ca3af' }} onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#4338ca'; }} onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#9ca3af'; }}>Reset ke auto</button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              )}
 
-              <div className="rounded-2xl px-6 py-6 mb-4" style={{ ...cardStyle, border: '1px solid rgba(67,56,202,0.12)' }}>
-                <form onSubmit={handleAddJamaah} className="space-y-3">
-                  <div className="grid grid-cols-2 gap-3">
-                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Nama <span style={{ color: '#f87171' }}>*</span></p><StyledInput type="text" value={jmNama} onChange={e => setJmNama(e.target.value)} placeholder="Nama lengkap sesuai paspor" required /></div>
-                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>No. Jamaah <span style={{ color: '#f87171' }}>*</span></p><StyledInput type="text" value={jmNomorJamaah} onChange={e => setJmNomorJamaah(e.target.value)} placeholder="001" required /></div>
+                <SectionDivider />
+
+                {/* Logo + Hero + Sertifikat */}
+                <div className="px-6 py-6" style={cardStyle}>
+                  <FieldLabel>Logo Tenant</FieldLabel>
+                  <div className="flex items-start gap-4">
+                    <div className="flex-none w-28 rounded-xl flex items-center justify-center overflow-hidden cursor-pointer transition-all duration-150" style={{ border: logoPreview || existingLogoUrl ? '1px solid rgba(0,0,0,0.08)' : '2px dashed rgba(0,0,0,0.12)', background: '#fafaf9', height: '72px' }} onClick={() => fileInputRef.current?.click()}
+                      onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = '#4338ca'; }}
+                      onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = logoPreview || existingLogoUrl ? 'rgba(0,0,0,0.08)' : 'rgba(0,0,0,0.12)'; }}>
+                      {logoPreview ? <img src={logoPreview} alt="Preview" className="max-w-full max-h-full object-contain p-2" /> : existingLogoUrl ? <img src={existingLogoUrl} alt="Logo" className="max-w-full max-h-full object-contain p-2" /> : <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" /></svg>}
+                    </div>
+                    <div className="flex-1">
+                      <button type="button" onClick={() => fileInputRef.current?.click()} className="flex items-center gap-2 px-4 py-2.5 text-[12px] font-semibold rounded-xl transition-all duration-150" style={{ background: 'rgba(67,56,202,0.07)', color: '#4338ca', border: '1px solid rgba(67,56,202,0.15)' }}
+                        onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(67,56,202,0.12)'; }}
+                        onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(67,56,202,0.07)'; }}>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 16 12 12 8 16" /><line x1="12" y1="12" x2="12" y2="21" /><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" /></svg>
+                        Pilih File
+                      </button>
+                      <input ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/webp" onChange={handleLogoChange} className="hidden" />
+                      <p className="mt-2 text-[11px]" style={{ color: '#9ca3af' }}>PNG, JPG, WebP — maks. 1MB. SVG tidak didukung.</p>
+                      {(logoPreview || existingLogoUrl) && (
+                        <button type="button" onClick={() => { setLogoFile(null); setLogoPreview(null); setExistingLogoUrl(null); }} className="mt-1 text-[11px] transition-all duration-150" style={{ color: '#9ca3af' }}
+                          onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#dc2626'; }}
+                          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#9ca3af'; }}>Hapus logo</button>
+                      )}
+                    </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Rombongan</p><StyledInput type="text" value={jmRombongan} onChange={e => setJmRombongan(e.target.value)} placeholder="A" /></div>
-                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>No. Paspor</p><StyledInput type="text" value={jmPaspor} onChange={e => setJmPaspor(e.target.value)} placeholder="C1234567" /></div>
+
+                  <div style={{ height: '1px', background: 'rgba(0,0,0,0.05)', margin: '0 -24px' }} />
+
+                  {/* Hero Image */}
+                  <div className="pt-5">
+                    <label className="block text-[11px] font-semibold uppercase tracking-widest mb-2" style={{ color: '#9ca3af' }}>
+                      Hero Image (Background Beranda)
+                    </label>
+                    {(heroPreview || existingHeroUrl) && (
+                      <div className="mb-3 rounded-xl overflow-hidden" style={{ height: '120px' }}>
+                        <img src={heroPreview || existingHeroUrl} alt="Hero preview" className="w-full h-full object-cover" />
+                      </div>
+                    )}
+                    <div className="flex items-center gap-3">
+                      <button type="button" onClick={() => heroInputRef.current?.click()} className="flex items-center gap-2 px-4 py-2.5 text-[12px] font-semibold rounded-xl transition-all duration-150" style={{ background: 'rgba(67,56,202,0.07)', color: '#4338ca', border: '1px solid rgba(67,56,202,0.15)' }}
+                        onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(67,56,202,0.12)'; }}
+                        onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(67,56,202,0.07)'; }}>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        {existingHeroUrl || heroPreview ? 'Ganti Hero Image' : 'Upload Hero Image'}
+                      </button>
+                      {(heroPreview || existingHeroUrl) && (
+                        <button type="button" onClick={() => { setHeroFile(null); setHeroPreview(''); setExistingHeroUrl(''); }} className="text-[11px] transition-colors" style={{ color: '#f87171' }}
+                          onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#dc2626'; }}
+                          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#f87171'; }}>Hapus</button>
+                      )}
+                    </div>
+                    <input ref={heroInputRef} type="file" accept="image/png,image/jpeg,image/webp" onChange={handleHeroChange} className="hidden" />
+                    <p className="mt-1.5 text-[10px]" style={{ color: '#9ca3af' }}>Maks 3MB · PNG, JPG, WEBP · Rekomendasi: 1200×600px landscape</p>
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>No. Bus</p><StyledInput type="text" value={jmBus} onChange={e => setJmBus(e.target.value)} placeholder="3" /></div>
-                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>No. Kamar</p><StyledInput type="text" value={jmKamar} onChange={e => setJmKamar(e.target.value)} placeholder="804" /></div>
-                  </div>
+
+                  <div style={{ height: '1px', background: 'rgba(0,0,0,0.05)', margin: '20px -24px' }} />
+
+                  {/* Template Sertifikat */}
                   <div>
-                    <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Fase</p>
-                    <select value={jmFase} onChange={e => setJmFase(e.target.value as JamaahAccountRow['fase'])} className="w-full rounded-xl px-4 py-3 text-sm focus:outline-none transition-all duration-150" style={{ ...inputBase }}>
-                      {FASE_OPTIONS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
-                    </select>
+                    <label className="block text-[11px] font-semibold uppercase tracking-widest mb-2" style={{ color: '#9ca3af' }}>
+                      Template Sertifikat
+                    </label>
+                    {(sertifikatPreview || existingSertifikatUrl) && (
+                      <div className="mb-3 rounded-xl overflow-hidden border border-slate-200" style={{ aspectRatio: '16/9', maxHeight: '120px' }}>
+                        <img src={sertifikatPreview || existingSertifikatUrl} alt="Preview template sertifikat" className="w-full h-full object-cover" />
+                      </div>
+                    )}
+                    <div className="flex items-center gap-3">
+                      <button type="button" onClick={() => sertifikatInputRef.current?.click()} className="flex items-center gap-2 px-4 py-2.5 text-[12px] font-semibold rounded-xl transition-all duration-150" style={{ background: 'rgba(67,56,202,0.07)', color: '#4338ca', border: '1px solid rgba(67,56,202,0.15)' }}
+                        onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(67,56,202,0.12)'; }}
+                        onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(67,56,202,0.07)'; }}>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        {existingSertifikatUrl || sertifikatPreview ? 'Ganti Template' : 'Upload Template'}
+                      </button>
+                      {(sertifikatPreview || existingSertifikatUrl) && (
+                        <button type="button" onClick={() => { setSertifikatFile(null); setSertifikatPreview(''); setExistingSertifikatUrl(''); }} className="text-[11px] transition-colors" style={{ color: '#f87171' }}
+                          onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#dc2626'; }}
+                          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#f87171'; }}>Hapus</button>
+                      )}
+                    </div>
+                    <input ref={sertifikatInputRef} type="file" accept="image/png,image/jpeg,image/webp" onChange={handleSertifikatChange} className="hidden" />
+                    <p className="mt-1.5 text-[10px]" style={{ color: '#9ca3af' }}>Maks 5MB · PNG, JPG, WEBP · Rekomendasi: landscape 1200×848px</p>
+                    <p className="mt-1 text-[10px]" style={{ color: '#d97706' }}>Pastikan template punya area kosong untuk nama jamaah di tengah</p>
                   </div>
-                  {jmError && <p className="text-[12px]" style={{ color: '#dc2626' }}>{jmError}</p>}
-                  <button type="submit" disabled={jmSubmitting} className="flex items-center gap-2 px-5 py-2.5 text-[12px] font-semibold rounded-xl transition-all duration-150 disabled:opacity-60"
-                    style={{ background: 'linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)', color: '#ffffff', boxShadow: '0 2px 8px rgba(67,56,202,0.22)' }}>
-                    Tambah Jamaah
-                  </button>
-                </form>
-              </div>
-              <div className="rounded-2xl overflow-hidden" style={cardStyle}>
-                {jamaahLoading ? <div className="py-8 text-center font-mono text-[12px]" style={{ color: '#d1d5db' }}>Memuat...</div> : jamaahList.length === 0 ? <div className="py-8 text-center text-[13px]" style={{ color: '#9ca3af' }}>Belum ada jamaah terdaftar.</div> : (
-                  <table className="w-full">
-                    <thead><tr style={{ borderBottom: '1px solid rgba(0,0,0,0.06)', background: '#fafaf9' }}>
-                      {['Nama', 'No. Jamaah', 'Rombongan', 'No. Paspor', 'Fase', ''].map(h => <th key={h} className="text-left font-mono text-[10px] uppercase tracking-[0.12em] px-5 py-3" style={{ color: '#9ca3af' }}>{h}</th>)}
-                    </tr></thead>
-                    <tbody>
-                      {jamaahList.map((j, i) => {
-                        const isEditing = editingJamaahId === j.id;
-                        const rowBorder = { borderBottom: i < jamaahList.length - 1 ? '1px solid rgba(0,0,0,0.04)' : 'none' };
-                        if (isEditing) {
-                          return (
-                            <tr key={j.id} style={{ ...rowBorder, background: 'rgba(67,56,202,0.03)' }}>
-                              <td className="px-5 py-3">
-                                <input value={editNama} onChange={e => setEditNama(e.target.value)}
-                                  className="w-full rounded-lg px-2 py-1.5 text-[13px] focus:outline-none"
-                                  style={{ border: '1px solid rgba(67,56,202,0.25)', background: '#fff', color: '#111827' }} />
-                              </td>
-                              <td className="px-5 py-3">
-                                <input value={editNomorJamaah} onChange={e => setEditNomorJamaah(e.target.value)}
-                                  className="w-full rounded-lg px-2 py-1.5 text-[12px] font-mono focus:outline-none"
-                                  style={{ border: '1px solid rgba(67,56,202,0.25)', background: '#fff', color: '#374151' }} />
-                              </td>
-                              <td className="px-5 py-3">
-                                <input value={editRombongan} onChange={e => setEditRombongan(e.target.value)} placeholder="—"
-                                  className="w-full rounded-lg px-2 py-1.5 text-[12px] focus:outline-none"
-                                  style={{ border: '1px solid rgba(67,56,202,0.25)', background: '#fff', color: '#374151' }} />
-                              </td>
-                              <td className="px-5 py-3">
-                                <input value={editPaspor} onChange={e => setEditPaspor(e.target.value)} placeholder="—"
-                                  className="w-full rounded-lg px-2 py-1.5 text-[12px] font-mono focus:outline-none"
-                                  style={{ border: '1px solid rgba(67,56,202,0.25)', background: '#fff', color: '#374151' }} />
-                              </td>
-                              <td className="px-5 py-3.5 text-[11px]" style={{ color: '#9ca3af' }}>—</td>
-                              <td className="px-5 py-3.5 text-right whitespace-nowrap">
-                                <button type="button" onClick={() => saveEditJamaah(j.id)} disabled={editSaving}
-                                  className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150 disabled:opacity-60 mr-1.5"
-                                  style={{ background: 'linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)', color: '#fff' }}>
-                                  {editSaving ? '...' : 'Simpan'}
-                                </button>
-                                <button type="button" onClick={cancelEditJamaah} disabled={editSaving}
-                                  className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150"
-                                  style={{ color: '#9ca3af', border: '1px solid rgba(0,0,0,0.07)' }}>
-                                  Batal
-                                </button>
-                              </td>
+                </div>
+
+                <SectionDivider />
+
+                {/* Judul Halaman */}
+                <div className="px-6 py-6" style={cardStyle}>
+                  <FieldLabel>Judul Halaman</FieldLabel>
+                  <StyledInput type="text" value={pageTitle} onChange={e => setPageTitle(e.target.value)} placeholder={buildDefaultTitle(namaTravel) || 'Nama Travel — Pendamping Umrah Anda'} />
+                  <p className="mt-2 text-[11px]" style={{ color: '#9ca3af' }}>Muncul di tab browser jamaah. Kosongkan untuk pakai default.</p>
+                </div>
+
+                <SectionDivider />
+
+                {/* Jadwal Perjalanan */}
+                <div className="rounded-b-2xl px-6 py-6" style={cardStyle}>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] mb-4" style={{ color: '#6b7280' }}>Jadwal Perjalanan</p>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-[11px] font-semibold mb-2" style={{ color: '#374151' }}>Tanggal Keberangkatan</p>
+                      <StyledInput type="date" value={tanggalKeberangkatan} onChange={e => { setTanggalKeberangkatan(e.target.value); setDateError(''); }} />
+                    </div>
+                    <div>
+                      <p className="text-[11px] font-semibold mb-2" style={{ color: '#374151' }}>Tanggal Kepulangan</p>
+                      <StyledInput type="date" value={tanggalKepulangan} onChange={e => { setTanggalKepulangan(e.target.value); setDateError(''); }} />
+                    </div>
+                  </div>
+                  {dateError && <p className="mt-2 text-[12px] flex items-center gap-1.5" style={{ color: '#d97706' }}>{dateError}</p>}
+                </div>
+
+                <SaveButton />
+              </>
+            )}
+
+            {/* ── TAB OPERASIONAL ── */}
+            {activeTab === 'operasional' && !isNew && (
+              <>
+                <div className="rounded-2xl px-6 py-6" style={cardStyle}>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] mb-4" style={{ color: '#6b7280' }}>Info Operasional</p>
+                  <p className="text-[11px] mb-4" style={{ color: '#9ca3af' }}>Semua field optional — kosong berarti tampilkan nilai default.</p>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Hotel Makkah</p><StyledInput type="text" value={opHotelMakkah} onChange={e => setOpHotelMakkah(e.target.value)} placeholder="Nama & no kamar hotel" maxLength={120} /></div>
+                      <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Hotel Madinah</p><StyledInput type="text" value={opHotelMadinah} onChange={e => setOpHotelMadinah(e.target.value)} placeholder="Nama & no kamar hotel" maxLength={120} /></div>
+                    </div>
+                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Titik Kumpul</p><StyledInput type="text" value={opMeetingPoint} onChange={e => setOpMeetingPoint(e.target.value)} placeholder="Cth: Lobby hotel lantai 1" maxLength={160} /></div>
+                    <div style={{ height: '1px', background: 'rgba(0,0,0,0.05)' }} />
+                    <div className="grid grid-cols-2 gap-4">
+                      <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Nama Muthowwif</p><StyledInput type="text" value={opGuideName} onChange={e => setOpGuideName(e.target.value)} placeholder="Ust. Ahmad" maxLength={80} /></div>
+                      <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>WhatsApp Muthowwif</p><StyledInput type="text" value={opGuideWhatsapp} onChange={e => setOpGuideWhatsapp(normalizePhone(e.target.value))} placeholder="628xxxxxxxxxx" /></div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Nama Tour Leader</p><StyledInput type="text" value={opTourLeaderName} onChange={e => setOpTourLeaderName(e.target.value)} placeholder="Bpk. Budi" maxLength={80} /></div>
+                      <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>WhatsApp Tour Leader</p><StyledInput type="text" value={opTourLeaderWhatsapp} onChange={e => setOpTourLeaderWhatsapp(normalizePhone(e.target.value))} placeholder="628xxxxxxxxxx" /></div>
+                    </div>
+                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Catatan Darurat</p><StyledTextarea rows={2} value={opEmergencyNote} onChange={e => setOpEmergencyNote(e.target.value)} placeholder="Instruksi jika jamaah tersesat atau butuh bantuan darurat..." /></div>
+                  </div>
+                </div>
+
+                <SaveButton label="Simpan Perubahan" />
+              </>
+            )}
+
+          </form>
+        )}
+
+        {/* ══════════════════════════════════════════════
+            TAB: JAMAAH
+        ══════════════════════════════════════════════ */}
+        {activeTab === 'jamaah' && !isNew && (
+          <div>
+            {/* Header */}
+            <div className="flex items-center gap-3 mb-5">
+              <h2 className="font-bold" style={{ fontSize: '18px', color: '#111827', letterSpacing: '-0.02em' }}>Daftar Jamaah</h2>
+              <span className="font-mono text-[10px] uppercase tracking-widest px-2 py-1 rounded-full" style={{ background: 'rgba(67,56,202,0.07)', color: '#4338ca' }}>{jamaahList.length} jamaah</span>
+              <button type="button" onClick={() => { setImportOpen(o => !o); setImportError(''); setImportPreview([]); }}
+                className="ml-auto inline-flex items-center gap-2 px-4 py-2 text-[12px] font-semibold rounded-xl transition-all duration-150"
+                style={{ background: 'rgba(67,56,202,0.07)', color: '#4338ca', border: '1px solid rgba(67,56,202,0.15)' }}>
+                <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Import dari Excel/PDF
+              </button>
+            </div>
+
+            {/* Import panel */}
+            {importOpen && (
+              <div className="rounded-2xl px-6 py-6 mb-4" style={{ ...cardStyle, border: '1px solid rgba(67,56,202,0.12)' }}>
+                <div className="flex items-center gap-2 mb-3">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.14em]" style={{ color: '#4338ca' }}>Import Jamaah dengan AI</p>
+                </div>
+                <p className="text-[12px] mb-4" style={{ color: '#6b7280' }}>
+                  Upload file Excel (.xlsx/.csv) atau PDF berisi daftar jamaah. AI akan membaca & merapikan datanya, lalu Anda bisa review sebelum menyimpan.
+                </p>
+
+                {importPreview.length === 0 ? (
+                  <div>
+                    <button type="button" onClick={() => importFileRef.current?.click()} disabled={importLoading}
+                      className="inline-flex items-center gap-2 px-5 py-2.5 text-[12px] font-semibold rounded-xl transition-all disabled:opacity-60"
+                      style={{ background: 'linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)', color: '#fff' }}>
+                      {importLoading ? 'AI sedang membaca...' : 'Pilih File'}
+                    </button>
+                    <input ref={importFileRef} type="file" accept=".xlsx,.xls,.csv,application/pdf,image/png,image/jpeg,image/webp" onChange={handleImportFile} className="hidden" />
+                    <p className="mt-2 text-[10px]" style={{ color: '#9ca3af' }}>Format: Excel, CSV, atau PDF. Maks ~10MB.</p>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-[12px] font-semibold" style={{ color: '#374151' }}>{importPreview.length} jamaah terbaca — review & edit sebelum simpan:</p>
+                    </div>
+                    <div className="overflow-x-auto rounded-xl" style={{ border: '1px solid rgba(0,0,0,0.06)' }}>
+                      <table className="w-full text-[12px]">
+                        <thead><tr style={{ background: '#fafaf9' }}>
+                          {['Nama', 'No. Jamaah', 'Rombongan', 'No. Paspor', ''].map(h => <th key={h} className="text-left px-3 py-2 font-mono text-[10px] uppercase" style={{ color: '#9ca3af' }}>{h}</th>)}
+                        </tr></thead>
+                        <tbody>
+                          {importPreview.map((r, idx) => (
+                            <tr key={idx} style={{ borderTop: '1px solid rgba(0,0,0,0.04)' }}>
+                              <td className="px-2 py-1.5"><input value={r.nama} onChange={e => updatePreviewRow(idx, 'nama', e.target.value)} className="w-full rounded px-2 py-1 text-[12px]" style={{ border: '1px solid rgba(0,0,0,0.1)' }} /></td>
+                              <td className="px-2 py-1.5"><input value={r.nomor_jamaah} onChange={e => updatePreviewRow(idx, 'nomor_jamaah', e.target.value)} className="w-full rounded px-2 py-1 text-[12px] font-mono" style={{ border: '1px solid rgba(0,0,0,0.1)' }} /></td>
+                              <td className="px-2 py-1.5"><input value={r.rombongan} onChange={e => updatePreviewRow(idx, 'rombongan', e.target.value)} className="w-full rounded px-2 py-1 text-[12px]" style={{ border: '1px solid rgba(0,0,0,0.1)' }} /></td>
+                              <td className="px-2 py-1.5"><input value={r.nomor_paspor} onChange={e => updatePreviewRow(idx, 'nomor_paspor', e.target.value)} className="w-full rounded px-2 py-1 text-[12px] font-mono" style={{ border: '1px solid rgba(0,0,0,0.1)' }} /></td>
+                              <td className="px-2 py-1.5 text-right"><button type="button" onClick={() => removePreviewRow(idx)} className="text-[11px] px-2 py-1 rounded" style={{ color: '#dc2626' }}>Hapus</button></td>
                             </tr>
-                          );
-                        }
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    <div className="flex gap-2 mt-4">
+                      <button type="button" onClick={confirmImport} disabled={importSaving}
+                        className="px-5 py-2.5 text-[12px] font-semibold rounded-xl disabled:opacity-60"
+                        style={{ background: 'linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)', color: '#fff' }}>
+                        {importSaving ? 'Menyimpan...' : `Simpan ${importPreview.length} Jamaah`}
+                      </button>
+                      <button type="button" onClick={() => { setImportPreview([]); setImportError(''); }}
+                        className="px-5 py-2.5 text-[12px] font-semibold rounded-xl" style={{ color: '#6b7280', border: '1px solid rgba(0,0,0,0.1)' }}>
+                        Batal / Pilih Ulang
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {importError && <p className="mt-3 text-[12px]" style={{ color: '#dc2626' }}>{importError}</p>}
+              </div>
+            )}
+
+            {/* Form tambah jamaah — cepat */}
+            <div className="rounded-2xl border p-5 mb-4" style={{ borderColor: 'rgba(0,0,0,0.07)', background: '#fff' }}>
+              <p className="font-mono text-[10px] uppercase tracking-[0.14em] mb-3" style={{ color: '#6b7280' }}>Tambah Jamaah</p>
+
+              <form onSubmit={handleAddJamaah}>
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
+                  <div className="flex-1">
+                    <FieldLabel>Nama Jamaah *</FieldLabel>
+                    <StyledInput
+                      ref={namaRef}
+                      type="text"
+                      value={jmNama}
+                      onChange={e => setJmNama(e.target.value)}
+                      placeholder="cth. Budi Santoso"
+                      required
+                    />
+                  </div>
+                  <div className="sm:w-44">
+                    <FieldLabel>Nomor Jamaah *</FieldLabel>
+                    <StyledInput
+                      type="text"
+                      value={jmNomorJamaah}
+                      onChange={e => setJmNomorJamaah(e.target.value)}
+                      placeholder="cth. TU-2026-001"
+                      required
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={jmSubmitting}
+                    className="flex-none rounded-xl px-5 py-2.5 text-[13px] font-semibold text-white transition-all active:scale-[0.98] disabled:opacity-60"
+                    style={{ background: 'linear-gradient(135deg, #4338ca, #4f46e5)' }}
+                  >
+                    {jmSubmitting ? 'Menyimpan…' : '+ Tambah'}
+                  </button>
+                </div>
+
+                {/* Toggle detail opsional */}
+                <button
+                  type="button"
+                  onClick={() => setShowDetailJamaah(v => !v)}
+                  className="mt-3 inline-flex items-center gap-1 text-[12px] font-medium"
+                  style={{ color: '#4338ca' }}
+                >
+                  {showDetailJamaah ? '− Sembunyikan detail' : '+ Detail opsional (rombongan, bus, kamar, paspor, fase)'}
+                </button>
+
+                {showDetailJamaah && (
+                  <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                    <div><FieldLabel>Rombongan</FieldLabel><StyledInput type="text" value={jmRombongan} onChange={e => setJmRombongan(e.target.value)} placeholder="A / 1" /></div>
+                    <div><FieldLabel>No. Bus</FieldLabel><StyledInput type="text" value={jmBus} onChange={e => setJmBus(e.target.value)} placeholder="3" /></div>
+                    <div><FieldLabel>No. Kamar</FieldLabel><StyledInput type="text" value={jmKamar} onChange={e => setJmKamar(e.target.value)} placeholder="812" /></div>
+                    <div><FieldLabel>No. Paspor</FieldLabel><StyledInput type="text" value={jmPaspor} onChange={e => setJmPaspor(e.target.value)} placeholder="C1234567" /></div>
+                    <div className="col-span-2 sm:col-span-1">
+                      <FieldLabel>Fase</FieldLabel>
+                      <select
+                        value={jmFase}
+                        onChange={e => setJmFase(e.target.value as JamaahAccountRow['fase'])}
+                        className="w-full rounded-xl px-3 py-2.5 text-[14px] focus:outline-none"
+                        style={{ border: '1px solid rgba(0,0,0,0.15)', ...inputBase }}
+                      >
+                        {FASE_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                      </select>
+                    </div>
+                  </div>
+                )}
+
+                {jmError && <p className="mt-2 text-[12px]" style={{ color: '#dc2626' }}>{jmError}</p>}
+              </form>
+            </div>
+
+            {/* List jamaah */}
+            <div className="rounded-2xl overflow-hidden" style={cardStyle}>
+              {jamaahLoading ? (
+                <div className="py-8 text-center font-mono text-[12px]" style={{ color: '#d1d5db' }}>Memuat...</div>
+              ) : jamaahList.length === 0 ? (
+                <div className="py-8 text-center text-[13px]" style={{ color: '#9ca3af' }}>Belum ada jamaah terdaftar.</div>
+              ) : (
+                <table className="w-full">
+                  <thead>
+                    <tr style={{ borderBottom: '1px solid rgba(0,0,0,0.06)', background: '#fafaf9' }}>
+                      {['Nama', 'No. Jamaah', 'Rombongan', 'No. Paspor', 'Fase', ''].map(h => (
+                        <th key={h} className="text-left font-mono text-[10px] uppercase tracking-[0.12em] px-5 py-3" style={{ color: '#9ca3af' }}>{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {jamaahList.map((j, i) => {
+                      const isEditing = editingJamaahId === j.id;
+                      const rowBorder = { borderBottom: i < jamaahList.length - 1 ? '1px solid rgba(0,0,0,0.04)' : 'none' };
+                      if (isEditing) {
                         return (
-                          <tr key={j.id} style={rowBorder}>
-                            <td className="px-5 py-3.5 text-[13px] font-semibold" style={{ color: '#111827' }}>{j.nama}</td>
-                            <td className="px-5 py-3.5 font-mono text-[12px]" style={{ color: '#6b7280' }}>{j.nomor_jamaah}</td>
-                            <td className="px-5 py-3.5 text-[12px]" style={{ color: '#6b7280' }}>{j.rombongan ?? '—'}</td>
-                            <td className="px-5 py-3.5 font-mono text-[12px]" style={{ color: '#6b7280' }}>{j.nomor_paspor ?? '—'}</td>
-                            <td className="px-5 py-3.5">
-                              <select value={j.fase_override ?? ''} onChange={e => handleUpdateJamaahFase(j.id, e.target.value)} className="text-[11px] rounded-lg px-2 py-1 focus:outline-none transition-all" style={{ border: '1px solid rgba(0,0,0,0.09)', background: '#fafaf9', color: '#374151' }}>
-                                <option value="">Otomatis (dari jadwal)</option>
-                                {FASE_OPTIONS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
-                              </select>
+                          <tr key={j.id} style={{ ...rowBorder, background: 'rgba(67,56,202,0.03)' }}>
+                            <td className="px-5 py-3">
+                              <input value={editNama} onChange={e => setEditNama(e.target.value)}
+                                className="w-full rounded-lg px-2 py-1.5 text-[13px] focus:outline-none"
+                                style={{ border: '1px solid rgba(67,56,202,0.25)', background: '#fff', color: '#111827' }} />
                             </td>
+                            <td className="px-5 py-3">
+                              <input value={editNomorJamaah} onChange={e => setEditNomorJamaah(e.target.value)}
+                                className="w-full rounded-lg px-2 py-1.5 text-[12px] font-mono focus:outline-none"
+                                style={{ border: '1px solid rgba(67,56,202,0.25)', background: '#fff', color: '#374151' }} />
+                            </td>
+                            <td className="px-5 py-3">
+                              <input value={editRombongan} onChange={e => setEditRombongan(e.target.value)} placeholder="—"
+                                className="w-full rounded-lg px-2 py-1.5 text-[12px] focus:outline-none"
+                                style={{ border: '1px solid rgba(67,56,202,0.25)', background: '#fff', color: '#374151' }} />
+                            </td>
+                            <td className="px-5 py-3">
+                              <input value={editPaspor} onChange={e => setEditPaspor(e.target.value)} placeholder="—"
+                                className="w-full rounded-lg px-2 py-1.5 text-[12px] font-mono focus:outline-none"
+                                style={{ border: '1px solid rgba(67,56,202,0.25)', background: '#fff', color: '#374151' }} />
+                            </td>
+                            <td className="px-5 py-3.5 text-[11px]" style={{ color: '#9ca3af' }}>—</td>
                             <td className="px-5 py-3.5 text-right whitespace-nowrap">
-                              <button type="button" onClick={() => startEditJamaah(j)}
-                                className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150 mr-1.5"
-                                style={{ color: '#4338ca', border: '1px solid rgba(67,56,202,0.2)' }}
-                                onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(67,56,202,0.06)'; }}
-                                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}>
-                                Edit
+                              <button type="button" onClick={() => saveEditJamaah(j.id)} disabled={editSaving}
+                                className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150 disabled:opacity-60 mr-1.5"
+                                style={{ background: 'linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)', color: '#fff' }}>
+                                {editSaving ? '...' : 'Simpan'}
                               </button>
-                              <button type="button" onClick={() => handleDeleteJamaah(j.id, j.nama)}
+                              <button type="button" onClick={cancelEditJamaah} disabled={editSaving}
                                 className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150"
-                                style={{ color: '#9ca3af', border: '1px solid rgba(0,0,0,0.07)' }}
-                                onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#dc2626'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(220,38,38,0.25)'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(220,38,38,0.05)'; }}
-                                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#9ca3af'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,0,0,0.07)'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}>
-                                Hapus
+                                style={{ color: '#9ca3af', border: '1px solid rgba(0,0,0,0.07)' }}>
+                                Batal
                               </button>
                             </td>
                           </tr>
                         );
-                      })}
-                    </tbody>
-                  </table>
-                )}
-                {editError && (
-                  <p className="px-5 py-2 text-[12px]" style={{ color: '#dc2626' }}>{editError}</p>
-                )}
-              </div>
+                      }
+                      return (
+                        <tr key={j.id} style={rowBorder}>
+                          <td className="px-5 py-3.5 text-[13px] font-semibold" style={{ color: '#111827' }}>{j.nama}</td>
+                          <td className="px-5 py-3.5 font-mono text-[12px]" style={{ color: '#6b7280' }}>{j.nomor_jamaah}</td>
+                          <td className="px-5 py-3.5 text-[12px]" style={{ color: '#6b7280' }}>{j.rombongan ?? '—'}</td>
+                          <td className="px-5 py-3.5 font-mono text-[12px]" style={{ color: '#6b7280' }}>{j.nomor_paspor ?? '—'}</td>
+                          <td className="px-5 py-3.5">
+                            <select value={j.fase_override ?? ''} onChange={e => handleUpdateJamaahFase(j.id, e.target.value)} className="text-[11px] rounded-lg px-2 py-1 focus:outline-none transition-all" style={{ border: '1px solid rgba(0,0,0,0.09)', background: '#fafaf9', color: '#374151' }}>
+                              <option value="">Otomatis (dari jadwal)</option>
+                              {FASE_OPTIONS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
+                            </select>
+                          </td>
+                          <td className="px-5 py-3.5 text-right whitespace-nowrap">
+                            <button type="button" onClick={() => startEditJamaah(j)}
+                              className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150 mr-1.5"
+                              style={{ color: '#4338ca', border: '1px solid rgba(67,56,202,0.2)' }}
+                              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(67,56,202,0.06)'; }}
+                              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}>
+                              Edit
+                            </button>
+                            <button type="button" onClick={() => handleDeleteJamaah(j.id, j.nama)}
+                              className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150"
+                              style={{ color: '#9ca3af', border: '1px solid rgba(0,0,0,0.07)' }}
+                              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#dc2626'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(220,38,38,0.25)'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(220,38,38,0.05)'; }}
+                              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#9ca3af'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,0,0,0.07)'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}>
+                              Hapus
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              )}
+              {editError && (
+                <p className="px-5 py-2 text-[12px]" style={{ color: '#dc2626' }}>{editError}</p>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* ══════════════════════════════════════════════
+            TAB: AGENDA
+        ══════════════════════════════════════════════ */}
+        {activeTab === 'agenda' && !isNew && (
+          <div>
+            <div className="flex items-center gap-3 mb-5">
+              <h2 className="font-bold" style={{ fontSize: '18px', color: '#111827', letterSpacing: '-0.02em' }}>Agenda Perjalanan</h2>
+              <span className="font-mono text-[10px] uppercase tracking-widest px-2 py-1 rounded-full" style={{ background: 'rgba(67,56,202,0.07)', color: '#4338ca' }}>{agendaItems.length} item</span>
+              <button type="button" onClick={handleInsertDummy} disabled={dummyLoading}
+                className="ml-auto text-[11px] font-semibold px-3 py-1.5 rounded-lg transition-all duration-150 disabled:opacity-60"
+                style={{ color: '#6b7280', border: '1px solid rgba(0,0,0,0.10)' }}
+                onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#4338ca'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(67,56,202,0.25)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#6b7280'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,0,0,0.10)'; }}>
+                {dummyLoading ? 'Memasukkan...' : '+ Itinerary Demo'}
+              </button>
             </div>
 
-            {/* Akun Travel Agency */}
-            <div className="mt-10 mb-10">
-              <div className="flex items-center gap-3 mb-5">
-                <h2 className="font-bold" style={{ fontSize: '18px', color: '#111827', letterSpacing: '-0.02em' }}>Akun Travel Agency</h2>
-                <span className="font-mono text-[10px] uppercase tracking-widest px-2 py-1 rounded-full" style={{ background: 'rgba(67,56,202,0.07)', color: '#4338ca' }}>{travelAccounts.length} akun</span>
-              </div>
-              <div className="rounded-2xl px-6 py-6 mb-4" style={{ ...cardStyle, border: '1px solid rgba(67,56,202,0.12)' }}>
-                <p className="font-mono text-[10px] uppercase tracking-[0.14em] mb-4" style={{ color: '#6b7280' }}>Buat Akun Login Travel Agency</p>
-                <form onSubmit={handleCreateTravelAccount} className="space-y-3">
-                  <div className="grid grid-cols-2 gap-3">
-                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Email <span style={{ color: '#f87171' }}>*</span></p><StyledInput type="email" value={taEmail} onChange={e => setTaEmail(e.target.value)} placeholder="travel@example.com" required /></div>
-                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Password <span style={{ color: '#f87171' }}>*</span></p><StyledInput type="password" value={taPassword} onChange={e => setTaPassword(e.target.value)} placeholder="Min 8 karakter" /></div>
-                  </div>
-                  {taError && <p className="text-[12px]" style={{ color: '#dc2626' }}>{taError}</p>}
-                  {taSuccess && <p className="text-[12px]" style={{ color: '#059669' }}>{taSuccess}</p>}
-                  <button type="submit" disabled={taSubmitting} className="flex items-center gap-2 px-5 py-2.5 text-[12px] font-semibold rounded-xl transition-all duration-150 disabled:opacity-60"
-                    style={{ background: 'linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)', color: '#ffffff', boxShadow: '0 2px 8px rgba(67,56,202,0.22)' }}>
-                    {taSubmitting ? 'Membuat...' : 'Buat Akun'}
-                  </button>
-                </form>
-              </div>
-              <div className="rounded-2xl overflow-hidden" style={cardStyle}>
-                {travelAccountsLoading ? <div className="py-8 text-center font-mono text-[12px]" style={{ color: '#d1d5db' }}>Memuat...</div> : travelAccounts.length === 0 ? <div className="py-8 text-center text-[13px]" style={{ color: '#9ca3af' }}>Belum ada akun travel agency.</div> : (
-                  <div className="divide-y" style={{ borderColor: 'rgba(0,0,0,0.04)' }}>
-                    {travelAccounts.map(acc => (
-                      <div key={acc.id} className="px-5 py-4 flex items-center justify-between gap-4">
-                        <div>
-                          <p className="font-mono text-[12px]" style={{ color: '#374151' }}>{acc.user_id.slice(0, 16)}...</p>
-                          <p className="font-mono text-[10px] mt-0.5" style={{ color: '#9ca3af' }}>Ditambahkan {formatDatetime(acc.created_at)}</p>
-                        </div>
-                        <button type="button" onClick={() => handleRevokeTravelAccess(acc.id, acc.user_id)} className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150" style={{ color: '#9ca3af', border: '1px solid rgba(0,0,0,0.07)' }}
-                          onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#dc2626'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(220,38,38,0.25)'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(220,38,38,0.05)'; }}
-                          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#9ca3af'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,0,0,0.07)'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}>Cabut Akses</button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
+            <div className="rounded-2xl px-6 py-6 mb-4" style={{ ...cardStyle, border: '1px solid rgba(67,56,202,0.12)' }}>
+              <p className="font-mono text-[10px] uppercase tracking-[0.14em] mb-4" style={{ color: '#6b7280' }}>Tambah Agenda Baru</p>
+              <form onSubmit={handleAddAgenda} className="space-y-3">
+                <div className="grid grid-cols-2 gap-3">
+                  <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Tanggal <span style={{ color: '#f87171' }}>*</span></p><StyledInput type="date" value={agTanggal} onChange={e => setAgTanggal(e.target.value)} required /></div>
+                  <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Jam Mulai</p><StyledInput type="time" value={agJam} onChange={e => setAgJam(e.target.value)} /></div>
+                </div>
+                <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Judul Kegiatan <span style={{ color: '#f87171' }}>*</span></p><StyledInput type="text" value={agJudul} onChange={e => setAgJudul(e.target.value)} placeholder="Cth: Perjalanan ke Madinah" required /></div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Lokasi</p><StyledInput type="text" value={agLokasi} onChange={e => setAgLokasi(e.target.value)} placeholder="Bandara Soekarno-Hatta" /></div>
+                  <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Deskripsi</p><StyledTextarea rows={1} value={agDeskripsi} onChange={e => setAgDeskripsi(e.target.value)} placeholder="Keterangan tambahan..." /></div>
+                </div>
+                {agError && <p className="text-[12px]" style={{ color: '#dc2626' }}>{agError}</p>}
+                <button type="submit" disabled={agSubmitting}
+                  className="flex items-center gap-2 px-5 py-2.5 text-[12px] font-semibold rounded-xl transition-all duration-150 disabled:opacity-60"
+                  style={{ background: 'linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)', color: '#ffffff', boxShadow: '0 2px 8px rgba(67,56,202,0.22)' }}>
+                  {agSubmitting ? <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeOpacity="0.3" /><path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" /></svg> : <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>}
+                  Tambah Agenda
+                </button>
+              </form>
             </div>
-          </>
+
+            <div className="rounded-2xl overflow-hidden" style={cardStyle}>
+              {agendaLoading ? (
+                <div className="py-10 text-center font-mono text-[12px]" style={{ color: '#d1d5db' }}>Memuat agenda...</div>
+              ) : agendaItems.length === 0 ? (
+                <div className="py-10 text-center"><p className="text-[13px]" style={{ color: '#9ca3af' }}>Belum ada agenda.</p></div>
+              ) : (
+                <table className="w-full">
+                  <thead>
+                    <tr style={{ borderBottom: '1px solid rgba(0,0,0,0.06)', background: '#fafaf9' }}>
+                      {['Tanggal', 'Jam', 'Judul', 'Lokasi', ''].map(h => (
+                        <th key={h} className="text-left font-mono text-[10px] uppercase tracking-[0.12em] px-5 py-3" style={{ color: '#9ca3af' }}>{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {agendaItems.map((item, i) => (
+                      <tr key={item.id} style={{ borderBottom: i < agendaItems.length - 1 ? '1px solid rgba(0,0,0,0.04)' : 'none' }}>
+                        <td className="px-5 py-3.5 text-[13px] font-medium whitespace-nowrap" style={{ color: '#374151' }}>{formatTanggal(item.tanggal)}</td>
+                        <td className="px-5 py-3.5 font-mono text-[12px]" style={{ color: '#6b7280' }}>{item.jam_mulai ? item.jam_mulai.slice(0, 5) : '—'}</td>
+                        <td className="px-5 py-3.5"><p className="text-[13px] font-semibold" style={{ color: '#111827' }}>{item.judul}</p>{item.deskripsi && <p className="text-[11px] mt-0.5" style={{ color: '#9ca3af' }}>{item.deskripsi}</p>}</td>
+                        <td className="px-5 py-3.5 text-[12px]" style={{ color: '#6b7280' }}>{item.lokasi ?? '—'}</td>
+                        <td className="px-5 py-3.5 text-right">
+                          <button type="button" onClick={() => handleDeleteAgenda(item.id, item.judul)}
+                            className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150"
+                            style={{ color: '#9ca3af', border: '1px solid rgba(0,0,0,0.07)' }}
+                            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#dc2626'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(220,38,38,0.25)'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(220,38,38,0.05)'; }}
+                            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#9ca3af'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,0,0,0.07)'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}>
+                            Hapus
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          </div>
         )}
+
+        {/* ══════════════════════════════════════════════
+            TAB: PENGUMUMAN
+        ══════════════════════════════════════════════ */}
+        {activeTab === 'pengumuman' && !isNew && (
+          <div>
+            <div className="flex items-center gap-3 mb-5">
+              <h2 className="font-bold" style={{ fontSize: '18px', color: '#111827', letterSpacing: '-0.02em' }}>Pengumuman Travel</h2>
+              <span className="font-mono text-[10px] uppercase tracking-widest px-2 py-1 rounded-full" style={{ background: 'rgba(67,56,202,0.07)', color: '#4338ca' }}>{announcements.length} item</span>
+            </div>
+            <div className="rounded-2xl px-6 py-6 mb-4" style={{ ...cardStyle, border: '1px solid rgba(67,56,202,0.12)' }}>
+              <form onSubmit={handleAddAnnouncement} className="space-y-3">
+                <div className="grid grid-cols-2 gap-3">
+                  <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Label</p><StyledInput type="text" value={annLabel} onChange={e => setAnnLabel(e.target.value)} placeholder="Info / Penting / Darurat" /></div>
+                  <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Judul <span style={{ color: '#f87171' }}>*</span></p><StyledInput type="text" value={annTitle} onChange={e => setAnnTitle(e.target.value)} required placeholder="Perubahan jadwal..." maxLength={120} /></div>
+                </div>
+                <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Isi Pengumuman <span style={{ color: '#f87171' }}>*</span></p><StyledTextarea rows={3} value={annContent} onChange={e => setAnnContent(e.target.value)} required placeholder="Detail pengumuman untuk jamaah..." maxLength={1000} /></div>
+                <label className="flex items-center gap-2.5 cursor-pointer">
+                  <input type="checkbox" checked={annImportant} onChange={e => setAnnImportant(e.target.checked)} className="rounded" />
+                  <span className="text-[12px]" style={{ color: '#374151' }}>Tandai sebagai penting</span>
+                </label>
+                {annError && <p className="text-[12px]" style={{ color: '#dc2626' }}>{annError}</p>}
+                <button type="submit" disabled={annSubmitting}
+                  className="flex items-center gap-2 px-5 py-2.5 text-[12px] font-semibold rounded-xl transition-all duration-150 disabled:opacity-60"
+                  style={{ background: 'linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)', color: '#ffffff', boxShadow: '0 2px 8px rgba(67,56,202,0.22)' }}>
+                  Kirim Pengumuman
+                </button>
+              </form>
+            </div>
+            <div className="rounded-2xl overflow-hidden" style={cardStyle}>
+              {annLoading ? (
+                <div className="py-8 text-center font-mono text-[12px]" style={{ color: '#d1d5db' }}>Memuat...</div>
+              ) : announcements.length === 0 ? (
+                <div className="py-8 text-center text-[13px]" style={{ color: '#9ca3af' }}>Belum ada pengumuman.</div>
+              ) : (
+                <div className="divide-y" style={{ borderColor: 'rgba(0,0,0,0.04)' }}>
+                  {announcements.map(ann => (
+                    <div key={ann.id} className="px-5 py-4 flex items-start justify-between gap-4">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-mono text-[10px] px-2 py-0.5 rounded-full" style={{ background: ann.important ? 'rgba(239,68,68,0.08)' : 'rgba(67,56,202,0.07)', color: ann.important ? '#dc2626' : '#4338ca' }}>{ann.label}</span>
+                          <span className="font-mono text-[10px]" style={{ color: '#9ca3af' }}>{formatDatetime(ann.published_at)}</span>
+                        </div>
+                        <p className="text-[13px] font-semibold truncate" style={{ color: '#111827' }}>{ann.title}</p>
+                        <p className="text-[12px] mt-0.5 line-clamp-2" style={{ color: '#6b7280' }}>{ann.content}</p>
+                      </div>
+                      <button type="button" onClick={() => handleDeleteAnnouncement(ann.id, ann.title)}
+                        className="flex-none font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150"
+                        style={{ color: '#9ca3af', border: '1px solid rgba(0,0,0,0.07)' }}
+                        onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#dc2626'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(220,38,38,0.25)'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(220,38,38,0.05)'; }}
+                        onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#9ca3af'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,0,0,0.07)'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}>
+                        Hapus
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* ══════════════════════════════════════════════
+            TAB: AKUN TRAVEL
+        ══════════════════════════════════════════════ */}
+        {activeTab === 'akun' && !isNew && (
+          <div className="mb-10">
+            <div className="flex items-center gap-3 mb-5">
+              <h2 className="font-bold" style={{ fontSize: '18px', color: '#111827', letterSpacing: '-0.02em' }}>Akun Travel Agency</h2>
+              <span className="font-mono text-[10px] uppercase tracking-widest px-2 py-1 rounded-full" style={{ background: 'rgba(67,56,202,0.07)', color: '#4338ca' }}>{travelAccounts.length} akun</span>
+            </div>
+            <div className="rounded-2xl px-6 py-6 mb-4" style={{ ...cardStyle, border: '1px solid rgba(67,56,202,0.12)' }}>
+              <p className="font-mono text-[10px] uppercase tracking-[0.14em] mb-4" style={{ color: '#6b7280' }}>Buat Akun Login Travel Agency</p>
+              <form onSubmit={handleCreateTravelAccount} className="space-y-3">
+                <div className="grid grid-cols-2 gap-3">
+                  <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Email <span style={{ color: '#f87171' }}>*</span></p><StyledInput type="email" value={taEmail} onChange={e => setTaEmail(e.target.value)} placeholder="travel@example.com" required /></div>
+                  <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Password <span style={{ color: '#f87171' }}>*</span></p><StyledInput type="password" value={taPassword} onChange={e => setTaPassword(e.target.value)} placeholder="Min 8 karakter" /></div>
+                </div>
+                {taError && <p className="text-[12px]" style={{ color: '#dc2626' }}>{taError}</p>}
+                {taSuccess && <p className="text-[12px]" style={{ color: '#059669' }}>{taSuccess}</p>}
+                <button type="submit" disabled={taSubmitting}
+                  className="flex items-center gap-2 px-5 py-2.5 text-[12px] font-semibold rounded-xl transition-all duration-150 disabled:opacity-60"
+                  style={{ background: 'linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)', color: '#ffffff', boxShadow: '0 2px 8px rgba(67,56,202,0.22)' }}>
+                  {taSubmitting ? 'Membuat...' : 'Buat Akun'}
+                </button>
+              </form>
+            </div>
+            <div className="rounded-2xl overflow-hidden" style={cardStyle}>
+              {travelAccountsLoading ? (
+                <div className="py-8 text-center font-mono text-[12px]" style={{ color: '#d1d5db' }}>Memuat...</div>
+              ) : travelAccounts.length === 0 ? (
+                <div className="py-8 text-center text-[13px]" style={{ color: '#9ca3af' }}>Belum ada akun travel agency.</div>
+              ) : (
+                <div className="divide-y" style={{ borderColor: 'rgba(0,0,0,0.04)' }}>
+                  {travelAccounts.map(acc => (
+                    <div key={acc.id} className="px-5 py-4 flex items-center justify-between gap-4">
+                      <div>
+                        <p className="font-mono text-[12px]" style={{ color: '#374151' }}>{acc.user_id.slice(0, 16)}...</p>
+                        <p className="font-mono text-[10px] mt-0.5" style={{ color: '#9ca3af' }}>Ditambahkan {formatDatetime(acc.created_at)}</p>
+                      </div>
+                      <button type="button" onClick={() => handleRevokeTravelAccess(acc.id, acc.user_id)}
+                        className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150"
+                        style={{ color: '#9ca3af', border: '1px solid rgba(0,0,0,0.07)' }}
+                        onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#dc2626'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(220,38,38,0.25)'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(220,38,38,0.05)'; }}
+                        onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#9ca3af'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,0,0,0.07)'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}>
+                        Cabut Akses
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
       </div>
     </AdminLayout>
   );
