@@ -62,7 +62,7 @@ function isOngoing(dayItems: AgendaItemRow[], idx: number, tanggal: string, jam_
 }
 
 export default function AgendaLengkap() {
-  const { keberangkatan } = useAuth();
+  const { keberangkatan, tenant } = useAuth();
   const [items, setItems] = useState<AgendaItemRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -113,9 +113,9 @@ export default function AgendaLengkap() {
   const todayInRange = todayHariKe !== null && todayHariKe >= 1 && todayHariKe <= tanggalList.length;
 
   const handleInsertDemo = async () => {
-    if (!tenant?.id) return;
+    if (!tenant?.id || !keberangkatan?.id) return;
     setInserting(true);
-    await insertAgendaDummy(tenant.id);
+    await insertAgendaDummy(tenant.id, keberangkatan.id);
     setInserting(false);
     setRefreshKey((k) => k + 1);
   };

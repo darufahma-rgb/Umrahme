@@ -313,7 +313,7 @@ export async function bulkInsertJamaah(tenantId: string, keberangkatanId: string
   return { inserted: (data ?? []).length };
 }
 
-export async function createJamaah(tenantId: string, keberangkatanId: string, payload: object): Promise<JamaahAccountRow> {
+export async function createJamaah(tenantId: string, keberangkatanId: string | null, payload: object): Promise<JamaahAccountRow> {
   const { data, error } = await supabase
     .from('jamaah_accounts')
     .insert({ ...payload, tenant_id: tenantId, keberangkatan_id: keberangkatanId })

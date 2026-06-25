@@ -664,7 +664,7 @@ export default function AdminTenantForm() {
         tour_leader_name: kbTourLeaderName.trim() || null,
         tour_leader_whatsapp: kbTourLeaderWhatsapp.trim() || null,
         emergency_note: kbEmergencyNote.trim() || null,
-        fase_override: kbFaseOverride || null,
+        fase_override: (kbFaseOverride || null) as 'persiapan' | 'tanah-suci' | 'selesai' | null,
         aktif: kbAktif,
       };
       if (kbEditId) {
