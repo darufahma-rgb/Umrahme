@@ -945,6 +945,199 @@ export const daftarLokasi: Lokasi[] = [
     ],
     catatan: 'Bagi jamaah Indonesia gelombang dari Madinah, Bir Ali adalah miqat utama. Pastikan sudah berniat ihram sebelum bus melewati batas miqat untuk menghindari kewajiban dam.',
   },
+
+  // ===================================================== THAIF
+  {
+    id: 'masjid-abdullah-bin-abbas',
+    tipe: 'masjid',
+    nama: 'Masjid Abdullah bin Abbas',
+    namaArab: 'مَسْجِد عَبْد ٱللَّٰه ٱبْن ٱلْعَبَّاس',
+    kota: 'Thaif',
+    jarakKm: 90,
+    jamKunjungan: 'Buka saat waktu shalat',
+    ringkas: 'Masjid bersejarah di Thaif, dekat makam sahabat & ahli tafsir Abdullah bin Abbas \u0631\u0636\u064a \u0627\u0644\u0644\u0647 \u0639\u0646\u0647.',
+    gambar: '',
+    koordinat: { lat: 21.2701, lng: 40.4082 },
+    sejarah:
+      'Masjid Abdullah bin Abbas terletak di pusat kota lama Thaif, sekitar 90 km tenggara Makkah di dataran tinggi yang sejuk. Masjid ini dinamai sesuai nama Abdullah bin Abbas \u0631\u0636\u064a \u0627\u0644\u0644\u0647 \u0639\u0646\u0647 \u2014 sepupu Rasulullah \ufdfa dan ahli tafsir Al-Qur\u2019an terbesar di kalangan sahabat \u2014 yang wafat dan dimakamkan di Thaif pada tahun 68 H. Masjid awal diperkirakan dibangun sekitar tahun 630 M, lalu berkali-kali direnovasi pada era Abbasiyah, Utsmaniyah, hingga era Saudi modern.',
+    sejarahSeksi: [
+      {
+        judul: 'Abdullah bin Abbas \u2014 Sang Penafsir Al-Qur\u2019an',
+        isi: 'Abdullah bin Abbas \u0631\u0636\u064a \u0627\u0644\u0644\u0647 \u0639\u0646\u0647 dijuluki "Habrul Ummah" (ulama umat) dan "Bahrul Ulum" (lautan ilmu). Sejak kecil ia didoakan Rasulullah \ufdfa: "Ya Allah, pahamkanlah ia dalam agama dan ajarkanlah ia takwil (tafsir)." Ia meriwayatkan 1.660 hadis dan menjadi rujukan utama dalam tafsir Al-Qur\u2019an. Beliau wafat di Thaif pada 68 H dan dimakamkan dekat masjid ini.',
+      },
+      {
+        judul: 'Sejarah Dakwah Nabi \ufdfa ke Thaif',
+        isi: 'Thaif memiliki tempat khusus dalam sirah: ke kota inilah Rasulullah \ufdfa pergi berdakwah setelah tahun kesedihan (wafatnya Khadijah & Abu Thalib). Beliau ditolak keras dan dilempari batu oleh penduduk Thaif hingga terluka. Justru di saat tersulit itulah turun teladan kesabaran beliau \u2014 menolak tawaran malaikat untuk membinasakan penduduk Thaif, dan malah mendoakan agar keturunan mereka kelak beriman.',
+      },
+      {
+        judul: 'Arsitektur & Renovasi',
+        isi: 'Masjid ini memadukan elemen Hijazi tradisional dengan pengaruh Utsmaniyah \u2014 kubah, menara, dan kaligrafi. Bentuknya kini adalah hasil renovasi berlapis dari masa ke masa. Di kompleksnya terdapat makam Abdullah bin Abbas, Muhammad bin Ali (bin Hanafiyah), serta sejumlah syuhada.',
+      },
+    ],
+    tokoh: [
+      { nama: 'Abdullah bin Abbas \u0631\u0636\u064a \u0627\u0644\u0644\u0647 \u0639\u0646\u0647', peran: 'Ahli tafsir Al-Qur\u2019an, dimakamkan di sini' },
+      { nama: 'Nabi Muhammad \ufdfa', peran: 'Berdakwah ke Thaif & memberi teladan kesabaran' },
+    ],
+    keutamaan: [
+      'Mengenang Abdullah bin Abbas, ahli tafsir terbesar di kalangan sahabat.',
+      'Mengingatkan teladan kesabaran Nabi \ufdfa saat ditolak penduduk Thaif.',
+      'Salah satu masjid tertua & monumen Islam penting di Thaif.',
+    ],
+    dalil: [
+      {
+        sumber: 'HR. Bukhari',
+        teks: 'Rasulullah \ufdfa memeluk Ibnu Abbas dan berdoa: "Ya Allah, ajarkanlah ia hikmah dan takwil Al-Kitab."',
+      },
+    ],
+    adab: [
+      'Tempat ziarah untuk mengenang sejarah & mengambil pelajaran, bukan ritual khusus.',
+      'Jaga adab di area makam \u2014 tidak meminta berkah pada kuburan.',
+      'Berpakaian sopan & jaga ketenangan masjid.',
+    ],
+    catatan: 'Thaif sering jadi tujuan ziarah tambahan saat umrah karena udaranya sejuk. Banyak travel memasukkan Thaif sebagai paket city tour opsional dari Makkah.',
+  },
+  {
+    id: 'masjid-addas',
+    tipe: 'sejarah',
+    nama: 'Masjid Addas',
+    namaArab: '\u0645\u064e\u0633\u0652\u062c\u0650\u062f \u0639\u064e\u062f\u0651\u064e\u0627\u0633',
+    kota: 'Thaif',
+    jarakKm: 90,
+    jamKunjungan: 'Buka saat waktu shalat',
+    ringkas: 'Tempat Addas, pemuda Nasrani, memeluk Islam setelah memberi anggur kepada Nabi \ufdfa saat beliau terluka di Thaif.',
+    gambar: '',
+    koordinat: { lat: 21.2510, lng: 40.3920 },
+    sejarah:
+      'Masjid Addas terletak sekitar 2,5 km barat daya Masjid Abdullah bin Abbas, di kawasan kebun lama Thaif. Masjid ini mengenang peristiwa menyentuh: setelah Rasulullah \ufdfa ditolak dan dilempari batu oleh penduduk Thaif, beliau berteduh di sebuah kebun milik Utbah dan Syaibah bin Rabi\u2019ah. Keduanya menyuruh budak mereka, Addas \u2014 seorang pemuda Nasrani dari Nineveh \u2014 mengantarkan setangkai anggur untuk Nabi \ufdfa.',
+    sejarahSeksi: [
+      {
+        judul: 'Anggur & Kalimat "Bismillah"',
+        isi: 'Saat Addas menyodorkan anggur, Rasulullah \ufdfa mengucap "Bismillah" sebelum memakannya. Addas terkejut \u2014 kalimat itu tak pernah ia dengar dari penduduk Thaif. Ketika Nabi \ufdfa bertanya asalnya dan Addas menyebut Nineveh, beliau menyebut Nineveh sebagai negeri Nabi Yunus bin Matta. Addas takjub bagaimana seorang di tengah gurun Arab mengenal Nabi Yunus, lalu ia pun masuk Islam.',
+      },
+      {
+        judul: 'Teladan di Titik Terberat',
+        isi: 'Peristiwa Addas terjadi di hari paling berat dalam dakwah Nabi \ufdfa \u2014 ditolak, terluka, dan kesepian. Namun justru di sanalah Allah menghadirkan secercah cahaya: satu jiwa yang beriman. Kisah ini mengajarkan bahwa hidayah datang dari Allah, dan kebaikan kecil (setangkai anggur) bisa menjadi pintu keimanan.',
+      },
+    ],
+    tokoh: [
+      { nama: 'Nabi Muhammad \ufdfa', peran: 'Berteduh & menerima anggur di tempat ini' },
+      { nama: 'Addas \u0631\u0636\u064a \u0627\u0644\u0644\u0647 \u0639\u0646\u0647', peran: 'Pemuda Nasrani yang memeluk Islam di sini' },
+    ],
+    keutamaan: [
+      'Mengenang masuk Islamnya Addas \u2014 buah kesabaran Nabi \ufdfa di Thaif.',
+      'Mengajarkan bahwa hidayah adalah milik Allah semata.',
+      'Teladan bahwa kebaikan kecil bisa membuka pintu keimanan.',
+    ],
+    dalil: [
+      {
+        sumber: 'Sirah Ibnu Hisyam',
+        teks: 'Kisah Addas memberikan anggur kepada Rasulullah \ufdfa di Thaif dan keislamannya diriwayatkan dalam kitab-kitab sirah.',
+      },
+    ],
+    adab: [
+      'Tempat untuk merenungkan sejarah dakwah & kesabaran Nabi \ufdfa.',
+      'Jaga ketenangan & kebersihan lokasi.',
+      'Ambil pelajaran tentang hidayah, bukan ritual khusus.',
+    ],
+    catatan: 'Lokasi persis masjid kadang berbeda menurut sumber. Kunjungan untuk mengenang sejarah, bukan ibadah khusus.',
+  },
+
+  // ===================================================== BADR
+  {
+    id: 'situs-perang-badr',
+    tipe: 'sejarah',
+    nama: 'Situs Perang Badr',
+    namaArab: '\u0645\u064e\u0648\u0652\u0642\u0650\u0639\u064e\u0629 \u0628\u064e\u062f\u0652\u0631',
+    kota: 'Badr',
+    jarakKm: 130,
+    jamKunjungan: 'Area terbuka, dapat dikunjungi',
+    ringkas: 'Medan Perang Badr \u2014 kemenangan besar pertama umat Islam atas kaum Quraisy pada 17 Ramadhan 2 H.',
+    gambar: '',
+    koordinat: { lat: 23.7333, lng: 38.7667 },
+    sejarah:
+      'Situs Perang Badr terletak di kota Badr, Provinsi Madinah, sekitar 130 km barat daya Madinah. Di sinilah berlangsung Perang Badr pada 17 Ramadhan 2 H (624 M) \u2014 pertempuran besar pertama umat Islam. Pasukan muslimin yang hanya berjumlah 313 orang dengan persenjataan seadanya menghadapi pasukan Quraisy yang berjumlah sekitar 1.000 orang bersenjata lengkap. Dengan pertolongan Allah, kaum muslimin meraih kemenangan gemilang.',
+    sejarahSeksi: [
+      {
+        judul: 'Pertempuran yang Menentukan',
+        isi: 'Hanya 14 sahabat yang gugur sebagai syuhada, sementara pihak Quraisy kehilangan 70 orang terbaiknya dan 70 lainnya ditawan. Kemenangan ini menjadi titik balik: umat Islam Madinah bangkit sebagai kekuatan yang diperhitungkan, dan keimanan kaum muslimin terhadap pertolongan Allah semakin kokoh.',
+      },
+      {
+        judul: 'Pertolongan dari Langit',
+        isi: 'Al-Qur\u2019an mengabadikan bahwa Allah menurunkan bantuan malaikat dalam Perang Badr. Para pejuang Badr (ahlu Badr) mendapat kedudukan istimewa \u2014 Rasulullah \ufdfa menyebut mereka sebagai sebaik-baik kaum muslimin, dan dalam satu riwayat disebutkan bahwa Allah telah mengampuni mereka.',
+      },
+      {
+        judul: 'Landmark di Situs Badr',
+        isi: 'Kawasan Badr mencakup beberapa landmark: medan pertempuran, Masjid Al-Arish (tempat Nabi \ufdfa berkemah & berdoa sebelum perang), makam para syuhada Badr, serta Jabal Malaikah (Gunung Malaikat). Sebagian area kini berupa lahan terbuka dengan papan informasi sejarah.',
+      },
+    ],
+    tokoh: [
+      { nama: 'Nabi Muhammad \ufdfa', peran: 'Memimpin pasukan muslimin dalam Perang Badr' },
+      { nama: 'Hamzah bin Abdul Muthalib \u0631\u0636\u064a \u0627\u0644\u0644\u0647 \u0639\u0646\u0647', peran: 'Pahlawan dalam duel pembuka Badr' },
+      { nama: 'Umair bin al-Humam \u0631\u0636\u064a \u0627\u0644\u0644\u0647 \u0639\u0646\u0647', peran: 'Syahid pertama dalam Perang Badr' },
+    ],
+    keutamaan: [
+      'Kemenangan besar pertama umat Islam \u2014 disebut langsung dalam Al-Qur\u2019an.',
+      'Bukti pertolongan Allah kepada orang beriman meski jumlah sedikit.',
+      'Para pejuang Badr mendapat kedudukan istimewa di sisi Allah & Rasul-Nya.',
+    ],
+    dalil: [
+      {
+        sumber: 'QS. Ali \u2018Imran: 123',
+        teks: '"Sungguh, Allah telah menolong kamu dalam perang Badr, padahal kamu dalam keadaan lemah. Maka bertakwalah kepada Allah agar kamu mensyukuri-Nya."',
+      },
+    ],
+    adab: [
+      'Tempat untuk mengambil pelajaran sejarah & merenungkan pertolongan Allah.',
+      'Hormati area makam syuhada \u2014 tidak meminta berkah pada kuburan.',
+      'Jaga ketertiban & kebersihan di area situs.',
+    ],
+    catatan: 'Badr berjarak ~130 km dari Madinah. Beberapa travel menawarkan ziarah Badr sebagai perjalanan tambahan dari Madinah.',
+  },
+  {
+    id: 'makam-syuhada-badr',
+    tipe: 'sejarah',
+    nama: 'Makam Syuhada Badr',
+    namaArab: '\u0645\u064e\u0642\u0652\u0628\u064e\u0631\u064e\u0629 \u0634\u064f\u0647\u064e\u062f\u064e\u0627\u0621 \u0628\u064e\u062f\u0652\u0631',
+    kota: 'Badr',
+    jarakKm: 130,
+    jamKunjungan: 'Area tertutup, dilihat dari luar',
+    ringkas: 'Pemakaman 14 sahabat yang gugur sebagai syuhada dalam Perang Badr.',
+    gambar: '',
+    koordinat: { lat: 23.7314, lng: 38.7611 },
+    sejarah:
+      'Makam Syuhada Badr terletak sekitar 550 meter sebelah barat medan Perang Badr. Di sinilah 14 sahabat yang gugur sebagai syuhada dalam Perang Badr dimakamkan. Meskipun jumlah syuhada awalnya 14 orang, area pemakaman ini meluas selama berabad-abad. Kini lokasinya dibatasi pagar tembok dan tidak dibuka untuk umum \u2014 peziarah hanya dapat melihat dari luar dan mendoakan para syuhada.',
+    sejarahSeksi: [
+      {
+        judul: 'Para Syuhada Badr',
+        isi: 'Syahid pertama dalam Perang Badr adalah Umair bin al-Humam \u0631\u0636\u064a \u0627\u0644\u0644\u0647 \u0639\u0646\u0647. Di antara para syuhada juga ada Umair bin Abi Waqqash \u2014 salah satu peserta termuda yang sempat khawatir tidak diizinkan ikut karena usianya baru 16 tahun, namun akhirnya gugur sebagai syahid. Mereka adalah generasi terbaik yang Allah abadikan keutamaannya.',
+      },
+      {
+        judul: 'Kedudukan Mulia Ahlu Badr',
+        isi: 'Rasulullah \ufdfa memberikan kabar gembira tentang ahlu Badr. Dalam satu riwayat, Jibril \u0639\u0644\u064a\u0647 \u0627\u0644\u0633\u0644\u0627\u0645 bertanya kepada Nabi \ufdfa tentang bagaimana beliau memandang para pejuang Badr, dan Nabi \ufdfa menjawab: "Sebaik-baik kaum muslimin." Keutamaan ini menjadikan makam mereka tempat yang dihormati umat Islam.',
+      },
+    ],
+    tokoh: [
+      { nama: 'Umair bin al-Humam \u0631\u0636\u064a \u0627\u0644\u0644\u0647 \u0639\u0646\u0647', peran: 'Syahid pertama Perang Badr' },
+      { nama: 'Umair bin Abi Waqqash \u0631\u0636\u064a \u0627\u0644\u0644\u0647 \u0639\u0646\u0647', peran: 'Syahid termuda Perang Badr' },
+    ],
+    keutamaan: [
+      'Tempat peristirahatan generasi terbaik \u2014 para pejuang Badr.',
+      'Mengenang pengorbanan para syuhada dalam membela Islam.',
+      'Ahlu Badr mendapat kedudukan paling mulia di kalangan sahabat.',
+    ],
+    dalil: [
+      {
+        sumber: 'HR. Bukhari',
+        teks: 'Rasulullah \ufdfa bersabda tentang ahlu Badr bahwa Allah telah melihat mereka dan berfirman: "Berbuatlah sekehendak kalian, sungguh Aku telah mengampuni kalian."',
+      },
+    ],
+    adab: [
+      'Mendoakan para syuhada dari luar pagar \u2014 area tidak dibuka untuk umum.',
+      'Tidak meminta berkah atau berdoa kepada penghuni kubur.',
+      'Mengucap salam kepada ahli kubur sesuai sunnah & mendoakan rahmat.',
+    ],
+    catatan: 'Makam ini tidak dibuka untuk umum dan hanya bisa dilihat dari luar. Ziarah untuk mengenang & mendoakan, sesuai adab ziarah kubur yang syar\u2019i.',
+  },
 ];
 
 export function lokasiByTipe(tipe: Lokasi['tipe']): Lokasi[] {
@@ -959,8 +1152,8 @@ export type KotaFilter = 'Makkah' | 'Madinah';
 
 export function lokasiByKota(kota: KotaFilter): Lokasi[] {
   return daftarLokasi.filter((l) => {
-    if (kota === 'Makkah') return l.kota === 'Makkah' || l.kota === 'Arafah';
-    return l.kota === 'Madinah';
+    if (kota === 'Makkah') return l.kota === 'Makkah' || l.kota === 'Arafah' || l.kota === 'Thaif';
+    return l.kota === 'Madinah' || l.kota === 'Badr';
   });
 }
 
