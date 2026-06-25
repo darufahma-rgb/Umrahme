@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef, useCallback, type FormEvent, type ChangeEvent } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import * as XLSX from 'xlsx';
 import AdminLayout from '../../components/admin/AdminLayout';
 import {
   fetchTenant, createTenant, updateTenant,
   fetchAgenda, createAgenda, deleteAgenda,
   fetchAnnouncements, createAnnouncement, deleteAnnouncement,
-  fetchJamaah, createJamaah, updateJamaah, deleteJamaah,
+  fetchJamaah, createJamaah, updateJamaah, deleteJamaah, bulkInsertJamaah,
   fetchTravelAccounts, createTravelAccount, revokeTravelAccess,
   uploadLogo as apiUploadLogo,
   uploadHeroImage as apiUploadHeroImage,
@@ -165,6 +166,13 @@ export default function AdminTenantForm() {
   const [ocrLoading, setOcrLoading] = useState(false);
   const [ocrError, setOcrError] = useState('');
   const [ocrResult, setOcrResult] = useState<Record<string, string | null> | null>(null);
+
+  const [importOpen, setImportOpen] = useState(false);
+  const [importLoading, setImportLoading] = useState(false);
+  const [importError, setImportError] = useState('');
+  const [importPreview, setImportPreview] = useState<Array<{ nama: string; nomor_jamaah: string; rombongan: string; nomor_paspor: string }>>([]);
+  const [importSaving, setImportSaving] = useState(false);
+  const importFileRef = useRef<HTMLInputElement>(null);
 
   const loadTravelAccounts = useCallback(async () => {
     if (!id || isNew) return;
@@ -482,6 +490,99 @@ export default function AdminTenantForm() {
       setEditError(err instanceof Error ? err.message : 'Gagal menyimpan perubahan.');
     } finally {
       setEditSaving(false);
+    }
+  }
+
+  async function handleImportFile(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImportError('');
+    setImportLoading(true);
+    setImportPreview([]);
+    try {
+      const ext = file.name.split('.').pop()?.toLowerCase();
+      let result: Array<{ nama?: unknown; nomor_jamaah?: unknown; rombongan?: unknown; nomor_paspor?: unknown }> = [];
+
+      if (ext === 'xlsx' || ext === 'xls' || ext === 'csv') {
+        const buf = await file.arrayBuffer();
+        const wb = XLSX.read(buf, { type: 'array' });
+        const ws = wb.Sheets[wb.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(ws, { header: 1 });
+        const resp = await fetch('/api/ai-extract-jamaah', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ mode: 'excel', rows }),
+        });
+        const json = await resp.json() as { error?: string; jamaah?: typeof result };
+        if (!resp.ok) throw new Error(json.error || 'Gagal ekstrak Excel.');
+        result = json.jamaah ?? [];
+      } else if (ext === 'pdf' || ['png', 'jpg', 'jpeg', 'webp'].includes(ext || '')) {
+        const base64 = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve((reader.result as string).split(',')[1]);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+        const resp = await fetch('/api/ai-extract-jamaah', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ mode: 'pdf', fileBase64: base64, mimeType: file.type }),
+        });
+        const json = await resp.json() as { error?: string; jamaah?: typeof result };
+        if (!resp.ok) throw new Error(json.error || 'Gagal ekstrak PDF.');
+        result = json.jamaah ?? [];
+      } else {
+        throw new Error('Format tidak didukung. Pakai Excel (.xlsx/.csv) atau PDF.');
+      }
+
+      const preview = (result || []).map((j, idx) => ({
+        nama: String(j.nama ?? '').trim(),
+        nomor_jamaah: String(j.nomor_jamaah ?? String(idx + 1).padStart(3, '0')).trim(),
+        rombongan: String(j.rombongan ?? '').trim(),
+        nomor_paspor: String(j.nomor_paspor ?? '').trim(),
+      })).filter(j => j.nama);
+
+      if (preview.length === 0) throw new Error('Tidak ada data jamaah terbaca. Cek format file.');
+      setImportPreview(preview);
+    } catch (err: unknown) {
+      setImportError(err instanceof Error ? err.message : 'Gagal memproses file.');
+    } finally {
+      setImportLoading(false);
+      if (importFileRef.current) importFileRef.current.value = '';
+    }
+  }
+
+  function updatePreviewRow(idx: number, field: string, value: string) {
+    setImportPreview(prev => prev.map((r, i) => i === idx ? { ...r, [field]: value } : r));
+  }
+
+  function removePreviewRow(idx: number) {
+    setImportPreview(prev => prev.filter((_, i) => i !== idx));
+  }
+
+  async function confirmImport() {
+    if (importPreview.length === 0) return;
+    const invalid = importPreview.some(r => !r.nama.trim() || !r.nomor_jamaah.trim());
+    if (invalid) { setImportError('Semua baris harus punya Nama & No. Jamaah.'); return; }
+    setImportSaving(true);
+    setImportError('');
+    try {
+      const payload = importPreview.map(r => ({
+        nama: r.nama.trim(),
+        nomor_jamaah: r.nomor_jamaah.trim(),
+        rombongan: r.rombongan.trim() || null,
+        nomor_paspor: r.nomor_paspor.trim() || null,
+        fase: 'persiapan',
+      }));
+      const { inserted } = await bulkInsertJamaah(id!, payload);
+      setImportPreview([]);
+      setImportOpen(false);
+      await loadJamaah();
+      alert(`${inserted} jamaah berhasil diimport.`);
+    } catch (err: unknown) {
+      setImportError(err instanceof Error ? err.message : 'Gagal menyimpan data.');
+    } finally {
+      setImportSaving(false);
     }
   }
 
@@ -957,7 +1058,74 @@ export default function AdminTenantForm() {
               <div className="flex items-center gap-3 mb-5">
                 <h2 className="font-bold" style={{ fontSize: '18px', color: '#111827', letterSpacing: '-0.02em' }}>Daftar Jamaah</h2>
                 <span className="font-mono text-[10px] uppercase tracking-widest px-2 py-1 rounded-full" style={{ background: 'rgba(67,56,202,0.07)', color: '#4338ca' }}>{jamaahList.length} jamaah</span>
+                <button type="button" onClick={() => { setImportOpen(o => !o); setImportError(''); setImportPreview([]); }}
+                  className="ml-auto inline-flex items-center gap-2 px-4 py-2 text-[12px] font-semibold rounded-xl transition-all duration-150"
+                  style={{ background: 'rgba(67,56,202,0.07)', color: '#4338ca', border: '1px solid rgba(67,56,202,0.15)' }}>
+                  <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  Import dari Excel/PDF
+                </button>
               </div>
+
+              {importOpen && (
+                <div className="rounded-2xl px-6 py-6 mb-4" style={{ ...cardStyle, border: '1px solid rgba(67,56,202,0.12)' }}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <p className="font-mono text-[10px] uppercase tracking-[0.14em]" style={{ color: '#4338ca' }}>Import Jamaah dengan AI</p>
+                  </div>
+                  <p className="text-[12px] mb-4" style={{ color: '#6b7280' }}>
+                    Upload file Excel (.xlsx/.csv) atau PDF berisi daftar jamaah. AI akan membaca & merapikan datanya, lalu Anda bisa review sebelum menyimpan.
+                  </p>
+
+                  {importPreview.length === 0 ? (
+                    <div>
+                      <button type="button" onClick={() => importFileRef.current?.click()} disabled={importLoading}
+                        className="inline-flex items-center gap-2 px-5 py-2.5 text-[12px] font-semibold rounded-xl transition-all disabled:opacity-60"
+                        style={{ background: 'linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)', color: '#fff' }}>
+                        {importLoading ? 'AI sedang membaca...' : 'Pilih File'}
+                      </button>
+                      <input ref={importFileRef} type="file" accept=".xlsx,.xls,.csv,application/pdf,image/png,image/jpeg,image/webp" onChange={handleImportFile} className="hidden" />
+                      <p className="mt-2 text-[10px]" style={{ color: '#9ca3af' }}>Format: Excel, CSV, atau PDF. Maks ~10MB.</p>
+                    </div>
+                  ) : (
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <p className="text-[12px] font-semibold" style={{ color: '#374151' }}>{importPreview.length} jamaah terbaca — review & edit sebelum simpan:</p>
+                      </div>
+                      <div className="overflow-x-auto rounded-xl" style={{ border: '1px solid rgba(0,0,0,0.06)' }}>
+                        <table className="w-full text-[12px]">
+                          <thead><tr style={{ background: '#fafaf9' }}>
+                            {['Nama', 'No. Jamaah', 'Rombongan', 'No. Paspor', ''].map(h => <th key={h} className="text-left px-3 py-2 font-mono text-[10px] uppercase" style={{ color: '#9ca3af' }}>{h}</th>)}
+                          </tr></thead>
+                          <tbody>
+                            {importPreview.map((r, idx) => (
+                              <tr key={idx} style={{ borderTop: '1px solid rgba(0,0,0,0.04)' }}>
+                                <td className="px-2 py-1.5"><input value={r.nama} onChange={e => updatePreviewRow(idx, 'nama', e.target.value)} className="w-full rounded px-2 py-1 text-[12px]" style={{ border: '1px solid rgba(0,0,0,0.1)' }} /></td>
+                                <td className="px-2 py-1.5"><input value={r.nomor_jamaah} onChange={e => updatePreviewRow(idx, 'nomor_jamaah', e.target.value)} className="w-full rounded px-2 py-1 text-[12px] font-mono" style={{ border: '1px solid rgba(0,0,0,0.1)' }} /></td>
+                                <td className="px-2 py-1.5"><input value={r.rombongan} onChange={e => updatePreviewRow(idx, 'rombongan', e.target.value)} className="w-full rounded px-2 py-1 text-[12px]" style={{ border: '1px solid rgba(0,0,0,0.1)' }} /></td>
+                                <td className="px-2 py-1.5"><input value={r.nomor_paspor} onChange={e => updatePreviewRow(idx, 'nomor_paspor', e.target.value)} className="w-full rounded px-2 py-1 text-[12px] font-mono" style={{ border: '1px solid rgba(0,0,0,0.1)' }} /></td>
+                                <td className="px-2 py-1.5 text-right"><button type="button" onClick={() => removePreviewRow(idx)} className="text-[11px] px-2 py-1 rounded" style={{ color: '#dc2626' }}>Hapus</button></td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                      <div className="flex gap-2 mt-4">
+                        <button type="button" onClick={confirmImport} disabled={importSaving}
+                          className="px-5 py-2.5 text-[12px] font-semibold rounded-xl disabled:opacity-60"
+                          style={{ background: 'linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)', color: '#fff' }}>
+                          {importSaving ? 'Menyimpan...' : `Simpan ${importPreview.length} Jamaah`}
+                        </button>
+                        <button type="button" onClick={() => { setImportPreview([]); setImportError(''); }}
+                          className="px-5 py-2.5 text-[12px] font-semibold rounded-xl" style={{ color: '#6b7280', border: '1px solid rgba(0,0,0,0.1)' }}>
+                          Batal / Pilih Ulang
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {importError && <p className="mt-3 text-[12px]" style={{ color: '#dc2626' }}>{importError}</p>}
+                </div>
+              )}
+
               <div className="rounded-2xl px-6 py-6 mb-4" style={{ ...cardStyle, border: '1px solid rgba(67,56,202,0.12)' }}>
                 <form onSubmit={handleAddJamaah} className="space-y-3">
                   <div className="grid grid-cols-2 gap-3">

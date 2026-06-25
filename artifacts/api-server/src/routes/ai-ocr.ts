@@ -50,7 +50,7 @@ Format JSON yang diharapkan:
         "X-Title": "Umrahme Admin",
       },
       body: JSON.stringify({
-        model: "google/gemini-flash-1.5",
+        model: "anthropic/claude-sonnet-4-5",
         messages: [
           {
             role: "user",

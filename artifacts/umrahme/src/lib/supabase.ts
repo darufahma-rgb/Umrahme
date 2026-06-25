@@ -227,6 +227,13 @@ export async function fetchJamaah(tenantId: string): Promise<JamaahAccountRow[]>
   return data as JamaahAccountRow[];
 }
 
+export async function bulkInsertJamaah(tenantId: string, items: object[]): Promise<{ inserted: number }> {
+  const rows = items.map((item) => ({ ...item, tenant_id: tenantId }));
+  const { data, error } = await supabase.from('jamaah_accounts').insert(rows).select();
+  if (error) throw new Error(error.message);
+  return { inserted: (data ?? []).length };
+}
+
 export async function createJamaah(tenantId: string, payload: object): Promise<JamaahAccountRow> {
   const { data, error } = await supabase
     .from('jamaah_accounts')
