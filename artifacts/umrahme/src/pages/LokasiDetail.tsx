@@ -190,6 +190,31 @@ export default function LokasiDetail() {
           )}
         </div>
 
+        {/* ── 4b. BAGIAN-BAGIAN KA'BAH ─────────────────────────── */}
+        {lokasi.bagian && lokasi.bagian.length > 0 && (
+          <section className="mt-6">
+            <div className="mb-3">
+              <p className="font-mono text-[8.5px] uppercase tracking-[0.18em] text-mute">Rincian</p>
+              <h3 className="mt-0.5 text-[15px] font-bold text-ink">Bagian-Bagian Ka\u2019bah</h3>
+            </div>
+
+            <div className="space-y-2.5">
+              {lokasi.bagian.map((b, i) => (
+                <div key={i} className="rounded-2xl border border-hairline bg-surface-card p-4 shadow-drop-soft">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <h4 className="text-[14px] font-bold leading-tight text-ink">{b.nama}</h4>
+                      <p className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-gold">{b.posisi}</p>
+                    </div>
+                    {b.arab && <span className="flex-none font-arab text-[16px] text-gold" dir="rtl">{b.arab}</span>}
+                  </div>
+                  <p className="mt-2 text-[12.5px] leading-relaxed text-charcoal">{b.deskripsi}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* ── 5. TOKOH BERSEJARAH ───────────────────────────────── */}
         {lokasi.tokoh && lokasi.tokoh.length > 0 && (
           <div className="rounded-md border border-hairline bg-surface-card px-5 py-4 shadow-drop-card">

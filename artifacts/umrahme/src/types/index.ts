@@ -66,6 +66,14 @@ export interface Doa {
 
 export type TipeLokasi = 'masjid' | 'sejarah';
 
+/** Bagian fisik dari Ka'bah beserta keterangan posisi dan deskripsinya. */
+export interface BagianKabah {
+  nama: string;
+  arab?: string;
+  posisi: string;
+  deskripsi: string;
+}
+
 /** Pintu/gerbang penting pada masjid besar. */
 export interface PintuMasjid {
   nama: string;
@@ -120,6 +128,8 @@ export interface Lokasi {
   pintu?: PintuMasjid[];
   /** URL ke peta atau denah resmi. */
   petaResmiUrl?: string;
+  /** Bagian-bagian fisik Ka'bah (atau lokasi dengan rincian bagian). */
+  bagian?: BagianKabah[];
 }
 
 export type KategoriChecklist = 'dokumen' | 'kesehatan' | 'barang' | 'mental';
