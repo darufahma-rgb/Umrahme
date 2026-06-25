@@ -1130,100 +1130,120 @@ export default function AdminTenantForm() {
               </form>
             </div>
 
-            {/* List jamaah */}
+            {/* List jamaah — compact rows + chips */}
             <div className="rounded-2xl overflow-hidden" style={cardStyle}>
               {jamaahLoading ? (
                 <div className="py-8 text-center font-mono text-[12px]" style={{ color: '#d1d5db' }}>Memuat...</div>
               ) : jamaahList.length === 0 ? (
                 <div className="py-8 text-center text-[13px]" style={{ color: '#9ca3af' }}>Belum ada jamaah terdaftar.</div>
               ) : (
-                <table className="w-full">
-                  <thead>
-                    <tr style={{ borderBottom: '1px solid rgba(0,0,0,0.06)', background: '#fafaf9' }}>
-                      {['Nama', 'No. Jamaah', 'Rombongan', 'No. Paspor', 'Fase', ''].map(h => (
-                        <th key={h} className="text-left font-mono text-[10px] uppercase tracking-[0.12em] px-5 py-3" style={{ color: '#9ca3af' }}>{h}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {jamaahList.map((j, i) => {
-                      const isEditing = editingJamaahId === j.id;
-                      const rowBorder = { borderBottom: i < jamaahList.length - 1 ? '1px solid rgba(0,0,0,0.04)' : 'none' };
-                      if (isEditing) {
-                        return (
-                          <tr key={j.id} style={{ ...rowBorder, background: 'rgba(67,56,202,0.03)' }}>
-                            <td className="px-5 py-3">
+                <ul className="divide-y" style={{ borderColor: 'rgba(0,0,0,0.04)' }}>
+                  {jamaahList.map((j) => {
+                    const isEditing = editingJamaahId === j.id;
+                    const chips = [
+                      j.rombongan ? `Romb. ${j.rombongan}` : null,
+                      j.nomor_bus ? `Bus ${j.nomor_bus}` : null,
+                      j.nomor_kamar ? `Kmr ${j.nomor_kamar}` : null,
+                      j.nomor_paspor ? j.nomor_paspor : null,
+                    ].filter(Boolean) as string[];
+
+                    if (isEditing) {
+                      return (
+                        <li key={j.id} className="px-5 py-4" style={{ background: 'rgba(67,56,202,0.03)' }}>
+                          <div className="grid grid-cols-2 gap-2 mb-2 sm:grid-cols-4">
+                            <div>
+                              <p className="font-mono text-[9px] uppercase tracking-widest mb-1" style={{ color: '#9ca3af' }}>Nama</p>
                               <input value={editNama} onChange={e => setEditNama(e.target.value)}
                                 className="w-full rounded-lg px-2 py-1.5 text-[13px] focus:outline-none"
                                 style={{ border: '1px solid rgba(67,56,202,0.25)', background: '#fff', color: '#111827' }} />
-                            </td>
-                            <td className="px-5 py-3">
+                            </div>
+                            <div>
+                              <p className="font-mono text-[9px] uppercase tracking-widest mb-1" style={{ color: '#9ca3af' }}>No. Jamaah</p>
                               <input value={editNomorJamaah} onChange={e => setEditNomorJamaah(e.target.value)}
                                 className="w-full rounded-lg px-2 py-1.5 text-[12px] font-mono focus:outline-none"
                                 style={{ border: '1px solid rgba(67,56,202,0.25)', background: '#fff', color: '#374151' }} />
-                            </td>
-                            <td className="px-5 py-3">
+                            </div>
+                            <div>
+                              <p className="font-mono text-[9px] uppercase tracking-widest mb-1" style={{ color: '#9ca3af' }}>Rombongan</p>
                               <input value={editRombongan} onChange={e => setEditRombongan(e.target.value)} placeholder="—"
                                 className="w-full rounded-lg px-2 py-1.5 text-[12px] focus:outline-none"
                                 style={{ border: '1px solid rgba(67,56,202,0.25)', background: '#fff', color: '#374151' }} />
-                            </td>
-                            <td className="px-5 py-3">
+                            </div>
+                            <div>
+                              <p className="font-mono text-[9px] uppercase tracking-widest mb-1" style={{ color: '#9ca3af' }}>No. Paspor</p>
                               <input value={editPaspor} onChange={e => setEditPaspor(e.target.value)} placeholder="—"
                                 className="w-full rounded-lg px-2 py-1.5 text-[12px] font-mono focus:outline-none"
                                 style={{ border: '1px solid rgba(67,56,202,0.25)', background: '#fff', color: '#374151' }} />
-                            </td>
-                            <td className="px-5 py-3.5 text-[11px]" style={{ color: '#9ca3af' }}>—</td>
-                            <td className="px-5 py-3.5 text-right whitespace-nowrap">
-                              <button type="button" onClick={() => saveEditJamaah(j.id)} disabled={editSaving}
-                                className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150 disabled:opacity-60 mr-1.5"
-                                style={{ background: 'linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)', color: '#fff' }}>
-                                {editSaving ? '...' : 'Simpan'}
-                              </button>
-                              <button type="button" onClick={cancelEditJamaah} disabled={editSaving}
-                                className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150"
-                                style={{ color: '#9ca3af', border: '1px solid rgba(0,0,0,0.07)' }}>
-                                Batal
-                              </button>
-                            </td>
-                          </tr>
-                        );
-                      }
-                      return (
-                        <tr key={j.id} style={rowBorder}>
-                          <td className="px-5 py-3.5 text-[13px] font-semibold" style={{ color: '#111827' }}>{j.nama}</td>
-                          <td className="px-5 py-3.5 font-mono text-[12px]" style={{ color: '#6b7280' }}>{j.nomor_jamaah}</td>
-                          <td className="px-5 py-3.5 text-[12px]" style={{ color: '#6b7280' }}>{j.rombongan ?? '—'}</td>
-                          <td className="px-5 py-3.5 font-mono text-[12px]" style={{ color: '#6b7280' }}>{j.nomor_paspor ?? '—'}</td>
-                          <td className="px-5 py-3.5">
-                            <select value={j.fase_override ?? ''} onChange={e => handleUpdateJamaahFase(j.id, e.target.value)} className="text-[11px] rounded-lg px-2 py-1 focus:outline-none transition-all" style={{ border: '1px solid rgba(0,0,0,0.09)', background: '#fafaf9', color: '#374151' }}>
-                              <option value="">Otomatis (dari jadwal)</option>
-                              {FASE_OPTIONS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
-                            </select>
-                          </td>
-                          <td className="px-5 py-3.5 text-right whitespace-nowrap">
-                            <button type="button" onClick={() => startEditJamaah(j)}
-                              className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150 mr-1.5"
-                              style={{ color: '#4338ca', border: '1px solid rgba(67,56,202,0.2)' }}
-                              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(67,56,202,0.06)'; }}
-                              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}>
-                              Edit
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <button type="button" onClick={() => saveEditJamaah(j.id)} disabled={editSaving}
+                              className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150 disabled:opacity-60"
+                              style={{ background: 'linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)', color: '#fff' }}>
+                              {editSaving ? '...' : 'Simpan'}
                             </button>
-                            <button type="button" onClick={() => handleDeleteJamaah(j.id, j.nama)}
+                            <button type="button" onClick={cancelEditJamaah} disabled={editSaving}
                               className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150"
-                              style={{ color: '#9ca3af', border: '1px solid rgba(0,0,0,0.07)' }}
-                              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#dc2626'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(220,38,38,0.25)'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(220,38,38,0.05)'; }}
-                              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#9ca3af'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,0,0,0.07)'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}>
-                              Hapus
+                              style={{ color: '#9ca3af', border: '1px solid rgba(0,0,0,0.07)' }}>
+                              Batal
                             </button>
-                          </td>
-                        </tr>
+                          </div>
+                          {editError && <p className="mt-1 text-[12px]" style={{ color: '#dc2626' }}>{editError}</p>}
+                        </li>
                       );
-                    })}
-                  </tbody>
-                </table>
-              )}
-              {editError && (
-                <p className="px-5 py-2 text-[12px]" style={{ color: '#dc2626' }}>{editError}</p>
+                    }
+
+                    return (
+                      <li key={j.id} className="flex items-center gap-3 px-5 py-3.5">
+                        {/* Kiri: nama + nomor + chips */}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-baseline gap-2 flex-wrap">
+                            <span className="text-[13px] font-semibold" style={{ color: '#111827' }}>{j.nama}</span>
+                            <span className="font-mono text-[11px]" style={{ color: '#6b7280' }}>{j.nomor_jamaah}</span>
+                          </div>
+                          {chips.length > 0 && (
+                            <div className="flex flex-wrap gap-1 mt-1">
+                              {chips.map(chip => (
+                                <span key={chip} className="font-mono text-[10px] px-1.5 py-0.5 rounded-md" style={{ background: 'rgba(0,0,0,0.04)', color: '#6b7280' }}>
+                                  {chip}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Tengah: dropdown fase */}
+                        <select
+                          value={j.fase_override ?? ''}
+                          onChange={e => handleUpdateJamaahFase(j.id, e.target.value)}
+                          className="hidden sm:block text-[11px] rounded-lg px-2 py-1 focus:outline-none transition-all flex-none"
+                          style={{ border: '1px solid rgba(0,0,0,0.09)', background: '#fafaf9', color: '#374151' }}
+                        >
+                          <option value="">Auto</option>
+                          {FASE_OPTIONS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
+                        </select>
+
+                        {/* Kanan: tombol Edit & Hapus */}
+                        <div className="flex items-center gap-1.5 flex-none">
+                          <button type="button" onClick={() => startEditJamaah(j)}
+                            className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150"
+                            style={{ color: '#4338ca', border: '1px solid rgba(67,56,202,0.2)' }}
+                            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(67,56,202,0.06)'; }}
+                            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}>
+                            Edit
+                          </button>
+                          <button type="button" onClick={() => handleDeleteJamaah(j.id, j.nama)}
+                            className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150"
+                            style={{ color: '#9ca3af', border: '1px solid rgba(0,0,0,0.07)' }}
+                            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#dc2626'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(220,38,38,0.25)'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(220,38,38,0.05)'; }}
+                            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#9ca3af'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,0,0,0.07)'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}>
+                            Hapus
+                          </button>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
               )}
             </div>
           </div>
