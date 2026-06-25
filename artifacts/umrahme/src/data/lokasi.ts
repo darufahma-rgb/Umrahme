@@ -192,7 +192,7 @@ export const daftarLokasi: Lokasi[] = [
       'Ucapkan salam dengan tenang saat melewati makam; jangan mengusap pagar atau meminta kepada penghuni kubur.',
       'Jaga ketertiban \u2014 area Raudhah sangat padat.',
     ],
-    petaResmiUrl: 'https://alharamain.gov.sa/public/?site=en',
+    petaResmiUrl: 'https://eserv.wmn.gov.sa/apps/public/maps/en.pdf',
     pintu: [
       { nama: 'Bab As-Salam', fungsi: 'Pintu utama yang dahulu sering dilalui Nabi \ufdfa. Banyak peziarah pria masuk dari sini menuju arah Raudhah.' },
       { nama: 'Bab Jibril', fungsi: 'Pintu bersejarah; dinamai Malaikat Jibril yang membawa wahyu.' },
