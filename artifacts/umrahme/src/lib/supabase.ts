@@ -122,6 +122,15 @@ export async function updateTenant(id: string, payload: Partial<TenantRow>): Pro
   return data as TenantRow;
 }
 
+export async function deleteTenant(id: string): Promise<void> {
+  await supabase.from('agenda_items').delete().eq('tenant_id', id);
+  await supabase.from('travel_announcements').delete().eq('tenant_id', id);
+  await supabase.from('jamaah_accounts').delete().eq('tenant_id', id);
+  await supabase.from('tenant_users').delete().eq('tenant_id', id);
+  const { error } = await supabase.from('tenants').delete().eq('id', id);
+  if (error) throw new Error(error.message);
+}
+
 export async function fetchTenantBySlug(slug: string): Promise<TenantRow | null> {
   const { data, error } = await supabase
     .from('tenants')

@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AdminLayout from '../../components/admin/AdminLayout';
-import { fetchTenants, type TenantRow } from '../../lib/supabase';
+import { fetchTenants, deleteTenant, type TenantRow } from '../../lib/supabase';
 
 export default function AdminTenantList() {
   const [tenants, setTenants] = useState<TenantRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [toast, setToast] = useState('');
+  const [hapusTarget, setHapusTarget] = useState<TenantRow | null>(null);
+  const [konfirmText, setKonfirmText] = useState('');
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     const msg = sessionStorage.getItem('admin_toast');
@@ -23,6 +26,22 @@ export default function AdminTenantList() {
     const t = setTimeout(() => setToast(''), 4000);
     return () => clearTimeout(t);
   }, [toast]);
+
+  async function handleDelete() {
+    if (!hapusTarget) return;
+    setDeleting(true);
+    try {
+      await deleteTenant(hapusTarget.id);
+      setTenants((prev) => prev.filter((t) => t.id !== hapusTarget.id));
+      setToast(`Tenant "${hapusTarget.nama_travel}" berhasil dihapus.`);
+      setHapusTarget(null);
+      setKonfirmText('');
+    } catch (err) {
+      setToast(err instanceof Error ? `Gagal menghapus: ${err.message}` : 'Gagal menghapus tenant.');
+    } finally {
+      setDeleting(false);
+    }
+  }
 
   return (
     <AdminLayout>
@@ -72,14 +91,27 @@ export default function AdminTenantList() {
                         {t.activation_code}
                       </span>
                     </div>
-                    <Link to={`/admin/tenants/${t.id}`}
-                      className="flex-none inline-flex items-center gap-1.5 text-[12px] font-semibold px-3 py-1.5 rounded-lg transition-all duration-150"
-                      style={{ color: '#4338ca', border: '1px solid rgba(67,56,202,0.2)' }}
-                      onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(67,56,202,0.07)'; }}
-                      onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'transparent'; }}>
-                      Edit
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
-                    </Link>
+                    <div className="flex items-center gap-2">
+                      <Link to={`/admin/tenants/${t.id}`}
+                        className="flex-none inline-flex items-center gap-1.5 text-[12px] font-semibold px-3 py-1.5 rounded-lg transition-all duration-150"
+                        style={{ color: '#4338ca', border: '1px solid rgba(67,56,202,0.2)' }}
+                        onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(67,56,202,0.07)'; }}
+                        onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'transparent'; }}>
+                        Edit
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
+                      </Link>
+                      <button
+                        onClick={() => { setHapusTarget(t); setKonfirmText(''); }}
+                        className="flex-none inline-flex items-center justify-center rounded-lg transition-all duration-150"
+                        style={{ width: '32px', height: '32px', color: '#dc2626', border: '1px solid rgba(220,38,38,0.2)' }}
+                        onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(220,38,38,0.07)'; }}
+                        onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}
+                        title="Hapus tenant"
+                        aria-label={`Hapus ${t.nama_travel}`}
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /><line x1="10" y1="11" x2="10" y2="17" /><line x1="14" y1="11" x2="14" y2="17" /></svg>
+                      </button>
+                    </div>
                   </div>
                   <div className="flex items-center gap-3 mt-4 pt-3" style={{ borderTop: '1px solid rgba(0,0,0,0.05)' }}>
                     <div className="flex items-center gap-1.5">
@@ -97,6 +129,69 @@ export default function AdminTenantList() {
               </div>
             );
           })}
+        </div>
+      )}
+
+      {/* Modal konfirmasi hapus */}
+      {hapusTarget && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ background: 'rgba(0,0,0,0.5)' }}
+          onClick={() => !deleting && setHapusTarget(null)}
+        >
+          <div
+            className="w-full max-w-md rounded-2xl p-6"
+            style={{ background: '#ffffff' }}
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="flex items-center gap-3">
+              <div className="flex-none flex items-center justify-center rounded-full"
+                style={{ width: '40px', height: '40px', background: 'rgba(220,38,38,0.1)' }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" /><line x1="10" y1="11" x2="10" y2="17" /><line x1="14" y1="11" x2="14" y2="17" /></svg>
+              </div>
+              <div>
+                <h3 className="text-[16px] font-bold" style={{ color: '#111827' }}>Hapus Tenant</h3>
+                <p className="text-[12px]" style={{ color: '#6b7280' }}>Tindakan ini tidak dapat dibatalkan.</p>
+              </div>
+            </div>
+
+            <p className="mt-4 text-[13px] leading-relaxed" style={{ color: '#374151' }}>
+              Menghapus <b>{hapusTarget.nama_travel}</b> akan menghapus seluruh data terkait (agenda, pengumuman, akun jamaah). Ketik nama travel di bawah untuk konfirmasi:
+            </p>
+
+            <input
+              type="text"
+              value={konfirmText}
+              onChange={e => setKonfirmText(e.target.value)}
+              placeholder={hapusTarget.nama_travel}
+              className="mt-3 w-full rounded-xl px-3 py-2.5 text-[14px] outline-none"
+              style={{ border: '1px solid rgba(0,0,0,0.15)' }}
+              autoFocus
+            />
+
+            <div className="mt-5 flex items-center justify-end gap-2">
+              <button
+                onClick={() => { setHapusTarget(null); setKonfirmText(''); }}
+                disabled={deleting}
+                className="px-4 py-2 rounded-xl text-[13px] font-semibold"
+                style={{ color: '#374151', border: '1px solid rgba(0,0,0,0.15)' }}
+              >
+                Batal
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={deleting || konfirmText.trim() !== hapusTarget.nama_travel.trim()}
+                className="px-4 py-2 rounded-xl text-[13px] font-semibold transition-all duration-150"
+                style={{
+                  background: (deleting || konfirmText.trim() !== hapusTarget.nama_travel.trim()) ? 'rgba(220,38,38,0.4)' : '#dc2626',
+                  color: '#ffffff',
+                  cursor: (deleting || konfirmText.trim() !== hapusTarget.nama_travel.trim()) ? 'not-allowed' : 'pointer',
+                }}
+              >
+                {deleting ? 'Menghapus…' : 'Hapus Permanen'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </AdminLayout>
