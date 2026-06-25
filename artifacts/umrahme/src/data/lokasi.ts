@@ -205,7 +205,7 @@ export const daftarLokasi: Lokasi[] = [
     jamKunjungan: 'Buka 24 jam (waktu setempat)',
     ringkas: 'Masjid pertama yang dibangun dalam sejarah Islam.',
     gambar: '/lokasi/masjid-quba.jpg',
-    koordinat: { lat: 24.4395, lng: 39.6175 },
+    koordinat: { lat: 24.4368, lng: 39.6170 },
     sejarah:
       'Masjid Quba adalah masjid pertama yang dibangun Rasulullah \ufdfa saat tiba di pinggiran Madinah dalam perjalanan hijrah, dibangun di atas dasar takwa. Shalat di dalamnya berpahala seperti umrah.',
     sejarahSeksi: [
@@ -505,7 +505,7 @@ export const daftarLokasi: Lokasi[] = [
     jamKunjungan: 'Pagi hari \u00b7 pendakian terjal & panjang',
     ringkas: 'Gunung tempat Nabi \ufdfa dan Abu Bakar bersembunyi saat hijrah.',
     gambar: '/lokasi/jabal-tsur.jpg',
-    koordinat: { lat: 21.3733, lng: 39.8628 },
+    koordinat: { lat: 21.3859, lng: 39.8472 },
     sejarah:
       'Jabal Tsur di selatan Makkah memuat Gua Tsur, tempat Nabi Muhammad \ufdfa dan Abu Bakar Ash-Shiddiq bersembunyi tiga hari dari kejaran Quraisy di awal perjalanan hijrah ke Madinah.',
     sejarahSeksi: [
@@ -672,7 +672,7 @@ export const daftarLokasi: Lokasi[] = [
     jamKunjungan: 'Buka 24 jam',
     ringkas: 'Masjid \u201cdua kiblat\u201d, saksi perpindahan arah kiblat ke Ka\u2019bah.',
     gambar: '/lokasi/masjid-qiblatain.jpg',
-    koordinat: { lat: 24.4842, lng: 39.5779 },
+    koordinat: { lat: 24.4838, lng: 39.5740 },
     sejarah:
       'Masjid Qiblatain (\u201cMasjid Dua Kiblat\u201d) di barat laut Madinah adalah tempat turunnya perintah memindahkan kiblat dari Baitul Maqdis ke Ka\u2019bah saat shalat berlangsung.',
     sejarahSeksi: [

@@ -5,8 +5,8 @@ import PageHeader from '../components/PageHeader';
 import EmptyState from '../components/EmptyState';
 import { IconPeta, IconChevron } from '../components/icons';
 
-function gmapsUrl(lat: number, lng: number, nama: string): string {
-  return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}(${encodeURIComponent(nama)})`;
+function gmapsUrl(lat: number, lng: number, _nama: string): string {
+  return `https://www.google.com/maps/search/?api=1&query=${lat}%2C${lng}`;
 }
 
 function formatCoord(val: number, posLabel: string, negLabel: string): string {
