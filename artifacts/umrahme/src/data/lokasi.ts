@@ -1191,7 +1191,7 @@ export const daftarLokasi: Lokasi[] = [
     jarakKm: 20,
     jamKunjungan: 'Area terbuka (puncak ibadah 9 Dzulhijjah)',
     ringkas: 'Padang luas tempat wukuf \u2014 rukun terbesar haji. "Haji adalah Arafah."',
-    gambar: '',
+    gambar: '/lokasi/padang-arafah.jpg',
     koordinat: { lat: 21.3550, lng: 39.9839 },
     sejarah:
       'Padang Arafah adalah dataran luas sekitar 20 km tenggara Makkah, menjadi tempat pelaksanaan wukuf \u2014 rukun paling utama dalam ibadah haji. Pada tanggal 9 Dzulhijjah, jutaan jamaah haji berkumpul di sini dari tergelincirnya matahari hingga terbenam, berdoa dan bermunajat kepada Allah. Rasulullah \ufdfa bersabda bahwa inti haji adalah wukuf di Arafah.',
@@ -1240,7 +1240,7 @@ export const daftarLokasi: Lokasi[] = [
     jarakKm: 8,
     jamKunjungan: 'Area terbuka (aktif saat musim haji)',
     ringkas: '"Kota Tenda" \u2014 tempat jamaah haji bermalam (mabit) & melempar jumrah.',
-    gambar: '',
+    gambar: '/lokasi/mina.jpg',
     koordinat: { lat: 21.4133, lng: 39.8933 },
     sejarah:
       'Mina adalah lembah sekitar 8 km timur Makkah, dijuluki "Kota Tenda" karena dipenuhi lebih dari 100.000 tenda permanen untuk menampung jutaan jamaah haji. Di Mina jamaah bermalam (mabit) pada malam tanggal 8, 11, 12, dan 13 Dzulhijjah, serta melaksanakan lempar jumrah (jamarat) di tiga tugu yang melambangkan godaan setan.',
@@ -1289,7 +1289,7 @@ export const daftarLokasi: Lokasi[] = [
     jarakKm: 12,
     jamKunjungan: 'Area terbuka (aktif saat musim haji)',
     ringkas: 'Tempat jamaah haji bermalam setelah Arafah & mengumpulkan kerikil untuk jumrah.',
-    gambar: '',
+    gambar: '/lokasi/muzdalifah.jpg',
     koordinat: { lat: 21.3925, lng: 39.9378 },
     sejarah:
       'Muzdalifah adalah kawasan terbuka antara Arafah dan Mina, sekitar 12 km tenggara Makkah. Setelah wukuf di Arafah, pada malam 10 Dzulhijjah jamaah haji bergerak ke Muzdalifah untuk bermalam (mabit), menjamak shalat Maghrib & Isya, lalu mengumpulkan batu kerikil yang akan dipakai untuk melempar jumrah di Mina.',
@@ -1337,7 +1337,7 @@ export const daftarLokasi: Lokasi[] = [
     jarakKm: 18,
     jamKunjungan: 'Aktif saat hari Arafah (9 Dzulhijjah)',
     ringkas: 'Masjid besar di tepi barat Arafah, tempat khutbah & shalat jamak di hari Arafah.',
-    gambar: '',
+    gambar: '/lokasi/masjid-namira.jpg',
     koordinat: { lat: 21.3547, lng: 39.9728 },
     sejarah:
       'Masjid Namira terletak di tepi barat Padang Arafah, sekitar 18 km dari Masjidil Haram. Masjid ini dibangun di kawasan tempat Rasulullah \ufdfa singgah sebelum menyampaikan Khutbah Wada\u2019. Di sinilah pada hari Arafah (9 Dzulhijjah) imam menyampaikan khutbah haji dan memimpin shalat Dzuhur & Ashar yang dijamak-qashar. Kini Masjid Namira menjadi salah satu masjid terbesar di dunia.',
@@ -1381,7 +1381,7 @@ export const daftarLokasi: Lokasi[] = [
     jarakKm: 8,
     jamKunjungan: 'Aktif saat musim haji',
     ringkas: 'Masjid bersejarah di Mina, diriwayatkan 70 nabi pernah shalat di tempat ini.',
-    gambar: '',
+    gambar: '/lokasi/masjid-khayf.jpg',
     koordinat: { lat: 21.4108, lng: 39.8867 },
     sejarah:
       'Masjid Al-Khayf terletak di tengah lembah Mina, dekat Jamratul Ula (jumrah terkecil). Masjid ini memiliki keutamaan istimewa: diriwayatkan bahwa 70 nabi pernah shalat di tempat ini. Pada musim haji, masjid ini menjadi tempat shalat jamaah yang sedang mabit di Mina.',
@@ -1426,7 +1426,7 @@ export const daftarLokasi: Lokasi[] = [
     jarakKm: 8,
     jamKunjungan: 'Aktif saat hari-hari Tasyrik',
     ringkas: 'Tiga tugu tempat melempar jumrah \u2014 simbol perlawanan terhadap godaan setan.',
-    gambar: '',
+    gambar: '/lokasi/jamarat.jpg',
     koordinat: { lat: 21.4222, lng: 39.8728 },
     sejarah:
       'Jamarat adalah tiga tugu (pilar) di lembah Mina tempat jamaah haji melaksanakan ritual lempar jumrah. Ketiganya adalah Jamratul Ula (terkecil), Jamratul Wustha (tengah), dan Jamratul Aqabah (terbesar). Kini ketiganya berada di Jembatan Jamarat \u2014 struktur bertingkat yang dibangun untuk menampung jutaan jamaah agar lebih aman dan teratur.',
