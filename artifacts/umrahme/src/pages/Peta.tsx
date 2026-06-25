@@ -8,7 +8,7 @@ import { IconPeta, IconChevron } from '../components/icons';
 const tabs: { id: KotaFilter; label: string }[] = [
   { id: 'Makkah', label: 'Makkah' },
   { id: 'Madinah', label: 'Madinah' },
-  { id: 'Haji', label: 'Tempat Haji' },
+  { id: 'Haji', label: 'Haji' },
   { id: 'Lainnya', label: 'Lainnya' },
 ];
 
