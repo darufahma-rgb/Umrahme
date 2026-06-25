@@ -1148,12 +1148,13 @@ export function lokasiById(id: string): Lokasi | undefined {
   return daftarLokasi.find((l) => l.id === id);
 }
 
-export type KotaFilter = 'Makkah' | 'Madinah';
+export type KotaFilter = 'Makkah' | 'Madinah' | 'Lainnya';
 
 export function lokasiByKota(kota: KotaFilter): Lokasi[] {
   return daftarLokasi.filter((l) => {
-    if (kota === 'Makkah') return l.kota === 'Makkah' || l.kota === 'Arafah' || l.kota === 'Thaif';
-    return l.kota === 'Madinah' || l.kota === 'Badr';
+    if (kota === 'Makkah') return l.kota === 'Makkah' || l.kota === 'Arafah';
+    if (kota === 'Madinah') return l.kota === 'Madinah';
+    return l.kota !== 'Makkah' && l.kota !== 'Arafah' && l.kota !== 'Madinah';
   });
 }
 
