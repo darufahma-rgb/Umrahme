@@ -16,14 +16,27 @@ function formatCoord(val: number, posLabel: string, negLabel: string): string {
 function CityBadge({ kota }: { kota: string }) {
   const isMakkah = kota === 'Makkah';
   const isArafah = kota === 'Arafah';
+  const isThaif = kota === 'Thaif';
+  const isBadr = kota === 'Badr';
+
+  let bg = 'rgba(var(--color-primary-rgb,67,56,202),0.09)';
+  let color = 'var(--color-primary)';
+  let border = 'rgba(var(--color-primary-rgb,67,56,202),0.15)';
+
+  if (isMakkah) {
+    bg = 'rgba(212,162,78,0.14)'; color = '#a07020'; border = 'rgba(212,162,78,0.25)';
+  } else if (isArafah) {
+    bg = 'rgba(212,162,78,0.08)'; color = '#8a6010'; border = 'rgba(212,162,78,0.15)';
+  } else if (isThaif) {
+    bg = 'rgba(34,139,80,0.10)'; color = '#1a6e3c'; border = 'rgba(34,139,80,0.22)';
+  } else if (isBadr) {
+    bg = 'rgba(180,60,50,0.10)'; color = '#8b2020'; border = 'rgba(180,60,50,0.22)';
+  }
+
   return (
     <span
       className="inline-flex items-center rounded px-2 py-0.5 font-mono text-[10px] uppercase tracking-wide"
-      style={{
-        background: isMakkah ? 'rgba(212,162,78,0.14)' : isArafah ? 'rgba(212,162,78,0.08)' : 'rgba(var(--color-primary-rgb,67,56,202),0.09)',
-        color: isMakkah ? '#a07020' : isArafah ? '#8a6010' : 'var(--color-primary)',
-        border: `1px solid ${isMakkah ? 'rgba(212,162,78,0.25)' : isArafah ? 'rgba(212,162,78,0.15)' : 'rgba(var(--color-primary-rgb,67,56,202),0.15)'}`,
-      }}
+      style={{ background: bg, color, border: `1px solid ${border}` }}
     >
       {kota}
     </span>
