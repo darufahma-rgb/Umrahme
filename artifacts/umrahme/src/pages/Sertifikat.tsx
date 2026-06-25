@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import PageHeader from '../components/PageHeader';
 import EmptyState from '../components/EmptyState';
 import { IconSertifikat, IconDownload, IconShare } from '../components/icons';
+import { DEFAULT_SERTIFIKAT_LAYOUT, type SertifikatField } from '../lib/supabase';
 
 function nomorSertifikat(nomorJamaah: string): string {
   const tahun = new Date().getFullYear();
@@ -16,6 +17,15 @@ const tanggalSekarang = new Date().toLocaleDateString('id-ID', {
   month: 'long',
   year: 'numeric',
 });
+
+function fontFamilyToCss(f: SertifikatField['fontFamily']): string {
+  switch (f) {
+    case 'display': return "'Bricolage Grotesque', sans-serif";
+    case 'mono':    return "'JetBrains Mono', monospace";
+    case 'arab':    return "'Amiri', serif";
+    default:        return "'Inter', sans-serif";
+  }
+}
 
 export default function Sertifikat() {
   const { jamaah, tenant, setFase } = useAuth();
@@ -48,6 +58,18 @@ export default function Sertifikat() {
   }
 
   const hasTemplate = Boolean(tenant?.sertifikat_template_url);
+  const layout = tenant?.sertifikat_layout ?? DEFAULT_SERTIFIKAT_LAYOUT;
+
+  const fieldValue: Record<string, string> = {
+    nama:             jamaah.nama,
+    nomor:            jamaah.nomorJamaah,
+    tanggal:          tanggalSekarang,
+    nomor_sertifikat: nomorSertifikat(jamaah.nomorJamaah),
+    nama_travel:      tenant?.nama_travel ?? jamaah.travel,
+    judul:            'Sertifikat Umrah',
+    subjudul:         'Dengan ini menerangkan bahwa',
+    keterangan:       'telah menunaikan ibadah umrah ke Baitullah dengan khusyuk',
+  };
 
   async function unduh() {
     if (!certRef.current) return;
@@ -94,7 +116,8 @@ export default function Sertifikat() {
       style={{
         aspectRatio: '1.414 / 1',
         background: hasTemplate ? 'transparent' : 'radial-gradient(120% 60% at 50% 0%, rgba(212,162,78,0.18), #130a04 60%)',
-      }}
+        containerType: 'inline-size',
+      } as React.CSSProperties}
     >
       {/* Background template image */}
       {hasTemplate && (
@@ -126,86 +149,83 @@ export default function Sertifikat() {
         </>
       )}
 
-      {/* Konten teks */}
-      <div className="relative flex h-full flex-col items-center justify-center px-8 text-center">
-        {!hasTemplate && (
+      {/* Konten teks — layout absolut bila ada template, default bila tidak */}
+      {hasTemplate ? (
+        layout.fields.filter(f => f.visible).map(f => (
+          <div
+            key={f.key}
+            className="pointer-events-none absolute whitespace-nowrap"
+            style={{
+              left: `${f.x}%`,
+              top: `${f.y}%`,
+              transform: `translate(${f.align === 'center' ? '-50%' : f.align === 'right' ? '-100%' : '0'}, -50%)`,
+              fontSize: `${f.fontSize / 10}cqw`,
+              color: f.color,
+              fontWeight: f.bold ? 700 : 400,
+              fontFamily: fontFamilyToCss(f.fontFamily),
+              textShadow: '0 1px 4px rgba(0,0,0,0.25)',
+            }}
+          >
+            {fieldValue[f.key] ?? ''}
+          </div>
+        ))
+      ) : (
+        <div className="relative flex h-full flex-col items-center justify-center px-8 text-center">
           <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-gold">
             Sertifikat Pelaksanaan
           </p>
-        )}
 
-        {!hasTemplate && (
           <h2 className="mt-1.5 font-display text-2xl font-bold" style={{ color: '#f3e9d5' }}>
             Ibadah Umrah
           </h2>
-        )}
 
-        {!hasTemplate && (
           <div className="mx-auto my-4 flex items-center justify-center gap-3">
             <span className="h-px w-10 bg-gold/40" />
             <span className="h-1.5 w-1.5 rotate-45 bg-gold/70" />
             <span className="h-px w-10 bg-gold/40" />
           </div>
-        )}
 
-        {!hasTemplate && (
           <p className="text-[11px] uppercase tracking-widest" style={{ color: 'rgba(243,233,213,0.5)' }}>
             Dengan ini menerangkan bahwa
           </p>
-        )}
 
-        {/* Nama jamaah — selalu tampil */}
-        <p
-          className={hasTemplate ? 'font-display font-bold leading-tight' : 'mt-2 font-display text-3xl font-bold leading-tight'}
-          style={{
-            color: hasTemplate ? '#ffffff' : '#f3e9d5',
-            fontSize: hasTemplate ? 'clamp(22px, 4vw, 36px)' : undefined,
-            textShadow: hasTemplate ? '0 2px 8px rgba(0,0,0,0.6)' : 'none',
-            marginTop: hasTemplate ? 0 : undefined,
-          }}
-        >
-          {jamaah.nama}
-        </p>
+          <p className="mt-2 font-display text-3xl font-bold leading-tight" style={{ color: '#f3e9d5' }}>
+            {jamaah.nama}
+          </p>
 
-        {/* Nomor jamaah */}
-        <p
-          className="font-mono text-[11px] mt-2"
-          style={{
-            color: hasTemplate ? 'rgba(255,255,255,0.7)' : 'rgba(243,233,213,0.5)',
-            textShadow: hasTemplate ? '0 1px 4px rgba(0,0,0,0.5)' : 'none',
-            letterSpacing: '0.15em',
-          }}
-        >
-          {jamaah.nomorJamaah}
-        </p>
+          <p
+            className="font-mono text-[11px] mt-2"
+            style={{ color: 'rgba(243,233,213,0.5)', letterSpacing: '0.15em' }}
+          >
+            {jamaah.nomorJamaah}
+          </p>
 
-        {!hasTemplate && (
-          <>
-            <p className="mt-3 max-w-[34ch] mx-auto text-pretty text-sm leading-relaxed" style={{ color: 'rgba(243,233,213,0.6)' }}>
-              telah menunaikan rangkaian ibadah umrah ke Baitullah Al-Haram dengan penuh khusyuk.
-              Semoga menjadi umrah yang mabrur.
+          <p className="mt-3 max-w-[34ch] mx-auto text-pretty text-sm leading-relaxed" style={{ color: 'rgba(243,233,213,0.6)' }}>
+            telah menunaikan rangkaian ibadah umrah ke Baitullah Al-Haram dengan penuh khusyuk.
+            Semoga menjadi umrah yang mabrur.
+          </p>
+
+          <div className="mt-6 grid grid-cols-2 gap-3 text-left w-full">
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-widest text-gold/80">Tanggal</p>
+              <p className="mt-0.5 text-sm" style={{ color: '#f3e9d5' }}>{tanggalSekarang}</p>
+            </div>
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-widest text-gold/80">No. Sertifikat</p>
+              <p className="mt-0.5 font-mono text-sm" style={{ color: '#f3e9d5' }}>{nomorSertifikat(jamaah.nomorJamaah)}</p>
+            </div>
+          </div>
+
+          <div className="mt-6 border-t border-gold/15 pt-4 w-full text-center">
+            <p className="font-mono text-[10px] uppercase tracking-widest" style={{ color: 'rgba(243,233,213,0.4)' }}>
+              Diselenggarakan oleh
             </p>
-            <div className="mt-6 grid grid-cols-2 gap-3 text-left w-full">
-              <div>
-                <p className="font-mono text-[10px] uppercase tracking-widest text-gold/80">Tanggal</p>
-                <p className="mt-0.5 text-sm" style={{ color: '#f3e9d5' }}>{tanggalSekarang}</p>
-              </div>
-              <div>
-                <p className="font-mono text-[10px] uppercase tracking-widest text-gold/80">No. Sertifikat</p>
-                <p className="mt-0.5 font-mono text-sm" style={{ color: '#f3e9d5' }}>{nomorSertifikat(jamaah.nomorJamaah)}</p>
-              </div>
-            </div>
-            <div className="mt-6 border-t border-gold/15 pt-4 w-full text-center">
-              <p className="font-mono text-[10px] uppercase tracking-widest" style={{ color: 'rgba(243,233,213,0.4)' }}>
-                Diselenggarakan oleh
-              </p>
-              <p className="mt-0.5 font-display text-base font-bold" style={{ color: '#f3e9d5' }}>
-                {tenant?.nama_travel ?? jamaah.travel}
-              </p>
-            </div>
-          </>
-        )}
-      </div>
+            <p className="mt-0.5 font-display text-base font-bold" style={{ color: '#f3e9d5' }}>
+              {tenant?.nama_travel ?? jamaah.travel}
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 

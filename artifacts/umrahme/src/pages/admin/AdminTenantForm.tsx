@@ -14,6 +14,8 @@ import {
   uploadHeroImage as apiUploadHeroImage,
   uploadSertifikatTemplate as apiUploadSertifikatTemplate,
   type TenantRow, type AgendaItemRow, type TravelAnnouncementRow, type JamaahAccountRow, type TenantUserRow, type KeberangkatanRow,
+  type SertifikatLayout, type SertifikatField,
+  DEFAULT_SERTIFIKAT_LAYOUT,
 } from '../../lib/supabase';
 import { darkenHex, generateActivationCode } from '../../lib/colorUtils';
 import { insertAgendaDummy } from '../../data/agendaDummy';
@@ -120,6 +122,11 @@ export default function AdminTenantForm() {
   const [existingSertifikatUrl, setExistingSertifikatUrl] = useState<string>('');
   const sertifikatInputRef = useRef<HTMLInputElement>(null);
   const MAX_SERTIFIKAT_SIZE = 5 * 1024 * 1024;
+  const sertifikatCanvasRef = useRef<HTMLDivElement>(null);
+  const [sertifikatLayout, setSertifikatLayout] = useState<SertifikatLayout>(DEFAULT_SERTIFIKAT_LAYOUT);
+  const [selectedLayoutField, setSelectedLayoutField] = useState<string | null>(null);
+  const [layoutSaving, setLayoutSaving] = useState(false);
+  const [layoutSaveMsg, setLayoutSaveMsg] = useState('');
 
   const [keberangkatanList, setKeberangkatanList] = useState<KeberangkatanRow[]>([]);
   const [keberangkatanLoading, setKeberangkatanLoading] = useState(false);
@@ -248,6 +255,7 @@ export default function AdminTenantForm() {
           setExistingLogoUrl(t.logo_url);
           setExistingHeroUrl(t.hero_image_url ?? '');
           setExistingSertifikatUrl(t.sertifikat_template_url ?? '');
+          if (t.sertifikat_layout) setSertifikatLayout(t.sertifikat_layout);
         })
         .catch(err => setError(err instanceof Error ? err.message : 'Tenant tidak ditemukan.'))
         .finally(() => setLoading(false));
@@ -344,6 +352,69 @@ export default function AdminTenantForm() {
     reader.onload = ev => setSertifikatPreview(ev.target?.result as string);
     reader.readAsDataURL(file);
   }
+
+  function fontFamilyToCss(f: SertifikatField['fontFamily']): string {
+    switch (f) {
+      case 'display': return "'Bricolage Grotesque', sans-serif";
+      case 'mono':    return "'JetBrains Mono', monospace";
+      case 'arab':    return "'Amiri', serif";
+      default:        return "'Inter', sans-serif";
+    }
+  }
+
+  function startDrag(e: React.PointerEvent, key: string) {
+    e.preventDefault();
+    setSelectedLayoutField(key);
+    const canvas = sertifikatCanvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    function move(ev: PointerEvent) {
+      const x = Math.min(100, Math.max(0, ((ev.clientX - rect.left) / rect.width) * 100));
+      const y = Math.min(100, Math.max(0, ((ev.clientY - rect.top) / rect.height) * 100));
+      setSertifikatLayout(prev => ({
+        fields: prev.fields.map(f => f.key === key ? { ...f, x: Math.round(x * 10) / 10, y: Math.round(y * 10) / 10 } : f),
+      }));
+    }
+    function up() {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+    }
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+  }
+
+  function updateSelectedField(patch: Partial<SertifikatField>) {
+    if (!selectedLayoutField) return;
+    setSertifikatLayout(prev => ({
+      fields: prev.fields.map(f => f.key === selectedLayoutField ? { ...f, ...patch } : f),
+    }));
+  }
+
+  async function saveSertifikatLayout() {
+    if (!id || isNew) return;
+    setLayoutSaving(true);
+    setLayoutSaveMsg('');
+    try {
+      await updateTenant(id, { sertifikat_layout: sertifikatLayout });
+      setLayoutSaveMsg('Tata letak tersimpan ✓');
+      setTimeout(() => setLayoutSaveMsg(''), 3000);
+    } catch (err) {
+      setLayoutSaveMsg(err instanceof Error ? err.message : 'Gagal menyimpan.');
+    } finally {
+      setLayoutSaving(false);
+    }
+  }
+
+  const LAYOUT_PREVIEW_TEXT: Record<string, string> = {
+    nama: 'Budi Santoso',
+    nomor: 'TU-2026-001',
+    tanggal: '15 Februari 2026',
+    nomor_sertifikat: 'UMR/2026/00123',
+    nama_travel: 'Nama Travel',
+    judul: 'Sertifikat Umrah',
+    subjudul: 'Dengan ini menerangkan bahwa',
+    keterangan: 'telah menunaikan ibadah umrah',
+  };
 
   function handleHeroChange(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -982,6 +1053,172 @@ export default function AdminTenantForm() {
                     <p className="mt-1.5 text-[10px]" style={{ color: '#9ca3af' }}>Maks 5MB · PNG, JPG, WEBP · Rekomendasi: landscape 1200×848px</p>
                     <p className="mt-1 text-[10px]" style={{ color: '#d97706' }}>Pastikan template punya area kosong untuk nama jamaah di tengah</p>
                   </div>
+
+                  {/* ── EDITOR TATA LETAK ─────────────────────── */}
+                  {(existingSertifikatUrl || sertifikatPreview) && !isNew && (
+                    <div className="mt-5">
+                      <div style={{ height: '1px', background: 'rgba(0,0,0,0.05)', margin: '0 -24px 20px' }} />
+                      <label className="block text-[11px] font-semibold uppercase tracking-widest mb-1" style={{ color: '#9ca3af' }}>
+                        Tata Letak Sertifikat
+                      </label>
+                      <p className="mb-3 text-[10px]" style={{ color: '#6b7280' }}>Geser elemen teks di atas kanvas. Klik untuk memilih dan ubah propertinya.</p>
+
+                      {/* Kanvas drag-drop */}
+                      <div
+                        ref={sertifikatCanvasRef}
+                        onClick={() => setSelectedLayoutField(null)}
+                        className="relative w-full overflow-hidden rounded-xl border cursor-crosshair select-none"
+                        style={{ aspectRatio: '1.414 / 1', background: '#f3f0e8', borderColor: 'rgba(0,0,0,0.1)', containerType: 'inline-size' } as React.CSSProperties}
+                      >
+                        <img
+                          src={sertifikatPreview || existingSertifikatUrl}
+                          alt=""
+                          className="absolute inset-0 h-full w-full object-cover pointer-events-none"
+                        />
+                        {sertifikatLayout.fields.filter(f => f.visible).map(f => (
+                          <div
+                            key={f.key}
+                            onPointerDown={e => { e.stopPropagation(); startDrag(e, f.key); }}
+                            onClick={e => { e.stopPropagation(); setSelectedLayoutField(f.key); }}
+                            className="absolute cursor-move px-1"
+                            style={{
+                              left: `${f.x}%`,
+                              top: `${f.y}%`,
+                              transform: `translate(${f.align === 'center' ? '-50%' : f.align === 'right' ? '-100%' : '0'}, -50%)`,
+                              fontSize: `${f.fontSize / 10}cqw`,
+                              color: f.color,
+                              fontWeight: f.bold ? 700 : 400,
+                              fontFamily: fontFamilyToCss(f.fontFamily),
+                              outline: selectedLayoutField === f.key ? '2px dashed #4338ca' : '1px dashed rgba(0,0,0,0.2)',
+                              outlineOffset: '2px',
+                              whiteSpace: 'nowrap',
+                              userSelect: 'none',
+                            }}
+                          >
+                            {LAYOUT_PREVIEW_TEXT[f.key] ?? f.label}
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Panel bawah: daftar field + properti */}
+                      <div className="mt-3 flex gap-3 flex-wrap">
+
+                        {/* Daftar field — checkbox aktifkan */}
+                        <div className="flex-1 min-w-[140px] rounded-xl p-3" style={{ background: '#f9fafb', border: '1px solid rgba(0,0,0,0.07)' }}>
+                          <p className="font-mono text-[9px] uppercase tracking-widest mb-2" style={{ color: '#9ca3af' }}>Tampilkan elemen</p>
+                          <div className="space-y-1.5">
+                            {sertifikatLayout.fields.map(f => (
+                              <label key={f.key} className="flex items-center gap-2 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={f.visible}
+                                  onChange={ch => {
+                                    setSertifikatLayout(prev => ({
+                                      fields: prev.fields.map(ff => ff.key === f.key ? { ...ff, visible: ch.target.checked } : ff),
+                                    }));
+                                    if (ch.target.checked) setSelectedLayoutField(f.key);
+                                  }}
+                                  className="rounded"
+                                />
+                                <span
+                                  className="text-[12px] cursor-pointer"
+                                  style={{ color: selectedLayoutField === f.key ? '#4338ca' : '#374151', fontWeight: selectedLayoutField === f.key ? 600 : 400 }}
+                                  onClick={() => f.visible && setSelectedLayoutField(f.key)}
+                                >
+                                  {f.label}
+                                </span>
+                              </label>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Panel properti field terpilih */}
+                        {selectedLayoutField && (() => {
+                          const fld = sertifikatLayout.fields.find(f => f.key === selectedLayoutField);
+                          if (!fld) return null;
+                          return (
+                            <div className="rounded-xl p-3 space-y-2.5" style={{ background: '#f9fafb', border: '1px solid rgba(0,0,0,0.07)', minWidth: '180px', flex: '1' }}>
+                              <p className="font-mono text-[9px] uppercase tracking-widest" style={{ color: '#9ca3af' }}>{fld.label}</p>
+
+                              <div>
+                                <p className="text-[10px] mb-1" style={{ color: '#6b7280' }}>Ukuran Font ({fld.fontSize}px)</p>
+                                <input
+                                  type="range" min={8} max={80} value={fld.fontSize}
+                                  onChange={e => updateSelectedField({ fontSize: Number(e.target.value) })}
+                                  className="w-full accent-indigo-600"
+                                />
+                              </div>
+
+                              <div className="flex items-center gap-2">
+                                <p className="text-[10px]" style={{ color: '#6b7280' }}>Warna</p>
+                                <input
+                                  type="color" value={fld.color}
+                                  onChange={e => updateSelectedField({ color: e.target.value })}
+                                  className="h-7 w-10 cursor-pointer rounded"
+                                  style={{ border: '1px solid rgba(0,0,0,0.1)', padding: '1px 2px' }}
+                                />
+                              </div>
+
+                              <div>
+                                <p className="text-[10px] mb-1" style={{ color: '#6b7280' }}>Rata teks</p>
+                                <div className="flex gap-1">
+                                  {(['left', 'center', 'right'] as const).map(a => (
+                                    <button key={a} type="button" onClick={() => updateSelectedField({ align: a })}
+                                      className="flex-1 rounded px-1 py-1 text-[10px] font-medium transition"
+                                      style={{ background: fld.align === a ? '#4338ca' : '#f3f4f6', color: fld.align === a ? '#fff' : '#374151', border: '1px solid', borderColor: fld.align === a ? '#4338ca' : 'rgba(0,0,0,0.1)' }}>
+                                      {a === 'left' ? 'Kiri' : a === 'center' ? 'Tengah' : 'Kanan'}
+                                    </button>
+                                  ))}
+                                </div>
+                              </div>
+
+                              <div>
+                                <p className="text-[10px] mb-1" style={{ color: '#6b7280' }}>Font</p>
+                                <select value={fld.fontFamily} onChange={e => updateSelectedField({ fontFamily: e.target.value as SertifikatField['fontFamily'] })}
+                                  className="w-full rounded-lg px-2 py-1.5 text-[11px]" style={{ border: '1px solid rgba(0,0,0,0.1)', background: '#fff' }}>
+                                  <option value="display">Display (Bricolage)</option>
+                                  <option value="sans">Sans (Inter)</option>
+                                  <option value="mono">Mono (JetBrains)</option>
+                                  <option value="arab">Arab (Amiri)</option>
+                                </select>
+                              </div>
+
+                              <label className="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" checked={fld.bold} onChange={e => updateSelectedField({ bold: e.target.checked })} className="rounded" />
+                                <span className="text-[12px]" style={{ color: '#374151' }}>Tebal (Bold)</span>
+                              </label>
+                            </div>
+                          );
+                        })()}
+                      </div>
+
+                      {/* Tombol simpan tata letak */}
+                      <div className="mt-3 flex items-center gap-2 flex-wrap">
+                        <button
+                          type="button"
+                          onClick={saveSertifikatLayout}
+                          disabled={layoutSaving}
+                          className="rounded-xl px-4 py-2 text-[12px] font-semibold transition"
+                          style={{ background: '#4338ca', color: '#fff', opacity: layoutSaving ? 0.7 : 1, cursor: layoutSaving ? 'not-allowed' : 'pointer' }}
+                        >
+                          {layoutSaving ? 'Menyimpan…' : 'Simpan Tata Letak'}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setSertifikatLayout(DEFAULT_SERTIFIKAT_LAYOUT); setSelectedLayoutField(null); }}
+                          className="rounded-xl px-4 py-2 text-[12px] font-medium transition"
+                          style={{ background: '#f3f4f6', color: '#374151', border: '1px solid rgba(0,0,0,0.1)' }}
+                        >
+                          Reset ke Default
+                        </button>
+                        {layoutSaveMsg && (
+                          <span className="text-[11px] font-medium" style={{ color: layoutSaveMsg.includes('✓') ? '#16a34a' : '#dc2626' }}>
+                            {layoutSaveMsg}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <SectionDivider />

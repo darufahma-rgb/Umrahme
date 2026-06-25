@@ -12,6 +12,36 @@ export const SUPABASE_FUNCTIONS_URL = `${supabaseUrl}/functions/v1`;
 
 // ── Types ──────────────────────────────────────────────────────
 
+export interface SertifikatField {
+  key: 'nama' | 'nomor' | 'tanggal' | 'nomor_sertifikat' | 'nama_travel' | 'judul' | 'subjudul' | 'keterangan';
+  label: string;
+  x: number;
+  y: number;
+  fontSize: number;
+  color: string;
+  align: 'left' | 'center' | 'right';
+  fontFamily: 'display' | 'sans' | 'mono' | 'arab';
+  bold: boolean;
+  visible: boolean;
+}
+
+export interface SertifikatLayout {
+  fields: SertifikatField[];
+}
+
+export const DEFAULT_SERTIFIKAT_LAYOUT: SertifikatLayout = {
+  fields: [
+    { key: 'nama',             label: 'Nama Jamaah',    x: 50, y: 50, fontSize: 40, color: '#1a1a1a', align: 'center', fontFamily: 'display', bold: true,  visible: true  },
+    { key: 'nomor',            label: 'Nomor Jamaah',   x: 50, y: 60, fontSize: 18, color: '#666666', align: 'center', fontFamily: 'mono',    bold: false, visible: true  },
+    { key: 'tanggal',          label: 'Tanggal',        x: 30, y: 80, fontSize: 16, color: '#333333', align: 'center', fontFamily: 'sans',    bold: false, visible: false },
+    { key: 'nomor_sertifikat', label: 'No. Sertifikat', x: 70, y: 80, fontSize: 16, color: '#333333', align: 'center', fontFamily: 'mono',    bold: false, visible: false },
+    { key: 'nama_travel',      label: 'Nama Travel',    x: 50, y: 90, fontSize: 18, color: '#1a1a1a', align: 'center', fontFamily: 'display', bold: true,  visible: false },
+    { key: 'judul',            label: 'Judul',          x: 50, y: 20, fontSize: 28, color: '#1a1a1a', align: 'center', fontFamily: 'display', bold: true,  visible: false },
+    { key: 'subjudul',         label: 'Sub Judul',      x: 50, y: 30, fontSize: 16, color: '#666666', align: 'center', fontFamily: 'sans',    bold: false, visible: false },
+    { key: 'keterangan',       label: 'Keterangan',     x: 50, y: 70, fontSize: 14, color: '#444444', align: 'center', fontFamily: 'sans',    bold: false, visible: false },
+  ],
+};
+
 export type TenantRow = {
   id: string;
   activation_code: string;
@@ -35,6 +65,7 @@ export type TenantRow = {
   fase_override: 'persiapan' | 'tanah-suci' | 'selesai' | null;
   hero_image_url: string | null;
   sertifikat_template_url: string | null;
+  sertifikat_layout: SertifikatLayout | null;
 };
 
 export type KeberangkatanRow = {
