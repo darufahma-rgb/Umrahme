@@ -289,30 +289,35 @@ export default function DoaPage() {
         <div className="px-5 pt-4">
           <SearchBox q={q} setQ={setQ} />
         </div>
-        <div className="mt-5 space-y-2.5 px-5 pb-6">
-          {kategoriDoaMeta.map((k, i) => {
+        <div className="mt-5 grid grid-cols-2 gap-3 px-5 pb-6">
+          {kategoriDoaMeta.map((k) => {
             const jumlah = daftarDoa.filter((d) => d.kategori === k.id).length;
             return (
               <button
                 key={k.id}
                 type="button"
                 onClick={() => setParams({ kategori: k.id })}
-                className="group relative flex w-full items-center gap-4 overflow-hidden rounded-2xl border border-hairline bg-surface-card px-4 py-3.5 text-left shadow-drop-soft transition-all hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.99]"
+                className="group relative flex flex-col overflow-hidden rounded-2xl border border-hairline bg-surface-card text-left shadow-drop-soft transition-all hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.98] bg-gradient-to-br from-primary/10 via-primary/5 to-primary/5"
               >
-                <span className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-primary to-primary/40 opacity-60" aria-hidden />
+                <span className="absolute left-0 top-0 h-0.5 w-full bg-gradient-to-r from-primary/40 to-primary/10" aria-hidden />
 
-                <div className="flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-gradient-to-br from-primary/15 to-primary/5">
-                  <IconDoa className="h-5 w-5 text-primary" />
+                <div className="flex flex-col gap-2.5 p-4">
+                  <div className="flex items-start justify-between">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/70 shadow-sm backdrop-blur-sm">
+                      <IconDoa className="h-5 w-5 text-primary" />
+                    </div>
+                    <span className="rounded-full bg-primary/10 px-1.5 py-0.5 font-mono text-[10px] font-bold text-primary">{jumlah}</span>
+                  </div>
+                  <div>
+                    <h2 className="font-display text-[13px] font-bold leading-tight text-ink">{k.judul}</h2>
+                    <p className="mt-0.5 line-clamp-2 text-[11px] leading-snug text-charcoal">{k.deskripsi}</p>
+                  </div>
                 </div>
 
-                <div className="min-w-0 flex-1">
-                  <h2 className="font-display text-[15px] font-bold leading-tight text-ink">{k.judul}</h2>
-                  <p className="mt-0.5 line-clamp-1 text-[12px] text-charcoal">{k.deskripsi}</p>
-                </div>
-
-                <div className="flex flex-none items-center gap-2">
-                  <span className="rounded-full bg-primary/10 px-2 py-0.5 font-mono text-[11px] font-semibold text-primary">{jumlah}</span>
-                  <IconChevron className="h-4 w-4 text-ash transition-transform group-hover:translate-x-0.5 group-hover:text-charcoal" />
+                <div className="mt-auto flex items-center justify-end px-4 pb-3">
+                  <span className="font-mono text-[9px] uppercase tracking-wider text-primary opacity-60 transition-opacity group-hover:opacity-100">
+                    Buka →
+                  </span>
                 </div>
               </button>
             );
