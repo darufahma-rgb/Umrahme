@@ -141,6 +141,7 @@ export default function AdminTenantForm() {
   const [jmRombongan, setJmRombongan] = useState('');
   const [jmBus, setJmBus] = useState('');
   const [jmKamar, setJmKamar] = useState('');
+  const [jmPaspor, setJmPaspor] = useState('');
   const [jmFase, setJmFase] = useState<JamaahAccountRow['fase']>('persiapan');
   const [jmSubmitting, setJmSubmitting] = useState(false);
   const [jmError, setJmError] = useState('');
@@ -421,8 +422,8 @@ export default function AdminTenantForm() {
     if (!jmNomorJamaah.trim()) { setJmError('Nomor jamaah wajib diisi.'); return; }
     setJmSubmitting(true);
     try {
-      await createJamaah(id!, { nama: jmNama.trim(), nomor_jamaah: jmNomorJamaah.trim(), rombongan: jmRombongan.trim() || null, nomor_bus: jmBus.trim() || null, nomor_kamar: jmKamar.trim() || null, fase: jmFase });
-      setJmNama(''); setJmNomorJamaah(''); setJmRombongan(''); setJmBus(''); setJmKamar(''); setJmFase('persiapan');
+      await createJamaah(id!, { nama: jmNama.trim(), nomor_jamaah: jmNomorJamaah.trim(), rombongan: jmRombongan.trim() || null, nomor_bus: jmBus.trim() || null, nomor_kamar: jmKamar.trim() || null, nomor_paspor: jmPaspor.trim() || null, fase: jmFase });
+      setJmNama(''); setJmNomorJamaah(''); setJmRombongan(''); setJmBus(''); setJmKamar(''); setJmPaspor(''); setJmFase('persiapan');
       await loadJamaah();
     } catch (err: unknown) { setJmError(err instanceof Error ? err.message : 'Gagal menambah jamaah.'); }
     setJmSubmitting(false);
@@ -919,8 +920,11 @@ export default function AdminTenantForm() {
                     <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Nama <span style={{ color: '#f87171' }}>*</span></p><StyledInput type="text" value={jmNama} onChange={e => setJmNama(e.target.value)} placeholder="Nama lengkap sesuai paspor" required /></div>
                     <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>No. Jamaah <span style={{ color: '#f87171' }}>*</span></p><StyledInput type="text" value={jmNomorJamaah} onChange={e => setJmNomorJamaah(e.target.value)} placeholder="001" required /></div>
                   </div>
-                  <div className="grid grid-cols-3 gap-3">
+                  <div className="grid grid-cols-2 gap-3">
                     <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Rombongan</p><StyledInput type="text" value={jmRombongan} onChange={e => setJmRombongan(e.target.value)} placeholder="A" /></div>
+                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>No. Paspor</p><StyledInput type="text" value={jmPaspor} onChange={e => setJmPaspor(e.target.value)} placeholder="C1234567" /></div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
                     <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>No. Bus</p><StyledInput type="text" value={jmBus} onChange={e => setJmBus(e.target.value)} placeholder="3" /></div>
                     <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>No. Kamar</p><StyledInput type="text" value={jmKamar} onChange={e => setJmKamar(e.target.value)} placeholder="804" /></div>
                   </div>

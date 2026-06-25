@@ -20,6 +20,7 @@ export interface Jamaah {
   rombongan?: string;
   nomorBus?: string;
   nomorKamar?: string;
+  nomorPaspor?: string;
   hotelMakkah?: string;
   hotelMadinah?: string;
   pembimbingNama?: string;

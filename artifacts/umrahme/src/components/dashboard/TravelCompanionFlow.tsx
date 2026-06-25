@@ -56,9 +56,8 @@ export function TripIdentityCard() {
   const info        = getOperationalInfo(tenant ?? null);
   const firstName   = jamaah.nama.split(' ')[0];
   const namaTravel  = tenant?.nama_travel ?? jamaah.travel;
-  const rombongan   = jamaah.rombongan ?? info.groupCode;
-  const bus         = jamaah.nomorBus  ?? info.busNumber;
-  const kamar       = jamaah.nomorKamar ?? info.roomNumber;
+  const rombongan = jamaah.rombongan ?? info.groupCode;
+  const paspor    = jamaah.nomorPaspor;
   const hotelMakkah  = jamaah.hotelMakkah  ?? info.hotelMakkah;
   const hotelMadinah = jamaah.hotelMadinah ?? info.hotelMadinah;
 
@@ -85,15 +84,17 @@ export function TripIdentityCard() {
           </Link>
         </div>
 
-        {/* Chips: Rombongan · Bus · Kamar */}
+        {/* Chips: Rombongan · No. Paspor (paspor opsional) */}
         <div className="mt-3 flex flex-wrap gap-1.5">
-          {[rombongan, bus, `Kamar ${kamar}`].map((v) => (
-            <span key={v}
-              className="rounded-full px-2.5 py-1 font-mono text-[10px] font-semibold text-charcoal"
-              style={{ background: 'rgba(0,0,0,0.045)', border: '1px solid rgba(0,0,0,0.06)' }}>
-              {v}
-            </span>
-          ))}
+          {[rombongan, paspor ? `Paspor ${paspor}` : null]
+            .filter(Boolean)
+            .map((v) => (
+              <span key={v as string}
+                className="rounded-full px-2.5 py-1 font-mono text-[10px] font-semibold text-charcoal"
+                style={{ background: 'rgba(0,0,0,0.045)', border: '1px solid rgba(0,0,0,0.06)' }}>
+                {v}
+              </span>
+            ))}
         </div>
 
         {/* Hotel Makkah + Madinah */}
