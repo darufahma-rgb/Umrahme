@@ -641,11 +641,16 @@ export default function ManasikModulDetail() {
 
   useEffect(() => {
     if (!modul) return;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     const p = getModulProgress(modul.id);
     if (p.selesai) {
       setPartCSkor(p.partCScore);
       setPartCTotal(p.partCTotal);
       setTahap('ringkasan');
+    } else {
+      setPartCSkor(0);
+      setPartCTotal(0);
+      setTahap('A');
     }
   }, [modul?.id]);
 
