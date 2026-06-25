@@ -67,6 +67,13 @@ export default function Panduan() {
       accent: 'gold',
     },
     {
+      to: '/panduan/faq-fikih',
+      label: 'Tanya Jawab Fikih',
+      desc: 'Haid, batal wudhu, lupa putaran, kursi roda & lainnya',
+      Icon: IconPanduan,
+      accent: 'green',
+    },
+    {
       to: '/peta',
       label: 'Peta Lokasi',
       desc: '19 masjid & tempat bersejarah',
