@@ -50,10 +50,10 @@ function IconClipboard({ className = '' }: { className?: string }) {
 // ── 1. TripIdentityCard ────────────────────────────────────────
 
 export function TripIdentityCard() {
-  const { jamaah, tenant } = useAuth();
+  const { jamaah, tenant, keberangkatan } = useAuth();
   if (!jamaah) return null;
 
-  const info        = getOperationalInfo(tenant ?? null);
+  const info        = getOperationalInfo(keberangkatan ?? null);
   const firstName   = jamaah.nama.split(' ')[0];
   const namaTravel  = tenant?.nama_travel ?? jamaah.travel;
   const rombongan = jamaah.rombongan ?? info.groupCode;
@@ -230,18 +230,18 @@ function isPastItem(tanggal: string, jam_mulai: string | null): boolean {
 // ── 3. TodayInstructionCard ───────────────────────────────────
 
 export function TodayInstructionCard() {
-  const { tenant } = useAuth();
+  const { keberangkatan } = useAuth();
   const [todayItems, setTodayItems] = useState<AgendaItemRow[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!tenant?.id) { setLoading(false); return; }
+    if (!keberangkatan?.id) { setLoading(false); return; }
     const today = new Date().toISOString().split('T')[0];
-    fetchAgenda(tenant.id).then(data => {
+    fetchAgenda(keberangkatan.id).then(data => {
       setTodayItems(data.filter(i => i.tanggal === today));
       setLoading(false);
     }).catch(() => setLoading(false));
-  }, [tenant?.id]);
+  }, [keberangkatan?.id]);
 
   if (loading) {
     return (
@@ -343,12 +343,12 @@ export function TodayInstructionCard() {
 // ── 4. PinnedAnnouncementCard ─────────────────────────────────
 
 export function PinnedAnnouncementCard() {
-  const { tenant } = useAuth();
+  const { keberangkatan } = useAuth();
   const [announcement, setAnnouncement] = useState<TravelAnnouncement | null>(null);
 
   useEffect(() => {
-    getLatestAnnouncement(tenant?.id ?? null).then(setAnnouncement);
-  }, [tenant?.id]);
+    getLatestAnnouncement(keberangkatan?.id ?? null).then(setAnnouncement);
+  }, [keberangkatan?.id]);
 
   if (!announcement) return null;
 
@@ -395,10 +395,10 @@ export function PinnedAnnouncementCard() {
 // ── 5. EmergencyGuideCard ─────────────────────────────────────
 
 export function EmergencyGuideCard() {
-  const { jamaah, tenant } = useAuth();
+  const { jamaah, keberangkatan } = useAuth();
   if (!jamaah) return null;
 
-  const info          = getOperationalInfo(tenant ?? null);
+  const info          = getOperationalInfo(keberangkatan ?? null);
   const muthowwif     = jamaah.pembimbingNama     ?? info.guideName;
   const muthowwifWa   = jamaah.pembimbingWhatsapp ?? info.guideWhatsapp;
   const tourLeader    = info.tourLeaderName;

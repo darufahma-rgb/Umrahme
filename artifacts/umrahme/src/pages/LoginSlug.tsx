@@ -32,7 +32,7 @@ export default function LoginSlug() {
     try {
       const hasil = await validasiSlug(slug, nama);
       if (hasil.ok && hasil.jamaah && hasil.tenant) {
-        login(hasil.jamaah, hasil.tenant);
+        login(hasil.jamaah, hasil.tenant, hasil.keberangkatan ?? null);
         navigate('/beranda', { replace: true });
       } else {
         setError(hasil.error ?? 'Gagal masuk.');

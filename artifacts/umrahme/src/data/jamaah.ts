@@ -1,14 +1,11 @@
 import type { Jamaah } from '../types';
 import { supabase } from '../lib/supabase';
-import type { TenantRow } from '../lib/supabase';
+import type { TenantRow, KeberangkatanRow } from '../lib/supabase';
+import { fetchKeberangkatanById } from '../lib/supabase';
 
 export const KODE_DEMO = 'DEMO01';
 
 /**
- * UNTUK DEMO: pastikan tenant sudah diisi tanggal_keberangkatan dan tanggal_kepulangan
- * di admin panel (/admin → edit tenant) agar fase berubah otomatis.
- * Jika tanggal kosong, fase default ke 'persiapan'.
- *
  * Hitung fase efektif: fase_override (manual admin) > otomatis dari tanggal > fallback 'persiapan'
  */
 export function hitungFaseEfektif(
@@ -35,6 +32,7 @@ export interface HasilValidasi {
   ok: boolean;
   jamaah?: Jamaah;
   tenant?: TenantRow;
+  keberangkatan?: KeberangkatanRow | null;
   error?: string;
 }
 
@@ -66,27 +64,34 @@ export async function validasiKode(kode: string, nama: string): Promise<HasilVal
     return { ok: false, error: 'Nama tidak ditemukan. Pastikan nama sesuai yang didaftarkan travel Anda.' };
   }
 
+  let kb: KeberangkatanRow | null = null;
+  if (akun.keberangkatan_id) {
+    kb = await fetchKeberangkatanById(akun.keberangkatan_id).catch(() => null);
+  }
+
+  const fase = hitungFaseEfektif(
+    akun.fase_override ?? kb?.fase_override ?? null,
+    kb?.tanggal_keberangkatan ?? tenant.tanggal_keberangkatan,
+    kb?.tanggal_kepulangan ?? tenant.tanggal_kepulangan,
+  );
+
   const jamaah: Jamaah = {
     nama: akun.nama,
     nomorJamaah: akun.nomor_jamaah,
     travel: tenant.nama_travel,
     kodeAktivasi: k,
-    fase: hitungFaseEfektif(
-      akun.fase_override ?? null,
-      tenant.tanggal_keberangkatan,
-      tenant.tanggal_kepulangan,
-    ),
+    fase,
     rombongan: akun.rombongan ?? undefined,
     nomorBus: akun.nomor_bus ?? undefined,
     nomorKamar: akun.nomor_kamar ?? undefined,
     nomorPaspor: akun.nomor_paspor ?? undefined,
-    hotelMakkah: tenant.hotel_makkah ?? undefined,
-    hotelMadinah: tenant.hotel_madinah ?? undefined,
-    pembimbingNama: tenant.guide_name ?? undefined,
-    pembimbingWhatsapp: tenant.guide_whatsapp ?? undefined,
+    hotelMakkah: (kb?.hotel_makkah ?? tenant.hotel_makkah) ?? undefined,
+    hotelMadinah: (kb?.hotel_madinah ?? tenant.hotel_madinah) ?? undefined,
+    pembimbingNama: (kb?.guide_name ?? tenant.guide_name) ?? undefined,
+    pembimbingWhatsapp: (kb?.guide_whatsapp ?? tenant.guide_whatsapp) ?? undefined,
   };
 
-  return { ok: true, jamaah, tenant };
+  return { ok: true, jamaah, tenant, keberangkatan: kb };
 }
 
 export async function validasiSlug(slug: string, nama: string): Promise<HasilValidasi> {
@@ -114,27 +119,34 @@ export async function validasiSlug(slug: string, nama: string): Promise<HasilVal
     return { ok: false, error: 'Nama tidak ditemukan. Pastikan sesuai yang didaftarkan travel Anda.' };
   }
 
+  let kb: KeberangkatanRow | null = null;
+  if (akun.keberangkatan_id) {
+    kb = await fetchKeberangkatanById(akun.keberangkatan_id).catch(() => null);
+  }
+
+  const fase = hitungFaseEfektif(
+    akun.fase_override ?? kb?.fase_override ?? null,
+    kb?.tanggal_keberangkatan ?? tenant.tanggal_keberangkatan,
+    kb?.tanggal_kepulangan ?? tenant.tanggal_kepulangan,
+  );
+
   const jamaah: Jamaah = {
     nama: akun.nama,
     nomorJamaah: akun.nomor_jamaah,
     travel: tenant.nama_travel,
     kodeAktivasi: tenant.activation_code,
-    fase: hitungFaseEfektif(
-      akun.fase_override ?? null,
-      tenant.tanggal_keberangkatan,
-      tenant.tanggal_kepulangan,
-    ),
+    fase,
     rombongan: akun.rombongan ?? undefined,
     nomorBus: akun.nomor_bus ?? undefined,
     nomorKamar: akun.nomor_kamar ?? undefined,
     nomorPaspor: akun.nomor_paspor ?? undefined,
-    hotelMakkah: tenant.hotel_makkah ?? undefined,
-    hotelMadinah: tenant.hotel_madinah ?? undefined,
-    pembimbingNama: tenant.guide_name ?? undefined,
-    pembimbingWhatsapp: tenant.guide_whatsapp ?? undefined,
+    hotelMakkah: (kb?.hotel_makkah ?? tenant.hotel_makkah) ?? undefined,
+    hotelMadinah: (kb?.hotel_madinah ?? tenant.hotel_madinah) ?? undefined,
+    pembimbingNama: (kb?.guide_name ?? tenant.guide_name) ?? undefined,
+    pembimbingWhatsapp: (kb?.guide_whatsapp ?? tenant.guide_whatsapp) ?? undefined,
   };
 
-  return { ok: true, jamaah, tenant };
+  return { ok: true, jamaah, tenant, keberangkatan: kb };
 }
 
 export const urutanFase: { id: Jamaah['fase']; label: string }[] = [

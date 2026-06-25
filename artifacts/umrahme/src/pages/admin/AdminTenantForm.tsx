@@ -9,10 +9,11 @@ import {
   fetchAnnouncements, createAnnouncement, deleteAnnouncement,
   fetchJamaah, createJamaah, updateJamaah, deleteJamaah, bulkInsertJamaah,
   fetchTravelAccounts, createTravelAccount, revokeTravelAccess,
+  fetchKeberangkatan, createKeberangkatan, updateKeberangkatan, deleteKeberangkatan,
   uploadLogo as apiUploadLogo,
   uploadHeroImage as apiUploadHeroImage,
   uploadSertifikatTemplate as apiUploadSertifikatTemplate,
-  type TenantRow, type AgendaItemRow, type TravelAnnouncementRow, type JamaahAccountRow, type TenantUserRow,
+  type TenantRow, type AgendaItemRow, type TravelAnnouncementRow, type JamaahAccountRow, type TenantUserRow, type KeberangkatanRow,
 } from '../../lib/supabase';
 import { darkenHex, generateActivationCode } from '../../lib/colorUtils';
 import { insertAgendaDummy } from '../../data/agendaDummy';
@@ -74,11 +75,11 @@ const FASE_OPTIONS: { value: JamaahAccountRow['fase']; label: string }[] = [
   { value: 'selesai', label: 'Selesai' },
 ];
 
-type TabId = 'profil' | 'operasional' | 'jamaah' | 'agenda' | 'pengumuman' | 'akun';
+type TabId = 'profil' | 'keberangkatan' | 'jamaah' | 'agenda' | 'pengumuman' | 'akun';
 
 const TABS: { id: TabId; label: string }[] = [
   { id: 'profil', label: 'Profil & Branding' },
-  { id: 'operasional', label: 'Operasional' },
+  { id: 'keberangkatan', label: 'Keberangkatan' },
   { id: 'jamaah', label: 'Jamaah' },
   { id: 'agenda', label: 'Agenda' },
   { id: 'pengumuman', label: 'Pengumuman' },
@@ -106,8 +107,6 @@ export default function AdminTenantForm() {
   const [existingLogoUrl, setExistingLogoUrl] = useState<string | null>(null);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
-  const [tanggalKeberangkatan, setTanggalKeberangkatan] = useState('');
-  const [tanggalKepulangan, setTanggalKepulangan] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [heroFile, setHeroFile] = useState<File | null>(null);
@@ -122,14 +121,26 @@ export default function AdminTenantForm() {
   const sertifikatInputRef = useRef<HTMLInputElement>(null);
   const MAX_SERTIFIKAT_SIZE = 5 * 1024 * 1024;
 
-  const [opHotelMakkah, setOpHotelMakkah] = useState('');
-  const [opHotelMadinah, setOpHotelMadinah] = useState('');
-  const [opMeetingPoint, setOpMeetingPoint] = useState('');
-  const [opGuideName, setOpGuideName] = useState('');
-  const [opGuideWhatsapp, setOpGuideWhatsapp] = useState('');
-  const [opTourLeaderName, setOpTourLeaderName] = useState('');
-  const [opTourLeaderWhatsapp, setOpTourLeaderWhatsapp] = useState('');
-  const [opEmergencyNote, setOpEmergencyNote] = useState('');
+  const [keberangkatanList, setKeberangkatanList] = useState<KeberangkatanRow[]>([]);
+  const [keberangkatanLoading, setKeberangkatanLoading] = useState(false);
+  const [selectedKeberangkatan, setSelectedKeberangkatan] = useState('');
+  const [kbFormOpen, setKbFormOpen] = useState(false);
+  const [kbEditId, setKbEditId] = useState<string | null>(null);
+  const [kbNamaBatch, setKbNamaBatch] = useState('');
+  const [kbTanggalBerangkat, setKbTanggalBerangkat] = useState('');
+  const [kbTanggalPulang, setKbTanggalPulang] = useState('');
+  const [kbHotelMakkah, setKbHotelMakkah] = useState('');
+  const [kbHotelMadinah, setKbHotelMadinah] = useState('');
+  const [kbMeetingPoint, setKbMeetingPoint] = useState('');
+  const [kbGuideName, setKbGuideName] = useState('');
+  const [kbGuideWhatsapp, setKbGuideWhatsapp] = useState('');
+  const [kbTourLeaderName, setKbTourLeaderName] = useState('');
+  const [kbTourLeaderWhatsapp, setKbTourLeaderWhatsapp] = useState('');
+  const [kbEmergencyNote, setKbEmergencyNote] = useState('');
+  const [kbFaseOverride, setKbFaseOverride] = useState('');
+  const [kbAktif, setKbAktif] = useState(true);
+  const [kbSaving, setKbSaving] = useState(false);
+  const [kbError, setKbError] = useState('');
 
   const [agendaItems, setAgendaItems] = useState<AgendaItemRow[]>([]);
   const [agendaLoading, setAgendaLoading] = useState(false);
@@ -198,23 +209,32 @@ export default function AdminTenantForm() {
     fetchTravelAccounts(id).then(setTravelAccounts).catch(() => {}).finally(() => setTravelAccountsLoading(false));
   }, [id, isNew]);
 
-  const loadAgenda = useCallback(async () => {
+  const loadKeberangkatan = useCallback(async () => {
     if (!id || isNew) return;
+    setKeberangkatanLoading(true);
+    fetchKeberangkatan(id).then(list => {
+      setKeberangkatanList(list);
+      if (list.length > 0 && !selectedKeberangkatan) setSelectedKeberangkatan(list[0].id);
+    }).catch(() => {}).finally(() => setKeberangkatanLoading(false));
+  }, [id, isNew, selectedKeberangkatan]);
+
+  const loadAgenda = useCallback(async () => {
+    if (!id || isNew || !selectedKeberangkatan) return;
     setAgendaLoading(true);
-    fetchAgenda(id).then(setAgendaItems).catch(() => {}).finally(() => setAgendaLoading(false));
-  }, [id, isNew]);
+    fetchAgenda(selectedKeberangkatan).then(setAgendaItems).catch(() => {}).finally(() => setAgendaLoading(false));
+  }, [id, isNew, selectedKeberangkatan]);
 
   const loadAnnouncements = useCallback(async () => {
-    if (!id || isNew) return;
+    if (!id || isNew || !selectedKeberangkatan) return;
     setAnnLoading(true);
-    fetchAnnouncements(id).then(setAnnouncements).catch(() => {}).finally(() => setAnnLoading(false));
-  }, [id, isNew]);
+    fetchAnnouncements(selectedKeberangkatan).then(setAnnouncements).catch(() => {}).finally(() => setAnnLoading(false));
+  }, [id, isNew, selectedKeberangkatan]);
 
   const loadJamaah = useCallback(async () => {
-    if (!id || isNew) return;
+    if (!id || isNew || !selectedKeberangkatan) return;
     setJamaahLoading(true);
-    fetchJamaah(id).then(setJamaahList).catch(() => {}).finally(() => setJamaahLoading(false));
-  }, [id, isNew]);
+    fetchJamaah(selectedKeberangkatan).then(setJamaahList).catch(() => {}).finally(() => setJamaahLoading(false));
+  }, [id, isNew, selectedKeberangkatan]);
 
   useEffect(() => {
     if (!isNew && id) {
@@ -228,25 +248,21 @@ export default function AdminTenantForm() {
           setExistingLogoUrl(t.logo_url);
           setExistingHeroUrl(t.hero_image_url ?? '');
           setExistingSertifikatUrl(t.sertifikat_template_url ?? '');
-          setTanggalKeberangkatan(t.tanggal_keberangkatan ?? '');
-          setTanggalKepulangan(t.tanggal_kepulangan ?? '');
-          setOpHotelMakkah(t.hotel_makkah ?? '');
-          setOpHotelMadinah(t.hotel_madinah ?? '');
-          setOpMeetingPoint(t.meeting_point ?? '');
-          setOpGuideName(t.guide_name ?? '');
-          setOpGuideWhatsapp(t.guide_whatsapp ?? '');
-          setOpTourLeaderName(t.tour_leader_name ?? '');
-          setOpTourLeaderWhatsapp(t.tour_leader_whatsapp ?? '');
-          setOpEmergencyNote(t.emergency_note ?? '');
         })
         .catch(err => setError(err instanceof Error ? err.message : 'Tenant tidak ditemukan.'))
         .finally(() => setLoading(false));
+      loadKeberangkatan();
+      loadTravelAccounts();
+    }
+  }, [id, isNew, loadKeberangkatan, loadTravelAccounts]);
+
+  useEffect(() => {
+    if (selectedKeberangkatan) {
       loadAgenda();
       loadAnnouncements();
       loadJamaah();
-      loadTravelAccounts();
     }
-  }, [id, isNew, loadAgenda, loadAnnouncements, loadJamaah, loadTravelAccounts]);
+  }, [selectedKeberangkatan, loadAgenda, loadAnnouncements, loadJamaah]);
 
   async function handleOcrPoster(file: File) {
     setOcrLoading(true);
@@ -272,16 +288,18 @@ export default function AdminTenantForm() {
       setOcrResult(d);
 
       if (d.nama_travel) { setNamaTravel(d.nama_travel); if (!pageTitle || pageTitle === buildDefaultTitle(namaTravel)) setPageTitle(buildDefaultTitle(d.nama_travel)); }
-      if (d.tanggal_keberangkatan) setTanggalKeberangkatan(d.tanggal_keberangkatan);
-      if (d.tanggal_kepulangan) setTanggalKepulangan(d.tanggal_kepulangan);
-      if (d.hotel_makkah) setOpHotelMakkah(d.hotel_makkah);
-      if (d.hotel_madinah) setOpHotelMadinah(d.hotel_madinah);
-      if (d.guide_name) setOpGuideName(d.guide_name);
-      if (d.guide_whatsapp) setOpGuideWhatsapp(d.guide_whatsapp);
-      if (d.tour_leader_name) setOpTourLeaderName(d.tour_leader_name);
-      if (d.tour_leader_whatsapp) setOpTourLeaderWhatsapp(d.tour_leader_whatsapp);
-      if (d.meeting_point) setOpMeetingPoint(d.meeting_point);
-      if (d.catatan) setOpEmergencyNote(d.catatan);
+      if (d.tanggal_keberangkatan) setKbTanggalBerangkat(d.tanggal_keberangkatan);
+      if (d.tanggal_kepulangan) setKbTanggalPulang(d.tanggal_kepulangan);
+      if (d.hotel_makkah) setKbHotelMakkah(d.hotel_makkah);
+      if (d.hotel_madinah) setKbHotelMadinah(d.hotel_madinah);
+      if (d.guide_name) setKbGuideName(d.guide_name);
+      if (d.guide_whatsapp) setKbGuideWhatsapp(d.guide_whatsapp);
+      if (d.tour_leader_name) setKbTourLeaderName(d.tour_leader_name);
+      if (d.tour_leader_whatsapp) setKbTourLeaderWhatsapp(d.tour_leader_whatsapp);
+      if (d.meeting_point) setKbMeetingPoint(d.meeting_point);
+      if (d.catatan) setKbEmergencyNote(d.catatan);
+      setKbFormOpen(true);
+      setActiveTab('keberangkatan');
     } catch (err) {
       setOcrError(err instanceof Error ? err.message : 'Gagal membaca poster.');
     } finally {
@@ -342,19 +360,9 @@ export default function AdminTenantForm() {
     reader.readAsDataURL(file);
   }
 
-  function validateDates(): boolean {
-    if (tanggalKeberangkatan && tanggalKepulangan && tanggalKepulangan < tanggalKeberangkatan) {
-      setDateError('Tanggal kepulangan harus setelah atau sama dengan tanggal keberangkatan.');
-      return false;
-    }
-    setDateError('');
-    return true;
-  }
-
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError(''); setCodeError('');
-    if (!validateDates()) return;
     if (!isValidHex(primaryColor)) {
       setError('Warna primary harus berupa hex valid, contoh: #0ea5e9');
       return;
@@ -377,16 +385,6 @@ export default function AdminTenantForm() {
         hero_image_url: heroImageUrl || null,
         sertifikat_template_url: sertifikatTemplateUrl || null,
         page_title: finalTitle,
-        tanggal_keberangkatan: tanggalKeberangkatan || null,
-        tanggal_kepulangan: tanggalKepulangan || null,
-        hotel_makkah: opHotelMakkah.trim() || null,
-        hotel_madinah: opHotelMadinah.trim() || null,
-        meeting_point: opMeetingPoint.trim() || null,
-        guide_name: opGuideName.trim() || null,
-        guide_whatsapp: opGuideWhatsapp.trim() || null,
-        tour_leader_name: opTourLeaderName.trim() || null,
-        tour_leader_whatsapp: opTourLeaderWhatsapp.trim() || null,
-        emergency_note: opEmergencyNote.trim() || null,
       };
       if (isNew) {
         await createTenant({ ...payload, activation_code: activationCode.trim().toUpperCase() });
@@ -408,7 +406,7 @@ export default function AdminTenantForm() {
     if (!agJudul.trim() || !agTanggal) { setAgError('Tanggal dan judul wajib diisi.'); return; }
     setAgSubmitting(true);
     try {
-      await createAgenda(id!, { tanggal: agTanggal, jam_mulai: agJam || null, judul: agJudul.trim(), deskripsi: agDeskripsi.trim() || null, lokasi: agLokasi.trim() || null, urutan: 0 });
+      await createAgenda(id!, selectedKeberangkatan, { tanggal: agTanggal, jam_mulai: agJam || null, judul: agJudul.trim(), deskripsi: agDeskripsi.trim() || null, lokasi: agLokasi.trim() || null, urutan: 0 });
       setAgJudul(''); setAgTanggal(''); setAgJam(''); setAgDeskripsi(''); setAgLokasi('');
       await loadAgenda();
     } catch (err: unknown) { setAgError(err instanceof Error ? err.message : 'Gagal menambah agenda.'); }
@@ -425,7 +423,7 @@ export default function AdminTenantForm() {
     if (!id || isNew) return;
     if (!window.confirm('Tambah itinerary demo (10 hari)? Ini akan menambah banyak agenda baru.')) return;
     setDummyLoading(true);
-    const result = await insertAgendaDummy(id);
+    const result = await insertAgendaDummy(id, selectedKeberangkatan);
     setDummyLoading(false);
     if (result.error) { setAgError(result.error); } else { await loadAgenda(); }
   }
@@ -436,7 +434,7 @@ export default function AdminTenantForm() {
     if (!annTitle.trim() || !annContent.trim()) { setAnnError('Judul dan isi pengumuman wajib diisi.'); return; }
     setAnnSubmitting(true);
     try {
-      await createAnnouncement(id!, { label: annLabel.trim() || 'Info', title: annTitle.trim(), content: annContent.trim(), important: annImportant });
+      await createAnnouncement(id!, selectedKeberangkatan, { label: annLabel.trim() || 'Info', title: annTitle.trim(), content: annContent.trim(), important: annImportant });
       setAnnLabel('Info'); setAnnTitle(''); setAnnContent(''); setAnnImportant(false);
       await loadAnnouncements();
     } catch (err: unknown) { setAnnError(err instanceof Error ? err.message : 'Gagal membuat pengumuman.'); }
@@ -456,7 +454,7 @@ export default function AdminTenantForm() {
     if (!jmNomorJamaah.trim()) { setJmError('Nomor jamaah wajib diisi.'); return; }
     setJmSubmitting(true);
     try {
-      await createJamaah(id!, { nama: jmNama.trim(), nomor_jamaah: jmNomorJamaah.trim(), rombongan: jmRombongan.trim() || null, nomor_bus: jmBus.trim() || null, nomor_kamar: jmKamar.trim() || null, nomor_paspor: jmPaspor.trim() || null, fase: jmFase });
+      await createJamaah(id!, selectedKeberangkatan, { nama: jmNama.trim(), nomor_jamaah: jmNomorJamaah.trim(), rombongan: jmRombongan.trim() || null, nomor_bus: jmBus.trim() || null, nomor_kamar: jmKamar.trim() || null, nomor_paspor: jmPaspor.trim() || null, fase: jmFase });
       setJmNama(''); setJmNomorJamaah(''); setJmRombongan(''); setJmBus(''); setJmKamar(''); setJmPaspor(''); setJmFase('persiapan');
       await loadJamaah();
       namaRef.current?.focus();
@@ -593,7 +591,7 @@ export default function AdminTenantForm() {
         nomor_paspor: r.nomor_paspor.trim() || null,
         fase: 'persiapan',
       }));
-      const { inserted } = await bulkInsertJamaah(id!, payload);
+      const { inserted } = await bulkInsertJamaah(id!, selectedKeberangkatan, payload);
       setImportPreview([]);
       setImportOpen(false);
       await loadJamaah();
@@ -619,6 +617,76 @@ export default function AdminTenantForm() {
       await loadTravelAccounts();
     } catch (err: unknown) { setTaError(err instanceof Error ? err.message : 'Terjadi kesalahan.'); }
     setTaSubmitting(false);
+  }
+
+  function openKbForm(kb?: KeberangkatanRow) {
+    if (kb) {
+      setKbEditId(kb.id);
+      setKbNamaBatch(kb.nama_batch);
+      setKbTanggalBerangkat(kb.tanggal_keberangkatan ?? '');
+      setKbTanggalPulang(kb.tanggal_kepulangan ?? '');
+      setKbHotelMakkah(kb.hotel_makkah ?? '');
+      setKbHotelMadinah(kb.hotel_madinah ?? '');
+      setKbMeetingPoint(kb.meeting_point ?? '');
+      setKbGuideName(kb.guide_name ?? '');
+      setKbGuideWhatsapp(kb.guide_whatsapp ?? '');
+      setKbTourLeaderName(kb.tour_leader_name ?? '');
+      setKbTourLeaderWhatsapp(kb.tour_leader_whatsapp ?? '');
+      setKbEmergencyNote(kb.emergency_note ?? '');
+      setKbFaseOverride(kb.fase_override ?? '');
+      setKbAktif(kb.aktif ?? true);
+    } else {
+      setKbEditId(null);
+      setKbNamaBatch(''); setKbTanggalBerangkat(''); setKbTanggalPulang('');
+      setKbHotelMakkah(''); setKbHotelMadinah(''); setKbMeetingPoint('');
+      setKbGuideName(''); setKbGuideWhatsapp('');
+      setKbTourLeaderName(''); setKbTourLeaderWhatsapp('');
+      setKbEmergencyNote(''); setKbFaseOverride(''); setKbAktif(true);
+    }
+    setKbError('');
+    setKbFormOpen(true);
+  }
+
+  async function handleSaveKeberangkatan(e: FormEvent) {
+    e.preventDefault();
+    if (!kbNamaBatch.trim()) { setKbError('Nama batch wajib diisi.'); return; }
+    setKbSaving(true); setKbError('');
+    try {
+      const payload = {
+        nama_batch: kbNamaBatch.trim(),
+        tanggal_keberangkatan: kbTanggalBerangkat || null,
+        tanggal_kepulangan: kbTanggalPulang || null,
+        hotel_makkah: kbHotelMakkah.trim() || null,
+        hotel_madinah: kbHotelMadinah.trim() || null,
+        meeting_point: kbMeetingPoint.trim() || null,
+        guide_name: kbGuideName.trim() || null,
+        guide_whatsapp: kbGuideWhatsapp.trim() || null,
+        tour_leader_name: kbTourLeaderName.trim() || null,
+        tour_leader_whatsapp: kbTourLeaderWhatsapp.trim() || null,
+        emergency_note: kbEmergencyNote.trim() || null,
+        fase_override: kbFaseOverride || null,
+        aktif: kbAktif,
+      };
+      if (kbEditId) {
+        await updateKeberangkatan(kbEditId, payload);
+      } else {
+        const newKb = await createKeberangkatan(id!, payload);
+        setSelectedKeberangkatan(newKb.id);
+      }
+      setKbFormOpen(false);
+      await loadKeberangkatan();
+    } catch (err: unknown) { setKbError(err instanceof Error ? err.message : 'Gagal menyimpan.'); }
+    setKbSaving(false);
+  }
+
+  async function handleDeleteKeberangkatan(kbId: string, nama: string) {
+    if (!window.confirm(`Hapus batch "${nama}"? Semua jamaah, agenda, dan pengumuman batch ini juga akan terpengaruh.`)) return;
+    await deleteKeberangkatan(kbId);
+    setKeberangkatanList(prev => {
+      const next = prev.filter(k => k.id !== kbId);
+      if (selectedKeberangkatan === kbId) setSelectedKeberangkatan(next[0]?.id ?? '');
+      return next;
+    });
   }
 
   async function handleRevokeTravelAccess(mappingId: string, userId: string) {
@@ -722,15 +790,13 @@ export default function AdminTenantForm() {
         )}
 
         {/* ══════════════════════════════════════════════
-            TAB: PROFIL & BRANDING  +  OPERASIONAL
-            Keduanya dalam satu form handleSubmit
+            TAB: PROFIL & BRANDING
         ══════════════════════════════════════════════ */}
-        {(activeTab === 'profil' || activeTab === 'operasional') && (
+        {activeTab === 'profil' && (
           <form onSubmit={handleSubmit} className="space-y-0">
 
             {/* ── TAB PROFIL ── */}
-            {activeTab === 'profil' && (
-              <>
+            <>
                 {/* Import dari Poster */}
                 <div className="rounded-t-2xl px-6 py-5 mb-0" style={{ background: 'rgba(67,56,202,0.03)', border: '2px dashed rgba(67,56,202,0.22)', borderRadius: '16px 16px 0 0' }}>
                   <p className="font-mono text-[10px] uppercase tracking-widest mb-1" style={{ color: '#4338ca' }}>
@@ -921,64 +987,149 @@ export default function AdminTenantForm() {
                 <SectionDivider />
 
                 {/* Judul Halaman */}
-                <div className="px-6 py-6" style={cardStyle}>
+                <div className="rounded-b-2xl px-6 py-6" style={cardStyle}>
                   <FieldLabel>Judul Halaman</FieldLabel>
                   <StyledInput type="text" value={pageTitle} onChange={e => setPageTitle(e.target.value)} placeholder={buildDefaultTitle(namaTravel) || 'Nama Travel — Pendamping Umrah Anda'} />
                   <p className="mt-2 text-[11px]" style={{ color: '#9ca3af' }}>Muncul di tab browser jamaah. Kosongkan untuk pakai default.</p>
                 </div>
 
-                <SectionDivider />
-
-                {/* Jadwal Perjalanan */}
-                <div className="rounded-b-2xl px-6 py-6" style={cardStyle}>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] mb-4" style={{ color: '#6b7280' }}>Jadwal Perjalanan</p>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-[11px] font-semibold mb-2" style={{ color: '#374151' }}>Tanggal Keberangkatan</p>
-                      <StyledInput type="date" value={tanggalKeberangkatan} onChange={e => { setTanggalKeberangkatan(e.target.value); setDateError(''); }} />
-                    </div>
-                    <div>
-                      <p className="text-[11px] font-semibold mb-2" style={{ color: '#374151' }}>Tanggal Kepulangan</p>
-                      <StyledInput type="date" value={tanggalKepulangan} onChange={e => { setTanggalKepulangan(e.target.value); setDateError(''); }} />
-                    </div>
-                  </div>
-                  {dateError && <p className="mt-2 text-[12px] flex items-center gap-1.5" style={{ color: '#d97706' }}>{dateError}</p>}
-                </div>
-
                 <SaveButton />
-              </>
-            )}
-
-            {/* ── TAB OPERASIONAL ── */}
-            {activeTab === 'operasional' && !isNew && (
-              <>
-                <div className="rounded-2xl px-6 py-6" style={cardStyle}>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] mb-4" style={{ color: '#6b7280' }}>Info Operasional</p>
-                  <p className="text-[11px] mb-4" style={{ color: '#9ca3af' }}>Semua field optional — kosong berarti tampilkan nilai default.</p>
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Hotel Makkah</p><StyledInput type="text" value={opHotelMakkah} onChange={e => setOpHotelMakkah(e.target.value)} placeholder="Nama & no kamar hotel" maxLength={120} /></div>
-                      <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Hotel Madinah</p><StyledInput type="text" value={opHotelMadinah} onChange={e => setOpHotelMadinah(e.target.value)} placeholder="Nama & no kamar hotel" maxLength={120} /></div>
-                    </div>
-                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Titik Kumpul</p><StyledInput type="text" value={opMeetingPoint} onChange={e => setOpMeetingPoint(e.target.value)} placeholder="Cth: Lobby hotel lantai 1" maxLength={160} /></div>
-                    <div style={{ height: '1px', background: 'rgba(0,0,0,0.05)' }} />
-                    <div className="grid grid-cols-2 gap-4">
-                      <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Nama Muthowwif</p><StyledInput type="text" value={opGuideName} onChange={e => setOpGuideName(e.target.value)} placeholder="Ust. Ahmad" maxLength={80} /></div>
-                      <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>WhatsApp Muthowwif</p><StyledInput type="text" value={opGuideWhatsapp} onChange={e => setOpGuideWhatsapp(normalizePhone(e.target.value))} placeholder="628xxxxxxxxxx" /></div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Nama Tour Leader</p><StyledInput type="text" value={opTourLeaderName} onChange={e => setOpTourLeaderName(e.target.value)} placeholder="Bpk. Budi" maxLength={80} /></div>
-                      <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>WhatsApp Tour Leader</p><StyledInput type="text" value={opTourLeaderWhatsapp} onChange={e => setOpTourLeaderWhatsapp(normalizePhone(e.target.value))} placeholder="628xxxxxxxxxx" /></div>
-                    </div>
-                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Catatan Darurat</p><StyledTextarea rows={2} value={opEmergencyNote} onChange={e => setOpEmergencyNote(e.target.value)} placeholder="Instruksi jika jamaah tersesat atau butuh bantuan darurat..." /></div>
-                  </div>
-                </div>
-
-                <SaveButton label="Simpan Perubahan" />
-              </>
-            )}
+            </>
 
           </form>
+        )}
+
+        {/* ══════════════════════════════════════════════
+            TAB: KEBERANGKATAN
+        ══════════════════════════════════════════════ */}
+        {activeTab === 'keberangkatan' && !isNew && (
+          <div>
+            <div className="flex items-center gap-3 mb-5">
+              <h2 className="font-bold" style={{ fontSize: '18px', color: '#111827', letterSpacing: '-0.02em' }}>Batch Keberangkatan</h2>
+              <span className="font-mono text-[10px] uppercase tracking-widest px-2 py-1 rounded-full" style={{ background: 'rgba(67,56,202,0.07)', color: '#4338ca' }}>{keberangkatanList.length} batch</span>
+              <button type="button" onClick={() => openKbForm()}
+                className="ml-auto inline-flex items-center gap-2 px-4 py-2 text-[12px] font-semibold rounded-xl transition-all duration-150"
+                style={{ background: 'linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)', color: '#ffffff' }}>
+                + Tambah Batch
+              </button>
+            </div>
+
+            {kbFormOpen && (
+              <form onSubmit={handleSaveKeberangkatan} className="rounded-2xl px-6 py-6 mb-5" style={{ ...cardStyle, border: '1px solid rgba(67,56,202,0.18)' }}>
+                <p className="font-mono text-[10px] uppercase tracking-[0.14em] mb-4" style={{ color: '#4338ca' }}>
+                  {kbEditId ? 'Edit Batch' : 'Batch Baru'}
+                </p>
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Nama Batch <span style={{ color: '#f87171' }}>*</span></p>
+                    <StyledInput type="text" value={kbNamaBatch} onChange={e => setKbNamaBatch(e.target.value)} placeholder="cth. Batch 1 — Februari 2025" maxLength={120} required />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Tgl Keberangkatan</p>
+                      <StyledInput type="date" value={kbTanggalBerangkat} onChange={e => setKbTanggalBerangkat(e.target.value)} />
+                    </div>
+                    <div>
+                      <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Tgl Kepulangan</p>
+                      <StyledInput type="date" value={kbTanggalPulang} onChange={e => setKbTanggalPulang(e.target.value)} />
+                    </div>
+                  </div>
+                  <div style={{ height: '1px', background: 'rgba(0,0,0,0.05)' }} />
+                  <div className="grid grid-cols-2 gap-4">
+                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Hotel Makkah</p><StyledInput type="text" value={kbHotelMakkah} onChange={e => setKbHotelMakkah(e.target.value)} placeholder="Nama hotel & kamar" maxLength={120} /></div>
+                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Hotel Madinah</p><StyledInput type="text" value={kbHotelMadinah} onChange={e => setKbHotelMadinah(e.target.value)} placeholder="Nama hotel & kamar" maxLength={120} /></div>
+                  </div>
+                  <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Titik Kumpul</p><StyledInput type="text" value={kbMeetingPoint} onChange={e => setKbMeetingPoint(e.target.value)} placeholder="Cth: Lobby terminal 2" maxLength={160} /></div>
+                  <div style={{ height: '1px', background: 'rgba(0,0,0,0.05)' }} />
+                  <div className="grid grid-cols-2 gap-4">
+                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Nama Muthowwif</p><StyledInput type="text" value={kbGuideName} onChange={e => setKbGuideName(e.target.value)} placeholder="Ust. Ahmad" maxLength={80} /></div>
+                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>WA Muthowwif</p><StyledInput type="text" value={kbGuideWhatsapp} onChange={e => setKbGuideWhatsapp(normalizePhone(e.target.value))} placeholder="628xxxxxxxxxx" /></div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Nama Tour Leader</p><StyledInput type="text" value={kbTourLeaderName} onChange={e => setKbTourLeaderName(e.target.value)} placeholder="Bpk. Budi" maxLength={80} /></div>
+                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>WA Tour Leader</p><StyledInput type="text" value={kbTourLeaderWhatsapp} onChange={e => setKbTourLeaderWhatsapp(normalizePhone(e.target.value))} placeholder="628xxxxxxxxxx" /></div>
+                  </div>
+                  <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Catatan Darurat</p><StyledTextarea rows={2} value={kbEmergencyNote} onChange={e => setKbEmergencyNote(e.target.value)} placeholder="Instruksi jika jamaah tersesat..." /></div>
+                  <div className="flex items-center gap-3">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" checked={kbAktif} onChange={e => setKbAktif(e.target.checked)} className="w-4 h-4 rounded" />
+                      <span className="text-[12px] font-medium" style={{ color: '#374151' }}>Batch aktif (terlihat di login jamaah)</span>
+                    </label>
+                  </div>
+                </div>
+                {kbError && <p className="mt-3 text-[12px]" style={{ color: '#dc2626' }}>{kbError}</p>}
+                <div className="flex items-center gap-3 pt-5">
+                  <button type="submit" disabled={kbSaving}
+                    className="px-6 py-2.5 text-[12px] font-semibold rounded-xl disabled:opacity-60"
+                    style={{ background: 'linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)', color: '#ffffff' }}>
+                    {kbSaving ? 'Menyimpan...' : (kbEditId ? 'Simpan Perubahan' : 'Buat Batch')}
+                  </button>
+                  <button type="button" onClick={() => setKbFormOpen(false)}
+                    className="px-5 py-2.5 text-[12px] font-medium rounded-xl" style={{ color: '#6b7280', border: '1px solid rgba(0,0,0,0.1)' }}>
+                    Batal
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {keberangkatanLoading && (
+              <p className="text-[12px] py-8 text-center" style={{ color: '#9ca3af' }}>Memuat batch...</p>
+            )}
+
+            {!keberangkatanLoading && keberangkatanList.length === 0 && (
+              <div className="py-12 text-center rounded-2xl" style={{ border: '1px dashed rgba(0,0,0,0.12)' }}>
+                <p className="text-[13px]" style={{ color: '#9ca3af' }}>Belum ada batch keberangkatan.</p>
+                <p className="text-[12px] mt-1" style={{ color: '#d1d5db' }}>Klik "+ Tambah Batch" untuk memulai.</p>
+              </div>
+            )}
+
+            <div className="space-y-3">
+              {keberangkatanList.map(kb => (
+                <div key={kb.id} className="rounded-2xl px-5 py-4" style={{ ...cardStyle, border: selectedKeberangkatan === kb.id ? '1.5px solid rgba(67,56,202,0.35)' : undefined }}>
+                  <div className="flex items-start gap-3">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <p className="font-semibold text-[14px]" style={{ color: '#111827' }}>{kb.nama_batch}</p>
+                        {kb.aktif ? (
+                          <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full" style={{ background: 'rgba(22,163,74,0.1)', color: '#16a34a' }}>Aktif</span>
+                        ) : (
+                          <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full" style={{ background: 'rgba(0,0,0,0.05)', color: '#9ca3af' }}>Nonaktif</span>
+                        )}
+                        {selectedKeberangkatan === kb.id && (
+                          <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full" style={{ background: 'rgba(67,56,202,0.1)', color: '#4338ca' }}>Dipilih</span>
+                        )}
+                      </div>
+                      {(kb.tanggal_keberangkatan || kb.tanggal_kepulangan) && (
+                        <p className="text-[11px] mt-0.5" style={{ color: '#6b7280' }}>
+                          {kb.tanggal_keberangkatan ? new Date(kb.tanggal_keberangkatan + 'T00:00:00').toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'}
+                          {' → '}
+                          {kb.tanggal_kepulangan ? new Date(kb.tanggal_kepulangan + 'T00:00:00').toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'}
+                        </p>
+                      )}
+                      {kb.hotel_makkah && <p className="text-[10px] mt-0.5" style={{ color: '#9ca3af' }}>🕌 {kb.hotel_makkah}</p>}
+                    </div>
+                    <div className="flex items-center gap-2 flex-none">
+                      <button type="button" onClick={() => setSelectedKeberangkatan(kb.id)}
+                        className="text-[11px] px-3 py-1.5 rounded-lg font-medium transition-all"
+                        style={{ background: selectedKeberangkatan === kb.id ? 'rgba(67,56,202,0.1)' : 'rgba(0,0,0,0.04)', color: selectedKeberangkatan === kb.id ? '#4338ca' : '#6b7280' }}>
+                        Pilih
+                      </button>
+                      <button type="button" onClick={() => openKbForm(kb)}
+                        className="text-[11px] px-3 py-1.5 rounded-lg font-medium transition-all"
+                        style={{ background: 'rgba(0,0,0,0.04)', color: '#374151' }}>
+                        Edit
+                      </button>
+                      <button type="button" onClick={() => handleDeleteKeberangkatan(kb.id, kb.nama_batch)}
+                        className="text-[11px] px-3 py-1.5 rounded-lg font-medium transition-all"
+                        style={{ color: '#dc2626' }}>
+                        Hapus
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         )}
 
         {/* ══════════════════════════════════════════════
@@ -986,6 +1137,24 @@ export default function AdminTenantForm() {
         ══════════════════════════════════════════════ */}
         {activeTab === 'jamaah' && !isNew && (
           <div>
+            {/* Keberangkatan selector */}
+            {keberangkatanList.length > 0 && (
+              <div className="mb-5 flex items-center gap-3">
+                <label className="font-mono text-[10px] uppercase tracking-widest flex-none" style={{ color: '#6b7280' }}>Batch:</label>
+                <select value={selectedKeberangkatan} onChange={e => setSelectedKeberangkatan(e.target.value)}
+                  className="flex-1 rounded-xl px-3 py-2 text-[13px] focus:outline-none" style={{ ...inputBase, maxWidth: '360px' }}>
+                  {keberangkatanList.map(kb => (
+                    <option key={kb.id} value={kb.id}>{kb.nama_batch}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+            {!selectedKeberangkatan && (
+              <div className="mb-5 rounded-xl px-4 py-3 text-[12px]" style={{ background: 'rgba(245,158,11,0.07)', border: '1px solid rgba(245,158,11,0.2)', color: '#d97706' }}>
+                Buat batch keberangkatan dulu di tab <strong>Keberangkatan</strong> sebelum menambah jamaah.
+              </div>
+            )}
+
             {/* Header */}
             <div className="flex items-center gap-3 mb-5">
               <h2 className="font-bold" style={{ fontSize: '18px', color: '#111827', letterSpacing: '-0.02em' }}>Daftar Jamaah</h2>

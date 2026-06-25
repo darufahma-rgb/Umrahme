@@ -102,11 +102,10 @@ const ITINERARY: Array<{ dayOffset: number; items: DummyItem[] }> = [
   },
 ];
 
-export async function insertAgendaDummy(tenantId: string): Promise<{ inserted: number; error?: string }> {
+export async function insertAgendaDummy(tenantId: string, keberangkatanId: string): Promise<{ inserted: number; error?: string }> {
   const rows = ITINERARY.flatMap(({ dayOffset, items }) => {
     const tanggal = getRelativeDate(dayOffset);
     return items.map((item) => ({
-      tenant_id: tenantId,
       tanggal,
       jam_mulai: item.jam_mulai,
       judul: item.judul,
@@ -117,7 +116,7 @@ export async function insertAgendaDummy(tenantId: string): Promise<{ inserted: n
   });
 
   try {
-    const result = await bulkInsertAgenda(tenantId, rows);
+    const result = await bulkInsertAgenda(tenantId, keberangkatanId, rows);
     return { inserted: result.inserted };
   } catch (err: unknown) {
     return { inserted: 0, error: err instanceof Error ? err.message : String(err) };

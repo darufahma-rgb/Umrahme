@@ -37,9 +37,29 @@ export type TenantRow = {
   sertifikat_template_url: string | null;
 };
 
+export type KeberangkatanRow = {
+  id: string;
+  tenant_id: string;
+  nama_batch: string;
+  tanggal_keberangkatan: string | null;
+  tanggal_kepulangan: string | null;
+  hotel_makkah: string | null;
+  hotel_madinah: string | null;
+  meeting_point: string | null;
+  guide_name: string | null;
+  guide_whatsapp: string | null;
+  tour_leader_name: string | null;
+  tour_leader_whatsapp: string | null;
+  emergency_note: string | null;
+  fase_override: 'persiapan' | 'tanah-suci' | 'selesai' | null;
+  aktif: boolean;
+  created_at: string;
+};
+
 export type AgendaItemRow = {
   id: string;
   tenant_id: string;
+  keberangkatan_id: string | null;
   tanggal: string;
   jam_mulai: string | null;
   judul: string;
@@ -52,6 +72,7 @@ export type AgendaItemRow = {
 export type TravelAnnouncementRow = {
   id: string;
   tenant_id: string;
+  keberangkatan_id: string | null;
   label: string;
   title: string;
   content: string;
@@ -62,6 +83,7 @@ export type TravelAnnouncementRow = {
 export type JamaahAccountRow = {
   id: string;
   tenant_id: string;
+  keberangkatan_id: string | null;
   nama: string;
   nomor_jamaah: string;
   rombongan: string | null;
@@ -151,13 +173,61 @@ export async function checkActivationCode(code: string, excludeId?: string): Pro
   return { taken };
 }
 
+// ── Keberangkatan ─────────────────────────────────────────────
+
+export async function fetchKeberangkatan(tenantId: string): Promise<KeberangkatanRow[]> {
+  const { data, error } = await supabase
+    .from('keberangkatan')
+    .select('*')
+    .eq('tenant_id', tenantId)
+    .order('created_at', { ascending: false });
+  if (error) throw new Error(error.message);
+  return (data ?? []) as KeberangkatanRow[];
+}
+
+export async function fetchKeberangkatanById(id: string): Promise<KeberangkatanRow | null> {
+  const { data, error } = await supabase
+    .from('keberangkatan')
+    .select('*')
+    .eq('id', id)
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+  return data as KeberangkatanRow | null;
+}
+
+export async function createKeberangkatan(tenantId: string, payload: Partial<KeberangkatanRow>): Promise<KeberangkatanRow> {
+  const { data, error } = await supabase
+    .from('keberangkatan')
+    .insert({ tenant_id: tenantId, ...payload })
+    .select()
+    .single();
+  if (error) throw new Error(error.message);
+  return data as KeberangkatanRow;
+}
+
+export async function updateKeberangkatan(id: string, payload: Partial<KeberangkatanRow>): Promise<KeberangkatanRow> {
+  const { data, error } = await supabase
+    .from('keberangkatan')
+    .update(payload)
+    .eq('id', id)
+    .select()
+    .single();
+  if (error) throw new Error(error.message);
+  return data as KeberangkatanRow;
+}
+
+export async function deleteKeberangkatan(id: string): Promise<void> {
+  const { error } = await supabase.from('keberangkatan').delete().eq('id', id);
+  if (error) throw new Error(error.message);
+}
+
 // ── Agenda ────────────────────────────────────────────────────
 
-export async function fetchAgenda(tenantId: string): Promise<AgendaItemRow[]> {
+export async function fetchAgenda(keberangkatanId: string): Promise<AgendaItemRow[]> {
   const { data, error } = await supabase
     .from('agenda_items')
     .select('*')
-    .eq('tenant_id', tenantId)
+    .eq('keberangkatan_id', keberangkatanId)
     .order('tanggal', { ascending: true })
     .order('jam_mulai', { ascending: true })
     .order('urutan', { ascending: true });
@@ -165,18 +235,18 @@ export async function fetchAgenda(tenantId: string): Promise<AgendaItemRow[]> {
   return data as AgendaItemRow[];
 }
 
-export async function createAgenda(tenantId: string, payload: object): Promise<AgendaItemRow> {
+export async function createAgenda(tenantId: string, keberangkatanId: string, payload: object): Promise<AgendaItemRow> {
   const { data, error } = await supabase
     .from('agenda_items')
-    .insert({ ...payload, tenant_id: tenantId })
+    .insert({ ...payload, tenant_id: tenantId, keberangkatan_id: keberangkatanId })
     .select()
     .single();
   if (error) throw new Error(error.message);
   return data as AgendaItemRow;
 }
 
-export async function bulkInsertAgenda(tenantId: string, items: object[]): Promise<{ inserted: number }> {
-  const rows = items.map((item) => ({ ...item, tenant_id: tenantId }));
+export async function bulkInsertAgenda(tenantId: string, keberangkatanId: string, items: object[]): Promise<{ inserted: number }> {
+  const rows = items.map((item) => ({ ...item, tenant_id: tenantId, keberangkatan_id: keberangkatanId }));
   const { data, error } = await supabase.from('agenda_items').insert(rows).select();
   if (error) throw new Error(error.message);
   return { inserted: (data ?? []).length };
@@ -194,20 +264,20 @@ export async function deleteAgenda(tenantId: string, agendaId: string): Promise<
 
 // ── Announcements ─────────────────────────────────────────────
 
-export async function fetchAnnouncements(tenantId: string): Promise<TravelAnnouncementRow[]> {
+export async function fetchAnnouncements(keberangkatanId: string): Promise<TravelAnnouncementRow[]> {
   const { data, error } = await supabase
     .from('travel_announcements')
     .select('*')
-    .eq('tenant_id', tenantId)
+    .eq('keberangkatan_id', keberangkatanId)
     .order('published_at', { ascending: false });
   if (error) throw new Error(error.message);
   return data as TravelAnnouncementRow[];
 }
 
-export async function createAnnouncement(tenantId: string, payload: object): Promise<TravelAnnouncementRow> {
+export async function createAnnouncement(tenantId: string, keberangkatanId: string, payload: object): Promise<TravelAnnouncementRow> {
   const { data, error } = await supabase
     .from('travel_announcements')
-    .insert({ ...payload, tenant_id: tenantId })
+    .insert({ ...payload, tenant_id: tenantId, keberangkatan_id: keberangkatanId })
     .select()
     .single();
   if (error) throw new Error(error.message);
@@ -226,27 +296,27 @@ export async function deleteAnnouncement(tenantId: string, annId: string): Promi
 
 // ── Jamaah ────────────────────────────────────────────────────
 
-export async function fetchJamaah(tenantId: string): Promise<JamaahAccountRow[]> {
+export async function fetchJamaah(keberangkatanId: string): Promise<JamaahAccountRow[]> {
   const { data, error } = await supabase
     .from('jamaah_accounts')
     .select('*')
-    .eq('tenant_id', tenantId)
+    .eq('keberangkatan_id', keberangkatanId)
     .order('nama', { ascending: true });
   if (error) throw new Error(error.message);
   return data as JamaahAccountRow[];
 }
 
-export async function bulkInsertJamaah(tenantId: string, items: object[]): Promise<{ inserted: number }> {
-  const rows = items.map((item) => ({ ...item, tenant_id: tenantId }));
+export async function bulkInsertJamaah(tenantId: string, keberangkatanId: string, items: object[]): Promise<{ inserted: number }> {
+  const rows = items.map((item) => ({ ...item, tenant_id: tenantId, keberangkatan_id: keberangkatanId }));
   const { data, error } = await supabase.from('jamaah_accounts').insert(rows).select();
   if (error) throw new Error(error.message);
   return { inserted: (data ?? []).length };
 }
 
-export async function createJamaah(tenantId: string, payload: object): Promise<JamaahAccountRow> {
+export async function createJamaah(tenantId: string, keberangkatanId: string, payload: object): Promise<JamaahAccountRow> {
   const { data, error } = await supabase
     .from('jamaah_accounts')
-    .insert({ ...payload, tenant_id: tenantId })
+    .insert({ ...payload, tenant_id: tenantId, keberangkatan_id: keberangkatanId })
     .select()
     .single();
   if (error) {

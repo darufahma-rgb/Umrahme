@@ -1,11 +1,12 @@
 // @refresh reset
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import type { Fase, Jamaah } from '../types';
-import type { TenantRow } from '../lib/supabase';
+import type { TenantRow, KeberangkatanRow } from '../lib/supabase';
 import { hitungFaseEfektif } from '../data/jamaah';
 
 const STORAGE_KEY = 'umrahme.jamaah';
 const TENANT_STORAGE_KEY = 'umrahme.tenant';
+const KEBERANGKATAN_STORAGE_KEY = 'umrahme.keberangkatan';
 
 const DEFAULT_PRIMARY = '#0ea5e9';
 const DEFAULT_PRIMARY_DEEP = '#0284c7';
@@ -13,8 +14,9 @@ const DEFAULT_PRIMARY_DEEP = '#0284c7';
 interface AuthValue {
   jamaah: Jamaah | null;
   tenant: TenantRow | null;
+  keberangkatan: KeberangkatanRow | null;
   isLoggedIn: boolean;
-  login: (j: Jamaah, t: TenantRow) => void;
+  login: (j: Jamaah, t: TenantRow, kb: KeberangkatanRow | null) => void;
   logout: () => void;
   setFase: (f: Fase) => void;
 }
@@ -39,6 +41,15 @@ function bacaTenant(): TenantRow | null {
   }
 }
 
+function bacaKeberangkatan(): KeberangkatanRow | null {
+  try {
+    const raw = localStorage.getItem(KEBERANGKATAN_STORAGE_KEY);
+    return raw ? (JSON.parse(raw) as KeberangkatanRow) : null;
+  } catch {
+    return null;
+  }
+}
+
 function applyTenantTheme(tenant: TenantRow | null) {
   const root = document.documentElement;
   root.style.setProperty('--color-primary', tenant?.primary_color ?? DEFAULT_PRIMARY);
@@ -49,20 +60,34 @@ function applyTenantTheme(tenant: TenantRow | null) {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [jamaah, setJamaah] = useState<Jamaah | null>(() => {
     const saved = bacaStorage();
-    const savedTenant = bacaTenant();
-    if (saved && savedTenant) {
+    const savedKeberangkatan = bacaKeberangkatan();
+    if (saved && savedKeberangkatan) {
       return {
         ...saved,
         fase: hitungFaseEfektif(
-          savedTenant.fase_override ?? null,
-          savedTenant.tanggal_keberangkatan,
-          savedTenant.tanggal_kepulangan,
+          savedKeberangkatan.fase_override ?? null,
+          savedKeberangkatan.tanggal_keberangkatan,
+          savedKeberangkatan.tanggal_kepulangan,
         ),
       };
+    }
+    if (saved) {
+      const savedTenant = bacaTenant();
+      if (savedTenant) {
+        return {
+          ...saved,
+          fase: hitungFaseEfektif(
+            savedTenant.fase_override ?? null,
+            savedTenant.tanggal_keberangkatan,
+            savedTenant.tanggal_kepulangan,
+          ),
+        };
+      }
     }
     return saved;
   });
   const [tenant, setTenant] = useState<TenantRow | null>(() => bacaTenant());
+  const [keberangkatan, setKeberangkatan] = useState<KeberangkatanRow | null>(() => bacaKeberangkatan());
 
   useEffect(() => {
     try {
@@ -80,6 +105,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [tenant]);
 
   useEffect(() => {
+    try {
+      if (keberangkatan) localStorage.setItem(KEBERANGKATAN_STORAGE_KEY, JSON.stringify(keberangkatan));
+      else localStorage.removeItem(KEBERANGKATAN_STORAGE_KEY);
+    } catch { /* abaikan */ }
+  }, [keberangkatan]);
+
+  useEffect(() => {
     setJamaah((prev) => {
       if (!prev) return prev;
       const namaTravel = tenant?.nama_travel ?? prev.travel;
@@ -91,9 +123,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const value: AuthValue = {
     jamaah,
     tenant,
+    keberangkatan,
     isLoggedIn: !!jamaah,
-    login: (j, t) => { setJamaah(j); setTenant(t); },
-    logout: () => { setJamaah(null); setTenant(null); },
+    login: (j, t, kb) => { setJamaah(j); setTenant(t); setKeberangkatan(kb); },
+    logout: () => { setJamaah(null); setTenant(null); setKeberangkatan(null); },
     setFase: (f) => setJamaah((prev) => (prev ? { ...prev, fase: f } : prev)),
   };
 

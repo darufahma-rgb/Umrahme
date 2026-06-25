@@ -48,16 +48,16 @@ function IconRoute({ className = '' }: { className?: string }) {
 }
 
 export function DashboardTravelCompanionCards() {
-  const { jamaah, tenant } = useAuth();
+  const { jamaah, keberangkatan } = useAuth();
   const [announcement, setAnnouncement] = useState<TravelAnnouncement | null>(null);
 
   useEffect(() => {
-    getLatestAnnouncement(tenant?.id ?? null).then(setAnnouncement);
-  }, [tenant?.id]);
+    getLatestAnnouncement(keberangkatan?.id ?? null).then(setAnnouncement);
+  }, [keberangkatan?.id]);
 
   if (!jamaah) return null;
 
-  const info = getOperationalInfo(tenant ?? null);
+  const info = getOperationalInfo(keberangkatan ?? null);
   const focus = getFocusByFase(jamaah.fase);
 
   const rombongan = jamaah.rombongan ?? info.groupCode;

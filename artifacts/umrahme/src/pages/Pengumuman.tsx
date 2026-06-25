@@ -68,17 +68,17 @@ function AnnouncementCard({ item, travelName = 'Travel' }: { item: TravelAnnounc
 }
 
 export default function Pengumuman() {
-  const { tenant } = useAuth();
+  const { tenant, keberangkatan } = useAuth();
   const [announcements, setAnnouncements] = useState<TravelAnnouncement[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoading(true);
-    getAllAnnouncements(tenant?.id ?? null).then((data) => {
+    getAllAnnouncements(keberangkatan?.id ?? null).then((data) => {
       setAnnouncements(data);
       setLoading(false);
     });
-  }, [tenant?.id]);
+  }, [keberangkatan?.id]);
 
   const important = announcements.filter((a) => a.important);
   const info = announcements.filter((a) => !a.important);

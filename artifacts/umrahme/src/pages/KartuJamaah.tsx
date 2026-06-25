@@ -27,10 +27,10 @@ function IconUser({ className = '' }: { className?: string }) {
 }
 
 export default function KartuJamaah() {
-  const { jamaah, tenant } = useAuth();
+  const { jamaah, tenant, keberangkatan } = useAuth();
   if (!jamaah) return null;
 
-  const info         = getOperationalInfo(tenant ?? null);
+  const info         = getOperationalInfo(keberangkatan ?? null);
   const rombongan    = jamaah.rombongan  ?? info.groupCode;
   const hotelMakkah  = jamaah.hotelMakkah  ?? info.hotelMakkah;
   const hotelMadinah = jamaah.hotelMadinah ?? info.hotelMadinah;

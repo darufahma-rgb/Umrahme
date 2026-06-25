@@ -242,17 +242,17 @@ function KartuAgendaHariIni({ items, total }: { items: AgendaItemRow[]; total: n
   );
 }
 
-function KartuItinerary({ tenantId }: { tenantId: string }) {
+function KartuItinerary({ keberangkatanId }: { keberangkatanId: string }) {
   type SlimItem = { tanggal: string; judul: string; jam_mulai: string | null };
   const [allItems, setAllItems] = useState<SlimItem[]>([]);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    fetchAgenda(tenantId).then(data => {
+    fetchAgenda(keberangkatanId).then(data => {
       setAllItems(data.map(i => ({ tanggal: i.tanggal, judul: i.judul, jam_mulai: i.jam_mulai })));
       setReady(true);
     }).catch(() => setReady(true));
-  }, [tenantId]);
+  }, [keberangkatanId]);
 
   if (!ready) return null;
 
@@ -375,7 +375,7 @@ function hexToRgba(hex: string, alpha: number): string {
 }
 
 export default function Beranda() {
-  const { jamaah, tenant } = useAuth();
+  const { jamaah, tenant, keberangkatan } = useAuth();
 
   const totalPersiapan = checklistItems.length;
   const [persiapanDone] = useState<number>(() => {
@@ -390,7 +390,8 @@ export default function Beranda() {
 
   const firstName   = jamaah.nama.split(' ')[0];
   const namaTravel  = tenant?.nama_travel ?? jamaah.travel;
-  const hariMenuju  = tenant?.tanggal_keberangkatan ? hitungHariMenuju(tenant.tanggal_keberangkatan) : null;
+  const tanggalBerangkat = keberangkatan?.tanggal_keberangkatan ?? tenant?.tanggal_keberangkatan;
+  const hariMenuju  = tanggalBerangkat ? hitungHariMenuju(tanggalBerangkat) : null;
   const showHitung  = hariMenuju !== null && hariMenuju >= 1 && hariMenuju <= 30;
   const phaseActions = getPhaseActions(jamaah.fase);
 
@@ -449,7 +450,7 @@ export default function Beranda() {
           <TravelCompanionFlow />
 
           {/* Itinerary ringkasan */}
-          {tenant?.id && <KartuItinerary tenantId={tenant.id} />}
+          {keberangkatan?.id && <KartuItinerary keberangkatanId={keberangkatan.id} />}
 
           {/* Checklist */}
           {jamaah.fase === 'persiapan' && (
@@ -524,7 +525,7 @@ export default function Beranda() {
           <TravelCompanionFlow desktop />
 
           {/* Itinerary ringkasan */}
-          {tenant?.id && <KartuItinerary tenantId={tenant.id} />}
+          {keberangkatan?.id && <KartuItinerary keberangkatanId={keberangkatan.id} />}
 
           {jamaah.fase === 'persiapan' && (
             <Link to="/profil/persiapan" className="block active:scale-[0.99] transition-transform">

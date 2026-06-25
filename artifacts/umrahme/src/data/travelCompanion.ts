@@ -1,4 +1,4 @@
-import { fetchAnnouncements, type TenantRow, type TravelAnnouncementRow } from '../lib/supabase';
+import { fetchAnnouncements, type KeberangkatanRow, type TravelAnnouncementRow } from '../lib/supabase';
 import type { Fase } from '../types';
 
 export type TravelAnnouncement = {
@@ -55,23 +55,23 @@ const DEFAULT_OPERATIONAL_INFO: TravelOperationalInfo = {
     'Jika tersesat atau memerlukan bantuan mendesak, tetap tenang dan hubungi Ust. Ahmad Fauzi. Tunjukkan Kartu Jamaah Digital kepada petugas masjid atau polisi terdekat.',
 };
 
-export function getOperationalInfo(tenant: TenantRow | null): TravelOperationalInfo {
-  if (!tenant) return DEFAULT_OPERATIONAL_INFO;
+export function getOperationalInfo(keberangkatan: KeberangkatanRow | null): TravelOperationalInfo {
+  if (!keberangkatan) return DEFAULT_OPERATIONAL_INFO;
   return {
     groupCode: DEFAULT_OPERATIONAL_INFO.groupCode,
     busNumber: DEFAULT_OPERATIONAL_INFO.busNumber,
     roomNumber: DEFAULT_OPERATIONAL_INFO.roomNumber,
-    hotelMakkah: tenant.hotel_makkah ?? DEFAULT_OPERATIONAL_INFO.hotelMakkah,
-    hotelMadinah: tenant.hotel_madinah ?? DEFAULT_OPERATIONAL_INFO.hotelMadinah,
-    meetingPoint: tenant.meeting_point ?? DEFAULT_OPERATIONAL_INFO.meetingPoint,
-    guideName: tenant.guide_name ?? DEFAULT_OPERATIONAL_INFO.guideName,
+    hotelMakkah: keberangkatan.hotel_makkah ?? DEFAULT_OPERATIONAL_INFO.hotelMakkah,
+    hotelMadinah: keberangkatan.hotel_madinah ?? DEFAULT_OPERATIONAL_INFO.hotelMadinah,
+    meetingPoint: keberangkatan.meeting_point ?? DEFAULT_OPERATIONAL_INFO.meetingPoint,
+    guideName: keberangkatan.guide_name ?? DEFAULT_OPERATIONAL_INFO.guideName,
     guideRole: 'Muthowwif Rombongan',
-    guideWhatsapp: tenant.guide_whatsapp ?? DEFAULT_OPERATIONAL_INFO.guideWhatsapp,
-    tourLeaderName: tenant.tour_leader_name ?? DEFAULT_OPERATIONAL_INFO.tourLeaderName,
+    guideWhatsapp: keberangkatan.guide_whatsapp ?? DEFAULT_OPERATIONAL_INFO.guideWhatsapp,
+    tourLeaderName: keberangkatan.tour_leader_name ?? DEFAULT_OPERATIONAL_INFO.tourLeaderName,
     tourLeaderRole: 'Tour Leader',
-    tourLeaderWhatsapp: tenant.tour_leader_whatsapp ?? DEFAULT_OPERATIONAL_INFO.tourLeaderWhatsapp,
-    travelWhatsapp: tenant.guide_whatsapp ?? DEFAULT_OPERATIONAL_INFO.travelWhatsapp,
-    emergencyNote: tenant.emergency_note ?? DEFAULT_OPERATIONAL_INFO.emergencyNote,
+    tourLeaderWhatsapp: keberangkatan.tour_leader_whatsapp ?? DEFAULT_OPERATIONAL_INFO.tourLeaderWhatsapp,
+    travelWhatsapp: keberangkatan.guide_whatsapp ?? DEFAULT_OPERATIONAL_INFO.travelWhatsapp,
+    emergencyNote: keberangkatan.emergency_note ?? DEFAULT_OPERATIONAL_INFO.emergencyNote,
   };
 }
 
@@ -98,10 +98,10 @@ function rowToAnnouncement(row: TravelAnnouncementRow): TravelAnnouncement {
   };
 }
 
-export async function getLatestAnnouncement(tenantId: string | null): Promise<TravelAnnouncement | null> {
-  if (!tenantId) return null;
+export async function getLatestAnnouncement(keberangkatanId: string | null): Promise<TravelAnnouncement | null> {
+  if (!keberangkatanId) return null;
   try {
-    const rows = await fetchAnnouncements(tenantId);
+    const rows = await fetchAnnouncements(keberangkatanId);
     if (!rows.length) return null;
     return rowToAnnouncement(rows[0]);
   } catch {
@@ -109,10 +109,10 @@ export async function getLatestAnnouncement(tenantId: string | null): Promise<Tr
   }
 }
 
-export async function getAllAnnouncements(tenantId: string | null): Promise<TravelAnnouncement[]> {
-  if (!tenantId) return [];
+export async function getAllAnnouncements(keberangkatanId: string | null): Promise<TravelAnnouncement[]> {
+  if (!keberangkatanId) return [];
   try {
-    const rows = await fetchAnnouncements(tenantId);
+    const rows = await fetchAnnouncements(keberangkatanId);
     return rows.map(rowToAnnouncement);
   } catch {
     return [];

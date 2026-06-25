@@ -62,7 +62,7 @@ function isOngoing(dayItems: AgendaItemRow[], idx: number, tanggal: string, jam_
 }
 
 export default function AgendaLengkap() {
-  const { tenant } = useAuth();
+  const { keberangkatan } = useAuth();
   const [items, setItems] = useState<AgendaItemRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -74,12 +74,12 @@ export default function AgendaLengkap() {
   const todayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!tenant?.id) { setLoading(false); return; }
+    if (!keberangkatan?.id) { setLoading(false); return; }
     setLoading(true);
-    fetchAgenda(tenant.id)
+    fetchAgenda(keberangkatan.id)
       .then(data => { setItems(data); setLoading(false); })
       .catch(() => { setError('Gagal memuat agenda.'); setLoading(false); });
-  }, [tenant?.id, refreshKey]);
+  }, [keberangkatan?.id, refreshKey]);
 
   useEffect(() => {
     if (!todayRef.current) return;

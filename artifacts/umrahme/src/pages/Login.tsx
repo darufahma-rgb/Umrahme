@@ -22,7 +22,7 @@ export default function Login() {
     try {
       const hasil = await validasiKode(kode, nama);
       if (hasil.ok && hasil.jamaah && hasil.tenant) {
-        login(hasil.jamaah, hasil.tenant);
+        login(hasil.jamaah, hasil.tenant, hasil.keberangkatan ?? null);
         navigate(from, { replace: true });
       } else {
         setError(hasil.error ?? 'Terjadi kesalahan.');
