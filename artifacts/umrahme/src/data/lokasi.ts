@@ -144,7 +144,7 @@ export const daftarLokasi: Lokasi[] = [
     jarakKm: 0,
     jamKunjungan: 'Wajib booking via aplikasi Nusuk',
     ringkas: 'Area mulia di dalam Masjid Nabawi, disebut Nabi \ufdfa sebagai taman dari taman-taman surga.',
-    gambar: '',
+    gambar: '/lokasi/raudhah.jpg',
     koordinat: { lat: 24.4672, lng: 39.6112 },
     sejarah:
       'Raudhah (\u201ctaman\u201d) adalah area di dalam Masjid Nabawi yang terletak di antara mimbar Rasulullah \ufdfa dan kamar Sayyidah Aisyah \u0631\u0636\u064a \u0627\u0644\u0644\u0647 \u0639\u0646\u0647\u0627 (kini menjadi area makam Nabi \ufdfa). Luasnya sekitar 22 x 15 meter dan ditandai dengan karpet hijau yang berbeda dari karpet merah di bagian lain masjid. Di area inilah dahulu Rasulullah \ufdfa shalat, menerima wahyu, berdakwah, dan mengajar para sahabat.',
