@@ -104,6 +104,63 @@ export const larganganIhram: LaranganIhram[] = [
   },
 ];
 
+// =============================================================
+// DATA DAM (DENDA PELANGGARAN IHRAM)
+// =============================================================
+
+export interface JenisDam {
+  id: string;
+  nama: string;
+  untukPelanggaran: string;
+  bentuk: string;
+  catatan?: string;
+}
+
+export const damPengantar =
+  'Dam adalah denda atau tebusan yang wajib ditunaikan ketika seseorang melanggar larangan ihram atau meninggalkan salah satu wajib umrah/haji. Tujuannya menutup kekurangan ibadah. Jenis dan kadar dam berbeda tergantung jenis pelanggaran.';
+
+export const jenisDam: JenisDam[] = [
+  {
+    id: 'dam-tartib-takdir',
+    nama: 'Dam Tartib & Takdir',
+    untukPelanggaran:
+      'Meninggalkan salah satu wajib umrah/haji — mis. tidak ihram dari miqat (melewati miqat tanpa ihram), tidak mabit, tidak melempar jumrah (haji).',
+    bentuk:
+      'Menyembelih 1 ekor kambing. Jika tidak mampu, berpuasa 10 hari (3 hari saat haji + 7 hari setelah pulang).',
+    catatan:
+      'Disebut "tartib" karena harus berurutan (sembelih dulu, puasa jika tak mampu) dan "takdir" karena kadarnya sudah ditentukan.',
+  },
+  {
+    id: 'dam-takhyir-takdir',
+    nama: 'Dam Takhyir & Takdir',
+    untukPelanggaran:
+      'Melanggar larangan ihram seperti: mencukur/memotong rambut, memotong kuku, memakai wewangian, memakai pakaian berjahit (pria), atau menutup kepala (pria).',
+    bentuk:
+      "Boleh memilih (takhyir) salah satu: menyembelih 1 kambing, ATAU memberi makan 6 orang miskin (tiap orang ½ sha' ≈ 1,5 kg makanan pokok), ATAU berpuasa 3 hari.",
+    catatan:
+      'Disebut "takhyir" karena boleh memilih, dan "takdir" karena kadarnya tertentu. Dasar: QS. Al-Baqarah: 196 (fidyah Ka\'ab bin Ujrah).',
+  },
+  {
+    id: 'dam-jima',
+    nama: "Dam karena Jima' (Hubungan Suami-Istri)",
+    untukPelanggaran:
+      'Berhubungan suami-istri sebelum tahallul. Ini pelanggaran terberat yang dapat MERUSAK ibadah umrah/haji.',
+    bentuk:
+      'Untuk umrah: menyembelih 1 kambing & umrahnya batal (wajib qadha/mengulang). Untuk haji (sebelum tahallul awal): menyembelih seekor unta/sapi, haji batal, wajib qadha tahun depan.',
+    catatan:
+      "Pelanggaran paling berat. Jauhi segala pendahuluan jima' selama masih berihram.",
+  },
+  {
+    id: 'dam-berburu',
+    nama: 'Dam karena Berburu',
+    untukPelanggaran:
+      'Membunuh atau memburu hewan darat liar yang halal dimakan selama ihram.',
+    bentuk:
+      'Menyembelih hewan ternak yang sebanding dengan hewan buruan, ATAU memberi makan orang miskin senilai itu, ATAU berpuasa.',
+    catatan: "Dasar: QS. Al-Ma'idah: 95. Hewan di tanah haram dilindungi.",
+  },
+];
+
 export const tataCaraMemakaiIhram: IhramSection[] = [
   {
     id: 'sebelum',

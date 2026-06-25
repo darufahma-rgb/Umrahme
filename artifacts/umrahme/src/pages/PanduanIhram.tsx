@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react';
-import { niatIhram, larganganIhram, tataCaraMemakaiIhram } from '../data/ihram';
+import { niatIhram, larganganIhram, tataCaraMemakaiIhram, jenisDam, damPengantar } from '../data/ihram';
 import type { GenderLarangan } from '../types';
 import PageHeader from '../components/PageHeader';
 import MihrabCard from '../components/MihrabCard';
@@ -124,6 +124,53 @@ export default function PanduanIhram() {
                 </ol>
               </Section>
             ))}
+          </div>
+        </div>
+
+        {/* Dam (denda pelanggaran) */}
+        <div>
+          <h2 className="mb-2.5 font-mono text-[11px] uppercase tracking-widest text-mute">
+            Dam (Denda Pelanggaran)
+          </h2>
+          <p className="mb-3 text-[13px] leading-relaxed text-charcoal">{damPengantar}</p>
+
+          <div className="space-y-2.5">
+            {jenisDam.map((d) => (
+              <div
+                key={d.id}
+                className="rounded-2xl border border-hairline bg-surface-card p-4 shadow-drop-soft"
+              >
+                <div className="flex items-start gap-2.5">
+                  <div className="mt-0.5 flex h-8 w-8 flex-none items-center justify-center rounded-lg bg-gradient-to-br from-gold/20 to-gold/5">
+                    <span className="font-arab text-[15px] font-bold text-gold">ر</span>
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-[14px] font-bold leading-tight text-ink">{d.nama}</h3>
+                  </div>
+                </div>
+                <div className="mt-2.5 space-y-2 text-[12.5px] leading-snug">
+                  <div>
+                    <p className="font-mono text-[9px] uppercase tracking-wider text-mute">Pelanggaran</p>
+                    <p className="mt-0.5 text-charcoal">{d.untukPelanggaran}</p>
+                  </div>
+                  <div>
+                    <p className="font-mono text-[9px] uppercase tracking-wider text-mute">Bentuk Dam</p>
+                    <p className="mt-0.5 text-charcoal">{d.bentuk}</p>
+                  </div>
+                  {d.catatan ? (
+                    <div className="rounded-lg border border-gold/20 bg-gold/5 px-3 py-2">
+                      <p className="text-[12px] leading-snug text-gold">{d.catatan}</p>
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-3 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3">
+            <p className="text-[12.5px] leading-relaxed text-primary">
+              Penyembelihan dam dilakukan di tanah haram dan dagingnya dibagikan kepada fakir miskin di sana. Jika ragu tentang kewajiban dam atas kasus tertentu, tanyakan kepada pembimbing/muthowif atau ulama yang terpercaya.
+            </p>
           </div>
         </div>
       </div>
