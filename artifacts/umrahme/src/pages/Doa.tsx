@@ -289,27 +289,43 @@ export default function DoaPage() {
         <div className="px-5 pt-4">
           <SearchBox q={q} setQ={setQ} />
         </div>
-        <div className="mt-5 space-y-3 px-5 pb-6">
+        <div className="mt-5 grid grid-cols-2 gap-3 px-5 pb-6">
           {kategoriDoaMeta.map((k, i) => {
             const jumlah = daftarDoa.filter((d) => d.kategori === k.id).length;
-            const a = accentMap[accents[i % accents.length]];
+            const accent = accents[i % accents.length];
+            const a = accentMap[accent];
             return (
               <button
                 key={k.id}
                 type="button"
                 onClick={() => setParams({ kategori: k.id })}
-                className="group flex w-full items-center gap-4 rounded-2xl border border-hairline bg-surface-card p-4 text-left shadow-drop-soft transition-all hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.99]"
+                className={`group relative flex flex-col overflow-hidden rounded-2xl border border-hairline bg-surface-card text-left shadow-drop-soft transition-all hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.98] ${a.tile}`}
               >
-                <div className={`flex h-12 w-12 flex-none items-center justify-center rounded-xl ${a.tile}`}>
-                  <IconDoa className={`h-6 w-6 ${a.icon}`} />
+                <span className={`absolute left-0 top-0 h-0.5 w-full bg-gradient-to-r ${
+                  accent === 'maroon' ? 'from-primary/30 to-primary/10' :
+                  accent === 'gold'   ? 'from-gold/30 to-gold/10' :
+                  accent === 'green'  ? 'from-emerald-500/30 to-emerald-500/10' :
+                  accent === 'blue'   ? 'from-sky-500/30 to-sky-500/10' :
+                                        'from-fuchsia-500/30 to-fuchsia-500/10'
+                }`} aria-hidden />
+
+                <div className="flex flex-col gap-2.5 p-4">
+                  <div className="flex items-start justify-between">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/70 shadow-sm backdrop-blur-sm">
+                      <IconDoa className={`h-5 w-5 ${a.icon}`} />
+                    </div>
+                    <span className={`rounded-full px-1.5 py-0.5 font-mono text-[10px] font-bold ${a.count}`}>{jumlah}</span>
+                  </div>
+                  <div>
+                    <h2 className="font-display text-[13px] font-bold leading-tight text-ink">{k.judul}</h2>
+                    <p className="mt-0.5 line-clamp-2 text-[11px] leading-snug text-charcoal">{k.deskripsi}</p>
+                  </div>
                 </div>
-                <div className="min-w-0 flex-1">
-                  <h2 className="font-display text-[16px] font-bold leading-tight text-ink">{k.judul}</h2>
-                  <p className="mt-0.5 line-clamp-1 text-[12.5px] text-charcoal">{k.deskripsi}</p>
-                </div>
-                <div className="flex flex-none items-center gap-2">
-                  <span className={`rounded-full px-2 py-0.5 font-mono text-[11px] font-semibold ${a.count}`}>{jumlah}</span>
-                  <IconChevron className="h-4 w-4 text-ash transition-transform group-hover:translate-x-0.5" />
+
+                <div className="mt-auto flex items-center justify-end px-4 pb-3">
+                  <span className={`font-mono text-[9px] uppercase tracking-wider ${a.icon} opacity-70 transition-opacity group-hover:opacity-100`}>
+                    Buka →
+                  </span>
                 </div>
               </button>
             );
