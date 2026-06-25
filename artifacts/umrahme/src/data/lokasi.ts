@@ -849,7 +849,7 @@ export const daftarLokasi: Lokasi[] = [
     jarakKm: 0.45,
     jamKunjungan: 'Taman terbuka, kadang dibuka untuk umum',
     ringkas: 'Taman bersejarah tempat pembaiatan Abu Bakar \u0631\u0636\u064a \u0627\u0644\u0644\u0647 \u0639\u0646\u0647 sebagai khalifah pertama.',
-    gambar: '',
+    gambar: '/lokasi/saqifah-bani-saidah.jpg',
     koordinat: { lat: 24.4685, lng: 39.6105 },
     sejarah:
       'Saqifah Bani Saidah terletak di sisi barat laut Masjid Nabawi, hanya sekitar 450 meter dari Raudhah. \u201cSaqifah\u201d berarti bangunan beratap \u2014 dahulu ini adalah balai pertemuan milik kabilah Bani Saidah dari suku Khazraj, tempat kaum Anshar bermusyawarah. Kini lokasinya menjadi taman kecil yang asri dengan pepohonan kurma. Di tempat inilah berlangsung peristiwa besar: musyawarah pemilihan pemimpin umat setelah Rasulullah \ufdfa wafat.',
@@ -903,7 +903,7 @@ export const daftarLokasi: Lokasi[] = [
     jarakKm: 11,
     jamKunjungan: 'Buka 24 jam untuk miqat',
     ringkas: 'Tempat miqat (niat ihram) bagi jamaah yang berangkat dari Madinah menuju Makkah.',
-    gambar: '',
+    gambar: '/lokasi/masjid-bir-ali.jpg',
     koordinat: { lat: 24.4131, lng: 39.5419 },
     sejarah:
       'Masjid Bir Ali, dikenal juga sebagai Masjid Dzulhulaifah atau Masjid Asy-Syajarah, terletak di kawasan Dzulhulaifah sekitar 11\u201314 km dari Masjid Nabawi. Inilah miqat makani (batas tempat memulai ihram) bagi penduduk Madinah dan jamaah yang melewati Madinah menuju Makkah. Rasulullah \ufdfa sendiri memulai ihram dari tempat ini saat Haji Wada.',
@@ -956,7 +956,7 @@ export const daftarLokasi: Lokasi[] = [
     jarakKm: 90,
     jamKunjungan: 'Buka saat waktu shalat',
     ringkas: 'Masjid bersejarah di Thaif, dekat makam sahabat & ahli tafsir Abdullah bin Abbas \u0631\u0636\u064a \u0627\u0644\u0644\u0647 \u0639\u0646\u0647.',
-    gambar: '',
+    gambar: '/lokasi/masjid-abdullah-bin-abbas.jpg',
     koordinat: { lat: 21.2701, lng: 40.4082 },
     sejarah:
       'Masjid Abdullah bin Abbas terletak di pusat kota lama Thaif, sekitar 90 km tenggara Makkah di dataran tinggi yang sejuk. Masjid ini dinamai sesuai nama Abdullah bin Abbas \u0631\u0636\u064a \u0627\u0644\u0644\u0647 \u0639\u0646\u0647 \u2014 sepupu Rasulullah \ufdfa dan ahli tafsir Al-Qur\u2019an terbesar di kalangan sahabat \u2014 yang wafat dan dimakamkan di Thaif pada tahun 68 H. Masjid awal diperkirakan dibangun sekitar tahun 630 M, lalu berkali-kali direnovasi pada era Abbasiyah, Utsmaniyah, hingga era Saudi modern.',
@@ -1005,7 +1005,7 @@ export const daftarLokasi: Lokasi[] = [
     jarakKm: 90,
     jamKunjungan: 'Buka saat waktu shalat',
     ringkas: 'Tempat Addas, pemuda Nasrani, memeluk Islam setelah memberi anggur kepada Nabi \ufdfa saat beliau terluka di Thaif.',
-    gambar: '',
+    gambar: '/lokasi/masjid-addas.jpg',
     koordinat: { lat: 21.2510, lng: 40.3920 },
     sejarah:
       'Masjid Addas terletak sekitar 2,5 km barat daya Masjid Abdullah bin Abbas, di kawasan kebun lama Thaif. Masjid ini mengenang peristiwa menyentuh: setelah Rasulullah \ufdfa ditolak dan dilempari batu oleh penduduk Thaif, beliau berteduh di sebuah kebun milik Utbah dan Syaibah bin Rabi\u2019ah. Keduanya menyuruh budak mereka, Addas \u2014 seorang pemuda Nasrani dari Nineveh \u2014 mengantarkan setangkai anggur untuk Nabi \ufdfa.',
@@ -1052,7 +1052,7 @@ export const daftarLokasi: Lokasi[] = [
     jarakKm: 130,
     jamKunjungan: 'Area terbuka, dapat dikunjungi',
     ringkas: 'Medan Perang Badr \u2014 kemenangan besar pertama umat Islam atas kaum Quraisy pada 17 Ramadhan 2 H.',
-    gambar: '',
+    gambar: '/lokasi/situs-perang-badr.jpg',
     koordinat: { lat: 23.7333, lng: 38.7667 },
     sejarah:
       'Situs Perang Badr terletak di kota Badr, Provinsi Madinah, sekitar 130 km barat daya Madinah. Di sinilah berlangsung Perang Badr pada 17 Ramadhan 2 H (624 M) \u2014 pertempuran besar pertama umat Islam. Pasukan muslimin yang hanya berjumlah 313 orang dengan persenjataan seadanya menghadapi pasukan Quraisy yang berjumlah sekitar 1.000 orang bersenjata lengkap. Dengan pertolongan Allah, kaum muslimin meraih kemenangan gemilang.',
@@ -1102,7 +1102,7 @@ export const daftarLokasi: Lokasi[] = [
     jarakKm: 130,
     jamKunjungan: 'Area tertutup, dilihat dari luar',
     ringkas: 'Pemakaman 14 sahabat yang gugur sebagai syuhada dalam Perang Badr.',
-    gambar: '',
+    gambar: '/lokasi/makam-syuhada-badr.jpg',
     koordinat: { lat: 23.7314, lng: 38.7611 },
     sejarah:
       'Makam Syuhada Badr terletak sekitar 550 meter sebelah barat medan Perang Badr. Di sinilah 14 sahabat yang gugur sebagai syuhada dalam Perang Badr dimakamkan. Meskipun jumlah syuhada awalnya 14 orang, area pemakaman ini meluas selama berabad-abad. Kini lokasinya dibatasi pagar tembok dan tidak dibuka untuk umum \u2014 peziarah hanya dapat melihat dari luar dan mendoakan para syuhada.',
@@ -1148,7 +1148,7 @@ export const daftarLokasi: Lokasi[] = [
     jarakKm: 60,
     jamKunjungan: 'Area terbuka 24 jam (terbaik pagi/sore)',
     ringkas: 'Fenomena "bukit magnet" di Wadi Jinn — kendaraan terasa bergerak menanjak sendiri. Spot wisata alam populer dekat Madinah.',
-    gambar: '',
+    gambar: '/lokasi/jabal-magnet.jpg',
     koordinat: { lat: 24.7225, lng: 39.4431 },
     sejarah:
       'Jabal Magnet, dikenal juga sebagai Wadi Jinn atau Wadi Al-Baida, terletak sekitar 60 km barat laut Kota Madinah. Tempat ini terkenal dengan fenomena unik: kendaraan yang diposisikan netral (tanpa gas) terasa bergerak dan justru menanjak dengan sendirinya, seolah ada gaya magnet yang menarik. Kawasan ini menjadi tujuan wisata alam populer bagi keluarga Saudi maupun jamaah umrah yang punya waktu luang di Madinah.',
