@@ -7,6 +7,7 @@ import { manasikModulList } from './manasikInteraktif';
 import { faqKategori } from './faqFikih';
 import { daftarMiqat } from './miqat';
 import { niatIhram, larganganIhram, jenisDam } from './ihram';
+import { daftarIstilah } from './glosarium';
 
 export type SearchItemType =
   | 'doa'
@@ -17,7 +18,8 @@ export type SearchItemType =
   | 'manasik'
   | 'faq'
   | 'miqat'
-  | 'dam';
+  | 'dam'
+  | 'istilah';
 
 export interface SearchItem {
   id: string;
@@ -39,6 +41,7 @@ export const TYPE_META: Record<SearchItemType, { label: string; emoji: string }>
   faq:       { label: 'Tanya Jawab',emoji: '❓' },
   miqat:     { label: 'Miqat',      emoji: '🕋' },
   dam:       { label: 'Dam',        emoji: '⚖️' },
+  istilah:   { label: 'Istilah',    emoji: '📘' },
 };
 
 // ── Halaman statis ────────────────────────────────────────────
@@ -62,6 +65,7 @@ const halamanStatis: SearchItem[] = [
   { id: 'hal-ritual-nav',     type: 'halaman', judul: 'Navigator Ritual',       sub: 'Langkah demi langkah pelaksanaan umrah',       to: '/ibadah/ritual' },
   { id: 'hal-faq-fikih',      type: 'halaman', judul: 'Tanya Jawab Fikih',      sub: 'FAQ seputar ibadah umrah',                    to: '/panduan/faq-fikih' },
   { id: 'hal-miqat',          type: 'halaman', judul: 'Panduan Miqat',          sub: '5 titik miqat & aturan ihram',                to: '/panduan/miqat' },
+  { id: 'hal-glosarium',      type: 'halaman', judul: 'Glosarium Istilah',      sub: 'Kamus istilah umrah: ihram, tahallul, raml',  to: '/panduan/glosarium' },
 ];
 
 // ── Builder utama ─────────────────────────────────────────────
@@ -204,6 +208,18 @@ function buildIndex(): SearchItem[] {
       sub: l.keterangan?.slice(0, 70),
       to: `/panduan/ihram#${l.id}`,
       keywords: `larangan ihram ${l.judul} ${l.keterangan} ${l.gender}`.toLowerCase(),
+    })
+  );
+
+  // Glosarium Istilah
+  daftarIstilah.forEach((it) =>
+    items.push({
+      id: `istilah-${it.id}`,
+      type: 'istilah',
+      judul: it.istilah,
+      sub: it.arti.slice(0, 70),
+      to: `/panduan/glosarium#${it.id}`,
+      keywords: `${it.istilah} ${it.arab ?? ''} ${it.arti}`.toLowerCase(),
     })
   );
 

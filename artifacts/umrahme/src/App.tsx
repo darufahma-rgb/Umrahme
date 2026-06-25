@@ -13,6 +13,7 @@ import TataCara from './pages/TataCara';
 import PanduanIhram from './pages/PanduanIhram';
 import PanduanMiqat from './pages/PanduanMiqat';
 import FaqFikih from './pages/FaqFikih';
+import Glosarium from './pages/Glosarium';
 import Ibadah from './pages/Ibadah';
 import CounterTawaf from './pages/CounterTawaf';
 import CounterSai from './pages/CounterSai';
@@ -62,6 +63,7 @@ export default function App() {
         <Route path="/panduan/ihram" element={<PanduanIhram />} />
         <Route path="/panduan/miqat" element={<PanduanMiqat />} />
         <Route path="/panduan/faq-fikih" element={<FaqFikih />} />
+        <Route path="/panduan/glosarium" element={<Glosarium />} />
         <Route path="/panduan/manasik-interaktif" element={<ManasikInteraktif />} />
         <Route path="/panduan/manasik-interaktif/:modulId" element={<ManasikModulDetail />} />
         <Route path="/ibadah" element={<Ibadah />} />

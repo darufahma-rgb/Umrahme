@@ -41,6 +41,12 @@ export default function Panduan() {
       Icon: IconPanduan,
     },
     {
+      to: '/panduan/glosarium',
+      label: 'Glosarium Istilah',
+      desc: 'Kamus istilah umrah: ihram, tahallul, raml, dll',
+      Icon: IconPanduan,
+    },
+    {
       to: '/peta',
       label: 'Peta Lokasi',
       desc: '19 masjid & tempat bersejarah',
