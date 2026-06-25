@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useCallback, useRef } from 'react';
 import type { JurnalEntry } from '../types';
 import PageHeader from '../components/PageHeader';
