@@ -1138,6 +1138,49 @@ export const daftarLokasi: Lokasi[] = [
     ],
     catatan: 'Makam ini tidak dibuka untuk umum dan hanya bisa dilihat dari luar. Ziarah untuk mengenang & mendoakan, sesuai adab ziarah kubur yang syar\u2019i.',
   },
+  // ===================================================== WADI JINN
+  {
+    id: 'jabal-magnet',
+    tipe: 'sejarah',
+    nama: 'Jabal Magnet (Wadi Jinn)',
+    namaArab: 'وَادِي الْجِنّ',
+    kota: 'Wadi Jinn',
+    jarakKm: 60,
+    jamKunjungan: 'Area terbuka 24 jam (terbaik pagi/sore)',
+    ringkas: 'Fenomena "bukit magnet" di Wadi Jinn — kendaraan terasa bergerak menanjak sendiri. Spot wisata alam populer dekat Madinah.',
+    gambar: '',
+    koordinat: { lat: 24.7225, lng: 39.4431 },
+    sejarah:
+      'Jabal Magnet, dikenal juga sebagai Wadi Jinn atau Wadi Al-Baida, terletak sekitar 60 km barat laut Kota Madinah. Tempat ini terkenal dengan fenomena unik: kendaraan yang diposisikan netral (tanpa gas) terasa bergerak dan justru menanjak dengan sendirinya, seolah ada gaya magnet yang menarik. Kawasan ini menjadi tujuan wisata alam populer bagi keluarga Saudi maupun jamaah umrah yang punya waktu luang di Madinah.',
+    sejarahSeksi: [
+      {
+        judul: 'Fenomena "Bukit Magnet"',
+        isi: 'Di beberapa ruas jalan Wadi Jinn, mobil atau bus yang dimatikan gasnya akan terasa melaju sendiri, bahkan bisa mencapai kecepatan tinggi, seolah ditarik gaya tak terlihat. Air pun terlihat "mengalir ke atas". Karena keunikan inilah tempat ini dijuluki Jabal Magnet (Bukit Magnet).',
+      },
+      {
+        judul: 'Penjelasan Ilmiah: Ilusi Optik',
+        isi: 'Secara ilmiah, fenomena ini adalah ilusi optik gravitasi (gravity hill). Jalan yang tampak menanjak sebenarnya menurun landai. Karena dikelilingi pegunungan tanpa garis horizon yang jelas, mata & otak tertipu menilai kemiringan jalan. Studi pengukuran membuktikan kemiringan jalan turun bertahap menuju Madinah — jadi "magnet" itu sebenarnya gravitasi biasa yang bekerja pada jalan menurun.',
+      },
+      {
+        judul: 'Wadi Jinn & Penamaan',
+        isi: 'Nama "Wadi Jinn" (Lembah Jin) muncul dari cerita rakyat setempat yang mengaitkan fenomena ini dengan makhluk halus. Namun ini hanya legenda — tidak ada dasar syar\u2019i yang mengaitkan tempat ini dengan peristiwa keagamaan tertentu. Kawasan ini dahulu sempat menjadi area danau/sumber air, dan kini jadi tempat rekreasi keluarga, terutama akhir pekan.',
+      },
+    ],
+    tokoh: [],
+    keutamaan: [
+      'Tujuan wisata alam yang unik & menyegarkan dekat Madinah.',
+      'Sarana edukasi tentang fenomena ilusi optik gravitasi.',
+      'Pemandangan lembah & pegunungan yang indah, cocok untuk rehat.',
+    ],
+    dalil: [],
+    adab: [
+      'Ini tempat wisata alam, BUKAN situs ibadah atau ziarah keagamaan.',
+      'Tidak ada amalan/ritual khusus di sini — kunjungan murni rekreasi & edukasi.',
+      'Hindari mengaitkan fenomena dengan hal mistis; pahami penjelasan ilmiahnya.',
+      'Jaga kebersihan area & keselamatan saat berkendara di jalur fenomena.',
+    ],
+    catatan: 'Jabal Magnet sering jadi paket wisata tambahan dari Madinah (~60 km, 30-45 menit berkendara). Cocok untuk mengisi waktu luang, tapi ingatkan jamaah bahwa ini destinasi wisata alam — bukan bagian dari rangkaian ibadah umrah.',
+  },
 ];
 
 export function lokasiByTipe(tipe: Lokasi['tipe']): Lokasi[] {
