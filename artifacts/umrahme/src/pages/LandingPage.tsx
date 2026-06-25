@@ -646,8 +646,18 @@ export default function LandingPage() {
           <div className="lp-pain-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, marginTop: 10 }}>
             {[
               {
-                title: '"Jadwal hari ini apa, Pak?"',
-                desc: 'Pertanyaan sama, dijawab berulang sepanjang hari.',
+                title: 'Jamaah tersesat saat Tawaf & Sai',
+                desc: 'Terpisah di lautan jutaan orang. Lansia dan jamaah pertama paling rawan.',
+                icon: (
+                  <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                  </svg>
+                ),
+              },
+              {
+                title: '"Hari ini kita ke mana, Pak?"',
+                desc: 'Pertanyaan sama berulang sepanjang hari. Muthowif jadi mesin penjawab.',
                 icon: (
                   <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
@@ -655,8 +665,29 @@ export default function LandingPage() {
                 ),
               },
               {
-                title: 'Muthowif kelelahan',
-                desc: 'Energi habis untuk hal teknis, bukan membimbing.',
+                title: 'Salah niat ihram saat lewat Miqat',
+                desc: 'Jamaah tertinggal arahan muthowif. Risiko ibadah jadi tidak sah.',
+                icon: (
+                  <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                ),
+              },
+              {
+                title: 'Info penting tenggelam di grup WA',
+                desc: 'Pengumuman jam kumpul & perubahan jadwal tertimbun ratusan chat.',
+                icon: (
+                  <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 11l18-5v12L3 14v-3z"/>
+                    <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>
+                  </svg>
+                ),
+              },
+              {
+                title: 'Muthowif habis energi untuk hal teknis',
+                desc: 'Sibuk jawab pertanyaan & koordinasi, bukan membimbing ibadah.',
                 icon: (
                   <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
@@ -667,44 +698,14 @@ export default function LandingPage() {
                 ),
               },
               {
-                title: 'Buku doa cetak percuma',
-                desc: 'Mahal dicetak, sering hilang, jarang dibaca.',
-                icon: (
-                  <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-                  </svg>
-                ),
-              },
-              {
-                title: 'Info tenggelam di grup WA',
-                desc: 'Pengumuman penting tertimbun ratusan chat.',
-                icon: (
-                  <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M3 11l18-5v12L3 14v-3z"/>
-                    <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>
-                  </svg>
-                ),
-              },
-              {
-                title: 'Semua serba manual',
-                desc: 'Excel, kertas, WA. Tak ada sistem terpadu.',
-                icon: (
-                  <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="3" y="3" width="7" height="7" rx="1"/>
-                    <rect x="14" y="3" width="7" height="7" rx="1"/>
-                    <rect x="3" y="14" width="7" height="7" rx="1"/>
-                    <rect x="14" y="14" width="7" height="7" rx="1"/>
-                  </svg>
-                ),
-              },
-              {
-                title: 'Travel lain lebih maju',
-                desc: 'Mereka punya aplikasi sendiri, terlihat profesional.',
+                title: 'Lupa nomor kamar, bus & titik kumpul',
+                desc: 'Jamaah bingung cari hotel, bus, atau gerbang masjid tempat berkumpul.',
                 icon: (
                   <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="5" y="2" width="14" height="20" rx="2"/>
-                    <line x1="12" y1="18" x2="12" y2="18"/>
+                    <line x1="9" y1="9" x2="15" y2="9"/>
+                    <line x1="9" y1="13" x2="15" y2="13"/>
+                    <line x1="9" y1="17" x2="12" y2="17"/>
                   </svg>
                 ),
               },
