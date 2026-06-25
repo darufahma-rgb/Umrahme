@@ -60,6 +60,13 @@ export default function Panduan() {
       accent: 'green',
     },
     {
+      to: '/panduan/miqat',
+      label: 'Panduan Miqat',
+      desc: '5 titik miqat & aturan ihram — jangan sampai terlewat',
+      Icon: IconPeta,
+      accent: 'gold',
+    },
+    {
       to: '/peta',
       label: 'Peta Lokasi',
       desc: '19 masjid & tempat bersejarah',
