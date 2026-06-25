@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { lokasiById, daftarLokasi } from '../data/lokasi';
 import PageHeader from '../components/PageHeader';
@@ -31,6 +32,13 @@ function CityBadge({ kota }: { kota: string }) {
 
 export default function LokasiDetail() {
   const { id } = useParams();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const scroller = document.querySelector('[data-scroll-container]') as HTMLElement | null;
+    if (scroller) scroller.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [id]);
+
   const lokasi = id ? lokasiById(id) : undefined;
 
   if (!lokasi) {
