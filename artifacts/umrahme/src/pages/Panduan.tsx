@@ -1,11 +1,31 @@
 import { Link } from 'react-router-dom';
-import { IconPanduan, IconChevron, IconPeta, IconManasikInteraktif } from '../components/icons';
+import { IconPanduan, IconPeta, IconManasikInteraktif } from '../components/icons';
 
-const accentMap: Record<string, { tile: string; icon: string; bar: string }> = {
-  maroon: { tile: 'bg-gradient-to-br from-primary/15 to-primary/5', icon: 'text-primary', bar: 'bg-primary' },
-  gold:   { tile: 'bg-gradient-to-br from-gold/20 to-gold/5',       icon: 'text-gold',    bar: 'bg-gold' },
-  green:  { tile: 'bg-gradient-to-br from-emerald-500/15 to-emerald-500/5', icon: 'text-emerald-600', bar: 'bg-emerald-500' },
-  blue:   { tile: 'bg-gradient-to-br from-sky-500/15 to-sky-500/5', icon: 'text-sky-600', bar: 'bg-sky-500' },
+const accentMap: Record<string, { tile: string; icon: string; bar: string; label: string }> = {
+  maroon: {
+    tile: 'bg-gradient-to-br from-primary/20 via-primary/10 to-primary/5',
+    icon: 'text-primary',
+    bar: 'from-primary/30 to-primary/10',
+    label: 'text-primary',
+  },
+  gold: {
+    tile: 'bg-gradient-to-br from-gold/25 via-gold/12 to-gold/5',
+    icon: 'text-gold',
+    bar: 'from-gold/30 to-gold/10',
+    label: 'text-gold',
+  },
+  green: {
+    tile: 'bg-gradient-to-br from-emerald-500/20 via-emerald-500/10 to-emerald-500/5',
+    icon: 'text-emerald-600',
+    bar: 'from-emerald-500/30 to-emerald-500/10',
+    label: 'text-emerald-600',
+  },
+  blue: {
+    tile: 'bg-gradient-to-br from-sky-500/20 via-sky-500/10 to-sky-500/5',
+    icon: 'text-sky-600',
+    bar: 'from-sky-500/30 to-sky-500/10',
+    label: 'text-sky-600',
+  },
 };
 
 export default function Panduan() {
@@ -20,7 +40,7 @@ export default function Panduan() {
     {
       to: '/panduan/manasik-interaktif',
       label: 'Manasik Interaktif',
-      desc: 'Kenali, urutkan & uji paham — belajar umrah secara interaktif',
+      desc: 'Kenali, urutkan & uji paham secara interaktif',
       Icon: IconManasikInteraktif,
       highlight: true,
       accent: 'maroon',
@@ -28,21 +48,21 @@ export default function Panduan() {
     {
       to: '/panduan/tata-cara',
       label: 'Tata Cara Umrah',
-      desc: 'Alur lengkap: Miqat → Ihram → Tawaf → Sa\u2019i → Tahallul',
+      desc: 'Miqat → Ihram → Tawaf → Sa\u2019i → Tahallul',
       Icon: IconPanduan,
       accent: 'gold',
     },
     {
       to: '/panduan/ihram',
       label: 'Panduan Ihram',
-      desc: 'Niat, larangan, & cara memakai ihram',
+      desc: 'Niat, larangan & cara memakai ihram',
       Icon: IconPanduan,
       accent: 'green',
     },
     {
       to: '/peta',
       label: 'Peta Lokasi',
-      desc: '19 masjid & tempat bersejarah, lengkap dengan Google Maps',
+      desc: '19 masjid & tempat bersejarah',
       Icon: IconPeta,
       accent: 'blue',
     },
@@ -51,7 +71,7 @@ export default function Panduan() {
   return (
     <div>
       <header
-        className="px-5 pb-1 pt-8 lg:px-10 lg:pt-10"
+        className="px-5 pb-1 pt-8 lg:px-8 lg:pt-10"
         style={{ paddingTop: 'max(2rem, env(safe-area-inset-top))' }}
       >
         <h1 className="font-display text-3xl font-bold leading-tight text-ink lg:text-4xl">Panduan</h1>
@@ -60,34 +80,44 @@ export default function Panduan() {
         </p>
       </header>
 
-      <div className="mt-5 space-y-3.5 px-5 pb-6 lg:px-10 lg:pb-10 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-4 lg:mt-6">
+      <div className="mt-5 grid grid-cols-2 gap-3 px-5 pb-6 lg:px-8 lg:pb-10 lg:gap-4">
         {items.map(({ to, label, desc, Icon, highlight, accent }) => {
           const a = accentMap[accent];
           return (
             <Link
               key={to}
               to={to}
-              className="group relative flex items-center gap-4 overflow-hidden rounded-2xl border border-hairline bg-surface-card p-4 shadow-drop-soft transition-all hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.99] lg:p-5"
+              className={`group relative flex flex-col overflow-hidden rounded-2xl border border-hairline bg-surface-card shadow-drop-soft transition-all hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.98] ${a.tile}`}
             >
-              <span className={`absolute left-0 top-0 h-full w-1 ${a.bar} opacity-70`} aria-hidden />
+              {/* gradient top bar */}
+              <span className={`absolute left-0 top-0 h-0.5 w-full bg-gradient-to-r ${a.bar}`} aria-hidden />
 
-              <div className={`flex h-14 w-14 flex-none items-center justify-center rounded-2xl ${a.tile}`}>
-                <Icon className={`h-7 w-7 ${a.icon}`} />
-              </div>
-
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2">
-                  <h2 className="font-display text-[17px] font-bold leading-tight text-ink">{label}</h2>
+              <div className="flex flex-col gap-3 p-4">
+                {/* ikon + badge */}
+                <div className="flex items-start justify-between">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/70 shadow-sm backdrop-blur-sm">
+                    <Icon className={`h-5 w-5 ${a.icon}`} />
+                  </div>
                   {highlight && (
-                    <span className="flex-none rounded-full bg-primary/10 px-2 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wider text-primary">
+                    <span className={`rounded-full bg-white/80 px-2 py-0.5 font-mono text-[8px] font-bold uppercase tracking-wider ${a.label} shadow-sm`}>
                       Baru
                     </span>
                   )}
                 </div>
-                <p className="mt-1 text-[13px] leading-snug text-charcoal">{desc}</p>
+
+                {/* teks */}
+                <div>
+                  <h2 className="font-display text-[14px] font-bold leading-tight text-ink">{label}</h2>
+                  <p className="mt-1 text-[11.5px] leading-snug text-charcoal line-clamp-2">{desc}</p>
+                </div>
               </div>
 
-              <IconChevron className="h-5 w-5 flex-none text-ash transition-transform group-hover:translate-x-0.5 group-hover:text-charcoal" />
+              {/* footer arrow */}
+              <div className="mt-auto flex items-center justify-end px-4 pb-3">
+                <span className={`font-mono text-[9px] uppercase tracking-wider ${a.label} opacity-70 transition-opacity group-hover:opacity-100`}>
+                  Buka →
+                </span>
+              </div>
             </Link>
           );
         })}
