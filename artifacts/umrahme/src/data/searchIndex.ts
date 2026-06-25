@@ -4,6 +4,9 @@ import { ritualSteps } from './ritualSteps';
 import { checklistItems } from './checklist';
 import { daftarLokasi } from './lokasi';
 import { manasikModulList } from './manasikInteraktif';
+import { faqKategori } from './faqFikih';
+import { daftarMiqat } from './miqat';
+import { niatIhram, larganganIhram, jenisDam } from './ihram';
 
 export type SearchItemType =
   | 'doa'
@@ -11,7 +14,10 @@ export type SearchItemType =
   | 'lokasi'
   | 'checklist'
   | 'halaman'
-  | 'manasik';
+  | 'manasik'
+  | 'faq'
+  | 'miqat'
+  | 'dam';
 
 export interface SearchItem {
   id: string;
@@ -19,38 +25,43 @@ export interface SearchItem {
   judul: string;
   sub?: string;
   to: string;
-  keywords?: string; // joined lowercase string for fast matching
+  keywords?: string;
 }
 
 // ── Label emoji per tipe ─────────────────────────────────────
 export const TYPE_META: Record<SearchItemType, { label: string; emoji: string }> = {
-  doa:      { label: 'Doa',      emoji: '🤲' },
-  panduan:  { label: 'Panduan',  emoji: '📖' },
-  lokasi:   { label: 'Lokasi',   emoji: '📍' },
-  checklist:{ label: 'Checklist',emoji: '✅' },
-  halaman:  { label: 'Halaman',  emoji: '🗂️'  },
-  manasik:  { label: 'Manasik',  emoji: '🎓' },
+  doa:       { label: 'Doa',        emoji: '🤲' },
+  panduan:   { label: 'Panduan',    emoji: '📖' },
+  lokasi:    { label: 'Lokasi',     emoji: '📍' },
+  checklist: { label: 'Checklist',  emoji: '✅' },
+  halaman:   { label: 'Halaman',    emoji: '🗂️'  },
+  manasik:   { label: 'Manasik',    emoji: '🎓' },
+  faq:       { label: 'Tanya Jawab',emoji: '❓' },
+  miqat:     { label: 'Miqat',      emoji: '🕋' },
+  dam:       { label: 'Dam',        emoji: '⚖️' },
 };
 
 // ── Halaman statis ────────────────────────────────────────────
 const halamanStatis: SearchItem[] = [
-  { id: 'hal-beranda',        type: 'halaman', judul: 'Beranda',               sub: 'Dashboard utama jamaah',                     to: '/beranda' },
-  { id: 'hal-doa',            type: 'halaman', judul: 'Panduan Doa',            sub: 'Semua doa umrah per kategori',               to: '/doa' },
-  { id: 'hal-tata-cara',      type: 'halaman', judul: 'Tata Cara Umrah',        sub: 'Alur urutan ibadah umrah lengkap',            to: '/panduan/tata-cara' },
-  { id: 'hal-ihram',          type: 'halaman', judul: 'Panduan Ihram',          sub: 'Niat, larangan, tata cara pakai ihram',       to: '/panduan/ihram' },
-  { id: 'hal-tawaf',          type: 'halaman', judul: 'Counter Tawaf',          sub: 'Hitung putaran tawaf dengan panduan doa',     to: '/ibadah/tawaf' },
-  { id: 'hal-sai',            type: 'halaman', judul: "Counter Sa'i",           sub: "Hitung lintasan sa'i Shafa–Marwah",          to: '/ibadah/sai' },
-  { id: 'hal-tahallul',       type: 'halaman', judul: 'Panduan Tahallul',       sub: 'Doa dan tata cara tahallul',                  to: '/ibadah/tahallul' },
-  { id: 'hal-jadwal-sholat',  type: 'halaman', judul: 'Jadwal Sholat',          sub: 'Waktu sholat di Makkah & Madinah',            to: '/ibadah/jadwal-sholat' },
-  { id: 'hal-peta',           type: 'halaman', judul: 'Peta & Lokasi',          sub: 'Masjid dan tempat bersejarah',                to: '/peta' },
+  { id: 'hal-beranda',        type: 'halaman', judul: 'Beranda',               sub: 'Dashboard utama jamaah',                      to: '/beranda' },
+  { id: 'hal-doa',            type: 'halaman', judul: 'Panduan Doa',            sub: 'Semua doa umrah per kategori',                to: '/doa' },
+  { id: 'hal-tata-cara',      type: 'halaman', judul: 'Tata Cara Umrah',        sub: 'Alur urutan ibadah umrah lengkap',             to: '/panduan/tata-cara' },
+  { id: 'hal-ihram',          type: 'halaman', judul: 'Panduan Ihram',          sub: 'Niat, larangan, tata cara pakai ihram',        to: '/panduan/ihram' },
+  { id: 'hal-tawaf',          type: 'halaman', judul: 'Counter Tawaf',          sub: 'Hitung putaran tawaf dengan panduan doa',      to: '/ibadah/tawaf' },
+  { id: 'hal-sai',            type: 'halaman', judul: "Counter Sa'i",           sub: "Hitung lintasan sa'i Shafa–Marwah",           to: '/ibadah/sai' },
+  { id: 'hal-tahallul',       type: 'halaman', judul: 'Panduan Tahallul',       sub: 'Doa dan tata cara tahallul',                   to: '/ibadah/tahallul' },
+  { id: 'hal-jadwal-sholat',  type: 'halaman', judul: 'Jadwal Sholat',          sub: 'Waktu sholat di Makkah & Madinah',             to: '/ibadah/jadwal-sholat' },
+  { id: 'hal-peta',           type: 'halaman', judul: 'Peta & Lokasi',          sub: 'Masjid dan tempat bersejarah',                 to: '/peta' },
   { id: 'hal-persiapan',      type: 'halaman', judul: 'Checklist Persiapan',    sub: 'Dokumen, barang, kesehatan sebelum berangkat', to: '/profil/persiapan' },
-  { id: 'hal-kartu',          type: 'halaman', judul: 'Kartu Jamaah',           sub: 'Identitas digital jamaah & pembimbing',       to: '/profil/kartu' },
-  { id: 'hal-jurnal',         type: 'halaman', judul: 'Jurnal Perjalanan',      sub: 'Catatan pribadi selama ibadah',               to: '/jurnal' },
-  { id: 'hal-profil',         type: 'halaman', judul: 'Profil',                 sub: 'Data akun dan pengaturan',                    to: '/profil' },
-  { id: 'hal-manasik',        type: 'halaman', judul: 'Manasik Interaktif',     sub: 'Simulasi & kuis ibadah umrah',                to: '/manasik' },
-  { id: 'hal-sertifikat',     type: 'halaman', judul: 'Sertifikat Digital',     sub: 'Sertifikat penyelesaian ibadah',              to: '/profil/sertifikat' },
-  { id: 'hal-panduan',        type: 'halaman', judul: 'Panduan Lengkap',        sub: 'Semua panduan & referensi ibadah',            to: '/panduan' },
-  { id: 'hal-ritual-nav',     type: 'halaman', judul: 'Navigator Ritual',       sub: 'Langkah demi langkah pelaksanaan umrah',      to: '/ibadah/ritual' },
+  { id: 'hal-kartu',          type: 'halaman', judul: 'Kartu Jamaah',           sub: 'Identitas digital jamaah & pembimbing',        to: '/profil/kartu' },
+  { id: 'hal-jurnal',         type: 'halaman', judul: 'Jurnal Perjalanan',      sub: 'Catatan pribadi selama ibadah',                to: '/jurnal' },
+  { id: 'hal-profil',         type: 'halaman', judul: 'Profil',                 sub: 'Data akun dan pengaturan',                     to: '/profil' },
+  { id: 'hal-manasik',        type: 'halaman', judul: 'Manasik Interaktif',     sub: 'Simulasi & kuis ibadah umrah',                 to: '/manasik' },
+  { id: 'hal-sertifikat',     type: 'halaman', judul: 'Sertifikat Digital',     sub: 'Sertifikat penyelesaian ibadah',               to: '/profil/sertifikat' },
+  { id: 'hal-panduan',        type: 'halaman', judul: 'Panduan Lengkap',        sub: 'Semua panduan & referensi ibadah',             to: '/panduan' },
+  { id: 'hal-ritual-nav',     type: 'halaman', judul: 'Navigator Ritual',       sub: 'Langkah demi langkah pelaksanaan umrah',       to: '/ibadah/ritual' },
+  { id: 'hal-faq-fikih',      type: 'halaman', judul: 'Tanya Jawab Fikih',      sub: 'FAQ seputar ibadah umrah',                    to: '/panduan/faq-fikih' },
+  { id: 'hal-miqat',          type: 'halaman', judul: 'Panduan Miqat',          sub: '5 titik miqat & aturan ihram',                to: '/panduan/miqat' },
 ];
 
 // ── Builder utama ─────────────────────────────────────────────
@@ -134,24 +145,90 @@ function buildIndex(): SearchItem[] {
     })
   );
 
+  // FAQ Fikih — index tiap pertanyaan, deep-link via hash ke item
+  faqKategori.forEach((kat) =>
+    kat.items.forEach((f) =>
+      items.push({
+        id: `faq-${f.id}`,
+        type: 'faq',
+        judul: f.tanya,
+        sub: f.jawab.slice(0, 70),
+        to: `/panduan/faq-fikih#${f.id}`,
+        keywords: `${f.tanya} ${f.jawab} ${f.catatan ?? ''} ${kat.nama}`.toLowerCase(),
+      })
+    )
+  );
+
+  // Miqat — index tiap titik miqat
+  daftarMiqat.forEach((m) =>
+    items.push({
+      id: `miqat-${m.id}`,
+      type: 'miqat',
+      judul: `Miqat: ${m.nama}`,
+      sub: m.untuk?.slice(0, 70),
+      to: `/panduan/miqat#${m.id}`,
+      keywords: `miqat ${m.nama} ${m.namaArab ?? ''} ${m.namaLain ?? ''} ${m.untuk ?? ''} ${m.keterangan ?? ''}`.toLowerCase(),
+    })
+  );
+
+  // Dam (denda pelanggaran ihram)
+  jenisDam.forEach((d) =>
+    items.push({
+      id: `dam-${d.id}`,
+      type: 'dam',
+      judul: d.nama,
+      sub: d.untukPelanggaran?.slice(0, 70),
+      to: `/panduan/ihram#${d.id}`,
+      keywords: `dam denda ${d.nama} ${d.untukPelanggaran} ${d.bentuk} ${d.catatan ?? ''}`.toLowerCase(),
+    })
+  );
+
+  // Niat Ihram
+  niatIhram.forEach((n) =>
+    items.push({
+      id: `niat-${n.id}`,
+      type: 'panduan',
+      judul: n.judul,
+      sub: n.arti?.slice(0, 70),
+      to: `/panduan/ihram#${n.id}`,
+      keywords: `niat ihram ${n.judul} ${n.latin} ${n.arti}`.toLowerCase(),
+    })
+  );
+
+  // Larangan Ihram
+  larganganIhram.forEach((l) =>
+    items.push({
+      id: `larangan-${l.id}`,
+      type: 'panduan',
+      judul: `Larangan: ${l.judul}`,
+      sub: l.keterangan?.slice(0, 70),
+      to: `/panduan/ihram#${l.id}`,
+      keywords: `larangan ihram ${l.judul} ${l.keterangan} ${l.gender}`.toLowerCase(),
+    })
+  );
+
   return items;
 }
 
 export const searchIndex: SearchItem[] = buildIndex();
 
-// ── Fungsi pencarian ──────────────────────────────────────────
-export function searchAll(query: string, limit = 8): SearchItem[] {
+// ── Fungsi pencarian (multi-kata, semua kata harus cocok) ────
+export function searchAll(query: string, limit = 10): SearchItem[] {
   const q = query.trim().toLowerCase();
   if (!q) return [];
+  const kata = q.split(/\s+/).filter(Boolean);
 
   const scored = searchIndex
     .map((item) => {
       const kw = item.keywords ?? '';
-      const titleMatch = item.judul.toLowerCase().includes(q);
-      const kwMatch    = kw.includes(q);
-      if (!titleMatch && !kwMatch) return null;
-      // Prioritise title matches
-      return { item, score: titleMatch ? 2 : 1 };
+      const judul = item.judul.toLowerCase();
+      const semuaCocok = kata.every((k) => judul.includes(k) || kw.includes(k));
+      if (!semuaCocok) return null;
+      let score = 0;
+      if (judul.includes(q)) score = 3;
+      else if (kata.some((k) => judul.includes(k))) score = 2;
+      else score = 1;
+      return { item, score };
     })
     .filter(Boolean) as { item: SearchItem; score: number }[];
 

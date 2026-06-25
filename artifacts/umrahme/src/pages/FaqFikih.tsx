@@ -1,14 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import { faqKategori } from '../data/faqFikih';
 import type { FaqItem } from '../data/faqFikih';
 import { IconChevron } from '../components/icons';
 
-function FaqAccordion({ item }: { item: FaqItem }) {
-  const [open, setOpen] = useState(false);
+function FaqAccordion({ item, defaultOpen = false }: { item: FaqItem; defaultOpen?: boolean }) {
+  const [open, setOpen] = useState(defaultOpen);
+
+  useEffect(() => {
+    if (defaultOpen) setOpen(true);
+  }, [defaultOpen]);
 
   return (
-    <div className="overflow-hidden rounded-xl border border-hairline bg-surface-card">
+    <div id={item.id} className="overflow-hidden rounded-xl border border-hairline bg-surface-card transition-all">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
@@ -44,6 +49,22 @@ function FaqAccordion({ item }: { item: FaqItem }) {
 }
 
 export default function FaqFikih() {
+  const location = useLocation();
+  const hashTarget = location.hash?.replace('#', '') ?? '';
+
+  useEffect(() => {
+    if (!hashTarget) return;
+    const t = setTimeout(() => {
+      const el = document.getElementById(hashTarget);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.classList.add('ring-2', 'ring-primary/40');
+        setTimeout(() => el.classList.remove('ring-2', 'ring-primary/40'), 2000);
+      }
+    }, 200);
+    return () => clearTimeout(t);
+  }, [hashTarget]);
+
   return (
     <div className="pb-10">
       <PageHeader title="Tanya Jawab Fikih" eyebrow="Panduan" backTo="/panduan" />
@@ -70,7 +91,11 @@ export default function FaqFikih() {
 
             <div className="space-y-2">
               {kat.items.map((item) => (
-                <FaqAccordion key={item.id} item={item} />
+                <FaqAccordion
+                  key={item.id}
+                  item={item}
+                  defaultOpen={hashTarget === item.id}
+                />
               ))}
             </div>
           </section>

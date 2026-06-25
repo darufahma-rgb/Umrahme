@@ -1,4 +1,5 @@
-import { useState, type ReactNode } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
+import { useLocation } from 'react-router-dom';
 import { niatIhram, larganganIhram, tataCaraMemakaiIhram, jenisDam, damPengantar } from '../data/ihram';
 import type { GenderLarangan } from '../types';
 import PageHeader from '../components/PageHeader';
@@ -41,6 +42,29 @@ function Section({
 
 export default function PanduanIhram() {
   const [tab, setTab] = useState<GenderLarangan>('lakilaki');
+  const location = useLocation();
+  const hashTarget = location.hash?.replace('#', '') ?? '';
+
+  // Jika hash mengarah ke larangan gender tertentu, switch tab dulu
+  useEffect(() => {
+    if (!hashTarget) return;
+    const targetLarangan = larganganIhram.find((l) => l.id === hashTarget);
+    if (targetLarangan) setTab(targetLarangan.gender);
+  }, [hashTarget]);
+
+  useEffect(() => {
+    if (!hashTarget) return;
+    const t = setTimeout(() => {
+      const el = document.getElementById(hashTarget);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.classList.add('ring-2', 'ring-primary/40');
+        setTimeout(() => el.classList.remove('ring-2', 'ring-primary/40'), 2000);
+      }
+    }, 250);
+    return () => clearTimeout(t);
+  }, [hashTarget, tab]);
+
   const larangan = larganganIhram.filter((l) => l.gender === tab);
 
   return (
@@ -55,14 +79,16 @@ export default function PanduanIhram() {
           </h2>
           <div className="space-y-3 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-3">
             {niatIhram.map((n) => (
-              <MihrabCard key={n.id} bodyClassName="px-5 pb-5 pt-2">
-                <p className="text-xs font-semibold text-primary">{n.judul}</p>
-                <p className="mt-2 text-center font-arab text-[26px] leading-loose text-gold" dir="rtl">
-                  {n.arab}
-                </p>
-                <p className="mt-2 text-center text-sm italic text-body">{n.latin}</p>
-                <p className="mt-2 text-center text-xs leading-relaxed text-charcoal">{n.arti}</p>
-              </MihrabCard>
+              <div key={n.id} id={n.id} className="transition-all">
+                <MihrabCard bodyClassName="px-5 pb-5 pt-2">
+                  <p className="text-xs font-semibold text-primary">{n.judul}</p>
+                  <p className="mt-2 text-center font-arab text-[26px] leading-loose text-gold" dir="rtl">
+                    {n.arab}
+                  </p>
+                  <p className="mt-2 text-center text-sm italic text-body">{n.latin}</p>
+                  <p className="mt-2 text-center text-xs leading-relaxed text-charcoal">{n.arti}</p>
+                </MihrabCard>
+              </div>
             ))}
           </div>
         </div>
@@ -92,7 +118,8 @@ export default function PanduanIhram() {
             {larangan.map((l) => (
               <li
                 key={l.id}
-                className="rounded-md border border-hairline bg-surface-card px-4 py-3.5"
+                id={l.id}
+                className="rounded-md border border-hairline bg-surface-card px-4 py-3.5 transition-all"
               >
                 <div className="flex items-start gap-3">
                   <span className="mt-1.5 h-1.5 w-1.5 flex-none rotate-45 bg-primary" aria-hidden />
@@ -138,7 +165,8 @@ export default function PanduanIhram() {
             {jenisDam.map((d) => (
               <div
                 key={d.id}
-                className="rounded-2xl border border-hairline bg-surface-card p-4 shadow-drop-soft"
+                id={d.id}
+                className="rounded-2xl border border-hairline bg-surface-card p-4 shadow-drop-soft transition-all"
               >
                 <div className="flex items-start gap-2.5">
                   <div className="mt-0.5 flex h-8 w-8 flex-none items-center justify-center rounded-lg bg-gradient-to-br from-gold/20 to-gold/5">
