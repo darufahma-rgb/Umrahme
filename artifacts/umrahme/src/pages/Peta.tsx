@@ -8,6 +8,7 @@ import { IconPeta, IconChevron } from '../components/icons';
 const tabs: { id: KotaFilter; label: string }[] = [
   { id: 'Makkah', label: 'Makkah' },
   { id: 'Madinah', label: 'Madinah' },
+  { id: 'Haji', label: 'Tempat Haji' },
   { id: 'Lainnya', label: 'Lainnya' },
 ];
 
@@ -40,7 +41,7 @@ export default function Peta() {
               key={t.id}
               type="button"
               onClick={() => setTab(t.id)}
-              className={`min-h-[36px] flex-1 rounded-full px-2 text-[13px] font-medium transition ${
+              className={`min-h-[36px] flex-1 rounded-full px-1.5 text-[12px] font-medium transition ${
                 tab === t.id ? 'bg-primary text-on-primary' : 'text-mute active:bg-surface-card hover:text-body'
               }`}
             >

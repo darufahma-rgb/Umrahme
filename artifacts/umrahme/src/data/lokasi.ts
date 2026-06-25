@@ -1181,6 +1181,286 @@ export const daftarLokasi: Lokasi[] = [
     ],
     catatan: 'Jabal Magnet sering jadi paket wisata tambahan dari Madinah (~60 km, 30-45 menit berkendara). Cocok untuk mengisi waktu luang, tapi ingatkan jamaah bahwa ini destinasi wisata alam — bukan bagian dari rangkaian ibadah umrah.',
   },
+  // ===================================================== TEMPAT HAJI
+  {
+    id: 'padang-arafah',
+    tipe: 'sejarah',
+    nama: 'Padang Arafah',
+    namaArab: '\u0639\u064e\u0631\u064e\u0641\u064e\u0627\u062a',
+    kota: 'Arafah',
+    jarakKm: 20,
+    jamKunjungan: 'Area terbuka (puncak ibadah 9 Dzulhijjah)',
+    ringkas: 'Padang luas tempat wukuf \u2014 rukun terbesar haji. "Haji adalah Arafah."',
+    gambar: '',
+    koordinat: { lat: 21.3550, lng: 39.9839 },
+    sejarah:
+      'Padang Arafah adalah dataran luas sekitar 20 km tenggara Makkah, menjadi tempat pelaksanaan wukuf \u2014 rukun paling utama dalam ibadah haji. Pada tanggal 9 Dzulhijjah, jutaan jamaah haji berkumpul di sini dari tergelincirnya matahari hingga terbenam, berdoa dan bermunajat kepada Allah. Rasulullah \ufdfa bersabda bahwa inti haji adalah wukuf di Arafah.',
+    sejarahSeksi: [
+      {
+        judul: 'Wukuf \u2014 Rukun Terbesar Haji',
+        isi: 'Wukuf di Arafah adalah rukun haji yang tidak tergantikan. Rasulullah \ufdfa bersabda: "Haji itu Arafah." Siapa yang tidak wukuf di Arafah pada waktunya, hajinya tidak sah. Di sinilah jamaah memperbanyak doa, dzikir, istighfar, dan taubat \u2014 hari ketika Allah membanggakan hamba-hamba-Nya di hadapan para malaikat.',
+      },
+      {
+        judul: 'Khutbah Wada\u2019 (Haji Perpisahan)',
+        isi: 'Di kawasan Arafah, dari Wadi Uranah dekat Masjid Namira, Rasulullah \ufdfa menyampaikan Khutbah Wada\u2019 di hadapan lebih dari 100.000 sahabat. Khutbah ini berisi pesan agung tentang persamaan derajat manusia, hak-hak sesama, larangan riba & balas dendam jahiliah, serta penyempurnaan agama Islam.',
+      },
+      {
+        judul: 'Tempat Pertemuan Adam & Hawa',
+        isi: 'Sebagian riwayat menyebut Arafah sebagai tempat bertemunya kembali Nabi Adam dan Hawa setelah turun ke bumi. Dari sinilah pula nama "Arafah" (mengenal) dikaitkan. Jabal Rahmah, bukit di tengah padang ini, menjadi penanda peristiwa tersebut.',
+      },
+    ],
+    tokoh: [
+      { nama: 'Nabi Muhammad \ufdfa', peran: 'Menyampaikan Khutbah Wada\u2019 di Arafah' },
+      { nama: 'Nabi Adam & Hawa', peran: 'Diyakini bertemu kembali di Arafah (sebagian riwayat)' },
+    ],
+    keutamaan: [
+      'Wukuf di Arafah adalah rukun haji terbesar \u2014 "Haji itu Arafah".',
+      'Hari Arafah adalah hari pengampunan dosa & pembebasan dari neraka.',
+      'Doa di hari Arafah adalah doa terbaik.',
+    ],
+    dalil: [
+      {
+        sumber: 'HR. Tirmidzi & Abu Dawud',
+        teks: 'Rasulullah \ufdfa bersabda: "Haji itu Arafah. Barangsiapa datang (wukuf) pada malam itu sebelum terbit fajar, maka sungguh ia telah mendapati haji."',
+      },
+    ],
+    adab: [
+      'Bagi jamaah haji: wukuf adalah rukun \u2014 jangan tinggalkan area Arafah sebelum maghrib.',
+      'Perbanyak doa, dzikir, istighfar & taubat \u2014 terutama saat hari Arafah.',
+      'Bagi yang tidak berhaji: disunnahkan puasa Arafah (9 Dzulhijjah).',
+    ],
+    catatan: 'Di luar musim haji, kawasan Arafah dapat dikunjungi sebagai ziarah. Padang Arafah hanya "hidup" penuh saat puncak haji 9 Dzulhijjah.',
+  },
+  {
+    id: 'mina',
+    tipe: 'sejarah',
+    nama: 'Mina',
+    namaArab: '\u0645\u0650\u0646\u0649',
+    kota: 'Mina',
+    jarakKm: 8,
+    jamKunjungan: 'Area terbuka (aktif saat musim haji)',
+    ringkas: '"Kota Tenda" \u2014 tempat jamaah haji bermalam (mabit) & melempar jumrah.',
+    gambar: '',
+    koordinat: { lat: 21.4133, lng: 39.8933 },
+    sejarah:
+      'Mina adalah lembah sekitar 8 km timur Makkah, dijuluki "Kota Tenda" karena dipenuhi lebih dari 100.000 tenda permanen untuk menampung jutaan jamaah haji. Di Mina jamaah bermalam (mabit) pada malam tanggal 8, 11, 12, dan 13 Dzulhijjah, serta melaksanakan lempar jumrah (jamarat) di tiga tugu yang melambangkan godaan setan.',
+    sejarahSeksi: [
+      {
+        judul: 'Mabit & Lempar Jumrah',
+        isi: 'Di Mina terdapat tiga jamarat: Jamratul Ula (terkecil), Jamratul Wustha (tengah), dan Jamratul Aqabah (terbesar). Jamaah melempar batu kerikil ke tugu-tugu ini sebagai simbol perlawanan terhadap godaan setan, mengikuti jejak Nabi Ibrahim \u0639\u0644\u064a\u0647 \u0627\u0644\u0633\u0644\u0627\u0645 yang melempar setan saat menggoda beliau.',
+      },
+      {
+        judul: 'Kisah Nabi Ibrahim \u0639\u0644\u064a\u0647 \u0627\u0644\u0633\u0644\u0627\u0645',
+        isi: 'Di lembah Mina inilah Nabi Ibrahim \u0639\u0644\u064a\u0647 \u0627\u0644\u0633\u0644\u0627\u0645 diperintahkan Allah dalam mimpi untuk menyembelih putranya, Ismail. Saat menjalankan perintah itu, setan berusaha menggodanya, lalu Ibrahim melempari setan dengan batu. Peristiwa ini diabadikan dalam ritual lempar jumrah.',
+      },
+      {
+        judul: 'Baiat Aqabah',
+        isi: 'Mina juga diyakini sebagai lokasi Baiat Aqabah \u2014 perjanjian kaum Anshar dari Madinah untuk membela & menerima dakwah Rasulullah \ufdfa. Peristiwa ini menjadi titik awal hijrah dan berdirinya masyarakat Islam di Madinah.',
+      },
+    ],
+    tokoh: [
+      { nama: 'Nabi Ibrahim \u0639\u0644\u064a\u0647 \u0627\u0644\u0633\u0644\u0627\u0645', peran: 'Melempar setan di Mina \u2014 asal ritual jumrah' },
+      { nama: 'Kaum Anshar', peran: 'Membaiat Rasulullah \ufdfa di Aqabah, Mina' },
+    ],
+    keutamaan: [
+      'Tempat pelaksanaan lempar jumrah & mabit dalam rangkaian haji.',
+      'Mengenang ketaatan Nabi Ibrahim \u0639\u0644\u064a\u0647 \u0627\u0644\u0633\u0644\u0627\u0645 atas perintah Allah.',
+      'Lokasi Baiat Aqabah \u2014 cikal bakal hijrah & masyarakat Islam.',
+    ],
+    dalil: [
+      {
+        sumber: 'QS. Ash-Shaffat: 102',
+        teks: 'Kisah Nabi Ibrahim yang diperintah menyembelih putranya, lalu Allah menggantinya dengan sembelihan besar \u2014 peristiwa yang terjadi di lembah Mina.',
+      },
+    ],
+    adab: [
+      'Bagi jamaah haji: laksanakan mabit & lempar jumrah sesuai waktu yang ditentukan.',
+      'Jaga ketertiban saat melempar jumrah \u2014 keselamatan diutamakan.',
+      'Perbanyak takbir & dzikir selama di Mina.',
+    ],
+    catatan: 'Mina aktif penuh hanya saat musim haji (8\u201313 Dzulhijjah). Di luar itu berupa kawasan tenda kosong yang dapat dilewati saat ziarah.',
+  },
+  {
+    id: 'muzdalifah',
+    tipe: 'sejarah',
+    nama: 'Muzdalifah',
+    namaArab: '\u0645\u064f\u0632\u0652\u062f\u064e\u0644\u0650\u0641\u064e\u0629',
+    kota: 'Muzdalifah',
+    jarakKm: 12,
+    jamKunjungan: 'Area terbuka (aktif saat musim haji)',
+    ringkas: 'Tempat jamaah haji bermalam setelah Arafah & mengumpulkan kerikil untuk jumrah.',
+    gambar: '',
+    koordinat: { lat: 21.3925, lng: 39.9378 },
+    sejarah:
+      'Muzdalifah adalah kawasan terbuka antara Arafah dan Mina, sekitar 12 km tenggara Makkah. Setelah wukuf di Arafah, pada malam 10 Dzulhijjah jamaah haji bergerak ke Muzdalifah untuk bermalam (mabit), menjamak shalat Maghrib & Isya, lalu mengumpulkan batu kerikil yang akan dipakai untuk melempar jumrah di Mina.',
+    sejarahSeksi: [
+      {
+        judul: 'Mabit di Muzdalifah',
+        isi: 'Mabit (bermalam) di Muzdalifah pada malam 10 Dzulhijjah adalah bagian dari rangkaian wajib haji. Jamaah menjamak-qashar shalat Maghrib dan Isya, lalu beristirahat di bawah langit terbuka hingga menjelang fajar, sebelum bergerak ke Mina.',
+      },
+      {
+        judul: 'Mengumpulkan Kerikil Jumrah',
+        isi: 'Di Muzdalifah jamaah mengumpulkan batu-batu kerikil kecil (biasanya 49 atau 70 butir) yang akan dipakai untuk melempar jumrah di Mina selama hari-hari Tasyrik. Kebiasaan ini mengikuti sunnah dalam pelaksanaan haji.',
+      },
+      {
+        judul: 'Al-Masy\u2019aril Haram',
+        isi: 'Muzdalifah disebut dalam Al-Qur\u2019an dengan nama "Al-Masy\u2019aril Haram". Allah memerintahkan jamaah untuk berdzikir kepada-Nya di tempat ini, menjadikan Muzdalifah sebagai tempat perenungan & ketundukan di tengah rangkaian haji.',
+      },
+    ],
+    tokoh: [
+      { nama: 'Nabi Muhammad \ufdfa', peran: 'Mencontohkan mabit & menjamak shalat di Muzdalifah' },
+    ],
+    keutamaan: [
+      'Tempat mabit & menjamak shalat dalam rangkaian wajib haji.',
+      'Disebut dalam Al-Qur\u2019an sebagai "Al-Masy\u2019aril Haram".',
+      'Tempat mengumpulkan kerikil untuk lempar jumrah.',
+    ],
+    dalil: [
+      {
+        sumber: 'QS. Al-Baqarah: 198',
+        teks: '"\u2026Maka apabila kamu bertolak dari Arafah, berzikirlah kepada Allah di Masy\u2019aril Haram (Muzdalifah)\u2026"',
+      },
+    ],
+    adab: [
+      'Bagi jamaah haji: laksanakan mabit & jamak shalat sesuai tuntunan.',
+      'Manfaatkan waktu untuk dzikir & istirahat sebelum ke Mina.',
+      'Kumpulkan kerikil jumrah secukupnya.',
+    ],
+    catatan: 'Muzdalifah aktif saat musim haji (malam 10 Dzulhijjah). Di luar itu berupa area terbuka yang dilewati saat perjalanan ziarah.',
+  },
+  {
+    id: 'masjid-namira',
+    tipe: 'masjid',
+    nama: 'Masjid Namira',
+    namaArab: '\u0645\u064e\u0633\u0652\u062c\u0650\u062f \u0646\u064e\u0645\u0650\u0631\u064e\u0629',
+    kota: 'Arafah',
+    jarakKm: 18,
+    jamKunjungan: 'Aktif saat hari Arafah (9 Dzulhijjah)',
+    ringkas: 'Masjid besar di tepi barat Arafah, tempat khutbah & shalat jamak di hari Arafah.',
+    gambar: '',
+    koordinat: { lat: 21.3547, lng: 39.9728 },
+    sejarah:
+      'Masjid Namira terletak di tepi barat Padang Arafah, sekitar 18 km dari Masjidil Haram. Masjid ini dibangun di kawasan tempat Rasulullah \ufdfa singgah sebelum menyampaikan Khutbah Wada\u2019. Di sinilah pada hari Arafah (9 Dzulhijjah) imam menyampaikan khutbah haji dan memimpin shalat Dzuhur & Ashar yang dijamak-qashar. Kini Masjid Namira menjadi salah satu masjid terbesar di dunia.',
+    sejarahSeksi: [
+      {
+        judul: 'Tempat Khutbah Wada\u2019',
+        isi: 'Masjid Namira berdiri di dekat Wadi Uranah, tempat Rasulullah \ufdfa menyampaikan Khutbah Wada\u2019 pada Haji Perpisahan. Karena itu, di sinilah setiap tahun khutbah Arafah disampaikan kepada jutaan jamaah haji dan disiarkan ke seluruh dunia.',
+      },
+      {
+        judul: 'Batas Arafah & Wadi Uranah',
+        isi: 'Sebagian struktur masjid berada di dalam batas Arafah dan sebagian di Wadi Uranah (yang BUKAN bagian Arafah). Di dalam masjid terdapat papan penanda batas, penting bagi jamaah karena wukuf harus dilakukan di dalam batas Arafah yang sah.',
+      },
+    ],
+    tokoh: [
+      { nama: 'Nabi Muhammad \ufdfa', peran: 'Menyampaikan Khutbah Wada\u2019 & menjamak shalat di sini' },
+    ],
+    keutamaan: [
+      'Tempat khutbah Arafah & shalat jamak di hari Arafah.',
+      'Berdiri di lokasi bersejarah Khutbah Wada\u2019.',
+      'Salah satu masjid terbesar di dunia (kapasitas ratusan ribu jamaah).',
+    ],
+    dalil: [
+      {
+        sumber: 'HR. Muslim',
+        teks: 'Dalam hadis panjang tentang Haji Wada\u2019, disebutkan bahwa Rasulullah \ufdfa singgah di Namira lalu menyampaikan khutbah dan menjamak shalat di hari Arafah.',
+      },
+    ],
+    adab: [
+      'Tempat ibadah aktif terutama saat hari Arafah \u2014 jaga kekhusyukan.',
+      'Perhatikan papan penanda batas Arafah jika melaksanakan wukuf.',
+      'Di luar musim haji, masjid dapat dilihat dari luar.',
+    ],
+    catatan: 'Masjid Namira terutama berfungsi penuh di hari Arafah. Sebagian besar waktu lain dalam keadaan tutup.',
+  },
+  {
+    id: 'masjid-khayf',
+    tipe: 'masjid',
+    nama: 'Masjid Al-Khayf',
+    namaArab: '\u0645\u064e\u0633\u0652\u062c\u0650\u062f \u0627\u0644\u0652\u062e\u064e\u064a\u0652\u0641',
+    kota: 'Mina',
+    jarakKm: 8,
+    jamKunjungan: 'Aktif saat musim haji',
+    ringkas: 'Masjid bersejarah di Mina, diriwayatkan 70 nabi pernah shalat di tempat ini.',
+    gambar: '',
+    koordinat: { lat: 21.4108, lng: 39.8867 },
+    sejarah:
+      'Masjid Al-Khayf terletak di tengah lembah Mina, dekat Jamratul Ula (jumrah terkecil). Masjid ini memiliki keutamaan istimewa: diriwayatkan bahwa 70 nabi pernah shalat di tempat ini. Pada musim haji, masjid ini menjadi tempat shalat jamaah yang sedang mabit di Mina.',
+    sejarahSeksi: [
+      {
+        judul: 'Tempat Shalat Para Nabi',
+        isi: 'Dalam sebuah riwayat disebutkan bahwa 70 nabi pernah melaksanakan shalat di lokasi Masjid Al-Khayf. Ini menjadikan masjid ini salah satu tempat bersejarah yang istimewa di Mina, menghubungkan jamaah dengan jejak para nabi terdahulu.',
+      },
+      {
+        judul: 'Lokasi di Lembah Mina',
+        isi: 'Masjid Al-Khayf berada di kaki gunung di sisi selatan lembah Mina, dekat jumrah terkecil. Kata "khayf" merujuk pada tanah yang menurun dari gunung tetapi tidak sampai dataran \u2014 menggambarkan posisi geografis masjid ini.',
+      },
+    ],
+    tokoh: [
+      { nama: 'Para Nabi terdahulu', peran: 'Diriwayatkan 70 nabi shalat di tempat ini' },
+      { nama: 'Nabi Muhammad \ufdfa', peran: 'Shalat di Masjid Al-Khayf saat haji' },
+    ],
+    keutamaan: [
+      'Diriwayatkan 70 nabi pernah shalat di tempat ini.',
+      'Masjid bersejarah utama di lembah Mina.',
+      'Tempat shalat jamaah haji saat mabit di Mina.',
+    ],
+    dalil: [
+      {
+        sumber: 'HR. Thabrani',
+        teks: 'Diriwayatkan bahwa tujuh puluh nabi telah melaksanakan shalat di Masjid Al-Khayf.',
+      },
+    ],
+    adab: [
+      'Tempat ibadah bersejarah \u2014 jaga kekhusyukan & adab masjid.',
+      'Aktif terutama saat musim haji ketika jamaah mabit di Mina.',
+      'Renungkan jejak para nabi yang pernah shalat di sini.',
+    ],
+    catatan: 'Masjid Al-Khayf berfungsi penuh saat musim haji. Di luar itu relatif sepi.',
+  },
+  {
+    id: 'jamarat',
+    tipe: 'sejarah',
+    nama: 'Jamarat (Jembatan Jumrah)',
+    namaArab: '\u0627\u0644\u0652\u062c\u064e\u0645\u064e\u0631\u064e\u0627\u062a',
+    kota: 'Mina',
+    jarakKm: 8,
+    jamKunjungan: 'Aktif saat hari-hari Tasyrik',
+    ringkas: 'Tiga tugu tempat melempar jumrah \u2014 simbol perlawanan terhadap godaan setan.',
+    gambar: '',
+    koordinat: { lat: 21.4222, lng: 39.8728 },
+    sejarah:
+      'Jamarat adalah tiga tugu (pilar) di lembah Mina tempat jamaah haji melaksanakan ritual lempar jumrah. Ketiganya adalah Jamratul Ula (terkecil), Jamratul Wustha (tengah), dan Jamratul Aqabah (terbesar). Kini ketiganya berada di Jembatan Jamarat \u2014 struktur bertingkat yang dibangun untuk menampung jutaan jamaah agar lebih aman dan teratur.',
+    sejarahSeksi: [
+      {
+        judul: 'Simbol Perlawanan terhadap Setan',
+        isi: 'Lempar jumrah mengenang peristiwa Nabi Ibrahim \u0639\u0644\u064a\u0647 \u0627\u0644\u0633\u0644\u0627\u0645 yang digoda setan agar membatalkan perintah Allah untuk menyembelih Ismail. Ibrahim melempari setan dengan batu di tiga tempat. Ritual ini menjadi simbol keteguhan menolak godaan & ketaatan kepada Allah.',
+      },
+      {
+        judul: 'Jembatan Jamarat Modern',
+        isi: 'Setelah beberapa tragedi desak-desakan, pemerintah Saudi membangun Jembatan Jamarat bertingkat (selesai diperluas tahun 2005) yang mampu menampung hingga 300.000 jamaah per jam. Tugu jumrah kini berbentuk dinding panjang (bukan tugu bulat) agar lebih mudah dijangkau & mengurangi desakan.',
+      },
+    ],
+    tokoh: [
+      { nama: 'Nabi Ibrahim \u0639\u0644\u064a\u0647 \u0627\u0644\u0633\u0644\u0627\u0645', peran: 'Melempar setan di tiga tempat \u2014 asal ritual jumrah' },
+    ],
+    keutamaan: [
+      'Tempat pelaksanaan lempar jumrah dalam rangkaian wajib haji.',
+      'Simbol keteguhan menolak godaan setan & ketaatan kepada Allah.',
+      'Mengenang ketaatan Nabi Ibrahim \u0639\u0644\u064a\u0647 \u0627\u0644\u0633\u0644\u0627\u0645.',
+    ],
+    dalil: [
+      {
+        sumber: 'HR. Muslim',
+        teks: 'Rasulullah \ufdfa melaksanakan lempar jumrah saat haji dan bersabda bahwa ritual ini ditegakkan untuk mengingat Allah.',
+      },
+    ],
+    adab: [
+      'Bagi jamaah haji: lempar jumrah sesuai waktu & jumlah yang ditentukan.',
+      'Utamakan keselamatan \u2014 ikuti arahan petugas, hindari desak-desakan.',
+      'Bertakbir saat melempar setiap kerikil.',
+    ],
+    catatan: 'Jamarat aktif saat hari-hari Tasyrik (10\u201313 Dzulhijjah). Jembatan bertingkat dirancang untuk keselamatan jutaan jamaah.',
+  },
 ];
 
 export function lokasiByTipe(tipe: Lokasi['tipe']): Lokasi[] {
@@ -1191,13 +1471,16 @@ export function lokasiById(id: string): Lokasi | undefined {
   return daftarLokasi.find((l) => l.id === id);
 }
 
-export type KotaFilter = 'Makkah' | 'Madinah' | 'Lainnya';
+export type KotaFilter = 'Makkah' | 'Madinah' | 'Haji' | 'Lainnya';
+
+const KOTA_HAJI = ['Mina', 'Muzdalifah', 'Arafah'];
 
 export function lokasiByKota(kota: KotaFilter): Lokasi[] {
   return daftarLokasi.filter((l) => {
-    if (kota === 'Makkah') return l.kota === 'Makkah' || l.kota === 'Arafah';
+    if (kota === 'Makkah') return l.kota === 'Makkah';
     if (kota === 'Madinah') return l.kota === 'Madinah';
-    return l.kota !== 'Makkah' && l.kota !== 'Arafah' && l.kota !== 'Madinah';
+    if (kota === 'Haji') return KOTA_HAJI.includes(l.kota);
+    return l.kota !== 'Makkah' && l.kota !== 'Madinah' && !KOTA_HAJI.includes(l.kota);
   });
 }
 
