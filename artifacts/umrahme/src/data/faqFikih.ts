@@ -9,7 +9,6 @@ export interface FaqKategori {
   id: string;
   nama: string;
   ringkas: string;
-  accent: 'primary' | 'gold' | 'green' | 'blue';
   items: FaqItem[];
 }
 
@@ -18,7 +17,6 @@ export const faqKategori: FaqKategori[] = [
     id: 'thaharah',
     nama: 'Wudhu, Haid & Bersuci',
     ringkas: 'Batal wudhu, haid, dan kondisi suci saat ibadah',
-    accent: 'primary',
     items: [
       {
         id: 'batal-wudhu-tawaf',
@@ -48,7 +46,6 @@ export const faqKategori: FaqKategori[] = [
     id: 'tawaf-sai',
     nama: 'Tawaf & Sai',
     ringkas: 'Putaran, keraguan, dan teknis tawaf-sai',
-    accent: 'gold',
     items: [
       {
         id: 'lupa-putaran',
@@ -82,7 +79,6 @@ export const faqKategori: FaqKategori[] = [
     id: 'ihram-larangan',
     nama: 'Ihram & Larangan',
     ringkas: 'Kondisi tak sengaja & keraguan saat ihram',
-    accent: 'blue',
     items: [
       {
         id: 'tak-sengaja-langgar',
@@ -110,7 +106,6 @@ export const faqKategori: FaqKategori[] = [
     id: 'umum',
     nama: 'Umum & Praktis',
     ringkas: 'Pertanyaan umum seputar pelaksanaan',
-    accent: 'green',
     items: [
       {
         id: 'umrah-berkali',
