@@ -146,6 +146,14 @@ export default function AdminTenantForm() {
   const [jmSubmitting, setJmSubmitting] = useState(false);
   const [jmError, setJmError] = useState('');
 
+  const [editingJamaahId, setEditingJamaahId] = useState<string | null>(null);
+  const [editNama, setEditNama] = useState('');
+  const [editNomorJamaah, setEditNomorJamaah] = useState('');
+  const [editRombongan, setEditRombongan] = useState('');
+  const [editPaspor, setEditPaspor] = useState('');
+  const [editSaving, setEditSaving] = useState(false);
+  const [editError, setEditError] = useState('');
+
   const [travelAccounts, setTravelAccounts] = useState<TenantUserRow[]>([]);
   const [travelAccountsLoading, setTravelAccountsLoading] = useState(false);
   const [taEmail, setTaEmail] = useState('');
@@ -439,6 +447,42 @@ export default function AdminTenantForm() {
     const fase_override = (val === '' ? null : val) as JamaahAccountRow['fase'] | null;
     await updateJamaah(id!, jamaahId, { fase_override } as Partial<JamaahAccountRow>);
     setJamaahList(prev => prev.map(j => j.id === jamaahId ? { ...j, fase_override } : j));
+  }
+
+  function startEditJamaah(j: JamaahAccountRow) {
+    setEditingJamaahId(j.id);
+    setEditNama(j.nama);
+    setEditNomorJamaah(j.nomor_jamaah);
+    setEditRombongan(j.rombongan ?? '');
+    setEditPaspor(j.nomor_paspor ?? '');
+    setEditError('');
+  }
+
+  function cancelEditJamaah() {
+    setEditingJamaahId(null);
+    setEditError('');
+  }
+
+  async function saveEditJamaah(jamaahId: string) {
+    if (!editNama.trim()) { setEditError('Nama wajib diisi.'); return; }
+    if (!editNomorJamaah.trim()) { setEditError('No. Jamaah wajib diisi.'); return; }
+    setEditSaving(true);
+    setEditError('');
+    try {
+      const payload = {
+        nama: editNama.trim(),
+        nomor_jamaah: editNomorJamaah.trim(),
+        rombongan: editRombongan.trim() || null,
+        nomor_paspor: editPaspor.trim() || null,
+      };
+      await updateJamaah(id!, jamaahId, payload as Partial<JamaahAccountRow>);
+      setJamaahList(prev => prev.map(j => j.id === jamaahId ? { ...j, ...payload } : j));
+      setEditingJamaahId(null);
+    } catch (err: unknown) {
+      setEditError(err instanceof Error ? err.message : 'Gagal menyimpan perubahan.');
+    } finally {
+      setEditSaving(false);
+    }
   }
 
   async function handleCreateTravelAccount(e: FormEvent) {
@@ -945,29 +989,87 @@ export default function AdminTenantForm() {
                 {jamaahLoading ? <div className="py-8 text-center font-mono text-[12px]" style={{ color: '#d1d5db' }}>Memuat...</div> : jamaahList.length === 0 ? <div className="py-8 text-center text-[13px]" style={{ color: '#9ca3af' }}>Belum ada jamaah terdaftar.</div> : (
                   <table className="w-full">
                     <thead><tr style={{ borderBottom: '1px solid rgba(0,0,0,0.06)', background: '#fafaf9' }}>
-                      {['Nama', 'No. Jamaah', 'Rombongan', 'Fase', ''].map(h => <th key={h} className="text-left font-mono text-[10px] uppercase tracking-[0.12em] px-5 py-3" style={{ color: '#9ca3af' }}>{h}</th>)}
+                      {['Nama', 'No. Jamaah', 'Rombongan', 'No. Paspor', 'Fase', ''].map(h => <th key={h} className="text-left font-mono text-[10px] uppercase tracking-[0.12em] px-5 py-3" style={{ color: '#9ca3af' }}>{h}</th>)}
                     </tr></thead>
                     <tbody>
-                      {jamaahList.map((j, i) => (
-                        <tr key={j.id} style={{ borderBottom: i < jamaahList.length - 1 ? '1px solid rgba(0,0,0,0.04)' : 'none' }}>
-                          <td className="px-5 py-3.5 text-[13px] font-semibold" style={{ color: '#111827' }}>{j.nama}</td>
-                          <td className="px-5 py-3.5 font-mono text-[12px]" style={{ color: '#6b7280' }}>{j.nomor_jamaah}</td>
-                          <td className="px-5 py-3.5 text-[12px]" style={{ color: '#6b7280' }}>{j.rombongan ?? '—'}</td>
-                          <td className="px-5 py-3.5">
-                            <select value={j.fase_override ?? ''} onChange={e => handleUpdateJamaahFase(j.id, e.target.value)} className="text-[11px] rounded-lg px-2 py-1 focus:outline-none transition-all" style={{ border: '1px solid rgba(0,0,0,0.09)', background: '#fafaf9', color: '#374151' }}>
-                              <option value="">Otomatis (dari jadwal)</option>
-                              {FASE_OPTIONS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
-                            </select>
-                          </td>
-                          <td className="px-5 py-3.5 text-right">
-                            <button type="button" onClick={() => handleDeleteJamaah(j.id, j.nama)} className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150" style={{ color: '#9ca3af', border: '1px solid rgba(0,0,0,0.07)' }}
-                              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#dc2626'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(220,38,38,0.25)'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(220,38,38,0.05)'; }}
-                              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#9ca3af'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,0,0,0.07)'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}>Hapus</button>
-                          </td>
-                        </tr>
-                      ))}
+                      {jamaahList.map((j, i) => {
+                        const isEditing = editingJamaahId === j.id;
+                        const rowBorder = { borderBottom: i < jamaahList.length - 1 ? '1px solid rgba(0,0,0,0.04)' : 'none' };
+                        if (isEditing) {
+                          return (
+                            <tr key={j.id} style={{ ...rowBorder, background: 'rgba(67,56,202,0.03)' }}>
+                              <td className="px-5 py-3">
+                                <input value={editNama} onChange={e => setEditNama(e.target.value)}
+                                  className="w-full rounded-lg px-2 py-1.5 text-[13px] focus:outline-none"
+                                  style={{ border: '1px solid rgba(67,56,202,0.25)', background: '#fff', color: '#111827' }} />
+                              </td>
+                              <td className="px-5 py-3">
+                                <input value={editNomorJamaah} onChange={e => setEditNomorJamaah(e.target.value)}
+                                  className="w-full rounded-lg px-2 py-1.5 text-[12px] font-mono focus:outline-none"
+                                  style={{ border: '1px solid rgba(67,56,202,0.25)', background: '#fff', color: '#374151' }} />
+                              </td>
+                              <td className="px-5 py-3">
+                                <input value={editRombongan} onChange={e => setEditRombongan(e.target.value)} placeholder="—"
+                                  className="w-full rounded-lg px-2 py-1.5 text-[12px] focus:outline-none"
+                                  style={{ border: '1px solid rgba(67,56,202,0.25)', background: '#fff', color: '#374151' }} />
+                              </td>
+                              <td className="px-5 py-3">
+                                <input value={editPaspor} onChange={e => setEditPaspor(e.target.value)} placeholder="—"
+                                  className="w-full rounded-lg px-2 py-1.5 text-[12px] font-mono focus:outline-none"
+                                  style={{ border: '1px solid rgba(67,56,202,0.25)', background: '#fff', color: '#374151' }} />
+                              </td>
+                              <td className="px-5 py-3.5 text-[11px]" style={{ color: '#9ca3af' }}>—</td>
+                              <td className="px-5 py-3.5 text-right whitespace-nowrap">
+                                <button type="button" onClick={() => saveEditJamaah(j.id)} disabled={editSaving}
+                                  className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150 disabled:opacity-60 mr-1.5"
+                                  style={{ background: 'linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)', color: '#fff' }}>
+                                  {editSaving ? '...' : 'Simpan'}
+                                </button>
+                                <button type="button" onClick={cancelEditJamaah} disabled={editSaving}
+                                  className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150"
+                                  style={{ color: '#9ca3af', border: '1px solid rgba(0,0,0,0.07)' }}>
+                                  Batal
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        }
+                        return (
+                          <tr key={j.id} style={rowBorder}>
+                            <td className="px-5 py-3.5 text-[13px] font-semibold" style={{ color: '#111827' }}>{j.nama}</td>
+                            <td className="px-5 py-3.5 font-mono text-[12px]" style={{ color: '#6b7280' }}>{j.nomor_jamaah}</td>
+                            <td className="px-5 py-3.5 text-[12px]" style={{ color: '#6b7280' }}>{j.rombongan ?? '—'}</td>
+                            <td className="px-5 py-3.5 font-mono text-[12px]" style={{ color: '#6b7280' }}>{j.nomor_paspor ?? '—'}</td>
+                            <td className="px-5 py-3.5">
+                              <select value={j.fase_override ?? ''} onChange={e => handleUpdateJamaahFase(j.id, e.target.value)} className="text-[11px] rounded-lg px-2 py-1 focus:outline-none transition-all" style={{ border: '1px solid rgba(0,0,0,0.09)', background: '#fafaf9', color: '#374151' }}>
+                                <option value="">Otomatis (dari jadwal)</option>
+                                {FASE_OPTIONS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
+                              </select>
+                            </td>
+                            <td className="px-5 py-3.5 text-right whitespace-nowrap">
+                              <button type="button" onClick={() => startEditJamaah(j)}
+                                className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150 mr-1.5"
+                                style={{ color: '#4338ca', border: '1px solid rgba(67,56,202,0.2)' }}
+                                onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(67,56,202,0.06)'; }}
+                                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}>
+                                Edit
+                              </button>
+                              <button type="button" onClick={() => handleDeleteJamaah(j.id, j.nama)}
+                                className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150"
+                                style={{ color: '#9ca3af', border: '1px solid rgba(0,0,0,0.07)' }}
+                                onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#dc2626'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(220,38,38,0.25)'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(220,38,38,0.05)'; }}
+                                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#9ca3af'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,0,0,0.07)'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}>
+                                Hapus
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
+                )}
+                {editError && (
+                  <p className="px-5 py-2 text-[12px]" style={{ color: '#dc2626' }}>{editError}</p>
                 )}
               </div>
             </div>
