@@ -558,7 +558,7 @@ export default function LandingPage() {
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             style={{ fontSize: 'clamp(34px, 5vw, 60px)', fontWeight: 800, lineHeight: 1.05, color: '#fff', letterSpacing: '-0.02em', maxWidth: 900, margin: '0 auto 20px', textShadow: '0 1px 3px rgba(0,0,0,0.55), 0 2px 6px rgba(0,0,0,0.3)' }}
           >
-            Aplikasi Pendamping Umrah,{' '}
+            Pendamping Umrah Digital,{' '}
             <span style={{ color: C.accent, fontStyle: 'italic' }}>Atas Nama Travel Anda</span>
           </motion.h1>
 
