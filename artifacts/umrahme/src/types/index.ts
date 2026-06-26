@@ -144,6 +144,8 @@ export interface Lokasi {
   petaResmiUrl?: string;
   /** Bagian-bagian fisik Ka'bah (atau lokasi dengan rincian bagian). */
   bagian?: BagianKabah[];
+  /** Path 1 diagram visual semua bagian Ka'bah (mis. '/lokasi/kabah/diagram-bagian.jpg'). */
+  diagramBagian?: string;
   /** Bagian Ka'bah dikelompokkan jadi 2 grup (Sudut & Bagian Lain). */
   bagianGrup?: BagianKabahGrup[];
 }

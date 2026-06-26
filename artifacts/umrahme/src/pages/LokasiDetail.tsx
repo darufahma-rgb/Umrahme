@@ -223,6 +223,18 @@ export default function LokasiDetail() {
               <h3 className="mt-0.5 text-[15px] font-bold text-ink">Bagian-Bagian Ka'bah</h3>
             </div>
 
+            {/* Diagram visual semua bagian sekaligus */}
+            {lokasi.diagramBagian && (
+              <div className="mb-3 overflow-hidden rounded-2xl border border-hairline bg-white">
+                <img
+                  src={lokasi.diagramBagian}
+                  alt="Diagram bagian-bagian Ka'bah"
+                  className="w-full"
+                  loading="lazy"
+                />
+              </div>
+            )}
+
             <div className="space-y-3">
               {lokasi.bagianGrup.map((grup, gi) => (
                 <div key={gi} className="rounded-2xl border border-hairline bg-surface-card p-4 shadow-drop-soft">
@@ -233,19 +245,12 @@ export default function LokasiDetail() {
 
                   <div className="divide-y divide-hairline">
                     {grup.items.map((it, ii) => (
-                      <div key={ii} className="flex gap-3 py-2.5 first:pt-0 last:pb-0">
-                        {it.gambar && (
-                          <div className="h-14 w-14 flex-none overflow-hidden rounded-lg border border-hairline bg-surface-bone">
-                            <img src={it.gambar} alt={it.nama} className="h-full w-full object-cover" loading="lazy" />
-                          </div>
-                        )}
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-baseline justify-between gap-3">
-                            <h5 className="text-[13px] font-semibold text-ink">{it.nama}</h5>
-                            {it.arab && <span className="flex-none font-arab text-[14px] text-gold" dir="rtl">{it.arab}</span>}
-                          </div>
-                          <p className="mt-0.5 text-[12px] leading-snug text-charcoal">{it.deskripsi}</p>
+                      <div key={ii} className="py-2.5 first:pt-0 last:pb-0">
+                        <div className="flex items-baseline justify-between gap-3">
+                          <h5 className="text-[13px] font-semibold text-ink">{it.nama}</h5>
+                          {it.arab && <span className="flex-none font-arab text-[14px] text-gold" dir="rtl">{it.arab}</span>}
                         </div>
+                        <p className="mt-0.5 text-[12px] leading-snug text-charcoal">{it.deskripsi}</p>
                       </div>
                     ))}
                   </div>
