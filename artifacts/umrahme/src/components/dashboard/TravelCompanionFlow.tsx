@@ -54,7 +54,6 @@ export function TripIdentityCard() {
   if (!jamaah) return null;
 
   const info        = getOperationalInfo(keberangkatan ?? null);
-  const firstName   = jamaah.nama.split(' ')[0];
   const namaTravel  = tenant?.nama_travel ?? jamaah.travel;
   const rombongan = jamaah.rombongan ?? info.groupCode;
   const paspor    = jamaah.nomorPaspor;
@@ -70,13 +69,16 @@ export function TripIdentityCard() {
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0 flex-1">
             <p className="font-mono text-[8.5px] uppercase tracking-[0.28em] text-mute">
-              Aplikasi Jamaah
+              Kartu Jamaah
             </p>
-            <p className="mt-0.5 text-[13px] font-bold text-primary leading-tight">{namaTravel}</p>
-            <h2 className="mt-0.5 font-display text-[22px] font-bold leading-tight text-ink" style={{ letterSpacing: '-0.5px' }}>
-              Assalamu'alaikum, {firstName}
+            <h2 className="mt-0.5 font-display text-[20px] font-bold leading-tight text-ink" style={{ letterSpacing: '-0.5px' }}>
+              {jamaah.nama}
             </h2>
-            <p className="font-mono text-[10px] text-ash mt-0.5 tracking-wider">{jamaah.nomorJamaah}</p>
+            <div className="mt-1 flex items-center gap-2">
+              <p className="text-[12px] font-semibold text-primary leading-tight">{namaTravel}</p>
+              <span className="h-3 w-px bg-hairline" />
+              <p className="font-mono text-[10px] text-ash tracking-wider">{jamaah.nomorJamaah}</p>
+            </div>
           </div>
           <Link to="/profil/kartu"
             className="flex-none rounded-xl bg-surface-bone px-3 py-2 text-[10px] font-bold text-charcoal active:scale-[0.96] transition-all hover:bg-primary/10 hover:text-primary whitespace-nowrap">
