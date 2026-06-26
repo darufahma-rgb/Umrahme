@@ -106,6 +106,8 @@ export default function AdminTenantForm() {
   const [primaryColor, setPrimaryColor] = useState('#0ea5e9');
   const [primaryDeepColor, setPrimaryDeepColor] = useState('');
   const [pageTitle, setPageTitle] = useState('');
+  const [slug, setSlug] = useState('');
+  const [slugCopied, setSlugCopied] = useState(false);
   const [existingLogoUrl, setExistingLogoUrl] = useState<string | null>(null);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
@@ -252,6 +254,7 @@ export default function AdminTenantForm() {
           setPrimaryColor(t.primary_color);
           setPrimaryDeepColor(t.primary_deep_color);
           setPageTitle(t.page_title);
+          setSlug(t.slug ?? '');
           setExistingLogoUrl(t.logo_url);
           setExistingHeroUrl(t.hero_image_url ?? '');
           setExistingSertifikatUrl(t.sertifikat_template_url ?? '');
@@ -321,6 +324,15 @@ export default function AdminTenantForm() {
   }
 
   function buildDefaultTitle(nama: string) { return nama ? `${nama} — Pendamping Umrah Anda` : ''; }
+  function formatSlug(input: string): string {
+    return input
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '');
+  }
   function handleColorChange(val: string) { setPrimaryColor(val); if (!primaryDeepColor) setPrimaryDeepColor(darkenHex(val)); }
 
   function handleLogoChange(e: ChangeEvent<HTMLInputElement>) {
@@ -456,6 +468,7 @@ export default function AdminTenantForm() {
         hero_image_url: heroImageUrl || null,
         sertifikat_template_url: sertifikatTemplateUrl || null,
         page_title: finalTitle,
+        slug: slug.trim() ? slug.trim() : null,
       };
       if (isNew) {
         await createTenant({ ...payload, activation_code: activationCode.trim().toUpperCase() });
@@ -466,7 +479,12 @@ export default function AdminTenantForm() {
       }
       navigate('/admin', { replace: true });
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Terjadi kesalahan.');
+      const msg = err instanceof Error ? err.message : 'Terjadi kesalahan.';
+      if (/tenants_slug_unique|duplicate key|unique/i.test(msg)) {
+        setError(`Slug "${slug}" sudah dipakai travel lain. Silakan pilih slug lain.`);
+      } else {
+        setError(msg);
+      }
       setSubmitting(false);
     }
   }
@@ -1224,10 +1242,50 @@ export default function AdminTenantForm() {
                 <SectionDivider />
 
                 {/* Judul Halaman */}
-                <div className="rounded-b-2xl px-6 py-6" style={cardStyle}>
+                <div className="px-6 py-6" style={cardStyle}>
                   <FieldLabel>Judul Halaman</FieldLabel>
                   <StyledInput type="text" value={pageTitle} onChange={e => setPageTitle(e.target.value)} placeholder={buildDefaultTitle(namaTravel) || 'Nama Travel — Pendamping Umrah Anda'} />
                   <p className="mt-2 text-[11px]" style={{ color: '#9ca3af' }}>Muncul di tab browser jamaah. Kosongkan untuk pakai default.</p>
+                </div>
+
+                <SectionDivider />
+
+                {/* Slug / Link Travel */}
+                <div className="rounded-b-2xl px-6 py-6" style={cardStyle}>
+                  <FieldLabel>Link Khusus Travel (Slug)</FieldLabel>
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-[12px] flex-none" style={{ color: '#9ca3af' }}>umrahme.app/t/</span>
+                    <StyledInput
+                      type="text"
+                      value={slug}
+                      onChange={e => setSlug(formatSlug(e.target.value))}
+                      placeholder="barakah-mulia"
+                      maxLength={50}
+                    />
+                  </div>
+
+                  {slug && (
+                    <div className="mt-3 flex items-center gap-2 flex-wrap">
+                      <span className="font-mono text-[12px] px-3 py-1.5 rounded-lg" style={{ background: 'rgba(67,56,202,0.06)', color: '#4338ca', border: '1px solid rgba(67,56,202,0.12)' }}>
+                        umrahme.app/t/{slug}
+                      </span>
+                      <button type="button"
+                        onClick={() => {
+                          navigator.clipboard.writeText(`https://umrahme.app/t/${slug}`);
+                          setSlugCopied(true);
+                          setTimeout(() => setSlugCopied(false), 1500);
+                        }}
+                        className="text-[11px] font-semibold px-3 py-1.5 rounded-lg transition-all"
+                        style={{ color: '#4338ca', border: '1px solid rgba(67,56,202,0.2)' }}>
+                        {slugCopied ? 'Tersalin ✓' : 'Salin Link'}
+                      </button>
+                    </div>
+                  )}
+
+                  <p className="mt-2 text-[11px]" style={{ color: '#9ca3af' }}>
+                    Link yang travel sebarkan ke jamaah. Jamaah cukup klik &amp; isi nama — tanpa kode aktivasi.
+                    Gunakan huruf kecil &amp; strip, contoh: <span className="font-mono">barakah-mulia</span>. Kosongkan jika tidak dipakai.
+                  </p>
                 </div>
 
                 <SaveButton />
