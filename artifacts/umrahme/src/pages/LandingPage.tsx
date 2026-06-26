@@ -477,6 +477,41 @@ export default function LandingPage() {
         @media (max-width: 640px) {
           .lp-compare { grid-template-columns: 1fr !important; }
         }
+
+        /* ═══════════════════════════════════════════════════
+           DESKTOP POLISH — hanya aktif di layar ≥1024px.
+           Tidak menyentuh mobile (mobile pakai max-width).
+           ═══════════════════════════════════════════════════ */
+        @media (min-width: 1024px) {
+          .lp-inner { max-width: 1240px !important; }
+          .lp-section { padding-top: 88px !important; padding-bottom: 88px !important; }
+          .lp-hero-padding { padding-top: 132px !important; padding-bottom: 120px !important; }
+          .lp-hero-padding h1 {
+            font-size: clamp(52px, 5.4vw, 74px) !important;
+            line-height: 1.04 !important;
+            max-width: 960px !important;
+            margin-bottom: 24px !important;
+          }
+          .lp-hero-padding p {
+            font-size: 17px !important;
+            max-width: 600px !important;
+            margin-bottom: 32px !important;
+          }
+          .lp-hero-btns .lp-btn {
+            padding: 16px 32px !important;
+            font-size: 15.5px !important;
+          }
+          .lp-h2 { font-size: clamp(34px, 3.4vw, 44px) !important; }
+          .lp-feat-card { padding: 22px !important; border-radius: 14px !important; }
+          .lp-feat-grid { gap: 16px !important; }
+          .lp-bento { gap: 16px !important; }
+        }
+
+        @media (min-width: 1440px) {
+          .lp-inner { max-width: 1320px !important; }
+          .lp-section { padding-top: 104px !important; padding-bottom: 104px !important; }
+          .lp-hero-padding h1 { font-size: 78px !important; }
+        }
       `}</style>
 
       {/* ══════════ HERO ══════════ */}
@@ -551,7 +586,7 @@ export default function LandingPage() {
           </svg>
         </div>
 
-        <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 2, textAlign: 'center' }}>
+        <div className="lp-inner" style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 2, textAlign: 'center' }}>
 
           <motion.h1
             initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }}
