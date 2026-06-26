@@ -329,6 +329,42 @@ export default function LokasiDetail() {
           </div>
         )}
 
+        {/* ── 6b. SYUHADA BADR ──────────────────────────────────── */}
+        {lokasi.syuhada && lokasi.syuhada.length > 0 && (
+          <section className="mt-2">
+            <div className="mb-3">
+              <p className="font-mono text-[8.5px] uppercase tracking-[0.18em] text-mute">Mengenang</p>
+              <h3 className="mt-0.5 text-[15px] font-bold text-ink">14 Syuhada Badr</h3>
+            </div>
+
+            {lokasi.syuhadaPengantar && (
+              <p className="mb-3 text-[13px] leading-relaxed text-charcoal">{lokasi.syuhadaPengantar}</p>
+            )}
+
+            <div className="rounded-2xl border border-hairline bg-surface-card p-4 shadow-drop-soft">
+              <div className="divide-y divide-hairline">
+                {lokasi.syuhada.map((s, i) => (
+                  <div key={i} className="py-2.5 first:pt-0 last:pb-0">
+                    <div className="flex items-baseline justify-between gap-3">
+                      <h4 className="text-[13px] font-bold text-ink">{i + 1}. {s.nama}</h4>
+                      <span className={`flex-none rounded-full px-2 py-0.5 font-mono text-[8.5px] uppercase tracking-wider ${
+                        s.golongan.startsWith('Muhajirin') ? 'bg-gold/15 text-gold' : 'bg-primary/10 text-primary'
+                      }`}>
+                        {s.golongan}
+                      </span>
+                    </div>
+                    <p className="mt-0.5 text-[12px] leading-snug text-charcoal">{s.konteks}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <p className="mt-2 text-center font-mono text-[9px] uppercase tracking-wider text-mute">
+              Sumber: Sirah Ibnu Hisyam, Ibnu Ishaq, Ibnu Katsir
+            </p>
+          </section>
+        )}
+
         {/* ── 7. DALIL ─────────────────────────────────────────── */}
         {lokasi.dalil && lokasi.dalil.length > 0 && (
           <div className="rounded-md border border-hairline bg-surface-card px-5 py-4 shadow-drop-card">

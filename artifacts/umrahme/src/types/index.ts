@@ -148,6 +148,16 @@ export interface Lokasi {
   diagramBagian?: string;
   /** Bagian Ka'bah dikelompokkan jadi 2 grup (Sudut & Bagian Lain). */
   bagianGrup?: BagianKabahGrup[];
+  /** Pengantar daftar syuhada (khusus lokasi Makam Syuhada Badr). */
+  syuhadaPengantar?: string;
+  /** Daftar syuhada (khusus lokasi Makam Syuhada Badr). */
+  syuhada?: SyuhadaItem[];
+}
+
+export interface SyuhadaItem {
+  nama: string;
+  golongan: string;
+  konteks: string;
 }
 
 export type KategoriChecklist = 'dokumen' | 'kesehatan' | 'barang' | 'mental';
