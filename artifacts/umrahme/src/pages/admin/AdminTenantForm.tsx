@@ -923,37 +923,37 @@ export default function AdminTenantForm() {
         )}
 
         {/* ── Tab Bar ── */}
-        <div
-          className="sticky top-0 z-10 -mx-1 mb-6 flex gap-1 overflow-x-auto border-b px-1 pb-0"
-          style={{ background: '#f9f7f3', borderColor: 'rgba(0,0,0,0.06)' }}
-        >
-          {TABS.map(t => {
-            const disabled = isNew && t.id !== 'profil';
-            const active = activeTab === t.id;
-            return (
-              <button
-                key={t.id}
-                type="button"
-                disabled={disabled}
-                onClick={() => setActiveTab(t.id)}
-                className="relative flex-none whitespace-nowrap px-4 py-3 text-[13px] font-semibold transition-colors"
-                style={{
-                  color: disabled ? '#d1d5db' : active ? '#4338ca' : '#6b7280',
-                  cursor: disabled ? 'not-allowed' : 'pointer',
-                  background: 'transparent',
-                  border: 'none',
-                }}
-              >
-                {t.label}
-                {active && (
-                  <span
-                    className="absolute inset-x-2 -bottom-px h-0.5 rounded-full"
-                    style={{ background: '#4338ca' }}
-                  />
-                )}
-              </button>
-            );
-          })}
+        <div className="sticky top-0 z-10 mb-6 overflow-x-auto" style={{ background: '#f9f7f3' }}>
+          <div className="flex gap-1 px-1 py-1.5 w-max min-w-full"
+            style={{ background: 'rgba(0,0,0,0.04)', borderRadius: '14px' }}>
+            {TABS.map(t => {
+              const disabled = isNew && t.id !== 'profil';
+              const active = activeTab === t.id;
+              return (
+                <button
+                  key={t.id}
+                  type="button"
+                  disabled={disabled}
+                  onClick={() => setActiveTab(t.id)}
+                  className="relative flex-none whitespace-nowrap transition-all duration-200"
+                  style={{
+                    padding: '7px 16px',
+                    borderRadius: '10px',
+                    fontSize: '13px',
+                    fontWeight: active ? 600 : 500,
+                    border: 'none',
+                    cursor: disabled ? 'not-allowed' : 'pointer',
+                    color: disabled ? '#c4c4c4' : active ? '#1e1b4b' : '#6b7280',
+                    background: active ? '#ffffff' : 'transparent',
+                    boxShadow: active ? '0 1px 4px rgba(0,0,0,0.10), 0 0.5px 1px rgba(0,0,0,0.06)' : 'none',
+                    letterSpacing: active ? '-0.01em' : '0',
+                  }}
+                >
+                  {t.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* ── Hint untuk tenant baru ── */}
