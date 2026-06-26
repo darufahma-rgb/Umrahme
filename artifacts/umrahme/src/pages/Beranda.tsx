@@ -7,6 +7,7 @@ import { TravelCompanionFlow } from '../components/dashboard/TravelCompanionFlow
 import { checklistItems } from '../data/checklist';
 import { daftarLokasi } from '../data/lokasi';
 import { fetchAgenda, type AgendaItemRow } from '../lib/supabase';
+import { getWaktuSaudi } from '../lib/waktu';
 import type { Fase } from '../types';
 import {
   IconDoa,
@@ -282,7 +283,7 @@ function KartuItinerary({ keberangkatanId }: { keberangkatanId: string }) {
     : `Hari ${hariKe} dari ${totalHari}`;
 
   // Cari item berikutnya: hari ini jam >= sekarang, atau hari berikutnya pertama
-  const nowMin = new Date().getHours() * 60 + new Date().getMinutes();
+  const nowMin = getWaktuSaudi().totalMenit;
   const itemBerikutnya = (() => {
     // item hari ini yang belum lewat
     const hariIniItems = allItems.filter((i) => i.tanggal === todayStr);

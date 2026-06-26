@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { getWaktuSaudi } from '../../lib/waktu';
 import {
   getLatestAnnouncement,
   getOperationalInfo,
@@ -214,8 +215,7 @@ function isToday(tanggal: string): boolean {
 }
 
 function nowMinutes(): number {
-  const now = new Date();
-  return now.getHours() * 60 + now.getMinutes();
+  return getWaktuSaudi().totalMenit;
 }
 
 function jamToMinutes(jam: string): number {

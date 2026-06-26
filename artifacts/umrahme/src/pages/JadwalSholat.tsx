@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import PageHeader from '../components/PageHeader';
 import { IconMoon } from '../components/icons';
 import { jadwalMakkah, type WaktuSholat } from '../data/jadwalSholat';
+import { getWaktuSaudi } from '../lib/waktu';
 
 // ── Ikon per tipe waktu sholat ──────────────────────────────
 function IconWaktu({ tipe, className = '' }: { tipe: WaktuSholat['ikonTipe']; className?: string }) {
@@ -138,19 +139,19 @@ const BULAN = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'O
 // ── Halaman utama ───────────────────────────────────────────
 export default function JadwalSholat() {
   const jadwal = jadwalMakkah;
-  const [now, setNow] = useState(() => new Date());
+  const [ws, setWs] = useState(() => getWaktuSaudi());
 
   useEffect(() => {
-    const id = setInterval(() => setNow(new Date()), 1000);
+    const id = setInterval(() => setWs(getWaktuSaudi()), 1000);
     return () => clearInterval(id);
   }, []);
 
-  const jam    = now.getHours().toString().padStart(2, '0');
-  const menit  = now.getMinutes().toString().padStart(2, '0');
-  const detik  = now.getSeconds().toString().padStart(2, '0');
-  const progressMenit = now.getHours() * 60 + now.getMinutes();
+  const jam    = ws.jam.toString().padStart(2, '0');
+  const menit  = ws.menit.toString().padStart(2, '0');
+  const detik  = ws.detik.toString().padStart(2, '0');
+  const progressMenit = ws.totalMenit;
 
-  const tanggal = `${HARI[now.getDay()]}, ${now.getDate()} ${BULAN[now.getMonth()]} ${now.getFullYear()}`;
+  const tanggal = `${HARI[ws.hari]}, ${ws.tanggal} ${BULAN[ws.bulan]} ${ws.tahun}`;
 
   const sholatBerikutnya = jadwal.waktuList.find((w) => {
     const [h, m] = w.jamMulai.split(':').map(Number);
@@ -175,8 +176,13 @@ export default function JadwalSholat() {
               </p>
               <p className="mt-0.5 font-mono text-[11px] text-ash">{tanggal}</p>
             </div>
-            <div className="flex h-6 items-center rounded-full border border-hairline bg-surface-bone px-2.5">
-              <span className="font-mono text-[8.5px] uppercase tracking-wider text-ash">Data statis</span>
+            <div className="flex items-center gap-2">
+              <div className="flex h-6 items-center rounded-full border border-hairline bg-surface-bone px-2.5">
+                <span className="font-mono text-[8.5px] uppercase tracking-wider text-ash">Waktu Saudi (WAS)</span>
+              </div>
+              <div className="flex h-6 items-center rounded-full border border-hairline bg-surface-bone px-2.5">
+                <span className="font-mono text-[8.5px] uppercase tracking-wider text-ash">Data statis</span>
+              </div>
             </div>
           </div>
 
