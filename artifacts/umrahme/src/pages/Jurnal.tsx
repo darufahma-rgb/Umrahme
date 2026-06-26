@@ -288,14 +288,15 @@ export default function Jurnal() {
   }, [tenantId, nomorJamaah]);
 
   const handleDelete = useCallback(async (id: string) => {
+    if (!tenantId || !nomorJamaah) return;
     try {
-      await deleteJurnal(id);
+      await deleteJurnal(id, tenantId, nomorJamaah);
       removeFotoLokal(id);
       setEntries((prev) => prev.filter((e) => e.id !== id));
     } catch {
       alert('Gagal menghapus. Coba lagi.');
     }
-  }, []);
+  }, [tenantId, nomorJamaah]);
 
   const entriesSorted = [...entries].sort((a, b) => new Date(b.tanggal).getTime() - new Date(a.tanggal).getTime());
   const entriesWithPhoto = entriesSorted.filter((e) => !!e.fotoDataUrl);

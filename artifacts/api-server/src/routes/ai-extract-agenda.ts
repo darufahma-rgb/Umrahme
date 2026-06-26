@@ -1,8 +1,19 @@
 import { Router } from "express";
+import { verifyCaller, rateLimited } from "../lib/verify-caller";
 
 const router = Router();
 
 router.post("/ai-extract-agenda", async (req, res) => {
+  const caller = await verifyCaller(req.headers.authorization);
+  if (!caller.ok) {
+    res.status(401).json({ error: "Unauthorized. Silakan login sebagai admin atau travel." });
+    return;
+  }
+  if (caller.userId && rateLimited(caller.userId)) {
+    res.status(429).json({ error: "Terlalu banyak permintaan. Coba lagi sebentar." });
+    return;
+  }
+
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) {
     res.status(500).json({ error: "OPENROUTER_API_KEY belum dikonfigurasi." });

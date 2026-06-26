@@ -445,20 +445,32 @@ export async function uploadSertifikatTemplate(file: File): Promise<string> {
 
 // ── Jamaah Data (key-value sinkronisasi per-jamaah) ────────────
 
+function getJamaahToken(): string | null {
+  try {
+    const raw = localStorage.getItem('umrahme.jamaah');
+    if (!raw) return null;
+    const j = JSON.parse(raw) as { accessToken?: string };
+    return j?.accessToken ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export async function getJamaahData<T = unknown>(
   tenantId: string,
   nomorJamaah: string,
   key: string,
 ): Promise<T | null> {
-  const { data, error } = await supabase
-    .from('jamaah_data')
-    .select('data_value')
-    .eq('tenant_id', tenantId)
-    .eq('nomor_jamaah', nomorJamaah)
-    .eq('data_key', key)
-    .maybeSingle();
+  const token = getJamaahToken();
+  if (!token) return null;
+  const { data, error } = await supabase.rpc('jamaah_data_get', {
+    p_tenant_id: tenantId,
+    p_nomor_jamaah: nomorJamaah,
+    p_token: token,
+    p_key: key,
+  });
   if (error) throw new Error(error.message);
-  return (data?.data_value as T) ?? null;
+  return (data as T) ?? null;
 }
 
 export async function setJamaahData(
@@ -467,18 +479,15 @@ export async function setJamaahData(
   key: string,
   value: unknown,
 ): Promise<void> {
-  const { error } = await supabase
-    .from('jamaah_data')
-    .upsert(
-      {
-        tenant_id: tenantId,
-        nomor_jamaah: nomorJamaah,
-        data_key: key,
-        data_value: value,
-        updated_at: new Date().toISOString(),
-      },
-      { onConflict: 'tenant_id,nomor_jamaah,data_key' },
-    );
+  const token = getJamaahToken();
+  if (!token) return;
+  const { error } = await supabase.rpc('jamaah_data_set', {
+    p_tenant_id: tenantId,
+    p_nomor_jamaah: nomorJamaah,
+    p_token: token,
+    p_key: key,
+    p_value: value,
+  });
   if (error) throw new Error(error.message);
 }
 
@@ -497,12 +506,13 @@ export type JurnalRow = {
 };
 
 export async function fetchJurnal(tenantId: string, nomorJamaah: string): Promise<JurnalRow[]> {
-  const { data, error } = await supabase
-    .from('jurnal_entries')
-    .select('*')
-    .eq('tenant_id', tenantId)
-    .eq('nomor_jamaah', nomorJamaah)
-    .order('tanggal', { ascending: false });
+  const token = getJamaahToken();
+  if (!token) return [];
+  const { data, error } = await supabase.rpc('jurnal_list', {
+    p_tenant_id: tenantId,
+    p_nomor_jamaah: nomorJamaah,
+    p_token: token,
+  });
   if (error) throw new Error(error.message);
   return (data ?? []) as JurnalRow[];
 }
@@ -512,17 +522,34 @@ export async function createJurnal(
   nomorJamaah: string,
   payload: { tanggal: string; judul?: string | null; isi: string; lokasi?: string | null }
 ): Promise<JurnalRow> {
-  const { data, error } = await supabase
-    .from('jurnal_entries')
-    .insert({ tenant_id: tenantId, nomor_jamaah: nomorJamaah, ...payload })
-    .select()
-    .single();
+  const token = getJamaahToken();
+  if (!token) throw new Error('Sesi tidak valid. Silakan login ulang.');
+  const { data, error } = await supabase.rpc('jurnal_create', {
+    p_tenant_id: tenantId,
+    p_nomor_jamaah: nomorJamaah,
+    p_token: token,
+    p_tanggal: payload.tanggal,
+    p_judul: payload.judul ?? null,
+    p_isi: payload.isi,
+    p_lokasi: payload.lokasi ?? null,
+  });
   if (error) throw new Error(error.message);
   return data as JurnalRow;
 }
 
-export async function deleteJurnal(id: string): Promise<void> {
-  const { error } = await supabase.from('jurnal_entries').delete().eq('id', id);
+export async function deleteJurnal(
+  id: string,
+  tenantId: string,
+  nomorJamaah: string,
+): Promise<void> {
+  const token = getJamaahToken();
+  if (!token) throw new Error('Sesi tidak valid. Silakan login ulang.');
+  const { error } = await supabase.rpc('jurnal_delete', {
+    p_id: id,
+    p_tenant_id: tenantId,
+    p_nomor_jamaah: nomorJamaah,
+    p_token: token,
+  });
   if (error) throw new Error(error.message);
 }
 

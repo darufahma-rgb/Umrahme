@@ -9,6 +9,7 @@ import {
   fetchAgenda, createAgenda, deleteAgenda, bulkInsertAgenda,
   fetchAnnouncements, createAnnouncement, deleteAnnouncement,
   type KeberangkatanRow, type JamaahAccountRow, type AgendaItemRow, type TravelAnnouncementRow,
+  supabase,
 } from '../../lib/supabase';
 
 /* ─── Helpers ─────────────────────────────────────────────────────── */
@@ -469,7 +470,9 @@ export default function TravelDashboard() {
         const buf = await file.arrayBuffer();
         const wb = XLSX.read(buf, { type: 'array' });
         const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 });
-        const resp = await fetch('/api/ai-extract-agenda', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: 'excel', rows }) });
+        const { data: { session: agSession1 } } = await supabase.auth.getSession();
+        const agAuth1: Record<string, string> = agSession1?.access_token ? { Authorization: `Bearer ${agSession1.access_token}` } : {};
+        const resp = await fetch('/api/ai-extract-agenda', { method: 'POST', headers: { 'Content-Type': 'application/json', ...agAuth1 }, body: JSON.stringify({ mode: 'excel', rows }) });
         const json = await resp.json() as { error?: string; agenda?: typeof result };
         if (!resp.ok) throw new Error(json.error || 'Gagal ekstrak Excel.');
         result = json.agenda ?? [];
@@ -480,7 +483,9 @@ export default function TravelDashboard() {
           reader.onerror = reject;
           reader.readAsDataURL(file);
         });
-        const resp = await fetch('/api/ai-extract-agenda', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: 'pdf', fileBase64: base64, mimeType: file.type }) });
+        const { data: { session: agSession2 } } = await supabase.auth.getSession();
+        const agAuth2: Record<string, string> = agSession2?.access_token ? { Authorization: `Bearer ${agSession2.access_token}` } : {};
+        const resp = await fetch('/api/ai-extract-agenda', { method: 'POST', headers: { 'Content-Type': 'application/json', ...agAuth2 }, body: JSON.stringify({ mode: 'pdf', fileBase64: base64, mimeType: file.type }) });
         const json = await resp.json() as { error?: string; agenda?: typeof result };
         if (!resp.ok) throw new Error(json.error || 'Gagal ekstrak PDF.');
         result = json.agenda ?? [];

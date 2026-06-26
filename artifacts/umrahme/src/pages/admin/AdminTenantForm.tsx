@@ -16,6 +16,7 @@ import {
   type TenantRow, type AgendaItemRow, type TravelAnnouncementRow, type JamaahAccountRow, type TenantUserRow, type KeberangkatanRow,
   type SertifikatLayout, type SertifikatField,
   DEFAULT_SERTIFIKAT_LAYOUT,
+  supabase,
 } from '../../lib/supabase';
 import { darkenHex, generateActivationCode } from '../../lib/colorUtils';
 import { insertAgendaDummy } from '../../data/agendaDummy';
@@ -293,9 +294,11 @@ export default function AdminTenantForm() {
         reader.readAsDataURL(file);
       });
 
+      const { data: { session: ocrSession } } = await supabase.auth.getSession();
+      const ocrAuthHeader: Record<string, string> = ocrSession?.access_token ? { Authorization: `Bearer ${ocrSession.access_token}` } : {};
       const response = await fetch('/api/ai-ocr', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...ocrAuthHeader },
         body: JSON.stringify({ imageBase64: base64, mimeType: file.type }),
       });
 
@@ -623,9 +626,11 @@ export default function AdminTenantForm() {
         const wb = XLSX.read(buf, { type: 'array' });
         const ws = wb.Sheets[wb.SheetNames[0]];
         const rows = XLSX.utils.sheet_to_json(ws, { header: 1 });
+        const { data: { session: importSession } } = await supabase.auth.getSession();
+        const importAuthHeader: Record<string, string> = importSession?.access_token ? { Authorization: `Bearer ${importSession.access_token}` } : {};
         const resp = await fetch('/api/ai-extract-jamaah', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', ...importAuthHeader },
           body: JSON.stringify({ mode: 'excel', rows }),
         });
         const json = await resp.json() as { error?: string; jamaah?: typeof result };
@@ -638,9 +643,11 @@ export default function AdminTenantForm() {
           reader.onerror = reject;
           reader.readAsDataURL(file);
         });
+        const { data: { session: importSession2 } } = await supabase.auth.getSession();
+        const importAuthHeader2: Record<string, string> = importSession2?.access_token ? { Authorization: `Bearer ${importSession2.access_token}` } : {};
         const resp = await fetch('/api/ai-extract-jamaah', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', ...importAuthHeader2 },
           body: JSON.stringify({ mode: 'pdf', fileBase64: base64, mimeType: file.type }),
         });
         const json = await resp.json() as { error?: string; jamaah?: typeof result };
@@ -713,7 +720,9 @@ export default function AdminTenantForm() {
         const buf = await file.arrayBuffer();
         const wb = XLSX.read(buf, { type: 'array' });
         const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 });
-        const resp = await fetch('/api/ai-extract-agenda', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: 'excel', rows }) });
+        const { data: { session: agSession1 } } = await supabase.auth.getSession();
+        const agAuth1: Record<string, string> = agSession1?.access_token ? { Authorization: `Bearer ${agSession1.access_token}` } : {};
+        const resp = await fetch('/api/ai-extract-agenda', { method: 'POST', headers: { 'Content-Type': 'application/json', ...agAuth1 }, body: JSON.stringify({ mode: 'excel', rows }) });
         const json = await resp.json() as { error?: string; agenda?: typeof result };
         if (!resp.ok) throw new Error(json.error || 'Gagal ekstrak Excel.');
         result = json.agenda ?? [];
@@ -724,7 +733,9 @@ export default function AdminTenantForm() {
           reader.onerror = reject;
           reader.readAsDataURL(file);
         });
-        const resp = await fetch('/api/ai-extract-agenda', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: 'pdf', fileBase64: base64, mimeType: file.type }) });
+        const { data: { session: agSession2 } } = await supabase.auth.getSession();
+        const agAuth2: Record<string, string> = agSession2?.access_token ? { Authorization: `Bearer ${agSession2.access_token}` } : {};
+        const resp = await fetch('/api/ai-extract-agenda', { method: 'POST', headers: { 'Content-Type': 'application/json', ...agAuth2 }, body: JSON.stringify({ mode: 'pdf', fileBase64: base64, mimeType: file.type }) });
         const json = await resp.json() as { error?: string; agenda?: typeof result };
         if (!resp.ok) throw new Error(json.error || 'Gagal ekstrak PDF.');
         result = json.agenda ?? [];

@@ -16,6 +16,8 @@ export interface Jamaah {
   kodeAktivasi: string;
   fase: Fase;
 
+  accessToken?: string;
+
   // Data operasional perjalanan — sementara optional untuk kompatibilitas data lama
   rombongan?: string;
   nomorBus?: string;
