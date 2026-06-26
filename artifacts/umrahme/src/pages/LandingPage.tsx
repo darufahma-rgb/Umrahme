@@ -47,7 +47,7 @@ function Reveal({ children, delay = 0, className = '' }: {
 /* ─── EYEBROW ─── */
 function Eyebrow({ children, align = 'center' }: { children: React.ReactNode; align?: 'center' | 'left' }) {
   return (
-    <div style={{
+    <div className="lp-eyebrow" style={{
       display: 'flex', alignItems: 'center', justifyContent: align === 'center' ? 'center' : 'flex-start',
       gap: 8, fontSize: 12, fontWeight: 700, letterSpacing: '0.18em',
       textTransform: 'uppercase' as const, color: C.muted, marginBottom: 10,
@@ -479,38 +479,63 @@ export default function LandingPage() {
         }
 
         /* ═══════════════════════════════════════════════════
-           DESKTOP POLISH — hanya aktif di layar ≥1024px.
-           Tidak menyentuh mobile (mobile pakai max-width).
+           DESKTOP POLISH & PERBESAR TEKS — hanya aktif ≥1024px.
+           Mobile (max-width) tidak tersentuh sama sekali.
+           Semua pakai !important agar menimpa inline style.
            ═══════════════════════════════════════════════════ */
         @media (min-width: 1024px) {
+          /* ---- Kontainer & ritme ---- */
           .lp-inner { max-width: 1240px !important; }
           .lp-section { padding-top: 88px !important; padding-bottom: 88px !important; }
+
+          /* ---- HERO lebih dominan ---- */
           .lp-hero-padding { padding-top: 132px !important; padding-bottom: 120px !important; }
-          .lp-hero-padding h1 {
-            font-size: clamp(52px, 5.4vw, 74px) !important;
-            line-height: 1.04 !important;
-            max-width: 960px !important;
-            margin-bottom: 24px !important;
-          }
-          .lp-hero-padding p {
-            font-size: 17px !important;
-            max-width: 600px !important;
-            margin-bottom: 32px !important;
-          }
-          .lp-hero-btns .lp-btn {
-            padding: 16px 32px !important;
-            font-size: 15.5px !important;
-          }
+          .lp-hero-padding h1 { font-size: clamp(52px, 5.4vw, 74px) !important; line-height: 1.04 !important; max-width: 960px !important; margin-bottom: 24px !important; }
+          .lp-hero-padding p  { font-size: 18px !important; max-width: 620px !important; margin-bottom: 32px !important; line-height: 1.75 !important; }
+          .lp-hero-btns .lp-btn { padding: 16px 34px !important; font-size: 16px !important; }
+
+          /* ---- Heading & sub-teks section ---- */
           .lp-h2 { font-size: clamp(34px, 3.4vw, 44px) !important; }
+          .lp-section > .lp-inner > p,
+          .lp-inner > p { font-size: 16px !important; line-height: 1.7 !important; max-width: 640px !important; }
+          .lp-sub { font-size: 16px !important; line-height: 1.7 !important; }
+
+          /* ---- Eyebrow (label kecil di atas heading) ---- */
+          .lp-eyebrow { font-size: 13px !important; }
+
+          /* ---- Kartu FITUR ---- */
           .lp-feat-card { padding: 22px !important; border-radius: 14px !important; }
+          .lp-feat-card h3 { font-size: 16.5px !important; margin-bottom: 6px !important; }
+          .lp-feat-card p  { font-size: 14px !important; line-height: 1.55 !important; }
+          .lp-feat-card .lp-feat-icon { width: 44px !important; height: 44px !important; }
           .lp-feat-grid { gap: 16px !important; }
+
+          /* ---- BENTO (about) ---- */
           .lp-bento { gap: 16px !important; }
+          .lp-bento h3 { font-size: 17px !important; }
+          .lp-bento p  { font-size: 14px !important; line-height: 1.55 !important; }
+
+          /* ---- PAIN cards ---- */
+          .lp-pain-grid h3 { font-size: 16px !important; }
+          .lp-pain-grid p  { font-size: 14px !important; line-height: 1.55 !important; }
+
+          /* ---- STEPS ---- */
+          .lp-steps h3 { font-size: 17px !important; }
+          .lp-steps p  { font-size: 14.5px !important; line-height: 1.6 !important; }
+
+          /* ---- PRICE ---- */
+          .lp-price-card p, .lp-price-wrap p, .lp-price-wrap li { font-size: 14.5px !important; }
+
+          /* ---- TESTIMONI ---- */
+          .lp-testi-grid p { font-size: 14.5px !important; line-height: 1.6 !important; }
         }
 
         @media (min-width: 1440px) {
           .lp-inner { max-width: 1320px !important; }
           .lp-section { padding-top: 104px !important; padding-bottom: 104px !important; }
-          .lp-hero-padding h1 { font-size: 78px !important; }
+          .lp-hero-padding h1 { font-size: 80px !important; }
+          .lp-hero-padding p  { font-size: 19px !important; }
+          .lp-feat-card p { font-size: 14.5px !important; }
         }
       `}</style>
 
