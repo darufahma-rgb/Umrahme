@@ -473,6 +473,10 @@ export default function LandingPage() {
         @media (prefers-reduced-motion: reduce) {
           *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
         }
+
+        @media (max-width: 640px) {
+          .lp-compare { grid-template-columns: 1fr !important; }
+        }
       `}</style>
 
       {/* ══════════ HERO ══════════ */}
@@ -836,6 +840,78 @@ export default function LandingPage() {
               </div>
             </Reveal>
           </div>
+        </div>
+      </section>
+
+
+      {/* ══════════ PERBANDINGAN: Buku Doa vs Umrahme ══════════ */}
+      <section className="lp-section" style={{ padding: '56px 0' }}>
+        <div className="lp-inner" style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
+          <Reveal delay={0}><Eyebrow>Bandingkan</Eyebrow></Reveal>
+          <Reveal delay={0.08}>
+            <h2 style={{ fontSize: 'clamp(24px, 3.2vw, 34px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.02em', textAlign: 'center', marginBottom: 12 }}>
+              Biaya setara buku doa.<br />Nilainya jauh lebih besar.
+            </h2>
+          </Reveal>
+          <Reveal delay={0.14}>
+            <p style={{ color: C.muted, fontSize: 14, lineHeight: 1.7, textAlign: 'center', maxWidth: 600, margin: '0 auto 36px' }}>
+              Banyak travel sudah terbiasa mencetak buku doa untuk tiap jamaah. Dengan biaya yang kurang lebih sama, Umrahme memberi jauh lebih banyak — dan tak pernah hilang atau ketinggalan.
+            </p>
+          </Reveal>
+
+          <div className="lp-compare" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, maxWidth: 860, margin: '0 auto' }}>
+            {/* Kolom Buku Doa Cetak */}
+            <Reveal delay={0.18}>
+              <div style={{ height: '100%', border: `1px solid ${C.line}`, borderRadius: 18, padding: 24, background: C.bg }}>
+                <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: C.muted, marginBottom: 6 }}>Cara Lama</p>
+                <h3 style={{ fontSize: 19, fontWeight: 800, marginBottom: 4 }}>Buku Doa Cetak</h3>
+                <p style={{ fontSize: 13, color: C.muted, marginBottom: 16 }}>±Rp30.000 / jamaah</p>
+                <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                  {[
+                    'Hanya berisi doa & panduan dasar',
+                    'Sering hilang, tertinggal, atau rusak',
+                    'Tidak bisa diperbarui setelah dicetak',
+                    'Tidak ada jadwal, peta, atau pengumuman',
+                    'Habis dipakai sekali keberangkatan',
+                  ].map((t) => (
+                    <li key={t} style={{ display: 'flex', gap: 9, alignItems: 'flex-start', marginBottom: 10, fontSize: 13, color: C.muted }}>
+                      <span style={{ flexShrink: 0, width: 18, height: 18, borderRadius: '50%', background: '#f0f0f0', color: '#999', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700 }}>✕</span>
+                      {t}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </Reveal>
+
+            {/* Kolom Umrahme (di-highlight) */}
+            <Reveal delay={0.24}>
+              <div style={{ height: '100%', border: `2px solid ${C.accent}`, borderRadius: 18, padding: 24, background: C.greenDark, color: '#fff', position: 'relative', overflow: 'hidden' }}>
+                <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: C.accent, marginBottom: 6 }}>Cara Baru</p>
+                <h3 style={{ fontSize: 19, fontWeight: 800, marginBottom: 4 }}>Umrahme</h3>
+                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.75)', marginBottom: 16 }}>Mulai 10 SAR / jamaah</p>
+                <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                  {[
+                    'Doa, manasik interaktif & panduan lengkap',
+                    'Selalu di HP jamaah — tak akan hilang',
+                    'Jadwal, info hotel & pengumuman real-time',
+                    'Peta ziarah + Google Maps & kartu jamaah',
+                    'Bermerek travel Anda — naikkan citra travel',
+                  ].map((t) => (
+                    <li key={t} style={{ display: 'flex', gap: 9, alignItems: 'flex-start', marginBottom: 10, fontSize: 13, fontWeight: 600 }}>
+                      <span style={{ flexShrink: 0, width: 18, height: 18, borderRadius: '50%', background: C.accent, color: C.greenDark, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800 }}>✓</span>
+                      {t}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </Reveal>
+          </div>
+
+          <Reveal delay={0.3}>
+            <p style={{ color: C.muted, fontSize: 12.5, lineHeight: 1.7, textAlign: 'center', maxWidth: 620, margin: '24px auto 0', fontStyle: 'italic' }}>
+              Dengan biaya yang kurang lebih setara mencetak buku doa, travel Anda mendapat aplikasi pendamping umrah lengkap, bermerek sendiri, yang dipakai jamaah sepanjang perjalanan.
+            </p>
+          </Reveal>
         </div>
       </section>
 
