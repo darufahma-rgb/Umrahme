@@ -1,10 +1,11 @@
 import React from 'react';
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import type { JurnalEntry } from '../types';
 import PageHeader from '../components/PageHeader';
 import { IconBack } from '../components/icons';
+import { useAuth } from '../context/AuthContext';
+import { fetchJurnal, createJurnal, deleteJurnal } from '../lib/supabase';
 
-const LS_KEY = 'umrahme.jurnal';
 const MAX_FILE_BYTES = 5 * 1024 * 1024;
 
 const LOKASI_SARAN = [
@@ -13,17 +14,19 @@ const LOKASI_SARAN = [
   'Jabal Rahmah', 'Jabal Uhud', 'Mina', 'Arafah', 'Muzdalifah',
 ];
 
-function loadEntries(): JurnalEntry[] {
-  try {
-    const raw = localStorage.getItem(LS_KEY);
-    return raw ? (JSON.parse(raw) as JurnalEntry[]) : [];
-  } catch {
-    return [];
-  }
+// ── Foto tetap lokal (hanya dikaitkan ke id baris Supabase) ──
+const FOTO_PREFIX = 'umrahme.jurnal.foto.';
+
+function loadFotoLokal(id: string): string | undefined {
+  try { return localStorage.getItem(FOTO_PREFIX + id) ?? undefined; } catch { return undefined; }
 }
 
-function saveEntries(entries: JurnalEntry[]): void {
-  try { localStorage.setItem(LS_KEY, JSON.stringify(entries)); } catch { /* storage penuh */ }
+function saveFotoLokal(id: string, dataUrl: string) {
+  try { localStorage.setItem(FOTO_PREFIX + id, dataUrl); } catch { /* storage penuh */ }
+}
+
+function removeFotoLokal(id: string) {
+  try { localStorage.removeItem(FOTO_PREFIX + id); } catch { /* noop */ }
 }
 
 function resizeImageToDataUrl(file: File): Promise<string> {
@@ -116,7 +119,9 @@ function EntriDetailOverlay({
   );
 }
 
-function EntriForm({ onSave, onCancel }: { onSave: (data: Omit<JurnalEntry, 'id'>) => void; onCancel: () => void }) {
+function EntriForm({
+  onSave, onCancel,
+}: { onSave: (data: Omit<JurnalEntry, 'id'>) => Promise<void>; onCancel: () => void }) {
   const [judul, setJudul] = useState('');
   const [isi, setIsi] = useState('');
   const [lokasi, setLokasi] = useState('');
@@ -124,6 +129,7 @@ function EntriForm({ onSave, onCancel }: { onSave: (data: Omit<JurnalEntry, 'id'
   const [fotoDataUrl, setFotoDataUrl] = useState<string | null>(null);
   const [fotoError, setFotoError] = useState('');
   const [loadingFoto, setLoadingFoto] = useState(false);
+  const [saving, setSaving] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const saranFiltered = LOKASI_SARAN.filter((s) => s.toLowerCase().includes(lokasi.toLowerCase())).slice(0, 5);
@@ -144,9 +150,20 @@ function EntriForm({ onSave, onCancel }: { onSave: (data: Omit<JurnalEntry, 'id'
     }
   };
 
-  const handleSave = () => {
-    if (!isi.trim()) return;
-    onSave({ tanggal: new Date().toISOString().slice(0, 10), judul: judul.trim() || undefined, isi: isi.trim(), fotoDataUrl: fotoDataUrl ?? undefined, lokasi: lokasi.trim() || undefined });
+  const handleSave = async () => {
+    if (!isi.trim() || saving) return;
+    setSaving(true);
+    try {
+      await onSave({
+        tanggal: new Date().toISOString().slice(0, 10),
+        judul: judul.trim() || undefined,
+        isi: isi.trim(),
+        fotoDataUrl: fotoDataUrl ?? undefined,
+        lokasi: lokasi.trim() || undefined,
+      });
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -182,7 +199,7 @@ function EntriForm({ onSave, onCancel }: { onSave: (data: Omit<JurnalEntry, 'id'
         )}
       </div>
 
-      <div className="mb-4">
+      <div className="mb-3">
         {fotoDataUrl ? (
           <div className="relative rounded-md overflow-hidden border border-hairline">
             <img src={fotoDataUrl} alt="Preview foto" className="max-h-52 w-full object-cover" />
@@ -201,14 +218,18 @@ function EntriForm({ onSave, onCancel }: { onSave: (data: Omit<JurnalEntry, 'id'
         <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
       </div>
 
+      <p className="mb-3 rounded-md bg-surface-bone px-3 py-2 text-[11px] leading-relaxed text-mute">
+        💡 Catatan teks tersimpan &amp; tersinkron di semua perangkat. Foto saat ini hanya tersimpan di perangkat ini.
+      </p>
+
       <div className="flex gap-2.5">
-        <button type="button" onClick={onCancel}
-          className="flex-1 rounded-full border border-hairline py-2.5 text-sm text-mute transition active:scale-[0.98]">
+        <button type="button" onClick={onCancel} disabled={saving}
+          className="flex-1 rounded-full border border-hairline py-2.5 text-sm text-mute transition active:scale-[0.98] disabled:opacity-50">
           Batal
         </button>
-        <button type="button" onClick={handleSave} disabled={!isi.trim()}
+        <button type="button" onClick={handleSave} disabled={!isi.trim() || saving}
           className="flex-1 rounded-full bg-primary py-2.5 text-sm font-semibold text-on-primary transition active:scale-[0.98] disabled:opacity-40">
-          Simpan
+          {saving ? 'Menyimpan...' : 'Simpan'}
         </button>
       </div>
     </div>
@@ -216,30 +237,88 @@ function EntriForm({ onSave, onCancel }: { onSave: (data: Omit<JurnalEntry, 'id'
 }
 
 export default function Jurnal() {
-  const [entries, setEntries] = useState<JurnalEntry[]>(() => loadEntries());
+  const { jamaah, tenant } = useAuth();
+  const tenantId = tenant?.id;
+  const nomorJamaah = jamaah?.nomorJamaah;
+
+  const [entries, setEntries] = useState<JurnalEntry[]>([]);
+  const [loading, setLoading] = useState(true);
   const [mode, setMode] = useState<'linimasa' | 'gallery'>('linimasa');
   const [formOpen, setFormOpen] = useState(false);
   const [detail, setDetail] = useState<JurnalEntry | null>(null);
 
-  const handleSave = useCallback((data: Omit<JurnalEntry, 'id'>) => {
-    const newEntry: JurnalEntry = { ...data, id: `jrn-${Date.now()}` };
-    const updated = [newEntry, ...entries];
-    setEntries(updated);
-    saveEntries(updated);
-    setFormOpen(false);
-  }, [entries]);
+  useEffect(() => {
+    if (!tenantId || !nomorJamaah) {
+      setLoading(false);
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      try {
+        const rows = await fetchJurnal(tenantId, nomorJamaah);
+        if (cancelled) return;
+        setEntries(rows.map((r) => ({
+          id: r.id,
+          tanggal: r.tanggal,
+          judul: r.judul ?? undefined,
+          isi: r.isi,
+          lokasi: r.lokasi ?? undefined,
+          fotoDataUrl: loadFotoLokal(r.id),
+        })));
+      } catch (e) {
+        console.error('Gagal memuat jurnal', e);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [tenantId, nomorJamaah]);
 
-  const handleDelete = useCallback((id: string) => {
-    const updated = entries.filter((e) => e.id !== id);
-    setEntries(updated);
-    saveEntries(updated);
-  }, [entries]);
+  const handleSave = useCallback(async (data: Omit<JurnalEntry, 'id'>) => {
+    if (!tenantId || !nomorJamaah) return;
+    const row = await createJurnal(tenantId, nomorJamaah, {
+      tanggal: data.tanggal,
+      judul: data.judul ?? null,
+      isi: data.isi,
+      lokasi: data.lokasi ?? null,
+    });
+    if (data.fotoDataUrl) saveFotoLokal(row.id, data.fotoDataUrl);
+    setEntries((prev) => [{ ...data, id: row.id }, ...prev]);
+    setFormOpen(false);
+  }, [tenantId, nomorJamaah]);
+
+  const handleDelete = useCallback(async (id: string) => {
+    try {
+      await deleteJurnal(id);
+      removeFotoLokal(id);
+      setEntries((prev) => prev.filter((e) => e.id !== id));
+    } catch {
+      alert('Gagal menghapus. Coba lagi.');
+    }
+  }, []);
 
   const entriesSorted = [...entries].sort((a, b) => new Date(b.tanggal).getTime() - new Date(a.tanggal).getTime());
   const entriesWithPhoto = entriesSorted.filter((e) => !!e.fotoDataUrl);
 
   if (detail) {
     return <EntriDetailOverlay entry={detail} onClose={() => setDetail(null)} onDelete={handleDelete} />;
+  }
+
+  if (!tenantId || !nomorJamaah) {
+    return (
+      <div className="pb-10">
+        <PageHeader title="Jurnal" eyebrow="Profil" backTo="/profil" />
+        <div className="mx-auto max-w-2xl px-5 pt-4 lg:px-8">
+          <div className="py-20 text-center">
+            <p className="font-display text-3xl text-mute/30">✦</p>
+            <p className="mt-4 font-display text-xl font-bold text-charcoal">Masuk untuk menulis jurnal</p>
+            <p className="mt-2 text-sm leading-relaxed text-mute">
+              Jurnal Anda tersinkron ke semua perangkat setelah login.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -272,7 +351,14 @@ export default function Jurnal() {
           </div>
         ) : null}
 
-        {mode === 'linimasa' ? (
+        {loading ? (
+          <div className="mt-10 flex items-center justify-center gap-2 text-sm text-mute">
+            <span className="h-4 w-4 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
+            Memuat jurnal...
+          </div>
+        ) : null}
+
+        {!loading && mode === 'linimasa' ? (
           <div className="mt-5">
             {entriesSorted.length === 0 ? (
               <div className="py-16 text-center">
@@ -281,7 +367,7 @@ export default function Jurnal() {
                   Catat momen perjalanan Anda
                 </p>
                 <p className="mt-2 text-sm leading-relaxed text-mute">
-                  Setiap tulisan dan foto akan tersimpan di sini —<br />
+                  Setiap tulisan akan tersimpan &amp; tersinkron di semua perangkat —<br />
                   kenangan yang bisa dibaca ulang kapan saja.
                 </p>
               </div>
@@ -321,7 +407,7 @@ export default function Jurnal() {
           </div>
         ) : null}
 
-        {mode === 'gallery' ? (
+        {!loading && mode === 'gallery' ? (
           <div className="mt-5">
             {entriesWithPhoto.length === 0 ? (
               <div className="py-16 text-center">

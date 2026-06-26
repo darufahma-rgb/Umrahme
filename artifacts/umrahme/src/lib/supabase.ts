@@ -443,6 +443,50 @@ export async function uploadSertifikatTemplate(file: File): Promise<string> {
   return publicUrl;
 }
 
+// ── Jurnal Entries ─────────────────────────────────────────────
+
+export type JurnalRow = {
+  id: string;
+  tenant_id: string;
+  nomor_jamaah: string;
+  tanggal: string;
+  judul: string | null;
+  isi: string;
+  lokasi: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export async function fetchJurnal(tenantId: string, nomorJamaah: string): Promise<JurnalRow[]> {
+  const { data, error } = await supabase
+    .from('jurnal_entries')
+    .select('*')
+    .eq('tenant_id', tenantId)
+    .eq('nomor_jamaah', nomorJamaah)
+    .order('tanggal', { ascending: false });
+  if (error) throw new Error(error.message);
+  return (data ?? []) as JurnalRow[];
+}
+
+export async function createJurnal(
+  tenantId: string,
+  nomorJamaah: string,
+  payload: { tanggal: string; judul?: string | null; isi: string; lokasi?: string | null }
+): Promise<JurnalRow> {
+  const { data, error } = await supabase
+    .from('jurnal_entries')
+    .insert({ tenant_id: tenantId, nomor_jamaah: nomorJamaah, ...payload })
+    .select()
+    .single();
+  if (error) throw new Error(error.message);
+  return data as JurnalRow;
+}
+
+export async function deleteJurnal(id: string): Promise<void> {
+  const { error } = await supabase.from('jurnal_entries').delete().eq('id', id);
+  if (error) throw new Error(error.message);
+}
+
 // ── Hero Image Upload ──────────────────────────────────────────
 
 export async function uploadHeroImage(file: File): Promise<string> {
