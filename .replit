@@ -45,7 +45,7 @@ outputType = "webview"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd artifacts/umrahme && PORT=5000 node_modules/.bin/vite --config vite.config.ts --host 0.0.0.0"
+args = "PORT=5000 pnpm --filter @workspace/umrahme exec vite --config vite.config.ts --host 0.0.0.0"
 waitForPort = 5000
 
 [agent]
@@ -64,14 +64,6 @@ externalPort = 80
 [[ports]]
 localPort = 8080
 externalPort = 8080
-
-[[ports]]
-localPort = 8081
-externalPort = 8081
-
-[[ports]]
-localPort = 19579
-externalPort = 80
 
 [nix]
 channel = "stable-25_05"
