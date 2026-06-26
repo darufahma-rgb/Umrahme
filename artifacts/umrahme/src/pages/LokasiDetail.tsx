@@ -195,7 +195,7 @@ export default function LokasiDetail() {
           <section className="mt-6">
             <div className="mb-3">
               <p className="font-mono text-[8.5px] uppercase tracking-[0.18em] text-mute">Rincian</p>
-              <h3 className="mt-0.5 text-[15px] font-bold text-ink">Bagian-Bagian Ka\u2019bah</h3>
+              <h3 className="mt-0.5 text-[15px] font-bold text-ink">Bagian-Bagian Ka'bah</h3>
             </div>
 
             <div className="space-y-2.5">
@@ -220,7 +220,7 @@ export default function LokasiDetail() {
           <section className="mt-6">
             <div className="mb-3">
               <p className="font-mono text-[8.5px] uppercase tracking-[0.18em] text-mute">Rincian</p>
-              <h3 className="mt-0.5 text-[15px] font-bold text-ink">Bagian-Bagian Ka\u2019bah</h3>
+              <h3 className="mt-0.5 text-[15px] font-bold text-ink">Bagian-Bagian Ka'bah</h3>
             </div>
 
             <div className="space-y-3">
