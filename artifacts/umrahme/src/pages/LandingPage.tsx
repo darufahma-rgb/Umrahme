@@ -554,8 +554,8 @@ export default function LandingPage() {
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             style={{ fontSize: 'clamp(34px, 5vw, 60px)', fontWeight: 800, lineHeight: 1.05, color: '#fff', letterSpacing: '-0.02em', maxWidth: 900, margin: '0 auto 20px', textShadow: '0 1px 3px rgba(0,0,0,0.55), 0 2px 6px rgba(0,0,0,0.3)' }}
           >
-            Satu Aplikasi Umrah,{' '}
-            <span style={{ color: C.accent, fontStyle: 'italic' }}>Bermerek Travel Anda</span>
+            Aplikasi Pendamping Umrah,{' '}
+            <span style={{ color: C.accent, fontStyle: 'italic' }}>Atas Nama Travel Anda</span>
           </motion.h1>
 
           <motion.p
@@ -563,7 +563,7 @@ export default function LandingPage() {
             transition={{ delay: 0.18, duration: 0.65 }}
             style={{ color: 'rgba(255,255,255,.88)', fontSize: 'clamp(14px, 1.8vw, 16px)', maxWidth: 560, margin: '0 auto 26px', fontWeight: 400, textShadow: '0 1px 3px rgba(0,0,0,0.6), 0 2px 5px rgba(0,0,0,0.35)', lineHeight: 1.7 }}
           >
-            Beri jamaah Anda pendamping digital di genggaman: doa, panduan ibadah, manasik interaktif, peta ziarah, jadwal, hingga kartu jamaah. Semua dalam satu aplikasi yang menampilkan nama dan logo travel Anda.
+            Dampingi setiap jamaah dengan jadwal, doa, panduan ibadah, info hotel, dan pengumuman perjalanan — lengkap dalam satu aplikasi bermerek travel Anda.
           </motion.p>
 
           <motion.div
