@@ -80,7 +80,7 @@ export const daftarLokasi: Lokasi[] = [
     jarakKm: 0,
     jamKunjungan: 'Pusat Masjidil Haram, 24 jam',
     ringkas: 'Baitullah, kiblat seluruh umat Islam dan pusat pelaksanaan tawaf di Masjidil Haram.',
-    gambar: '',
+    gambar: '/lokasi/kabah.jpg',
     koordinat: { lat: 21.4225, lng: 39.8262 },
     sejarah:
       'Ka\u2019bah adalah bangunan berbentuk kubus di pusat Masjidil Haram, kiblat umat Islam sedunia, dan rumah ibadah pertama yang dibangun untuk manusia. Dalam Al-Qur\u2019an, Ka\u2019bah disebut dengan beberapa nama: Baitullah (rumah Allah), Al-Bait Al-Haram, Al-Bait Al-\u2018Atiq, Bakkah, dan Qiblah. Setiap hari jutaan muslim menghadap kepadanya dalam shalat dan mengelilinginya dalam tawaf.',
