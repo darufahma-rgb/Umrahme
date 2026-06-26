@@ -478,64 +478,62 @@ export default function LandingPage() {
           .lp-compare { grid-template-columns: 1fr !important; }
         }
 
-        /* ═══════════════════════════════════════════════════
-           DESKTOP POLISH & PERBESAR TEKS — hanya aktif ≥1024px.
-           Mobile (max-width) tidak tersentuh sama sekali.
-           Semua pakai !important agar menimpa inline style.
-           ═══════════════════════════════════════════════════ */
+        /* ═══ DESKTOP POLISH ≥1024px — mobile tidak tersentuh ═══ */
         @media (min-width: 1024px) {
-          /* ---- Kontainer & ritme ---- */
+          /* Kontainer & ritme */
           .lp-inner { max-width: 1240px !important; }
           .lp-section { padding-top: 88px !important; padding-bottom: 88px !important; }
 
-          /* ---- HERO lebih dominan ---- */
+          /* HERO dominan */
           .lp-hero-padding { padding-top: 132px !important; padding-bottom: 120px !important; }
           .lp-hero-padding h1 { font-size: clamp(52px, 5.4vw, 74px) !important; line-height: 1.04 !important; max-width: 960px !important; margin-bottom: 24px !important; }
           .lp-hero-padding p  { font-size: 18px !important; max-width: 620px !important; margin-bottom: 32px !important; line-height: 1.75 !important; }
           .lp-hero-btns .lp-btn { padding: 16px 34px !important; font-size: 16px !important; }
 
-          /* ---- Heading & sub-teks section ---- */
+          /* Heading & sub-teks */
           .lp-h2 { font-size: clamp(34px, 3.4vw, 44px) !important; }
-          .lp-section > .lp-inner > p,
-          .lp-inner > p { font-size: 16px !important; line-height: 1.7 !important; max-width: 640px !important; }
-          .lp-sub { font-size: 16px !important; line-height: 1.7 !important; }
-
-          /* ---- Eyebrow (label kecil di atas heading) ---- */
+          .lp-inner > p { font-size: 16px !important; line-height: 1.7 !important; }
           .lp-eyebrow { font-size: 13px !important; }
 
-          /* ---- Kartu FITUR ---- */
+          /* Kartu fitur */
           .lp-feat-card { padding: 22px !important; border-radius: 14px !important; }
           .lp-feat-card h3 { font-size: 16.5px !important; margin-bottom: 6px !important; }
           .lp-feat-card p  { font-size: 14px !important; line-height: 1.55 !important; }
           .lp-feat-card .lp-feat-icon { width: 44px !important; height: 44px !important; }
           .lp-feat-grid { gap: 16px !important; }
 
-          /* ---- BENTO (about) ---- */
+          /* Bento / about */
           .lp-bento { gap: 16px !important; }
           .lp-bento h3 { font-size: 17px !important; }
           .lp-bento p  { font-size: 14px !important; line-height: 1.55 !important; }
 
-          /* ---- PAIN cards ---- */
+          /* Pain cards */
           .lp-pain-grid h3 { font-size: 16px !important; }
           .lp-pain-grid p  { font-size: 14px !important; line-height: 1.55 !important; }
 
-          /* ---- STEPS ---- */
+          /* Steps */
           .lp-steps h3 { font-size: 17px !important; }
           .lp-steps p  { font-size: 14.5px !important; line-height: 1.6 !important; }
 
-          /* ---- PRICE ---- */
-          .lp-price-card p, .lp-price-wrap p, .lp-price-wrap li { font-size: 14.5px !important; }
+          /* Section "ngambang" → lebarkan proporsional */
+          .lp-wl-box  { max-width: 880px !important; }
+          .lp-compare { max-width: 1040px !important; gap: 22px !important; }
+          .lp-wl-list li { font-size: 15px !important; }
+          .lp-wl h2 { font-size: clamp(34px, 3.4vw, 44px) !important; }
 
-          /* ---- TESTIMONI ---- */
+          /* Harga & testimoni */
+          .lp-price-card p, .lp-price-wrap p, .lp-price-wrap li { font-size: 14.5px !important; }
           .lp-testi-grid p { font-size: 14.5px !important; line-height: 1.6 !important; }
         }
 
+        /* Monitor sangat lebar / proyektor */
         @media (min-width: 1440px) {
-          .lp-inner { max-width: 1320px !important; }
-          .lp-section { padding-top: 104px !important; padding-bottom: 104px !important; }
-          .lp-hero-padding h1 { font-size: 80px !important; }
-          .lp-hero-padding p  { font-size: 19px !important; }
-          .lp-feat-card p { font-size: 14.5px !important; }
+          .lp-inner { max-width: 1300px !important; }
+          .lp-section { padding-top: 100px !important; padding-bottom: 100px !important; }
+          .lp-hero-padding h1 { font-size: 78px !important; }
+          .lp-hero-padding p { font-size: 19px !important; }
+          .lp-wl-box { max-width: 920px !important; }
+          .lp-compare { max-width: 1080px !important; }
         }
       `}</style>
 
@@ -869,7 +867,7 @@ export default function LandingPage() {
       {/* ══════════ WHITE-LABEL SHOWCASE ══════════ */}
       <section className="lp-section" style={{ padding: '56px 0' }}>
         <div className="lp-inner" style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px' }}>
-          <div className="lp-wl" style={{ maxWidth: 680, margin: '0 auto', textAlign: 'center' }}>
+          <div className="lp-wl lp-wl-box" style={{ maxWidth: 680, margin: '0 auto', textAlign: 'center' }}>
             <Reveal>
               <div>
                 <Eyebrow>White-Label</Eyebrow>
