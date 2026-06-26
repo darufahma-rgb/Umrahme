@@ -5,6 +5,9 @@ import App from './App';
 import { AuthProvider } from './context/AuthContext';
 import { AdminAuthProvider } from './context/AdminAuthContext';
 import './index.css';
+import { registerSW } from 'virtual:pwa-register';
+
+registerSW({ immediate: true });
 
 // Cegah double-tap zoom (terutama iOS Safari yang mengabaikan user-scalable=no)
 let lastTouchEnd = 0;

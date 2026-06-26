@@ -4,6 +4,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import AdminProtectedRoute from './components/admin/AdminProtectedRoute';
 import TravelProtectedRoute from './components/travel/TravelProtectedRoute';
 import { TravelAuthProvider } from './context/TravelAuthContext';
+import OfflineBanner from './components/OfflineBanner';
 
 import Login from './pages/Login';
 import LoginSlug from './pages/LoginSlug';
@@ -45,7 +46,9 @@ import LandingPage from './pages/LandingPage';
 
 export default function App() {
   return (
-    <Routes>
+    <>
+      <OfflineBanner />
+      <Routes>
       {/* ── App jamaah ── */}
       <Route path="/t/:slug" element={<LoginSlug />} />
       <Route path="/login" element={<Login />} />
@@ -120,5 +123,6 @@ export default function App() {
       <Route path="/" element={<LandingPage />} />
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
+    </>
   );
 }
