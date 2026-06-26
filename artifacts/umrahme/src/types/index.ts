@@ -74,6 +74,19 @@ export interface BagianKabah {
   deskripsi: string;
 }
 
+/** Satu item dalam grup bagian Ka'bah (tanpa field posisi). */
+export interface BagianKabahItem {
+  nama: string;
+  arab?: string;
+  deskripsi: string;
+}
+
+/** Grup bagian Ka'bah (mis. "4 Sudut" dan "Bagian Penting Lainnya"). */
+export interface BagianKabahGrup {
+  judul: string;
+  items: BagianKabahItem[];
+}
+
 /** Pintu/gerbang penting pada masjid besar. */
 export interface PintuMasjid {
   nama: string;
@@ -130,6 +143,8 @@ export interface Lokasi {
   petaResmiUrl?: string;
   /** Bagian-bagian fisik Ka'bah (atau lokasi dengan rincian bagian). */
   bagian?: BagianKabah[];
+  /** Bagian Ka'bah dikelompokkan jadi 2 grup (Sudut & Bagian Lain). */
+  bagianGrup?: BagianKabahGrup[];
 }
 
 export type KategoriChecklist = 'dokumen' | 'kesehatan' | 'barang' | 'mental';
