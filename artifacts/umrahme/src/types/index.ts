@@ -79,6 +79,7 @@ export interface BagianKabahItem {
   nama: string;
   arab?: string;
   deskripsi: string;
+  gambar?: string;   // path foto thumbnail mis. '/lokasi/kabah/multazam.jpg'; kosong = belum ada
 }
 
 /** Grup bagian Ka'bah (mis. "4 Sudut" dan "Bagian Penting Lainnya"). */
