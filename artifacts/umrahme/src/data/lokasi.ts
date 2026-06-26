@@ -124,7 +124,7 @@ export const daftarLokasi: Lokasi[] = [
       'Arahkan segala doa hanya kepada Allah, bukan kepada batu atau bangunannya.',
     ],
     catatan: 'Mencium Hajar Aswad & mengusap Rukun Yamani adalah sunnah (mengikuti Nabi \ufdfa), bukan menyembah batu. Umar bin Khattab \u0631\u0636\u064a \u0627\u0644\u0644\u0647 \u0639\u0646\u0647 berkata pada Hajar Aswad: \u201cAku tahu engkau hanya batu, tidak memberi manfaat & mudarat. Andai aku tak melihat Nabi \ufdfa menciummu, aku tak akan menciummu.\u201d (HR. Bukhari-Muslim). Semua doa hanya ditujukan kepada Allah.',
-    diagramBagian: '/lokasi/kabah/diagram-bagian.jpg',
+    diagramBagian: '/lokasi/kabah/diagram-bagian.png',
     bagianGrup: [
       {
         judul: '4 Sudut (Rukun) Ka\u2019bah',
