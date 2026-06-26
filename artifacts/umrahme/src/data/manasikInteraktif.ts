@@ -450,3 +450,26 @@ export function resetModulProgress(modulId: string): void {
     // localStorage not available
   }
 }
+
+// ── Sinkronisasi Manasik ke Supabase ─────────────────────────
+// Import lazy (di dalam fungsi) agar tidak menyebabkan circular-dep saat tree shaking
+
+export async function syncManasikFromCloud(tenantId: string, nomor: string): Promise<void> {
+  const { getJamaahData } = await import('../lib/supabase');
+  const cloud = await getJamaahData<Record<string, ModulProgress>>(tenantId, nomor, 'manasik');
+  if (!cloud) return;
+  Object.entries(cloud).forEach(([modulId, prog]) => {
+    try {
+      localStorage.setItem(`umrahme.manasik.${modulId}`, JSON.stringify(prog));
+    } catch { /* noop */ }
+  });
+}
+
+export async function pushManasikToCloud(tenantId: string, nomor: string): Promise<void> {
+  const { setJamaahData } = await import('../lib/supabase');
+  const all: Record<string, ModulProgress> = {};
+  for (const m of manasikModulList) {
+    all[m.id] = getModulProgress(m.id);
+  }
+  await setJamaahData(tenantId, nomor, 'manasik', all);
+}

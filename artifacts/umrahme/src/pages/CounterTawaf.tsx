@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { doaById } from '../data/doa';
 import { IconBack, IconReset, IconCheck, IconChevron } from '../components/icons';
+import { useAuth } from '../context/AuthContext';
+import { getJamaahData, setJamaahData } from '../lib/supabase';
 
 const TOTAL = 7;
 const STORAGE = 'umrahme.tawaf';
@@ -67,6 +69,10 @@ function DoaCard({
 
 export default function CounterTawaf() {
   const navigate = useNavigate();
+  const { jamaah, tenant } = useAuth();
+  const tid = tenant?.id;
+  const nm = jamaah?.nomorJamaah;
+
   const [count, setCount] = useState<number>(() => {
     const v = Number(localStorage.getItem(STORAGE));
     return Number.isFinite(v) && v >= 0 && v <= TOTAL ? v : 0;
@@ -74,8 +80,20 @@ export default function CounterTawaf() {
   const [konfirmasiReset, setKonfirmasiReset] = useState(false);
 
   useEffect(() => {
+    if (!tid || !nm) return;
+    getJamaahData<number>(tid, nm, 'counter.tawaf').then((cloud) => {
+      const local = Number(localStorage.getItem(STORAGE)) || 0;
+      if (typeof cloud === 'number' && cloud > local && cloud <= TOTAL) {
+        setCount(cloud);
+        localStorage.setItem(STORAGE, String(cloud));
+      }
+    }).catch(() => {});
+  }, [tid, nm]);
+
+  useEffect(() => {
     localStorage.setItem(STORAGE, String(count));
-  }, [count]);
+    if (tid && nm) setJamaahData(tid, nm, 'counter.tawaf', count).catch(() => {});
+  }, [count, tid, nm]);
 
   const selesai = count >= TOTAL;
   const putaranBerjalan = Math.min(count + 1, TOTAL);

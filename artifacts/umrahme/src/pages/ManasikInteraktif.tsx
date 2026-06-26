@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
-import { manasikModulList, getModulProgress, type ModulProgress } from '../data/manasikInteraktif';
+import { manasikModulList, getModulProgress, syncManasikFromCloud, type ModulProgress } from '../data/manasikInteraktif';
 import { IconChevron } from '../components/icons';
+import { useAuth } from '../context/AuthContext';
 
 function StatusBadge({ progress }: { progress: ModulProgress }) {
   if (progress.selesai) {
@@ -29,16 +30,28 @@ function StatusBadge({ progress }: { progress: ModulProgress }) {
 }
 
 export default function ManasikInteraktif() {
+  const { jamaah, tenant } = useAuth();
+  const tenantId = tenant?.id;
+  const nomor = jamaah?.nomorJamaah;
+
   const [allProgress, setAllProgress] = useState<ModulProgress[]>(() =>
     manasikModulList.map((m) => getModulProgress(m.id))
   );
 
+  const refreshProgress = () => {
+    setAllProgress(manasikModulList.map((m) => getModulProgress(m.id)));
+  };
+
   useEffect(() => {
-    const refresh = () => {
-      setAllProgress(manasikModulList.map((m) => getModulProgress(m.id)));
-    };
-    window.addEventListener('focus', refresh);
-    return () => window.removeEventListener('focus', refresh);
+    if (!tenantId || !nomor) return;
+    syncManasikFromCloud(tenantId, nomor)
+      .then(refreshProgress)
+      .catch(() => {});
+  }, [tenantId, nomor]);
+
+  useEffect(() => {
+    window.addEventListener('focus', refreshProgress);
+    return () => window.removeEventListener('focus', refreshProgress);
   }, []);
 
   const modulSelesai = allProgress.filter((p) => p.selesai).length;

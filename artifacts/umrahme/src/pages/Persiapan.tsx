@@ -1,8 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { kategoriChecklist, checklistItems, itemsByKategori } from '../data/checklist';
 import type { ChecklistItem as ChecklistItemType, KategoriChecklist, KategoriJamaah } from '../types';
 import PageHeader from '../components/PageHeader';
 import { IconCheck, IconChevron } from '../components/icons';
+import { useAuth } from '../context/AuthContext';
+import { getJamaahData, setJamaahData } from '../lib/supabase';
 
 const PROFIL_OPTIONS: { id: KategoriJamaah; label: string }[] = [
   { id: 'laki-laki', label: 'Laki-laki' },
@@ -132,6 +134,10 @@ function ProfilSelector({
 }
 
 export default function Persiapan() {
+  const { jamaah, tenant } = useAuth();
+  const tenantId = tenant?.id;
+  const nomor = jamaah?.nomorJamaah;
+
   const [checked, setChecked] = useState<Set<string>>(() => {
     try {
       const raw = localStorage.getItem('umrahme.persiapan');
@@ -154,13 +160,38 @@ export default function Persiapan() {
     () => kategoriChecklist[0]?.id ?? null,
   );
 
+  const cloudLoadedRef = useRef(false);
   useEffect(() => {
-    localStorage.setItem('umrahme.persiapan', JSON.stringify([...checked]));
-  }, [checked]);
+    if (!tenantId || !nomor || cloudLoadedRef.current) return;
+    cloudLoadedRef.current = true;
+    (async () => {
+      try {
+        const [cloudChecked, cloudProfil] = await Promise.all([
+          getJamaahData<string[]>(tenantId, nomor, 'persiapan'),
+          getJamaahData<KategoriJamaah[]>(tenantId, nomor, 'persiapan.profil'),
+        ]);
+        if (cloudChecked !== null) {
+          setChecked(new Set(cloudChecked));
+          localStorage.setItem('umrahme.persiapan', JSON.stringify(cloudChecked));
+        }
+        if (cloudProfil !== null) {
+          setProfil(cloudProfil);
+          localStorage.setItem('umrahme.persiapan.profil', JSON.stringify(cloudProfil));
+        }
+      } catch { /* offline — localStorage tetap dipakai */ }
+    })();
+  }, [tenantId, nomor]);
+
+  useEffect(() => {
+    const arr = [...checked];
+    localStorage.setItem('umrahme.persiapan', JSON.stringify(arr));
+    if (tenantId && nomor) setJamaahData(tenantId, nomor, 'persiapan', arr).catch(() => {});
+  }, [checked, tenantId, nomor]);
 
   useEffect(() => {
     localStorage.setItem('umrahme.persiapan.profil', JSON.stringify(profil));
-  }, [profil]);
+    if (tenantId && nomor) setJamaahData(tenantId, nomor, 'persiapan.profil', profil).catch(() => {});
+  }, [profil, tenantId, nomor]);
 
   const toggle = (id: string) =>
     setChecked((prev) => {

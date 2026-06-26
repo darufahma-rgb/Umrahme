@@ -443,6 +443,45 @@ export async function uploadSertifikatTemplate(file: File): Promise<string> {
   return publicUrl;
 }
 
+// ── Jamaah Data (key-value sinkronisasi per-jamaah) ────────────
+
+export async function getJamaahData<T = unknown>(
+  tenantId: string,
+  nomorJamaah: string,
+  key: string,
+): Promise<T | null> {
+  const { data, error } = await supabase
+    .from('jamaah_data')
+    .select('data_value')
+    .eq('tenant_id', tenantId)
+    .eq('nomor_jamaah', nomorJamaah)
+    .eq('data_key', key)
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+  return (data?.data_value as T) ?? null;
+}
+
+export async function setJamaahData(
+  tenantId: string,
+  nomorJamaah: string,
+  key: string,
+  value: unknown,
+): Promise<void> {
+  const { error } = await supabase
+    .from('jamaah_data')
+    .upsert(
+      {
+        tenant_id: tenantId,
+        nomor_jamaah: nomorJamaah,
+        data_key: key,
+        data_value: value,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: 'tenant_id,nomor_jamaah,data_key' },
+    );
+  if (error) throw new Error(error.message);
+}
+
 // ── Jurnal Entries ─────────────────────────────────────────────
 
 export type JurnalRow = {

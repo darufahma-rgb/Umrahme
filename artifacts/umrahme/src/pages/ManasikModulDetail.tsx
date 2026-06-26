@@ -6,12 +6,14 @@ import {
   getModulProgress,
   saveModulProgress,
   resetModulProgress,
+  pushManasikToCloud,
   manasikModulList,
   type ManasikKartu,
   type ManasikUrutanItem,
   type ManasikKuisSoal,
   type ManasikModul,
 } from '../data/manasikInteraktif';
+import { useAuth } from '../context/AuthContext';
 
 // =============================================================================
 // Utilitas
@@ -628,6 +630,9 @@ function RingkasanModul({
 export default function ManasikModulDetail() {
   const { modulId } = useParams<{ modulId: string }>();
   const navigate = useNavigate();
+  const { jamaah, tenant } = useAuth();
+  const tenantId = tenant?.id;
+  const nomor = jamaah?.nomorJamaah;
   const modul = getModulById(modulId ?? '');
 
   const [tahap, setTahap] = useState<Tahap>('A');
@@ -660,12 +665,21 @@ export default function ManasikModulDetail() {
   const nextModul = manasikModulList[modulIdx + 1];
   const isLastModul = modulIdx === manasikModulList.length - 1;
 
-  const handlePartASelesai = () => { saveModulProgress(modul.id, { partADone: true }); setTahap('B'); };
-  const handlePartBSelesai = (benar: boolean) => { saveModulProgress(modul.id, { partBDone: true, partBBenar: benar }); setTahap('C'); };
+  const handlePartASelesai = () => {
+    saveModulProgress(modul.id, { partADone: true });
+    if (tenantId && nomor) pushManasikToCloud(tenantId, nomor).catch(() => {});
+    setTahap('B');
+  };
+  const handlePartBSelesai = (benar: boolean) => {
+    saveModulProgress(modul.id, { partBDone: true, partBBenar: benar });
+    if (tenantId && nomor) pushManasikToCloud(tenantId, nomor).catch(() => {});
+    setTahap('C');
+  };
   const handlePartCSelesai = (score: number, total: number) => {
     setPartCSkor(score);
     setPartCTotal(total);
     saveModulProgress(modul.id, { partCScore: score, partCTotal: total, selesai: true });
+    if (tenantId && nomor) pushManasikToCloud(tenantId, nomor).catch(() => {});
     setTahap('ringkasan');
   };
   const handleUlangDariAwal = () => {
