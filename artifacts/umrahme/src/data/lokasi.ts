@@ -40,8 +40,8 @@ export const daftarLokasi: Lokasi[] = [
       },
     ],
     tokoh: [
-      { nama: 'Nabi Ibrahim \ufdfa', peran: 'Membangun kembali Ka\u2019bah bersama putranya' },
-      { nama: 'Nabi Ismail \ufdfa', peran: 'Membantu pembangunan & peletakan Hajar Aswad' },
+      { nama: 'Nabi Ibrahim \u0639\u0644\u064a\u0647 \u0627\u0644\u0633\u0644\u0627\u0645', peran: 'Membangun kembali Ka\u2019bah bersama putranya' },
+      { nama: 'Nabi Ismail \u0639\u0644\u064a\u0647 \u0627\u0644\u0633\u0644\u0627\u0645', peran: 'Membantu pembangunan & peletakan Hajar Aswad' },
       { nama: 'Nabi Muhammad \ufdfa', peran: 'Menengahi peletakan Hajar Aswad, membersihkan Ka\u2019bah dari berhala saat Fathu Makkah' },
     ],
     keutamaan: [
@@ -72,78 +72,10 @@ export const daftarLokasi: Lokasi[] = [
     ],
   },
   {
-    id: 'kabah',
-    tipe: 'sejarah',
-    nama: 'Ka\u2019bah',
-    namaArab: '\u0627\u0644\u0643\u0639\u0628\u0629 \u0627\u0644\u0645\u0634\u0631\u0641\u0629',
-    kota: 'Makkah',
-    jarakKm: 0,
-    jamKunjungan: 'Pusat Masjidil Haram, 24 jam',
-    ringkas: 'Baitullah, kiblat seluruh umat Islam dan pusat pelaksanaan tawaf di Masjidil Haram.',
-    gambar: '',
-    koordinat: { lat: 21.4225, lng: 39.8262 },
-    sejarah:
-      'Ka\u2019bah adalah bangunan berbentuk kubus di pusat Masjidil Haram, kiblat umat Islam sedunia, dan rumah ibadah pertama yang dibangun untuk manusia. Dalam Al-Qur\u2019an, Ka\u2019bah memiliki beberapa nama: Baitullah (rumah Allah), Al-Bait Al-Haram, Al-Bait Al-\u2018Atiq, Bakkah, dan Qiblah. Setiap hari, jutaan muslim menghadap kepadanya dalam shalat dan mengelilinginya dalam tawaf.',
-    sejarahSeksi: [
-      {
-        judul: 'Dibangun Nabi Ibrahim & Ismail',
-        isi: 'Menurut riwayat, fondasi Ka\u2019bah ditinggikan oleh Nabi Ibrahim \u2018alaihissalam bersama putranya Nabi Ismail \u2018alaihissalam atas perintah Allah, sebagaimana diabadikan dalam Al-Qur\u2019an (QS. Al-Baqarah: 127). Sebagian riwayat menyebutkan Ka\u2019bah sudah ada sejak masa Nabi Adam, lalu ditinggikan kembali oleh Ibrahim. Bangunan Ibrahim saat itu tidak beratap dan memiliki dua pintu.',
-      },
-      {
-        judul: 'Renovasi Masa Quraisy',
-        isi: 'Sebelum kenabian, kaum Quraisy merenovasi Ka\u2019bah setelah rusak karena banjir. Karena keterbatasan dana yang halal, mereka memendekkan bangunan sehingga sebagian area (kini Hijir Ismail) tidak masuk ke dalam bangunan utama. Pada renovasi ini pula Nabi Muhammad \ufdfa \u2014 sebelum diangkat menjadi nabi \u2014 menjadi penengah saat para kabilah berselisih siapa yang berhak meletakkan kembali Hajar Aswad, dengan meletakkannya di atas kain yang diangkat bersama-sama.',
-      },
-      {
-        judul: 'Kiblat & Pusat Tawaf',
-        isi: 'Ka\u2019bah adalah kiblat shalat sejak diperintahkan berpindah dari Baitul Maqdis. Tawaf (mengelilingi Ka\u2019bah 7 putaran) dimulai dan diakhiri di garis sejajar Hajar Aswad, dengan Ka\u2019bah di sebelah kiri. Ukuran Ka\u2019bah relatif tetap sejak tahun 1040 M, dengan renovasi pada bagian-bagian pelengkap saja.',
-      },
-    ],
-    tokoh: [
-      { nama: 'Nabi Ibrahim \u2018alaihissalam', peran: 'Meninggikan fondasi Ka\u2019bah bersama Nabi Ismail' },
-      { nama: 'Nabi Ismail \u2018alaihissalam', peran: 'Membantu ayahnya membangun Ka\u2019bah' },
-      { nama: 'Nabi Muhammad \ufdfa', peran: 'Menengahi peletakan Hajar Aswad saat renovasi Quraisy' },
-    ],
-    keutamaan: [
-      'Rumah ibadah pertama yang dibangun untuk manusia (QS. Ali Imran: 96).',
-      'Kiblat seluruh umat Islam dalam shalat di mana pun berada.',
-      'Pusat tawaf dalam ibadah haji & umrah.',
-    ],
-    dalil: [
-      {
-        sumber: 'QS. Al-Baqarah: 127',
-        teks: 'Dan (ingatlah) ketika Ibrahim meninggikan fondasi Baitullah bersama Ismail (seraya berdoa), \u201cYa Tuhan kami, terimalah (amal) dari kami. Sungguh, Engkaulah Yang Maha Mendengar lagi Maha Mengetahui.\u201d',
-      },
-      {
-        sumber: 'QS. Ali Imran: 96',
-        teks: 'Sesungguhnya rumah (ibadah) pertama yang dibangun untuk manusia adalah (Baitullah) yang di Bakkah (Makkah) yang diberkahi dan menjadi petunjuk bagi seluruh alam.',
-      },
-    ],
-    adab: [
-      'Saat melihat Ka\u2019bah pertama kali, dianjurkan berdoa dengan khusyuk (doa terkabul).',
-      'Tawaf dengan tertib, jaga jangan menyakiti jamaah lain demi menyentuh bagian tertentu.',
-      'Arahkan segala doa hanya kepada Allah, bukan kepada batu/bangunannya.',
-      'Jaga kekhusyukan; bagian-bagian Ka\u2019bah dimuliakan karena perintah syariat, bukan disembah.',
-    ],
-    catatan: 'Mencium Hajar Aswad & mengusap Rukun Yamani adalah sunnah, bukan menyembah batu. Umar bin Khattab \u0631\u0636\u064a \u0627\u0644\u0644\u0647 \u0639\u0646\u0647 berkata pada Hajar Aswad: \u201cAku tahu engkau hanya batu, tidak memberi manfaat & mudarat. Andai aku tak melihat Nabi \ufdfa menciummu, aku tak akan menciummu.\u201d (HR. Bukhari-Muslim). Semua doa hanya ditujukan kepada Allah.',
-    bagian: [
-      { nama: 'Hajar Aswad', arab: '\u0627\u0644\u062d\u062c\u0631 \u0627\u0644\u0623\u0633\u0648\u062f', posisi: 'Sudut timur', deskripsi: 'Batu hitam mulia, titik awal & akhir tawaf. Disunnahkan mencium atau memberi isyarat tangan ke arahnya saat memulai putaran. Menciumnya sunnah, bukan ibadah kepada batu.' },
-      { nama: 'Rukun Yamani', arab: '\u0627\u0644\u0631\u0643\u0646 \u0627\u0644\u064a\u0645\u0627\u0646\u064a', posisi: 'Sudut barat daya', deskripsi: 'Sudut menghadap Yaman. Disunnahkan mengusapnya dengan tangan kanan saat tawaf (tanpa mencium). Antara Rukun Yamani dan Hajar Aswad dianjurkan membaca doa \u201cRabbana atina fid-dunya hasanah\u2026\u201d' },
-      { nama: 'Multazam', arab: '\u0627\u0644\u0645\u0644\u062a\u0632\u0645', posisi: 'Antara Hajar Aswad & pintu Ka\u2019bah', deskripsi: 'Bagian dinding Ka\u2019bah yang mustajab untuk berdoa. Disunnahkan menempelkan dada, pipi, dan kedua tangan ke dinding sambil berdoa khusyuk bila memungkinkan.' },
-      { nama: 'Maqam Ibrahim', arab: '\u0645\u0642\u0627\u0645 \u0625\u0628\u0631\u0627\u0647\u064a\u0645', posisi: 'Sisi timur, dekat pintu', deskripsi: 'Batu berisi bekas pijakan kaki Nabi Ibrahim saat membangun Ka\u2019bah (bukan makam). Disunnahkan shalat 2 rakaat di belakangnya setelah tawaf.' },
-      { nama: 'Hijir Ismail', arab: '\u062d\u062c\u0631 \u0625\u0633\u0645\u0627\u0639\u064a\u0644', posisi: 'Sisi utara, setengah lingkaran', deskripsi: 'Disebut juga Al-Hathim. Termasuk bagian asli Ka\u2019bah, maka tawaf WAJIB mengelilingi di luar pagarnya. Shalat di dalamnya dihukumi seperti shalat di dalam Ka\u2019bah.' },
-      { nama: 'Mizab Ar-Rahman', arab: '\u0645\u064a\u0632\u0627\u0628 \u0627\u0644\u0631\u062d\u0645\u0629', posisi: 'Atap, di atas Hijir Ismail', deskripsi: 'Pancuran/talang emas untuk mengalirkan air hujan dari atap Ka\u2019bah. Disebut \u201cpancuran rahmat\u201d.' },
-      { nama: 'Pintu Ka\u2019bah', arab: '\u0628\u0627\u0628 \u0627\u0644\u0643\u0639\u0628\u0629', posisi: 'Sisi timur, ditinggikan dari tanah', deskripsi: 'Terbuat dari emas murni, berat kedua daun pintu sekitar 280 kg. Letaknya ditinggikan sebagai perlindungan.' },
-      { nama: 'Kiswah', arab: '\u0643\u0633\u0648\u0629 \u0627\u0644\u0643\u0639\u0628\u0629', posisi: 'Menyelubungi seluruh Ka\u2019bah', deskripsi: 'Kain hitam berhias kaligrafi benang emas yang menutupi Ka\u2019bah, diganti setiap tahun pada 9 Dzulhijjah (hari Arafah).' },
-      { nama: 'Syadzarwan', arab: '\u0627\u0644\u0634\u0627\u0630\u0631\u0648\u0627\u0646', posisi: 'Dasar luar Ka\u2019bah', deskripsi: 'Bagian dasar Ka\u2019bah yang menonjol, berfungsi memperkuat fondasi. Termasuk bagian Ka\u2019bah, maka saat tawaf jangan menapak di atasnya.' },
-      { nama: 'Rukun Iraqi', arab: '\u0627\u0644\u0631\u0643\u0646 \u0627\u0644\u0639\u0631\u0627\u0642\u064a', posisi: 'Sudut utara (mengarah Irak)', deskripsi: 'Tidak ada amalan khusus di sudut ini, namun menjadi penanda dalam tawaf.' },
-      { nama: 'Rukun Syami', arab: '\u0627\u0644\u0631\u0643\u0646 \u0627\u0644\u0634\u0627\u0645\u064a', posisi: 'Sudut barat laut (mengarah Syam)', deskripsi: 'Disebut juga Rukun Maghribi. Tidak ada amalan khusus di sudut ini.' },
-    ],
-  },
-  {
     id: 'masjid-nabawi',
     tipe: 'masjid',
     nama: 'Masjid Nabawi',
-    namaArab: 'المسجد النبوي',
+    namaArab: '\u0627\u0644\u0645\u0633\u062c\u062f \u0627\u0644\u0646\u0628\u0648\u064a',
     kota: 'Madinah',
     jarakKm: 1.1,
     jamKunjungan: 'Buka 24 jam \u00b7 Raudhah perlu tasrih/janji temu via aplikasi Nusuk',
@@ -192,7 +124,7 @@ export const daftarLokasi: Lokasi[] = [
       'Ucapkan salam dengan tenang saat melewati makam; jangan mengusap pagar atau meminta kepada penghuni kubur.',
       'Jaga ketertiban \u2014 area Raudhah sangat padat.',
     ],
-    petaResmiUrl: 'https://eserv.wmn.gov.sa/apps/public/maps/en.pdf',
+    petaResmiUrl: 'https://alharamain.gov.sa/public/?site=en',
     pintu: [
       { nama: 'Bab As-Salam', fungsi: 'Pintu utama yang dahulu sering dilalui Nabi \ufdfa. Banyak peziarah pria masuk dari sini menuju arah Raudhah.' },
       { nama: 'Bab Jibril', fungsi: 'Pintu bersejarah; dinamai Malaikat Jibril yang membawa wahyu.' },
@@ -267,7 +199,7 @@ export const daftarLokasi: Lokasi[] = [
     id: 'masjid-quba',
     tipe: 'masjid',
     nama: 'Masjid Quba',
-    namaArab: 'مسجد قباء',
+    namaArab: '\u0645\u0633\u062c\u062f \u0642\u0628\u0627\u0621',
     kota: 'Madinah',
     jarakKm: 5.0,
     jamKunjungan: 'Buka 24 jam (waktu setempat)',
@@ -456,15 +388,14 @@ export const daftarLokasi: Lokasi[] = [
     sejarahSeksi: [
       {
         judul: 'Dinisbahkan kepada Ali \u0631\u0636\u064a \u0627\u0644\u0644\u0647 \u0639\u0646\u0647',
-        isi: 'Masjid ini dikaitkan dengan Ali bin Abi Thalib \u0631\u0636\u064a \u0627\u0644\u0644\u0647 \u0639\u0646\u0647, sepupu sekaligus menantu Nabi \ufdfa dan Khalifah keempat. Masjid ini juga pernah dipakai untuk pelaksanaan shalat Id pada masa awal Islam, dan menjadi bagian dari rangkaian ziarah masjid bersejarah di sekitar Masjid Nabawi.',
+        isi: 'Masjid ini dinisbahkan kepada Ali bin Abi Thalib \u0631\u0636\u064a \u0627\u0644\u0644\u0647 \u0639\u0646\u0647, sepupu sekaligus menantu Rasulullah \ufdfa dan Khalifah keempat. Termasuk dalam gugus masjid-masjid bersejarah di barat daya Masjid Nabawi yang menandai tempat-tempat bersejarah masa Nabi dan Khulafaur Rasyidin.',
       },
     ],
     tokoh: [
-      { nama: 'Ali bin Abi Thalib \u0631\u0636\u064a \u0627\u0644\u0644\u0647 \u0639\u0646\u0647', peran: 'Sepupu & menantu Nabi \ufdfa, Khalifah keempat' },
+      { nama: 'Ali bin Abi Thalib \u0631\u0636\u064a \u0627\u0644\u0644\u0647 \u0639\u0646\u0647', peran: 'Khalifah keempat, dinisbahkan kepada masjid ini' },
     ],
     keutamaan: [
-      'Mengenang Ali \u0631\u0636\u064a \u0627\u0644\u0644\u0647 \u0639\u0646\u0647, salah satu yang pertama masuk Islam.',
-      'Bagian dari rangkaian ziarah masjid bersejarah dekat Masjid Nabawi.',
+      'Mengenang Ali bin Abi Thalib \u0631\u0636\u064a \u0627\u0644\u0644\u0647 \u0639\u0646\u0647, salah satu dari sepuluh sahabat yang dijanjikan surga.',
     ],
     dalil: [],
     adab: [
@@ -522,7 +453,7 @@ export const daftarLokasi: Lokasi[] = [
     id: 'jabal-nur',
     tipe: 'sejarah',
     nama: 'Jabal Nur (Gua Hira)',
-    namaArab: 'جبل النور',
+    namaArab: '\u062c\u0628\u0644 \u0627\u0644\u0646\u0648\u0631',
     kota: 'Makkah',
     jarakKm: 6.5,
     jamKunjungan: 'Disarankan pagi hari \u00b7 pendakian berat, butuh fisik prima',
@@ -567,7 +498,7 @@ export const daftarLokasi: Lokasi[] = [
     id: 'jabal-tsur',
     tipe: 'sejarah',
     nama: 'Jabal Tsur (Gua Tsur)',
-    namaArab: 'جبل ثور',
+    namaArab: '\u062c\u0628\u0644 \u062b\u0648\u0631',
     kota: 'Makkah',
     jarakKm: 7.0,
     jamKunjungan: 'Pagi hari \u00b7 pendakian terjal & panjang',
@@ -611,7 +542,7 @@ export const daftarLokasi: Lokasi[] = [
     id: 'jabal-rahmah',
     tipe: 'sejarah',
     nama: 'Jabal Rahmah',
-    namaArab: 'جبل الرحمة',
+    namaArab: '\u062c\u0628\u0644 \u0627\u0644\u0631\u062d\u0645\u0629',
     kota: 'Arafah',
     jarakKm: 22.0,
     jamKunjungan: 'Ramai saat musim haji \u00b7 area terbuka',
@@ -648,7 +579,7 @@ export const daftarLokasi: Lokasi[] = [
     id: 'jabal-uhud',
     tipe: 'sejarah',
     nama: 'Jabal Uhud',
-    namaArab: 'جبل أحد',
+    namaArab: '\u062c\u0628\u0644 \u0623\u062d\u062f',
     kota: 'Madinah',
     jarakKm: 4.5,
     jamKunjungan: '06.00 \u2013 18.00 (waktu setempat)',
@@ -696,7 +627,7 @@ export const daftarLokasi: Lokasi[] = [
     id: 'jannatul-baqi',
     tipe: 'sejarah',
     nama: 'Jannatul Baqi\u2019',
-    namaArab: 'جنة البقيع',
+    namaArab: '\u062c\u0646\u0629 \u0627\u0644\u0628\u0642\u064a\u0639',
     kota: 'Madinah',
     jarakKm: 1.2,
     jamKunjungan: 'Dibuka untuk ziarah pada waktu tertentu setelah shalat',
@@ -734,7 +665,7 @@ export const daftarLokasi: Lokasi[] = [
     id: 'masjid-qiblatain',
     tipe: 'sejarah',
     nama: 'Masjid Qiblatain',
-    namaArab: 'مسجد القبلتين',
+    namaArab: '\u0645\u0633\u062c\u062f \u0627\u0644\u0642\u0628\u0644\u062a\u064a\u0646',
     kota: 'Madinah',
     jarakKm: 5.5,
     jamKunjungan: 'Buka 24 jam',
@@ -851,7 +782,7 @@ export const daftarLokasi: Lokasi[] = [
     id: 'masjid-aisyah-tanim',
     tipe: 'sejarah',
     nama: 'Masjid Aisyah (Tan\u2019im)',
-    namaArab: 'مسجد عائشة',
+    namaArab: '\u0645\u0633\u062c\u062f \u0639\u0627\u0626\u0634\u0629',
     kota: 'Makkah',
     jarakKm: 7.5,
     jamKunjungan: 'Buka 24 jam \u00b7 titik miqat',
@@ -881,7 +812,7 @@ export const daftarLokasi: Lokasi[] = [
   {
     id: 'jabal-sala',
     tipe: 'sejarah',
-    nama: 'Jabal Sala\u2019 (Gunung Sala)',
+    nama: 'Jabal Sala\u2019 (Gunung Sala\u2019)',
     namaArab: '\u062c\u0628\u0644 \u0633\u0644\u0639',
     kota: 'Madinah',
     jarakKm: 1.5,
@@ -974,7 +905,7 @@ export const daftarLokasi: Lokasi[] = [
     gambar: '/lokasi/masjid-bir-ali.jpg',
     koordinat: { lat: 24.4131, lng: 39.5419 },
     sejarah:
-      'Masjid Bir Ali, dikenal juga sebagai Masjid Dzulhulaifah atau Masjid Asy-Syajarah, terletak di kawasan Dzulhulaifah sekitar 11\u201314 km dari Masjid Nabawi. Inilah miqat makani (batas tempat memulai ihram) bagi penduduk Madinah dan jamaah yang melewati Madinah menuju Makkah. Rasulullah \ufdfa sendiri memulai ihram dari tempat ini saat Haji Wada.',
+      'Masjid Bir Ali, dikenal juga sebagai Masjid Dzulhulaifah atau Masjid Asy-Syajarah, terletak di kawasan Dzulhulaifah sekitar 11\u201314 km dari Masjid Nabawi. Inilah miqat makani (batas tempat memulai ihram) bagi penduduk Madinah dan jamaah yang melewati Madinah menuju Makkah. Rasulullah \ufdfa sendiri memulai ihram dari tempat ini saat Haji Wada\u2019.',
     sejarahSeksi: [
       {
         judul: 'Miqat yang Ditetapkan Rasulullah \ufdfa',
@@ -990,7 +921,7 @@ export const daftarLokasi: Lokasi[] = [
       },
     ],
     tokoh: [
-      { nama: 'Nabi Muhammad \ufdfa', peran: 'Memulai ihram dari tempat ini saat Haji Wada' },
+      { nama: 'Nabi Muhammad \ufdfa', peran: 'Memulai ihram dari tempat ini saat Haji Wada\u2019' },
       { nama: 'Umar bin Abdul Aziz', peran: 'Membangun masjid pertama di lokasi ini (87\u201393 H)' },
     ],
     keutamaan: [
@@ -1019,7 +950,7 @@ export const daftarLokasi: Lokasi[] = [
     id: 'masjid-abdullah-bin-abbas',
     tipe: 'masjid',
     nama: 'Masjid Abdullah bin Abbas',
-    namaArab: 'مَسْجِد عَبْد ٱللَّٰه ٱبْن ٱلْعَبَّاس',
+    namaArab: '\u0645\u064e\u0633\u0652\u062c\u0650\u062f \u0639\u064e\u0628\u0652\u062f \u0671\u0644\u0644\u0670\u0647 \u0671\u0628\u0652\u0646 \u0671\u0644\u0652\u0639\u064e\u0628\u0651\u064e\u0627\u0633',
     kota: 'Thaif',
     jarakKm: 90,
     jamKunjungan: 'Buka saat waktu shalat',
@@ -1031,7 +962,7 @@ export const daftarLokasi: Lokasi[] = [
     sejarahSeksi: [
       {
         judul: 'Abdullah bin Abbas \u2014 Sang Penafsir Al-Qur\u2019an',
-        isi: 'Abdullah bin Abbas \u0631\u0636\u064a \u0627\u0644\u0644\u0647 \u0639\u0646\u0647 dijuluki "Habrul Ummah" (ulama umat) dan "Bahrul Ulum" (lautan ilmu). Sejak kecil ia didoakan Rasulullah \ufdfa: "Ya Allah, pahamkanlah ia dalam agama dan ajarkanlah ia takwil (tafsir)." Ia meriwayatkan 1.660 hadis dan menjadi rujukan utama dalam tafsir Al-Qur\u2019an. Beliau wafat di Thaif pada 68 H dan dimakamkan dekat masjid ini.',
+        isi: 'Abdullah bin Abbas \u0631\u0636\u064a \u0627\u0644\u0644\u0647 \u0639\u0646\u0647 dijuluki \u201cHabrul Ummah\u201d (ulama umat) dan \u201cBahrul Ulum\u201d (lautan ilmu). Sejak kecil ia didoakan Rasulullah \ufdfa: \u201cYa Allah, pahamkanlah ia dalam agama dan ajarkanlah ia takwil (tafsir).\u201d Ia meriwayatkan 1.660 hadis dan menjadi rujukan utama dalam tafsir Al-Qur\u2019an. Beliau wafat di Thaif pada 68 H dan dimakamkan dekat masjid ini.',
       },
       {
         judul: 'Sejarah Dakwah Nabi \ufdfa ke Thaif',
@@ -1054,7 +985,7 @@ export const daftarLokasi: Lokasi[] = [
     dalil: [
       {
         sumber: 'HR. Bukhari',
-        teks: 'Rasulullah \ufdfa memeluk Ibnu Abbas dan berdoa: "Ya Allah, ajarkanlah ia hikmah dan takwil Al-Kitab."',
+        teks: 'Rasulullah \ufdfa memeluk Ibnu Abbas dan berdoa: \u201cYa Allah, ajarkanlah ia hikmah dan takwil Al-Kitab.\u201d',
       },
     ],
     adab: [
@@ -1079,8 +1010,8 @@ export const daftarLokasi: Lokasi[] = [
       'Masjid Addas terletak sekitar 2,5 km barat daya Masjid Abdullah bin Abbas, di kawasan kebun lama Thaif. Masjid ini mengenang peristiwa menyentuh: setelah Rasulullah \ufdfa ditolak dan dilempari batu oleh penduduk Thaif, beliau berteduh di sebuah kebun milik Utbah dan Syaibah bin Rabi\u2019ah. Keduanya menyuruh budak mereka, Addas \u2014 seorang pemuda Nasrani dari Nineveh \u2014 mengantarkan setangkai anggur untuk Nabi \ufdfa.',
     sejarahSeksi: [
       {
-        judul: 'Anggur & Kalimat "Bismillah"',
-        isi: 'Saat Addas menyodorkan anggur, Rasulullah \ufdfa mengucap "Bismillah" sebelum memakannya. Addas terkejut \u2014 kalimat itu tak pernah ia dengar dari penduduk Thaif. Ketika Nabi \ufdfa bertanya asalnya dan Addas menyebut Nineveh, beliau menyebut Nineveh sebagai negeri Nabi Yunus bin Matta. Addas takjub bagaimana seorang di tengah gurun Arab mengenal Nabi Yunus, lalu ia pun masuk Islam.',
+        judul: 'Anggur & Kalimat \u201cBismillah\u201d',
+        isi: 'Saat Addas menyodorkan anggur, Rasulullah \ufdfa mengucap \u201cBismillah\u201d sebelum memakannya. Addas terkejut \u2014 kalimat itu tak pernah ia dengar dari penduduk Thaif. Ketika Nabi \ufdfa bertanya asalnya dan Addas menyebut Nineveh, beliau menyebut Nineveh sebagai negeri Nabi Yunus bin Matta. Addas takjub bagaimana seorang di tengah gurun Arab mengenal Nabi Yunus, lalu ia pun masuk Islam.',
       },
       {
         judul: 'Teladan di Titik Terberat',
@@ -1151,7 +1082,7 @@ export const daftarLokasi: Lokasi[] = [
     dalil: [
       {
         sumber: 'QS. Ali \u2018Imran: 123',
-        teks: '"Sungguh, Allah telah menolong kamu dalam perang Badr, padahal kamu dalam keadaan lemah. Maka bertakwalah kepada Allah agar kamu mensyukuri-Nya."',
+        teks: '\u201cSungguh, Allah telah menolong kamu dalam perang Badr, padahal kamu dalam keadaan lemah. Maka bertakwalah kepada Allah agar kamu mensyukuri-Nya.\u201d',
       },
     ],
     adab: [
@@ -1181,7 +1112,7 @@ export const daftarLokasi: Lokasi[] = [
       },
       {
         judul: 'Kedudukan Mulia Ahlu Badr',
-        isi: 'Rasulullah \ufdfa memberikan kabar gembira tentang ahlu Badr. Dalam satu riwayat, Jibril \u0639\u0644\u064a\u0647 \u0627\u0644\u0633\u0644\u0627\u0645 bertanya kepada Nabi \ufdfa tentang bagaimana beliau memandang para pejuang Badr, dan Nabi \ufdfa menjawab: "Sebaik-baik kaum muslimin." Keutamaan ini menjadikan makam mereka tempat yang dihormati umat Islam.',
+        isi: 'Rasulullah \ufdfa memberikan kabar gembira tentang ahlu Badr. Dalam satu riwayat, Jibril \u0639\u0644\u064a\u0647 \u0627\u0644\u0633\u0644\u0627\u0645 bertanya kepada Nabi \ufdfa tentang bagaimana beliau memandang para pejuang Badr, dan Nabi \ufdfa menjawab: \u201cSebaik-baik kaum muslimin.\u201d Keutamaan ini menjadikan makam mereka tempat yang dihormati umat Islam.',
       },
     ],
     tokoh: [
@@ -1196,7 +1127,7 @@ export const daftarLokasi: Lokasi[] = [
     dalil: [
       {
         sumber: 'HR. Bukhari',
-        teks: 'Rasulullah \ufdfa bersabda tentang ahlu Badr bahwa Allah telah melihat mereka dan berfirman: "Berbuatlah sekehendak kalian, sungguh Aku telah mengampuni kalian."',
+        teks: 'Rasulullah \ufdfa bersabda tentang ahlu Badr bahwa Allah telah melihat mereka dan berfirman: \u201cBerbuatlah sekehendak kalian, sungguh Aku telah mengampuni kalian.\u201d',
       },
     ],
     adab: [
@@ -1211,27 +1142,27 @@ export const daftarLokasi: Lokasi[] = [
     id: 'jabal-magnet',
     tipe: 'sejarah',
     nama: 'Jabal Magnet (Wadi Jinn)',
-    namaArab: 'وَادِي الْجِنّ',
+    namaArab: '\u0648\u064e\u0627\u062f\u0650\u064a \u0627\u0644\u0652\u062c\u0650\u0646\u0651',
     kota: 'Wadi Jinn',
     jarakKm: 60,
     jamKunjungan: 'Area terbuka 24 jam (terbaik pagi/sore)',
-    ringkas: 'Fenomena "bukit magnet" di Wadi Jinn — kendaraan terasa bergerak menanjak sendiri. Spot wisata alam populer dekat Madinah.',
+    ringkas: 'Fenomena \u201cbukit magnet\u201d di Wadi Jinn \u2014 kendaraan terasa bergerak menanjak sendiri. Spot wisata alam populer dekat Madinah.',
     gambar: '/lokasi/jabal-magnet.jpg',
     koordinat: { lat: 24.7225, lng: 39.4431 },
     sejarah:
       'Jabal Magnet, dikenal juga sebagai Wadi Jinn atau Wadi Al-Baida, terletak sekitar 60 km barat laut Kota Madinah. Tempat ini terkenal dengan fenomena unik: kendaraan yang diposisikan netral (tanpa gas) terasa bergerak dan justru menanjak dengan sendirinya, seolah ada gaya magnet yang menarik. Kawasan ini menjadi tujuan wisata alam populer bagi keluarga Saudi maupun jamaah umrah yang punya waktu luang di Madinah.',
     sejarahSeksi: [
       {
-        judul: 'Fenomena "Bukit Magnet"',
-        isi: 'Di beberapa ruas jalan Wadi Jinn, mobil atau bus yang dimatikan gasnya akan terasa melaju sendiri, bahkan bisa mencapai kecepatan tinggi, seolah ditarik gaya tak terlihat. Air pun terlihat "mengalir ke atas". Karena keunikan inilah tempat ini dijuluki Jabal Magnet (Bukit Magnet).',
+        judul: 'Fenomena \u201cBukit Magnet\u201d',
+        isi: 'Di beberapa ruas jalan Wadi Jinn, mobil atau bus yang dimatikan gasnya akan terasa melaju sendiri, bahkan bisa mencapai kecepatan tinggi, seolah ditarik gaya tak terlihat. Air pun terlihat \u201cmengalir ke atas\u201d. Karena keunikan inilah tempat ini dijuluki Jabal Magnet (Bukit Magnet).',
       },
       {
         judul: 'Penjelasan Ilmiah: Ilusi Optik',
-        isi: 'Secara ilmiah, fenomena ini adalah ilusi optik gravitasi (gravity hill). Jalan yang tampak menanjak sebenarnya menurun landai. Karena dikelilingi pegunungan tanpa garis horizon yang jelas, mata & otak tertipu menilai kemiringan jalan. Studi pengukuran membuktikan kemiringan jalan turun bertahap menuju Madinah — jadi "magnet" itu sebenarnya gravitasi biasa yang bekerja pada jalan menurun.',
+        isi: 'Secara ilmiah, fenomena ini adalah ilusi optik gravitasi (gravity hill). Jalan yang tampak menanjak sebenarnya menurun landai. Karena dikelilingi pegunungan tanpa garis horizon yang jelas, mata & otak tertipu menilai kemiringan jalan. Studi pengukuran membuktikan kemiringan jalan turun bertahap menuju Madinah \u2014 jadi \u201cmagnet\u201d itu sebenarnya gravitasi biasa yang bekerja pada jalan menurun.',
       },
       {
         judul: 'Wadi Jinn & Penamaan',
-        isi: 'Nama "Wadi Jinn" (Lembah Jin) muncul dari cerita rakyat setempat yang mengaitkan fenomena ini dengan makhluk halus. Namun ini hanya legenda — tidak ada dasar syar\u2019i yang mengaitkan tempat ini dengan peristiwa keagamaan tertentu. Kawasan ini dahulu sempat menjadi area danau/sumber air, dan kini jadi tempat rekreasi keluarga, terutama akhir pekan.',
+        isi: 'Nama \u201cWadi Jinn\u201d (Lembah Jin) muncul dari cerita rakyat setempat yang mengaitkan fenomena ini dengan makhluk halus. Namun ini hanya legenda \u2014 tidak ada dasar syar\u2019i yang mengaitkan tempat ini dengan peristiwa keagamaan tertentu. Kawasan ini dahulu sempat menjadi area danau/sumber air, dan kini jadi tempat rekreasi keluarga, terutama akhir pekan.',
       },
     ],
     tokoh: [],
@@ -1243,11 +1174,11 @@ export const daftarLokasi: Lokasi[] = [
     dalil: [],
     adab: [
       'Ini tempat wisata alam, BUKAN situs ibadah atau ziarah keagamaan.',
-      'Tidak ada amalan/ritual khusus di sini — kunjungan murni rekreasi & edukasi.',
+      'Tidak ada amalan/ritual khusus di sini \u2014 kunjungan murni rekreasi & edukasi.',
       'Hindari mengaitkan fenomena dengan hal mistis; pahami penjelasan ilmiahnya.',
       'Jaga kebersihan area & keselamatan saat berkendara di jalur fenomena.',
     ],
-    catatan: 'Jabal Magnet sering jadi paket wisata tambahan dari Madinah (~60 km, 30-45 menit berkendara). Cocok untuk mengisi waktu luang, tapi ingatkan jamaah bahwa ini destinasi wisata alam — bukan bagian dari rangkaian ibadah umrah.',
+    catatan: 'Jabal Magnet sering jadi paket wisata tambahan dari Madinah (~60 km, 30-45 menit berkendara). Cocok untuk mengisi waktu luang, tapi ingatkan jamaah bahwa ini destinasi wisata alam \u2014 bukan bagian dari rangkaian ibadah umrah.',
   },
   // ===================================================== TEMPAT HAJI
   {
@@ -1258,15 +1189,15 @@ export const daftarLokasi: Lokasi[] = [
     kota: 'Arafah',
     jarakKm: 20,
     jamKunjungan: 'Area terbuka (puncak ibadah 9 Dzulhijjah)',
-    ringkas: 'Padang luas tempat wukuf \u2014 rukun terbesar haji. "Haji adalah Arafah."',
+    ringkas: '\u201cHaji itu Arafah\u201d \u2014 padang luas tempat wukuf, inti ibadah haji.',
     gambar: '/lokasi/padang-arafah.jpg',
-    koordinat: { lat: 21.3550, lng: 39.9839 },
+    koordinat: { lat: 21.3547, lng: 39.9843 },
     sejarah:
-      'Padang Arafah adalah dataran luas sekitar 20 km tenggara Makkah, menjadi tempat pelaksanaan wukuf \u2014 rukun paling utama dalam ibadah haji. Pada tanggal 9 Dzulhijjah, jutaan jamaah haji berkumpul di sini dari tergelincirnya matahari hingga terbenam, berdoa dan bermunajat kepada Allah. Rasulullah \ufdfa bersabda bahwa inti haji adalah wukuf di Arafah.',
+      'Padang Arafah adalah kawasan padang luas sekitar 20 km timur Makkah. Wukuf di Arafah pada 9 Dzulhijjah adalah rukun haji yang tidak tergantikan \u2014 siapa yang tidak sempat wukuf, hajinya tidak sah. Di kawasan Arafah, Rasulullah \ufdfa menyampaikan Khutbah Wada\u2019 (Haji Perpisahan) kepada lebih dari 100.000 sahabat.',
     sejarahSeksi: [
       {
-        judul: 'Wukuf \u2014 Rukun Terbesar Haji',
-        isi: 'Wukuf di Arafah adalah rukun haji yang tidak tergantikan. Rasulullah \ufdfa bersabda: "Haji itu Arafah." Siapa yang tidak wukuf di Arafah pada waktunya, hajinya tidak sah. Di sinilah jamaah memperbanyak doa, dzikir, istighfar, dan taubat \u2014 hari ketika Allah membanggakan hamba-hamba-Nya di hadapan para malaikat.',
+        judul: 'Wukuf \u2014 Rukun Haji Terbesar',
+        isi: 'Wukuf di Arafah adalah rukun haji yang tidak tergantikan. Rasulullah \ufdfa bersabda: \u201cHaji itu Arafah.\u201d Siapa yang tidak wukuf di Arafah pada waktunya, hajinya tidak sah. Di sinilah jamaah memperbanyak doa, dzikir, istighfar, dan taubat \u2014 hari ketika Allah membanggakan hamba-hamba-Nya di hadapan para malaikat.',
       },
       {
         judul: 'Khutbah Wada\u2019 (Haji Perpisahan)',
@@ -1274,7 +1205,7 @@ export const daftarLokasi: Lokasi[] = [
       },
       {
         judul: 'Tempat Pertemuan Adam & Hawa',
-        isi: 'Sebagian riwayat menyebut Arafah sebagai tempat bertemunya kembali Nabi Adam dan Hawa setelah turun ke bumi. Dari sinilah pula nama "Arafah" (mengenal) dikaitkan. Jabal Rahmah, bukit di tengah padang ini, menjadi penanda peristiwa tersebut.',
+        isi: 'Sebagian riwayat menyebut Arafah sebagai tempat bertemunya kembali Nabi Adam dan Hawa setelah turun ke bumi. Dari sinilah pula nama \u201cArafah\u201d (mengenal) dikaitkan. Jabal Rahmah, bukit di tengah padang ini, menjadi penanda peristiwa tersebut.',
       },
     ],
     tokoh: [
@@ -1282,14 +1213,14 @@ export const daftarLokasi: Lokasi[] = [
       { nama: 'Nabi Adam & Hawa', peran: 'Diyakini bertemu kembali di Arafah (sebagian riwayat)' },
     ],
     keutamaan: [
-      'Wukuf di Arafah adalah rukun haji terbesar \u2014 "Haji itu Arafah".',
+      'Wukuf di Arafah adalah rukun haji terbesar \u2014 \u201cHaji itu Arafah\u201d.',
       'Hari Arafah adalah hari pengampunan dosa & pembebasan dari neraka.',
       'Doa di hari Arafah adalah doa terbaik.',
     ],
     dalil: [
       {
         sumber: 'HR. Tirmidzi & Abu Dawud',
-        teks: 'Rasulullah \ufdfa bersabda: "Haji itu Arafah. Barangsiapa datang (wukuf) pada malam itu sebelum terbit fajar, maka sungguh ia telah mendapati haji."',
+        teks: 'Rasulullah \ufdfa bersabda: \u201cHaji itu Arafah. Barangsiapa datang (wukuf) pada malam itu sebelum terbit fajar, maka sungguh ia telah mendapati haji.\u201d',
       },
     ],
     adab: [
@@ -1297,7 +1228,7 @@ export const daftarLokasi: Lokasi[] = [
       'Perbanyak doa, dzikir, istighfar & taubat \u2014 terutama saat hari Arafah.',
       'Bagi yang tidak berhaji: disunnahkan puasa Arafah (9 Dzulhijjah).',
     ],
-    catatan: 'Di luar musim haji, kawasan Arafah dapat dikunjungi sebagai ziarah. Padang Arafah hanya "hidup" penuh saat puncak haji 9 Dzulhijjah.',
+    catatan: 'Di luar musim haji, kawasan Arafah dapat dikunjungi sebagai ziarah. Padang Arafah hanya \u201chidup\u201d penuh saat puncak haji 9 Dzulhijjah.',
   },
   {
     id: 'mina',
@@ -1307,11 +1238,11 @@ export const daftarLokasi: Lokasi[] = [
     kota: 'Mina',
     jarakKm: 8,
     jamKunjungan: 'Area terbuka (aktif saat musim haji)',
-    ringkas: '"Kota Tenda" \u2014 tempat jamaah haji bermalam (mabit) & melempar jumrah.',
+    ringkas: '\u201cKota Tenda\u201d \u2014 tempat jamaah haji bermalam (mabit) & melempar jumrah.',
     gambar: '/lokasi/mina.jpg',
     koordinat: { lat: 21.4133, lng: 39.8933 },
     sejarah:
-      'Mina adalah lembah sekitar 8 km timur Makkah, dijuluki "Kota Tenda" karena dipenuhi lebih dari 100.000 tenda permanen untuk menampung jutaan jamaah haji. Di Mina jamaah bermalam (mabit) pada malam tanggal 8, 11, 12, dan 13 Dzulhijjah, serta melaksanakan lempar jumrah (jamarat) di tiga tugu yang melambangkan godaan setan.',
+      'Mina adalah lembah sekitar 8 km timur Makkah, dijuluki \u201cKota Tenda\u201d karena dipenuhi lebih dari 100.000 tenda permanen untuk menampung jutaan jamaah haji. Di Mina jamaah bermalam (mabit) pada malam tanggal 8, 11, 12, dan 13 Dzulhijjah, serta melaksanakan lempar jumrah (jamarat) di tiga tugu yang melambangkan godaan setan.',
     sejarahSeksi: [
       {
         judul: 'Mabit & Lempar Jumrah',
@@ -1372,7 +1303,7 @@ export const daftarLokasi: Lokasi[] = [
       },
       {
         judul: 'Al-Masy\u2019aril Haram',
-        isi: 'Muzdalifah disebut dalam Al-Qur\u2019an dengan nama "Al-Masy\u2019aril Haram". Allah memerintahkan jamaah untuk berdzikir kepada-Nya di tempat ini, menjadikan Muzdalifah sebagai tempat perenungan & ketundukan di tengah rangkaian haji.',
+        isi: 'Muzdalifah disebut dalam Al-Qur\u2019an dengan nama \u201cAl-Masy\u2019aril Haram\u201d. Allah memerintahkan jamaah untuk berdzikir kepada-Nya di tempat ini, menjadikan Muzdalifah sebagai tempat perenungan & ketundukan di tengah rangkaian haji.',
       },
     ],
     tokoh: [
@@ -1380,13 +1311,13 @@ export const daftarLokasi: Lokasi[] = [
     ],
     keutamaan: [
       'Tempat mabit & menjamak shalat dalam rangkaian wajib haji.',
-      'Disebut dalam Al-Qur\u2019an sebagai "Al-Masy\u2019aril Haram".',
+      'Disebut dalam Al-Qur\u2019an sebagai \u201cAl-Masy\u2019aril Haram\u201d.',
       'Tempat mengumpulkan kerikil untuk lempar jumrah.',
     ],
     dalil: [
       {
         sumber: 'QS. Al-Baqarah: 198',
-        teks: '"\u2026Maka apabila kamu bertolak dari Arafah, berzikirlah kepada Allah di Masy\u2019aril Haram (Muzdalifah)\u2026"',
+        teks: '\u201c\u2026Maka apabila kamu bertolak dari Arafah, berzikirlah kepada Allah di Masy\u2019aril Haram (Muzdalifah)\u2026\u201d',
       },
     ],
     adab: [
@@ -1460,7 +1391,7 @@ export const daftarLokasi: Lokasi[] = [
       },
       {
         judul: 'Lokasi di Lembah Mina',
-        isi: 'Masjid Al-Khayf berada di kaki gunung di sisi selatan lembah Mina, dekat jumrah terkecil. Kata "khayf" merujuk pada tanah yang menurun dari gunung tetapi tidak sampai dataran \u2014 menggambarkan posisi geografis masjid ini.',
+        isi: 'Masjid Al-Khayf berada di kaki gunung di sisi selatan lembah Mina, dekat jumrah terkecil. Kata \u201ckhayf\u201d merujuk pada tanah yang menurun dari gunung tetapi tidak sampai dataran \u2014 menggambarkan posisi geografis masjid ini.',
       },
     ],
     tokoh: [
