@@ -66,9 +66,86 @@ export const daftarLokasi: Lokasi[] = [
       { nama: 'Bab Malik Abdul Aziz (Gerbang 1)', fungsi: 'Salah satu gerbang terbesar dan terpopuler, akses langsung ke area Mataf dari sisi selatan.' },
       { nama: 'Bab Malik Fahd', fungsi: 'Sering dipakai karena dekat dengan area tawaf (Mataf).' },
       { nama: 'Bab As-Salam', fungsi: 'Pintu bersejarah, dianjurkan masuk dengan mendahulukan kaki kanan dan berdoa.' },
-      { nama: 'Bab Umrah (Gerbang 63)', fungsi: 'Pintu yang menurut riwayat dilalui Nabi \ufdfa saat memasuki Makkah untuk umrah. Akses langsung ke Mataf dari arah barat laut.' },
+      { nama: 'Bab Umrah (Gerbang 63)', fungsi: 'Pintu yang menurut riwayat dilalui Nabi ﷺ saat memasuki Makkah untuk umrah. Akses langsung ke Mataf dari arah barat laut.' },
       { nama: 'Bab Ajyad', fungsi: 'Gerbang di sisi tenggara, sering dipakai jamaah; tersedia eskalator ke lantai atas.' },
       { nama: 'Bab Al-Fath', fungsi: 'Dinamai untuk mengenang Fathu Makkah (pembebasan Makkah).' },
+    ],
+  },
+  {
+    id: 'kabah',
+    tipe: 'sejarah',
+    nama: 'Ka\u2019bah',
+    namaArab: 'الكعبة المشرفة',
+    kota: 'Makkah',
+    jarakKm: 0,
+    jamKunjungan: 'Pusat Masjidil Haram, 24 jam',
+    ringkas: 'Baitullah, kiblat seluruh umat Islam dan pusat pelaksanaan tawaf di Masjidil Haram.',
+    gambar: '',
+    koordinat: { lat: 21.4225, lng: 39.8262 },
+    sejarah:
+      'Ka\u2019bah adalah bangunan berbentuk kubus di pusat Masjidil Haram, kiblat umat Islam sedunia, dan rumah ibadah pertama yang dibangun untuk manusia. Dalam Al-Qur\u2019an, Ka\u2019bah disebut dengan beberapa nama: Baitullah (rumah Allah), Al-Bait Al-Haram, Al-Bait Al-\u2018Atiq, Bakkah, dan Qiblah. Setiap hari jutaan muslim menghadap kepadanya dalam shalat dan mengelilinginya dalam tawaf.',
+    sejarahSeksi: [
+      {
+        judul: 'Dibangun Nabi Ibrahim & Ismail',
+        isi: 'Fondasi Ka\u2019bah ditinggikan oleh Nabi Ibrahim \u0639\u0644\u064a\u0647 \u0627\u0644\u0633\u0644\u0627\u0645 bersama putranya Nabi Ismail \u0639\u0644\u064a\u0647 \u0627\u0644\u0633\u0644\u0627\u0645 atas perintah Allah, sebagaimana diabadikan dalam Al-Qur\u2019an (QS. Al-Baqarah: 127). Sebagian riwayat menyebut Ka\u2019bah sudah ada sejak masa Nabi Adam, lalu ditinggikan kembali oleh Ibrahim. Bangunan Ibrahim saat itu tidak beratap dan memiliki dua pintu.',
+      },
+      {
+        judul: 'Renovasi Masa Quraisy',
+        isi: 'Sebelum kenabian, kaum Quraisy merenovasi Ka\u2019bah setelah rusak karena banjir. Karena keterbatasan dana yang halal, mereka memendekkan bangunan sehingga sebagian area (kini Hijir Ismail) tidak masuk ke dalam bangunan utama. Pada renovasi inilah Nabi Muhammad \ufdfa \u2014 sebelum diangkat menjadi nabi \u2014 menengahi perselisihan kabilah soal siapa yang berhak meletakkan Hajar Aswad, dengan meletakkannya di atas kain yang diangkat bersama-sama.',
+      },
+      {
+        judul: 'Kiblat & Pusat Tawaf',
+        isi: 'Ka\u2019bah adalah kiblat shalat setelah perpindahan dari Baitul Maqdis. Tawaf (mengelilingi Ka\u2019bah 7 putaran) dimulai dan diakhiri di garis sejajar Hajar Aswad, dengan Ka\u2019bah berada di sebelah kiri jamaah.',
+      },
+    ],
+    tokoh: [
+      { nama: 'Nabi Ibrahim \u0639\u0644\u064a\u0647 \u0627\u0644\u0633\u0644\u0627\u0645', peran: 'Meninggikan fondasi Ka\u2019bah bersama Nabi Ismail' },
+      { nama: 'Nabi Ismail \u0639\u0644\u064a\u0647 \u0627\u0644\u0633\u0644\u0627\u0645', peran: 'Membantu ayahnya membangun Ka\u2019bah' },
+      { nama: 'Nabi Muhammad \ufdfa', peran: 'Menengahi peletakan Hajar Aswad saat renovasi Quraisy' },
+    ],
+    keutamaan: [
+      'Rumah ibadah pertama yang dibangun untuk manusia (QS. Ali Imran: 96).',
+      'Kiblat seluruh umat Islam dalam shalat di mana pun berada.',
+      'Pusat tawaf dalam ibadah haji & umrah.',
+    ],
+    dalil: [
+      {
+        sumber: 'QS. Al-Baqarah: 127',
+        teks: 'Dan (ingatlah) ketika Ibrahim meninggikan fondasi Baitullah bersama Ismail (seraya berdoa), "Ya Tuhan kami, terimalah (amal) dari kami. Sungguh, Engkaulah Yang Maha Mendengar lagi Maha Mengetahui."',
+      },
+      {
+        sumber: 'QS. Ali Imran: 96',
+        teks: 'Sesungguhnya rumah (ibadah) pertama yang dibangun untuk manusia adalah (Baitullah) yang di Bakkah (Makkah) yang diberkahi dan menjadi petunjuk bagi seluruh alam.',
+      },
+    ],
+    adab: [
+      'Saat melihat Ka\u2019bah pertama kali, dianjurkan berdoa dengan khusyuk.',
+      'Tawaf dengan tertib; jangan menyakiti jamaah lain demi menyentuh bagian tertentu.',
+      'Arahkan segala doa hanya kepada Allah, bukan kepada batu atau bangunannya.',
+    ],
+    catatan: 'Mencium Hajar Aswad & mengusap Rukun Yamani adalah sunnah (mengikuti Nabi \ufdfa), bukan menyembah batu. Umar bin Khattab \u0631\u0636\u064a \u0627\u0644\u0644\u0647 \u0639\u0646\u0647 berkata pada Hajar Aswad: \u201cAku tahu engkau hanya batu, tidak memberi manfaat & mudarat. Andai aku tak melihat Nabi \ufdfa menciummu, aku tak akan menciummu.\u201d (HR. Bukhari-Muslim). Semua doa hanya ditujukan kepada Allah.',
+    bagianGrup: [
+      {
+        judul: '4 Sudut (Rukun) Ka\u2019bah',
+        items: [
+          { nama: 'Rukun Hajar Aswad', arab: 'ركن الحجر الأسود', deskripsi: 'Sudut timur, tempat Hajar Aswad. Titik awal & akhir tawaf. Disunnahkan mencium atau memberi isyarat tangan ke arahnya tiap memulai putaran.' },
+          { nama: 'Rukun Yamani', arab: 'الركن اليماني', deskripsi: 'Sudut barat daya (mengarah Yaman). Disunnahkan mengusapnya dengan tangan kanan tanpa mencium. Antara Rukun Yamani & Hajar Aswad dianjurkan membaca \u201cRabbana atina fid-dunya hasanah\u2026\u201d' },
+          { nama: 'Rukun Iraqi', arab: 'الركن العراقي', deskripsi: 'Sudut utara (mengarah Irak). Tidak ada amalan khusus, menjadi penanda dalam tawaf.' },
+          { nama: 'Rukun Syami', arab: 'الركن الشامي', deskripsi: 'Sudut barat laut (mengarah Syam). Disebut juga Rukun Maghribi. Tidak ada amalan khusus.' },
+        ],
+      },
+      {
+        judul: 'Bagian Penting Lainnya',
+        items: [
+          { nama: 'Multazam', arab: 'الملتزم', deskripsi: 'Dinding antara Hajar Aswad & pintu Ka\u2019bah; tempat mustajab berdoa. Disunnahkan menempelkan dada & tangan ke dinding bila memungkinkan.' },
+          { nama: 'Maqam Ibrahim', arab: 'مقام إبراهيم', deskripsi: 'Batu berisi bekas pijakan Nabi Ibrahim saat membangun Ka\u2019bah (bukan makam). Disunnahkan shalat 2 rakaat di belakangnya setelah tawaf.' },
+          { nama: 'Hijir Ismail', arab: 'حجر إسماعيل', deskripsi: 'Area setengah lingkaran di sisi utara (disebut Al-Hathim). Termasuk bagian asli Ka\u2019bah, maka tawaf wajib mengelilingi di luar pagarnya.' },
+          { nama: 'Pintu Ka\u2019bah', arab: 'باب الكعبة', deskripsi: 'Terbuat dari emas murni, ditinggikan dari permukaan tanah. Berat kedua daun pintu sekitar 280 kg.' },
+          { nama: 'Mizab Ar-Rahman', arab: 'ميزاب الرحمة', deskripsi: 'Pancuran/talang emas di atap (di atas Hijir Ismail) untuk mengalirkan air hujan. Disebut \u201cpancuran rahmat\u201d.' },
+          { nama: 'Kiswah', arab: 'كسوة الكعبة', deskripsi: 'Kain hitam berhias kaligrafi benang emas yang menyelubungi Ka\u2019bah, diganti setiap tahun pada 9 Dzulhijjah.' },
+          { nama: 'Syadzarwan', arab: 'الشاذروان', deskripsi: 'Bagian dasar Ka\u2019bah yang menonjol. Termasuk bagian Ka\u2019bah, maka saat tawaf jangan menapak di atasnya.' },
+        ],
+      },
     ],
   },
   {

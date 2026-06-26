@@ -190,7 +190,7 @@ export default function LokasiDetail() {
           )}
         </div>
 
-        {/* ── 4b. BAGIAN-BAGIAN KA'BAH ─────────────────────────── */}
+        {/* ── 4b. BAGIAN-BAGIAN KA'BAH (lama, per item) ───────────── */}
         {lokasi.bagian && lokasi.bagian.length > 0 && (
           <section className="mt-6">
             <div className="mb-3">
@@ -209,6 +209,39 @@ export default function LokasiDetail() {
                     {b.arab && <span className="flex-none font-arab text-[16px] text-gold" dir="rtl">{b.arab}</span>}
                   </div>
                   <p className="mt-2 text-[12.5px] leading-relaxed text-charcoal">{b.deskripsi}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* ── 4c. BAGIAN-BAGIAN KA'BAH (2 grup) ───────────────────── */}
+        {lokasi.bagianGrup && lokasi.bagianGrup.length > 0 && (
+          <section className="mt-6">
+            <div className="mb-3">
+              <p className="font-mono text-[8.5px] uppercase tracking-[0.18em] text-mute">Rincian</p>
+              <h3 className="mt-0.5 text-[15px] font-bold text-ink">Bagian-Bagian Ka\u2019bah</h3>
+            </div>
+
+            <div className="space-y-3">
+              {lokasi.bagianGrup.map((grup, gi) => (
+                <div key={gi} className="rounded-2xl border border-hairline bg-surface-card p-4 shadow-drop-soft">
+                  <div className="mb-2 flex items-center gap-2">
+                    <span className="h-4 w-1 rounded-full bg-gold" aria-hidden />
+                    <h4 className="text-[13.5px] font-bold text-ink">{grup.judul}</h4>
+                  </div>
+
+                  <div className="divide-y divide-hairline">
+                    {grup.items.map((it, ii) => (
+                      <div key={ii} className="py-2.5 first:pt-0 last:pb-0">
+                        <div className="flex items-baseline justify-between gap-3">
+                          <h5 className="text-[13px] font-semibold text-ink">{it.nama}</h5>
+                          {it.arab && <span className="flex-none font-arab text-[14px] text-gold" dir="rtl">{it.arab}</span>}
+                        </div>
+                        <p className="mt-0.5 text-[12px] leading-snug text-charcoal">{it.deskripsi}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>
