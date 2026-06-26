@@ -7,7 +7,7 @@ import {
   fetchTenant, createTenant, updateTenant,
   fetchAgenda, createAgenda, deleteAgenda,
   fetchAnnouncements, createAnnouncement, deleteAnnouncement,
-  fetchJamaah, createJamaah, updateJamaah, deleteJamaah, bulkInsertJamaah,
+  fetchJamaah, createJamaah, updateJamaah, deleteJamaah, bulkInsertJamaah, bulkInsertAgenda,
   fetchTravelAccounts, createTravelAccount, revokeTravelAccess,
   fetchKeberangkatan, createKeberangkatan, updateKeberangkatan, deleteKeberangkatan,
   uploadLogo as apiUploadLogo,
@@ -211,6 +211,13 @@ export default function AdminTenantForm() {
   const [importPreview, setImportPreview] = useState<Array<{ nama: string; nomor_jamaah: string; rombongan: string; nomor_paspor: string }>>([]);
   const [importSaving, setImportSaving] = useState(false);
   const importFileRef = useRef<HTMLInputElement>(null);
+
+  const [agImportOpen, setAgImportOpen] = useState(false);
+  const [agImportLoading, setAgImportLoading] = useState(false);
+  const [agImportError, setAgImportError] = useState('');
+  const [agImportPreview, setAgImportPreview] = useState<Array<{ tanggal: string; jam_mulai: string; judul: string; lokasi: string; deskripsi: string }>>([]);
+  const [agImportSaving, setAgImportSaving] = useState(false);
+  const agImportFileRef = useRef<HTMLInputElement>(null);
 
   const loadTravelAccounts = useCallback(async () => {
     if (!id || isNew) return;
@@ -492,6 +499,7 @@ export default function AdminTenantForm() {
   async function handleAddAgenda(e: FormEvent) {
     e.preventDefault();
     setAgError('');
+    if (!selectedKeberangkatan) { setAgError('Pilih atau buat keberangkatan dulu sebelum menambah agenda.'); return; }
     if (!agJudul.trim() || !agTanggal) { setAgError('Tanggal dan judul wajib diisi.'); return; }
     setAgSubmitting(true);
     try {
@@ -520,6 +528,7 @@ export default function AdminTenantForm() {
   async function handleAddAnnouncement(e: FormEvent) {
     e.preventDefault();
     setAnnError('');
+    if (!selectedKeberangkatan) { setAnnError('Pilih atau buat keberangkatan dulu sebelum menambah pengumuman.'); return; }
     if (!annTitle.trim() || !annContent.trim()) { setAnnError('Judul dan isi pengumuman wajib diisi.'); return; }
     setAnnSubmitting(true);
     try {
@@ -690,6 +699,84 @@ export default function AdminTenantForm() {
     } finally {
       setImportSaving(false);
     }
+  }
+
+  async function handleAgImportFile(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!selectedKeberangkatan) { setAgImportError('Pilih keberangkatan dulu.'); return; }
+    setAgImportError(''); setAgImportLoading(true); setAgImportPreview([]);
+    try {
+      const ext = file.name.split('.').pop()?.toLowerCase();
+      let result: Array<{ tanggal?: string; jam_mulai?: string; judul?: string; lokasi?: string; deskripsi?: string }> = [];
+      if (ext === 'xlsx' || ext === 'xls' || ext === 'csv') {
+        const buf = await file.arrayBuffer();
+        const wb = XLSX.read(buf, { type: 'array' });
+        const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 });
+        const resp = await fetch('/api/ai-extract-agenda', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: 'excel', rows }) });
+        const json = await resp.json() as { error?: string; agenda?: typeof result };
+        if (!resp.ok) throw new Error(json.error || 'Gagal ekstrak Excel.');
+        result = json.agenda ?? [];
+      } else if (ext === 'pdf' || ['png', 'jpg', 'jpeg', 'webp'].includes(ext || '')) {
+        const base64 = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve((reader.result as string).split(',')[1]);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+        const resp = await fetch('/api/ai-extract-agenda', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: 'pdf', fileBase64: base64, mimeType: file.type }) });
+        const json = await resp.json() as { error?: string; agenda?: typeof result };
+        if (!resp.ok) throw new Error(json.error || 'Gagal ekstrak PDF.');
+        result = json.agenda ?? [];
+      } else {
+        throw new Error('Format tidak didukung. Pakai Excel, CSV, PDF, atau gambar.');
+      }
+      const preview = (result || []).map(a => ({
+        tanggal: String(a.tanggal ?? '').trim(),
+        jam_mulai: String(a.jam_mulai ?? '').trim(),
+        judul: String(a.judul ?? '').trim(),
+        lokasi: String(a.lokasi ?? '').trim(),
+        deskripsi: String(a.deskripsi ?? '').trim(),
+      })).filter(a => a.judul);
+      if (preview.length === 0) throw new Error('Tidak ada agenda terbaca. Cek file atau format.');
+      setAgImportPreview(preview);
+    } catch (err: unknown) {
+      setAgImportError(err instanceof Error ? err.message : 'Gagal memproses file.');
+    } finally {
+      setAgImportLoading(false);
+      if (agImportFileRef.current) agImportFileRef.current.value = '';
+    }
+  }
+
+  function updateAgPreviewRow(idx: number, field: string, value: string) {
+    setAgImportPreview(prev => prev.map((r, i) => i === idx ? { ...r, [field]: value } : r));
+  }
+
+  function removeAgPreviewRow(idx: number) {
+    setAgImportPreview(prev => prev.filter((_, i) => i !== idx));
+  }
+
+  async function confirmAgImport() {
+    if (agImportPreview.length === 0 || !selectedKeberangkatan) return;
+    const invalid = agImportPreview.some(a => !a.judul.trim() || !a.tanggal.trim());
+    if (invalid) { setAgImportError('Setiap agenda wajib punya tanggal & judul.'); return; }
+    setAgImportSaving(true); setAgImportError('');
+    try {
+      const payload = agImportPreview.map(a => ({
+        tanggal: a.tanggal.trim(),
+        jam_mulai: a.jam_mulai.trim() || null,
+        judul: a.judul.trim(),
+        lokasi: a.lokasi.trim() || null,
+        deskripsi: a.deskripsi.trim() || null,
+        urutan: 0,
+      }));
+      const { inserted } = await bulkInsertAgenda(id!, selectedKeberangkatan, payload);
+      setAgImportPreview([]); setAgImportOpen(false);
+      await loadAgenda();
+      alert(`${inserted} agenda berhasil ditambahkan.`);
+    } catch (err: unknown) {
+      setAgImportError(err instanceof Error ? err.message : 'Gagal menyimpan.');
+    } finally { setAgImportSaving(false); }
   }
 
   async function handleCreateTravelAccount(e: FormEvent) {
@@ -1721,6 +1808,14 @@ export default function AdminTenantForm() {
             <div className="flex items-center gap-3 mb-5">
               <h2 className="font-bold" style={{ fontSize: '18px', color: '#111827', letterSpacing: '-0.02em' }}>Agenda Perjalanan</h2>
               <span className="font-mono text-[10px] uppercase tracking-widest px-2 py-1 rounded-full" style={{ background: 'rgba(67,56,202,0.07)', color: '#4338ca' }}>{agendaItems.length} item</span>
+              {selectedKeberangkatan && (
+                <button type="button" onClick={() => { setAgImportOpen(o => !o); setAgImportError(''); setAgImportPreview([]); }}
+                  className="inline-flex items-center gap-2 px-4 py-2 text-[12px] font-semibold rounded-xl transition-all duration-150"
+                  style={{ background: 'rgba(67,56,202,0.07)', color: '#4338ca', border: '1px solid rgba(67,56,202,0.15)' }}>
+                  <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  Susun Itinerary dengan AI
+                </button>
+              )}
               <button type="button" onClick={handleInsertDummy} disabled={dummyLoading}
                 className="ml-auto text-[11px] font-semibold px-3 py-1.5 rounded-lg transition-all duration-150 disabled:opacity-60"
                 style={{ color: '#6b7280', border: '1px solid rgba(0,0,0,0.10)' }}
@@ -1729,6 +1824,92 @@ export default function AdminTenantForm() {
                 {dummyLoading ? 'Memasukkan...' : '+ Itinerary Demo'}
               </button>
             </div>
+
+            {/* Keberangkatan selector */}
+            {keberangkatanList.length > 0 && (
+              <div className="mb-5 flex items-center gap-3">
+                <label className="font-mono text-[10px] uppercase tracking-widest flex-none" style={{ color: '#6b7280' }}>Batch:</label>
+                <select value={selectedKeberangkatan} onChange={e => setSelectedKeberangkatan(e.target.value)}
+                  className="flex-1 rounded-xl px-3 py-2 text-[13px] focus:outline-none" style={{ ...inputBase, maxWidth: '360px' }}>
+                  {keberangkatanList.map(kb => (
+                    <option key={kb.id} value={kb.id}>{kb.nama_batch}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {!selectedKeberangkatan ? (
+              <div className="rounded-2xl px-6 py-8 text-center" style={cardStyle}>
+                <p className="text-[13px]" style={{ color: '#6b7280' }}>
+                  Belum ada keberangkatan dipilih. Buat keberangkatan dulu di tab <strong>Keberangkatan</strong>,
+                  lalu pilih untuk mengelola agenda.
+                </p>
+              </div>
+            ) : (
+              <>
+                {/* AI Import Panel */}
+                {agImportOpen && (
+                  <div className="rounded-2xl px-6 py-6 mb-4" style={{ ...cardStyle, border: '1px solid rgba(67,56,202,0.12)' }}>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.14em] mb-1" style={{ color: '#4338ca' }}>Susun Itinerary dengan AI</p>
+                    <p className="text-[12px] mb-4" style={{ color: '#6b7280' }}>
+                      Upload file Excel, CSV, PDF, atau foto jadwal — AI ekstrak & susun itinerary otomatis. Anda bisa review & edit sebelum menyimpan.
+                    </p>
+                    {agImportPreview.length === 0 ? (
+                      <div>
+                        <button type="button" onClick={() => agImportFileRef.current?.click()} disabled={agImportLoading}
+                          className="inline-flex items-center gap-2 px-5 py-2.5 text-[12px] font-semibold rounded-xl transition-all disabled:opacity-60"
+                          style={{ background: 'linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)', color: '#fff' }}>
+                          {agImportLoading ? 'AI sedang membaca...' : 'Pilih File'}
+                        </button>
+                        <input ref={agImportFileRef} type="file" accept=".xlsx,.xls,.csv,application/pdf,image/png,image/jpeg,image/webp" onChange={handleAgImportFile} className="hidden" />
+                        <p className="mt-2 text-[10px]" style={{ color: '#9ca3af' }}>Format: Excel, CSV, PDF, PNG, JPG, WebP.</p>
+                      </div>
+                    ) : (
+                      <div>
+                        <div className="flex items-center justify-between mb-3">
+                          <p className="text-[12px] font-semibold" style={{ color: '#374151' }}>{agImportPreview.length} agenda terbaca — review & edit sebelum simpan:</p>
+                          <button type="button" onClick={() => setAgImportPreview([])} className="text-[11px]" style={{ color: '#9ca3af' }}>Ulangi</button>
+                        </div>
+                        <div className="overflow-x-auto rounded-xl mb-3" style={{ border: '1px solid rgba(0,0,0,0.07)' }}>
+                          <table className="w-full text-[11px]">
+                            <thead>
+                              <tr style={{ background: '#fafaf9', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+                                {['Tanggal', 'Jam', 'Judul', 'Lokasi', 'Deskripsi', ''].map(h => (
+                                  <th key={h} className="text-left font-mono uppercase tracking-wider px-3 py-2" style={{ color: '#9ca3af', fontSize: '10px' }}>{h}</th>
+                                ))}
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {agImportPreview.map((row, idx) => (
+                                <tr key={idx} style={{ borderBottom: idx < agImportPreview.length - 1 ? '1px solid rgba(0,0,0,0.04)' : 'none' }}>
+                                  <td className="px-2 py-1.5"><input className="w-28 rounded px-2 py-1 text-[11px] focus:outline-none" style={{ ...inputBase }} value={row.tanggal} onChange={e => updateAgPreviewRow(idx, 'tanggal', e.target.value)} /></td>
+                                  <td className="px-2 py-1.5"><input className="w-20 rounded px-2 py-1 text-[11px] focus:outline-none" style={{ ...inputBase }} value={row.jam_mulai} onChange={e => updateAgPreviewRow(idx, 'jam_mulai', e.target.value)} /></td>
+                                  <td className="px-2 py-1.5"><input className="w-44 rounded px-2 py-1 text-[11px] focus:outline-none" style={{ ...inputBase }} value={row.judul} onChange={e => updateAgPreviewRow(idx, 'judul', e.target.value)} /></td>
+                                  <td className="px-2 py-1.5"><input className="w-32 rounded px-2 py-1 text-[11px] focus:outline-none" style={{ ...inputBase }} value={row.lokasi} onChange={e => updateAgPreviewRow(idx, 'lokasi', e.target.value)} /></td>
+                                  <td className="px-2 py-1.5"><input className="w-40 rounded px-2 py-1 text-[11px] focus:outline-none" style={{ ...inputBase }} value={row.deskripsi} onChange={e => updateAgPreviewRow(idx, 'deskripsi', e.target.value)} /></td>
+                                  <td className="px-2 py-1.5"><button type="button" onClick={() => removeAgPreviewRow(idx)} className="text-[11px] px-2 py-1 rounded" style={{ color: '#dc2626' }}>Hapus</button></td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                        {agImportError && <p className="text-[12px] mb-2" style={{ color: '#dc2626' }}>{agImportError}</p>}
+                        <div className="flex gap-2">
+                          <button type="button" onClick={confirmAgImport} disabled={agImportSaving}
+                            className="px-5 py-2.5 text-[12px] font-semibold rounded-xl disabled:opacity-60"
+                            style={{ background: 'linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)', color: '#fff' }}>
+                            {agImportSaving ? 'Menyimpan...' : `Simpan ${agImportPreview.length} Agenda`}
+                          </button>
+                          <button type="button" onClick={() => { setAgImportOpen(false); setAgImportPreview([]); }}
+                            className="px-4 py-2.5 text-[12px] rounded-xl" style={{ border: '1px solid rgba(0,0,0,0.1)', color: '#6b7280' }}>
+                            Batal
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                    {agImportError && agImportPreview.length === 0 && <p className="mt-2 text-[12px]" style={{ color: '#dc2626' }}>{agImportError}</p>}
+                  </div>
+                )}
 
             <div className="rounded-2xl px-6 py-6 mb-4" style={{ ...cardStyle, border: '1px solid rgba(67,56,202,0.12)' }}>
               <p className="font-mono text-[10px] uppercase tracking-[0.14em] mb-4" style={{ color: '#6b7280' }}>Tambah Agenda Baru</p>
@@ -1788,6 +1969,8 @@ export default function AdminTenantForm() {
                 </table>
               )}
             </div>
+              </>
+            )}
           </div>
         )}
 
