@@ -1,14 +1,35 @@
 import React from 'react';
-import { useState, useEffect, useCallback, type FormEvent } from 'react';
+import { useState, useEffect, useRef, useCallback, type FormEvent, type ChangeEvent } from 'react';
+import * as XLSX from 'xlsx';
 import { useTravelAuth } from '../../context/TravelAuthContext';
 import TravelLayout from '../../components/travel/TravelLayout';
-import { fetchJamaah, createJamaah, deleteJamaah, updateJamaah, type JamaahAccountRow } from '../../lib/supabase';
+import {
+  fetchKeberangkatan, createKeberangkatan, updateKeberangkatan, deleteKeberangkatan,
+  fetchJamaah, createJamaah, updateJamaah, deleteJamaah, bulkInsertJamaah,
+  fetchAgenda, createAgenda, deleteAgenda,
+  fetchAnnouncements, createAnnouncement, deleteAnnouncement,
+  type KeberangkatanRow, type JamaahAccountRow, type AgendaItemRow, type TravelAnnouncementRow,
+} from '../../lib/supabase';
 
-const FASE_OPTIONS: { value: JamaahAccountRow['fase']; label: string }[] = [
-  { value: 'persiapan', label: 'Persiapan' },
-  { value: 'tanah-suci', label: 'Di Tanah Suci' },
-  { value: 'selesai', label: 'Selesai' },
-];
+/* ─── Helpers ─────────────────────────────────────────────────────── */
+
+function normalizePhone(val: string) {
+  return val.replace(/[^\d+]/g, '');
+}
+
+function formatTanggal(iso: string) {
+  return new Date(iso + 'T00:00:00').toLocaleDateString('id-ID', {
+    weekday: 'short', day: 'numeric', month: 'short', year: 'numeric',
+  });
+}
+
+function formatDatetime(iso: string) {
+  return new Date(iso).toLocaleString('id-ID', {
+    day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit',
+  });
+}
+
+/* ─── Styled primitives ───────────────────────────────────────────── */
 
 const inputBase: React.CSSProperties = {
   border: '1px solid rgba(0,0,0,0.09)',
@@ -17,44 +38,74 @@ const inputBase: React.CSSProperties = {
   boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.04)',
 };
 
-function StyledInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
-  return (
-    <input
-      {...props}
-      className={`w-full rounded-xl px-4 py-3 text-sm transition-all duration-150 focus:outline-none ${props.className ?? ''}`}
-      style={{ ...inputBase, ...props.style }}
-      onFocus={e => {
-        e.currentTarget.style.border = '1px solid #0ea5e9';
-        e.currentTarget.style.boxShadow = '0 0 0 3px rgba(14,165,233,0.12)';
-        e.currentTarget.style.background = '#ffffff';
-        props.onFocus?.(e);
-      }}
-      onBlur={e => {
-        e.currentTarget.style.border = '1px solid rgba(0,0,0,0.09)';
-        e.currentTarget.style.boxShadow = 'inset 0 1px 2px rgba(0,0,0,0.04)';
-        e.currentTarget.style.background = '#fafaf9';
-        props.onBlur?.(e);
-      }}
-    />
-  );
-}
-
 const cardStyle: React.CSSProperties = {
   background: '#ffffff',
   border: '1px solid rgba(0,0,0,0.06)',
   boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.04)',
 };
 
+const PRIMARY = '#0ea5e9';
+const PRIMARY_DEEP = '#0284c7';
+const PRIMARY_BG = 'rgba(14,165,233,0.07)';
+const PRIMARY_BORDER = 'rgba(14,165,233,0.18)';
+
+const StyledInput = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
+  function StyledInput(props, ref) {
+    return (
+      <input
+        {...props}
+        ref={ref}
+        className={`w-full rounded-xl px-4 py-3 text-sm transition-all duration-150 focus:outline-none ${props.className ?? ''}`}
+        style={{ ...inputBase, ...props.style }}
+        onFocus={e => { e.currentTarget.style.border = `1px solid ${PRIMARY}`; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(14,165,233,0.12)'; e.currentTarget.style.background = '#ffffff'; props.onFocus?.(e); }}
+        onBlur={e => { e.currentTarget.style.border = '1px solid rgba(0,0,0,0.09)'; e.currentTarget.style.boxShadow = 'inset 0 1px 2px rgba(0,0,0,0.04)'; e.currentTarget.style.background = '#fafaf9'; props.onBlur?.(e); }}
+      />
+    );
+  }
+);
+
+function StyledTextarea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
+  return (
+    <textarea
+      {...props}
+      className={`w-full rounded-xl px-4 py-3 text-sm transition-all duration-150 focus:outline-none resize-none ${props.className ?? ''}`}
+      style={{ ...inputBase, ...props.style }}
+      onFocus={e => { e.currentTarget.style.border = `1px solid ${PRIMARY}`; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(14,165,233,0.12)'; e.currentTarget.style.background = '#ffffff'; props.onFocus?.(e); }}
+      onBlur={e => { e.currentTarget.style.border = '1px solid rgba(0,0,0,0.09)'; e.currentTarget.style.boxShadow = 'inset 0 1px 2px rgba(0,0,0,0.04)'; e.currentTarget.style.background = '#fafaf9'; props.onBlur?.(e); }}
+    />
+  );
+}
+
+function FieldLabel({ children }: { children: React.ReactNode }) {
+  return <label className="block font-mono text-[10px] uppercase tracking-[0.14em] mb-2" style={{ color: '#6b7280' }}>{children}</label>;
+}
+
+/* ─── Constants ───────────────────────────────────────────────────── */
+
+const FASE_OPTIONS: { value: JamaahAccountRow['fase']; label: string }[] = [
+  { value: 'persiapan', label: 'Persiapan' },
+  { value: 'tanah-suci', label: 'Di Tanah Suci' },
+  { value: 'selesai', label: 'Selesai' },
+];
+
+type TabId = 'keberangkatan' | 'jamaah' | 'agenda' | 'pengumuman';
+
+const TABS: { id: TabId; label: string }[] = [
+  { id: 'keberangkatan', label: 'Keberangkatan' },
+  { id: 'jamaah', label: 'Jamaah' },
+  { id: 'agenda', label: 'Agenda' },
+  { id: 'pengumuman', label: 'Pengumuman' },
+];
+
+/* ─── Component ───────────────────────────────────────────────────── */
+
 export default function TravelDashboard() {
   const { tenant } = useTravelAuth();
 
-  const [jamaahList, setJamaahList] = useState<JamaahAccountRow[]>([]);
-  const [jamaahLoading, setJamaahLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<TabId>('keberangkatan');
   const [copied, setCopied] = useState(false);
 
-  const slugUrl = tenant?.slug
-    ? `${window.location.origin}/t/${tenant.slug}`
-    : null;
+  const slugUrl = tenant?.slug ? `${window.location.origin}/t/${tenant.slug}` : null;
 
   const handleCopySlug = useCallback(() => {
     if (!slugUrl) return;
@@ -64,54 +115,391 @@ export default function TravelDashboard() {
     });
   }, [slugUrl]);
 
-  // Form tambah jamaah
+  /* ── Keberangkatan ───────────────────────────────────────────────── */
+  const [keberangkatanList, setKeberangkatanList] = useState<KeberangkatanRow[]>([]);
+  const [keberangkatanLoading, setKeberangkatanLoading] = useState(false);
+  const [selectedKeberangkatan, setSelectedKeberangkatan] = useState('');
+
+  const [kbFormOpen, setKbFormOpen] = useState(false);
+  const [kbEditId, setKbEditId] = useState<string | null>(null);
+  const [kbNamaBatch, setKbNamaBatch] = useState('');
+  const [kbTanggalBerangkat, setKbTanggalBerangkat] = useState('');
+  const [kbTanggalPulang, setKbTanggalPulang] = useState('');
+  const [kbHotelMakkah, setKbHotelMakkah] = useState('');
+  const [kbHotelMadinah, setKbHotelMadinah] = useState('');
+  const [kbMeetingPoint, setKbMeetingPoint] = useState('');
+  const [kbGuideName, setKbGuideName] = useState('');
+  const [kbGuideWhatsapp, setKbGuideWhatsapp] = useState('');
+  const [kbTourLeaderName, setKbTourLeaderName] = useState('');
+  const [kbTourLeaderWhatsapp, setKbTourLeaderWhatsapp] = useState('');
+  const [kbEmergencyNote, setKbEmergencyNote] = useState('');
+  const [kbFaseOverride, setKbFaseOverride] = useState('');
+  const [kbAktif, setKbAktif] = useState(true);
+  const [kbSaving, setKbSaving] = useState(false);
+  const [kbError, setKbError] = useState('');
+
+  /* ── Jamaah ──────────────────────────────────────────────────────── */
+  const [jamaahList, setJamaahList] = useState<JamaahAccountRow[]>([]);
+  const [jamaahLoading, setJamaahLoading] = useState(false);
+
   const [jmNama, setJmNama] = useState('');
   const [jmNomorJamaah, setJmNomorJamaah] = useState('');
   const [jmRombongan, setJmRombongan] = useState('');
   const [jmBus, setJmBus] = useState('');
   const [jmKamar, setJmKamar] = useState('');
+  const [jmPaspor, setJmPaspor] = useState('');
   const [jmFase, setJmFase] = useState<JamaahAccountRow['fase']>('persiapan');
-  const [jmError, setJmError] = useState('');
   const [jmSubmitting, setJmSubmitting] = useState(false);
+  const [jmError, setJmError] = useState('');
+  const [showDetailJamaah, setShowDetailJamaah] = useState(false);
+  const namaRef = useRef<HTMLInputElement>(null);
 
-  async function loadJamaah() {
+  const [editingJamaahId, setEditingJamaahId] = useState<string | null>(null);
+  const [editNama, setEditNama] = useState('');
+  const [editNomorJamaah, setEditNomorJamaah] = useState('');
+  const [editRombongan, setEditRombongan] = useState('');
+  const [editPaspor, setEditPaspor] = useState('');
+  const [editSaving, setEditSaving] = useState(false);
+  const [editError, setEditError] = useState('');
+
+  const [importOpen, setImportOpen] = useState(false);
+  const [importLoading, setImportLoading] = useState(false);
+  const [importError, setImportError] = useState('');
+  const [importPreview, setImportPreview] = useState<Array<{ nama: string; nomor_jamaah: string; rombongan: string; nomor_paspor: string }>>([]);
+  const [importSaving, setImportSaving] = useState(false);
+  const importFileRef = useRef<HTMLInputElement>(null);
+
+  /* ── Agenda ──────────────────────────────────────────────────────── */
+  const [agendaItems, setAgendaItems] = useState<AgendaItemRow[]>([]);
+  const [agendaLoading, setAgendaLoading] = useState(false);
+  const [agJudul, setAgJudul] = useState('');
+  const [agTanggal, setAgTanggal] = useState('');
+  const [agJam, setAgJam] = useState('');
+  const [agDeskripsi, setAgDeskripsi] = useState('');
+  const [agLokasi, setAgLokasi] = useState('');
+  const [agSubmitting, setAgSubmitting] = useState(false);
+  const [agError, setAgError] = useState('');
+
+  /* ── Pengumuman ───────────────────────────────────────────────────── */
+  const [announcements, setAnnouncements] = useState<TravelAnnouncementRow[]>([]);
+  const [annLoading, setAnnLoading] = useState(false);
+  const [annLabel, setAnnLabel] = useState('Info');
+  const [annTitle, setAnnTitle] = useState('');
+  const [annContent, setAnnContent] = useState('');
+  const [annImportant, setAnnImportant] = useState(false);
+  const [annSubmitting, setAnnSubmitting] = useState(false);
+  const [annError, setAnnError] = useState('');
+
+  /* ── Loaders ─────────────────────────────────────────────────────── */
+
+  const loadKeberangkatan = useCallback(async () => {
     if (!tenant?.id) return;
+    setKeberangkatanLoading(true);
+    fetchKeberangkatan(tenant.id).then(list => {
+      setKeberangkatanList(list);
+      if (list.length > 0 && !selectedKeberangkatan) setSelectedKeberangkatan(list[0].id);
+    }).catch(() => {}).finally(() => setKeberangkatanLoading(false));
+  }, [tenant?.id, selectedKeberangkatan]);
+
+  const loadJamaah = useCallback(async () => {
+    if (!tenant?.id || !selectedKeberangkatan) return;
     setJamaahLoading(true);
-    fetchJamaah(tenant.id).then(setJamaahList).catch(() => {}).finally(() => setJamaahLoading(false));
-  }
+    fetchJamaah(selectedKeberangkatan).then(setJamaahList).catch(() => {}).finally(() => setJamaahLoading(false));
+  }, [tenant?.id, selectedKeberangkatan]);
+
+  const loadAgenda = useCallback(async () => {
+    if (!tenant?.id || !selectedKeberangkatan) return;
+    setAgendaLoading(true);
+    fetchAgenda(selectedKeberangkatan).then(setAgendaItems).catch(() => {}).finally(() => setAgendaLoading(false));
+  }, [tenant?.id, selectedKeberangkatan]);
+
+  const loadAnnouncements = useCallback(async () => {
+    if (!tenant?.id || !selectedKeberangkatan) return;
+    setAnnLoading(true);
+    fetchAnnouncements(selectedKeberangkatan).then(setAnnouncements).catch(() => {}).finally(() => setAnnLoading(false));
+  }, [tenant?.id, selectedKeberangkatan]);
 
   useEffect(() => {
-    loadJamaah();
-  }, [tenant?.id]);
+    if (tenant?.id) loadKeberangkatan();
+  }, [tenant?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (selectedKeberangkatan) {
+      loadJamaah();
+      loadAgenda();
+      loadAnnouncements();
+    }
+  }, [selectedKeberangkatan, loadJamaah, loadAgenda, loadAnnouncements]);
+
+  /* ── Keberangkatan handlers ──────────────────────────────────────── */
+
+  function openKbForm(kb?: KeberangkatanRow) {
+    if (kb) {
+      setKbEditId(kb.id);
+      setKbNamaBatch(kb.nama_batch);
+      setKbTanggalBerangkat(kb.tanggal_keberangkatan ?? '');
+      setKbTanggalPulang(kb.tanggal_kepulangan ?? '');
+      setKbHotelMakkah(kb.hotel_makkah ?? '');
+      setKbHotelMadinah(kb.hotel_madinah ?? '');
+      setKbMeetingPoint(kb.meeting_point ?? '');
+      setKbGuideName(kb.guide_name ?? '');
+      setKbGuideWhatsapp(kb.guide_whatsapp ?? '');
+      setKbTourLeaderName(kb.tour_leader_name ?? '');
+      setKbTourLeaderWhatsapp(kb.tour_leader_whatsapp ?? '');
+      setKbEmergencyNote(kb.emergency_note ?? '');
+      setKbFaseOverride(kb.fase_override ?? '');
+      setKbAktif(kb.aktif ?? true);
+    } else {
+      setKbEditId(null);
+      setKbNamaBatch(''); setKbTanggalBerangkat(''); setKbTanggalPulang('');
+      setKbHotelMakkah(''); setKbHotelMadinah(''); setKbMeetingPoint('');
+      setKbGuideName(''); setKbGuideWhatsapp('');
+      setKbTourLeaderName(''); setKbTourLeaderWhatsapp('');
+      setKbEmergencyNote(''); setKbFaseOverride(''); setKbAktif(true);
+    }
+    setKbError('');
+    setKbFormOpen(true);
+  }
+
+  async function handleSaveKeberangkatan(e: FormEvent) {
+    e.preventDefault();
+    if (!tenant?.id) return;
+    if (!kbNamaBatch.trim()) { setKbError('Nama batch wajib diisi.'); return; }
+    setKbSaving(true); setKbError('');
+    try {
+      const payload = {
+        nama_batch: kbNamaBatch.trim(),
+        tanggal_keberangkatan: kbTanggalBerangkat || null,
+        tanggal_kepulangan: kbTanggalPulang || null,
+        hotel_makkah: kbHotelMakkah.trim() || null,
+        hotel_madinah: kbHotelMadinah.trim() || null,
+        meeting_point: kbMeetingPoint.trim() || null,
+        guide_name: kbGuideName.trim() || null,
+        guide_whatsapp: kbGuideWhatsapp.trim() || null,
+        tour_leader_name: kbTourLeaderName.trim() || null,
+        tour_leader_whatsapp: kbTourLeaderWhatsapp.trim() || null,
+        emergency_note: kbEmergencyNote.trim() || null,
+        fase_override: (kbFaseOverride || null) as 'persiapan' | 'tanah-suci' | 'selesai' | null,
+        aktif: kbAktif,
+      };
+      if (kbEditId) {
+        await updateKeberangkatan(kbEditId, payload);
+      } else {
+        const newKb = await createKeberangkatan(tenant.id, payload);
+        setSelectedKeberangkatan(newKb.id);
+      }
+      setKbFormOpen(false);
+      await loadKeberangkatan();
+    } catch (err: unknown) { setKbError(err instanceof Error ? err.message : 'Gagal menyimpan.'); }
+    setKbSaving(false);
+  }
+
+  async function handleDeleteKeberangkatan(kbId: string, nama: string) {
+    if (!window.confirm(`Hapus batch "${nama}"? Semua jamaah, agenda, dan pengumuman batch ini juga akan terpengaruh.`)) return;
+    await deleteKeberangkatan(kbId);
+    setKeberangkatanList(prev => {
+      const next = prev.filter(k => k.id !== kbId);
+      if (selectedKeberangkatan === kbId) setSelectedKeberangkatan(next[0]?.id ?? '');
+      return next;
+    });
+  }
+
+  /* ── Jamaah handlers ─────────────────────────────────────────────── */
 
   async function handleAddJamaah(e: FormEvent) {
     e.preventDefault();
-    if (!tenant?.id) return;
+    if (!tenant?.id || !selectedKeberangkatan) return;
     setJmError('');
+    if (!jmNama.trim()) { setJmError('Nama jamaah wajib diisi.'); return; }
+    if (!jmNomorJamaah.trim()) { setJmError('Nomor jamaah wajib diisi.'); return; }
     setJmSubmitting(true);
-
     try {
-      await createJamaah(tenant.id, null, { nama: jmNama.trim(), nomor_jamaah: jmNomorJamaah.trim(), rombongan: jmRombongan.trim() || null, nomor_bus: jmBus.trim() || null, nomor_kamar: jmKamar.trim() || null, fase: jmFase });
-      setJmNama(''); setJmNomorJamaah(''); setJmRombongan(''); setJmBus(''); setJmKamar(''); setJmFase('persiapan');
+      await createJamaah(tenant.id, selectedKeberangkatan, {
+        nama: jmNama.trim(), nomor_jamaah: jmNomorJamaah.trim(),
+        rombongan: jmRombongan.trim() || null, nomor_bus: jmBus.trim() || null,
+        nomor_kamar: jmKamar.trim() || null, nomor_paspor: jmPaspor.trim() || null,
+        fase: jmFase,
+      });
+      setJmNama(''); setJmNomorJamaah(''); setJmRombongan(''); setJmBus(''); setJmKamar(''); setJmPaspor(''); setJmFase('persiapan');
       await loadJamaah();
-    } catch (err: unknown) {
-      setJmError(err instanceof Error ? err.message : 'Gagal menambah jamaah.');
-    }
+      namaRef.current?.focus();
+    } catch (err: unknown) { setJmError(err instanceof Error ? err.message : 'Gagal menambah jamaah.'); }
     setJmSubmitting(false);
   }
 
   async function handleDeleteJamaah(jamaahId: string, nama: string) {
-    if (!tenant?.id || !confirm(`Hapus jamaah "${nama}"? Akses login mereka akan dicabut.`)) return;
+    if (!tenant?.id || !window.confirm(`Hapus jamaah "${nama}"? Jamaah ini tidak bisa login lagi.`)) return;
     await deleteJamaah(tenant.id, jamaahId);
     setJamaahList(prev => prev.filter(j => j.id !== jamaahId));
   }
 
-  async function handleUpdateFase(jamaahId: string, val: string) {
+  async function handleUpdateJamaahFase(jamaahId: string, val: string) {
     if (!tenant?.id) return;
     const fase_override = (val === '' ? null : val) as JamaahAccountRow['fase'] | null;
     await updateJamaah(tenant.id, jamaahId, { fase_override } as Partial<JamaahAccountRow>);
     setJamaahList(prev => prev.map(j => j.id === jamaahId ? { ...j, fase_override } : j));
   }
+
+  function startEditJamaah(j: JamaahAccountRow) {
+    setEditingJamaahId(j.id);
+    setEditNama(j.nama);
+    setEditNomorJamaah(j.nomor_jamaah);
+    setEditRombongan(j.rombongan ?? '');
+    setEditPaspor(j.nomor_paspor ?? '');
+    setEditError('');
+  }
+
+  function cancelEditJamaah() { setEditingJamaahId(null); setEditError(''); }
+
+  async function saveEditJamaah(jamaahId: string) {
+    if (!tenant?.id) return;
+    if (!editNama.trim()) { setEditError('Nama wajib diisi.'); return; }
+    if (!editNomorJamaah.trim()) { setEditError('No. Jamaah wajib diisi.'); return; }
+    setEditSaving(true); setEditError('');
+    try {
+      const payload = {
+        nama: editNama.trim(), nomor_jamaah: editNomorJamaah.trim(),
+        rombongan: editRombongan.trim() || null, nomor_paspor: editPaspor.trim() || null,
+      };
+      await updateJamaah(tenant.id, jamaahId, payload as Partial<JamaahAccountRow>);
+      setJamaahList(prev => prev.map(j => j.id === jamaahId ? { ...j, ...payload } : j));
+      setEditingJamaahId(null);
+    } catch (err: unknown) { setEditError(err instanceof Error ? err.message : 'Gagal menyimpan perubahan.'); }
+    setEditSaving(false);
+  }
+
+  async function handleImportFile(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImportError(''); setImportLoading(true); setImportPreview([]);
+    try {
+      const ext = file.name.split('.').pop()?.toLowerCase();
+      let result: Array<{ nama?: unknown; nomor_jamaah?: unknown; rombongan?: unknown; nomor_paspor?: unknown }> = [];
+
+      if (ext === 'xlsx' || ext === 'xls' || ext === 'csv') {
+        const buf = await file.arrayBuffer();
+        const wb = XLSX.read(buf, { type: 'array' });
+        const ws = wb.Sheets[wb.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(ws, { header: 1 });
+        const resp = await fetch('/api/ai-extract-jamaah', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ mode: 'excel', rows }),
+        });
+        const json = await resp.json() as { error?: string; jamaah?: typeof result };
+        if (!resp.ok) throw new Error(json.error || 'Gagal ekstrak Excel.');
+        result = json.jamaah ?? [];
+      } else if (ext === 'pdf' || ['png', 'jpg', 'jpeg', 'webp'].includes(ext || '')) {
+        const base64 = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve((reader.result as string).split(',')[1]);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+        const resp = await fetch('/api/ai-extract-jamaah', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ mode: 'pdf', fileBase64: base64, mimeType: file.type }),
+        });
+        const json = await resp.json() as { error?: string; jamaah?: typeof result };
+        if (!resp.ok) throw new Error(json.error || 'Gagal ekstrak PDF.');
+        result = json.jamaah ?? [];
+      } else {
+        throw new Error('Format tidak didukung. Pakai Excel (.xlsx/.csv) atau PDF.');
+      }
+
+      const preview = (result || []).map((j, idx) => ({
+        nama: String(j.nama ?? '').trim(),
+        nomor_jamaah: String(j.nomor_jamaah ?? String(idx + 1).padStart(3, '0')).trim(),
+        rombongan: String(j.rombongan ?? '').trim(),
+        nomor_paspor: String(j.nomor_paspor ?? '').trim(),
+      })).filter(j => j.nama);
+
+      if (preview.length === 0) throw new Error('Tidak ada data jamaah terbaca. Cek format file.');
+      setImportPreview(preview);
+    } catch (err: unknown) { setImportError(err instanceof Error ? err.message : 'Gagal memproses file.'); }
+    finally { setImportLoading(false); if (importFileRef.current) importFileRef.current.value = ''; }
+  }
+
+  function updatePreviewRow(idx: number, field: string, value: string) {
+    setImportPreview(prev => prev.map((r, i) => i === idx ? { ...r, [field]: value } : r));
+  }
+
+  function removePreviewRow(idx: number) {
+    setImportPreview(prev => prev.filter((_, i) => i !== idx));
+  }
+
+  async function confirmImport() {
+    if (!tenant?.id || !selectedKeberangkatan || importPreview.length === 0) return;
+    const invalid = importPreview.some(r => !r.nama.trim() || !r.nomor_jamaah.trim());
+    if (invalid) { setImportError('Semua baris harus punya Nama & No. Jamaah.'); return; }
+    setImportSaving(true); setImportError('');
+    try {
+      const payload = importPreview.map(r => ({
+        nama: r.nama.trim(), nomor_jamaah: r.nomor_jamaah.trim(),
+        rombongan: r.rombongan.trim() || null, nomor_paspor: r.nomor_paspor.trim() || null,
+        fase: 'persiapan',
+      }));
+      const { inserted } = await bulkInsertJamaah(tenant.id, selectedKeberangkatan, payload);
+      setImportPreview([]); setImportOpen(false);
+      await loadJamaah();
+      alert(`${inserted} jamaah berhasil diimport.`);
+    } catch (err: unknown) { setImportError(err instanceof Error ? err.message : 'Gagal menyimpan data.'); }
+    setImportSaving(false);
+  }
+
+  /* ── Agenda handlers ─────────────────────────────────────────────── */
+
+  async function handleAddAgenda(e: FormEvent) {
+    e.preventDefault();
+    if (!tenant?.id || !selectedKeberangkatan) return;
+    setAgError('');
+    if (!agJudul.trim() || !agTanggal) { setAgError('Tanggal dan judul wajib diisi.'); return; }
+    setAgSubmitting(true);
+    try {
+      await createAgenda(tenant.id, selectedKeberangkatan, {
+        tanggal: agTanggal, jam_mulai: agJam || null,
+        judul: agJudul.trim(), deskripsi: agDeskripsi.trim() || null,
+        lokasi: agLokasi.trim() || null, urutan: 0,
+      });
+      setAgJudul(''); setAgTanggal(''); setAgJam(''); setAgDeskripsi(''); setAgLokasi('');
+      await loadAgenda();
+    } catch (err: unknown) { setAgError(err instanceof Error ? err.message : 'Gagal menambah agenda.'); }
+    setAgSubmitting(false);
+  }
+
+  async function handleDeleteAgenda(agendaId: string, judul: string) {
+    if (!tenant?.id || !window.confirm(`Hapus agenda "${judul}"?`)) return;
+    await deleteAgenda(tenant.id, agendaId);
+    await loadAgenda();
+  }
+
+  /* ── Pengumuman handlers ──────────────────────────────────────────── */
+
+  async function handleAddAnnouncement(e: FormEvent) {
+    e.preventDefault();
+    if (!tenant?.id || !selectedKeberangkatan) return;
+    setAnnError('');
+    if (!annTitle.trim() || !annContent.trim()) { setAnnError('Judul dan isi pengumuman wajib diisi.'); return; }
+    setAnnSubmitting(true);
+    try {
+      await createAnnouncement(tenant.id, selectedKeberangkatan, {
+        label: annLabel.trim() || 'Info', title: annTitle.trim(),
+        content: annContent.trim(), important: annImportant,
+      });
+      setAnnLabel('Info'); setAnnTitle(''); setAnnContent(''); setAnnImportant(false);
+      await loadAnnouncements();
+    } catch (err: unknown) { setAnnError(err instanceof Error ? err.message : 'Gagal membuat pengumuman.'); }
+    setAnnSubmitting(false);
+  }
+
+  async function handleDeleteAnnouncement(annId: string, title: string) {
+    if (!tenant?.id || !window.confirm(`Hapus pengumuman "${title}"?`)) return;
+    await deleteAnnouncement(tenant.id, annId);
+    await loadAnnouncements();
+  }
+
+  /* ── Guard: no tenant ────────────────────────────────────────────── */
 
   if (!tenant) {
     return (
@@ -128,51 +516,50 @@ export default function TravelDashboard() {
     );
   }
 
+  /* ── Render ──────────────────────────────────────────────────────── */
+
   return (
     <TravelLayout>
-      {/* ── Info Tenant ── */}
-      <div className="mb-8">
+
+      {/* ── Header Tenant ── */}
+      <div className="mb-6">
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="font-mono text-[10px] uppercase tracking-widest mb-1" style={{ color: '#9ca3af' }}>
               Portal Travel Agency
             </p>
-            <h1 className="font-bold" style={{ fontSize: '28px', color: '#111827', letterSpacing: '-0.02em' }}>
+            <h1 className="font-bold" style={{ fontSize: '26px', color: '#111827', letterSpacing: '-0.02em' }}>
               {tenant.nama_travel}
             </h1>
           </div>
-          {/* Ringkasan statistik */}
-          <div className="flex gap-3 flex-none">
-            <div className="rounded-2xl px-5 py-3 text-center" style={cardStyle}>
-              <p className="font-mono text-[28px] font-bold" style={{ color: '#111827', letterSpacing: '-1px' }}>
-                {jamaahList.length}
-              </p>
-              <p className="font-mono text-[9px] uppercase tracking-[0.18em] mt-0.5" style={{ color: '#9ca3af' }}>
-                Total Jamaah
-              </p>
-              {/* TODO: track last_login untuk hitung "sudah aktivasi" */}
-            </div>
+          <div className="rounded-2xl px-5 py-3 text-center" style={cardStyle}>
+            <p className="font-mono text-[26px] font-bold" style={{ color: '#111827', letterSpacing: '-1px' }}>
+              {jamaahList.length}
+            </p>
+            <p className="font-mono text-[9px] uppercase tracking-[0.18em] mt-0.5" style={{ color: '#9ca3af' }}>
+              {selectedKeberangkatan ? 'Jamaah Batch Ini' : 'Total Jamaah'}
+            </p>
           </div>
         </div>
 
-        {/* Kode aktivasi — read only */}
+        {/* Kode aktivasi */}
         <div className="mt-4 inline-flex items-center gap-3 rounded-xl px-4 py-3"
-          style={{ background: 'rgba(14,165,233,0.06)', border: '1px solid rgba(14,165,233,0.14)' }}>
+          style={{ background: 'rgba(14,165,233,0.06)', border: PRIMARY_BORDER }}>
           <div>
-            <p className="font-mono text-[9px] uppercase tracking-[0.18em]" style={{ color: '#0ea5e9' }}>
+            <p className="font-mono text-[9px] uppercase tracking-[0.18em]" style={{ color: PRIMARY }}>
               Kode Aktivasi Jamaah
             </p>
-            <p className="font-mono text-[20px] font-bold tracking-[0.12em]" style={{ color: '#0284c7', letterSpacing: '0.1em' }}>
+            <p className="font-mono text-[20px] font-bold tracking-[0.12em]" style={{ color: PRIMARY_DEEP, letterSpacing: '0.1em' }}>
               {tenant.activation_code}
             </p>
           </div>
-          <div className="h-10 w-px" style={{ background: 'rgba(14,165,233,0.18)' }} />
+          <div className="h-10 w-px" style={{ background: PRIMARY_BORDER }} />
           <p className="text-[12px] max-w-[220px]" style={{ color: '#0369a1' }}>
             Bagikan kode ini ke jamaah untuk login ke aplikasi.
           </p>
         </div>
 
-        {/* Link slug branded — tampil hanya jika tenant punya slug */}
+        {/* Link slug branded */}
         {slugUrl && (
           <div className="mt-3 flex items-center gap-3 rounded-xl px-4 py-3"
             style={{ background: 'rgba(16,185,129,0.06)', border: '1px solid rgba(16,185,129,0.18)' }}>
@@ -184,263 +571,613 @@ export default function TravelDashboard() {
                 {slugUrl}
               </p>
             </div>
-            <button
-              onClick={handleCopySlug}
+            <button onClick={handleCopySlug}
               className="flex-none flex items-center gap-1.5 rounded-lg px-3 py-2 text-[12px] font-semibold transition-all active:scale-95"
-              style={{
-                background: copied ? 'rgba(16,185,129,0.18)' : 'rgba(16,185,129,0.12)',
-                color: '#059669',
-                border: '1px solid rgba(16,185,129,0.22)',
-              }}
-            >
+              style={{ background: copied ? 'rgba(16,185,129,0.18)' : 'rgba(16,185,129,0.12)', color: '#059669', border: '1px solid rgba(16,185,129,0.22)' }}>
               {copied ? (
-                <>
-                  <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                  Tersalin!
-                </>
+                <><svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>Tersalin!</>
               ) : (
-                <>
-                  <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="9" y="9" width="13" height="13" rx="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                  </svg>
-                  Salin Link
-                </>
+                <><svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>Salin Link</>
               )}
             </button>
           </div>
         )}
       </div>
 
-      {/* ── Form Tambah Jamaah ── */}
-      <div className="mb-5">
-        <h2 className="font-bold mb-4" style={{ fontSize: '18px', color: '#111827', letterSpacing: '-0.02em' }}>
-          Daftar Jamaah
-        </h2>
+      {/* ── Tab Bar ── */}
+      <div className="sticky top-0 z-10 -mx-1 mb-6 flex gap-1 overflow-x-auto border-b px-1 pb-0"
+        style={{ background: '#f9f7f3', borderColor: 'rgba(0,0,0,0.06)' }}>
+        {TABS.map(t => {
+          const active = activeTab === t.id;
+          return (
+            <button key={t.id} type="button" onClick={() => setActiveTab(t.id)}
+              className="relative flex-none whitespace-nowrap px-4 py-3 text-[13px] font-semibold transition-colors"
+              style={{ color: active ? PRIMARY : '#6b7280', background: 'transparent', border: 'none', cursor: 'pointer' }}>
+              {t.label}
+              {active && (
+                <span className="absolute inset-x-2 -bottom-px h-0.5 rounded-full" style={{ background: PRIMARY }} />
+              )}
+            </button>
+          );
+        })}
+      </div>
 
-        <div className="rounded-2xl px-6 py-6 mb-4"
-          style={{ ...cardStyle, border: '1px solid rgba(14,165,233,0.14)' }}>
-          <p className="font-mono text-[10px] uppercase tracking-[0.14em] mb-4" style={{ color: '#6b7280' }}>
-            Tambah Jamaah Baru
-          </p>
-          <form onSubmit={handleAddJamaah} className="space-y-3">
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>
-                  Nama Lengkap <span style={{ color: '#f87171' }}>*</span>
-                </p>
-                <StyledInput
-                  type="text"
-                  value={jmNama}
-                  onChange={e => setJmNama(e.target.value)}
-                  placeholder="Sesuai data pendaftaran"
-                  required
-                />
+      {/* ══════════════════════════════════════════════
+          TAB: KEBERANGKATAN
+      ══════════════════════════════════════════════ */}
+      {activeTab === 'keberangkatan' && (
+        <div>
+          <div className="flex items-center gap-3 mb-5">
+            <h2 className="font-bold" style={{ fontSize: '18px', color: '#111827', letterSpacing: '-0.02em' }}>Batch Keberangkatan</h2>
+            <span className="font-mono text-[10px] uppercase tracking-widest px-2 py-1 rounded-full" style={{ background: PRIMARY_BG, color: PRIMARY }}>{keberangkatanList.length} batch</span>
+            <button type="button" onClick={() => openKbForm()}
+              className="ml-auto inline-flex items-center gap-2 px-4 py-2 text-[12px] font-semibold rounded-xl transition-all duration-150"
+              style={{ background: `linear-gradient(135deg, ${PRIMARY} 0%, ${PRIMARY_DEEP} 100%)`, color: '#ffffff' }}>
+              + Tambah Batch
+            </button>
+          </div>
+
+          {kbFormOpen && (
+            <form onSubmit={handleSaveKeberangkatan} className="rounded-2xl px-6 py-6 mb-5"
+              style={{ ...cardStyle, border: `1px solid ${PRIMARY_BORDER}` }}>
+              <p className="font-mono text-[10px] uppercase tracking-[0.14em] mb-4" style={{ color: PRIMARY }}>
+                {kbEditId ? 'Edit Batch' : 'Batch Baru'}
+              </p>
+              <div className="space-y-4">
+                <div>
+                  <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Nama Batch <span style={{ color: '#f87171' }}>*</span></p>
+                  <StyledInput type="text" value={kbNamaBatch} onChange={e => setKbNamaBatch(e.target.value)} placeholder="cth. Batch 1 — Februari 2025" maxLength={120} required />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Tgl Keberangkatan</p><StyledInput type="date" value={kbTanggalBerangkat} onChange={e => setKbTanggalBerangkat(e.target.value)} /></div>
+                  <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Tgl Kepulangan</p><StyledInput type="date" value={kbTanggalPulang} onChange={e => setKbTanggalPulang(e.target.value)} /></div>
+                </div>
+                <div style={{ height: '1px', background: 'rgba(0,0,0,0.05)' }} />
+                <div className="grid grid-cols-2 gap-4">
+                  <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Hotel Makkah</p><StyledInput type="text" value={kbHotelMakkah} onChange={e => setKbHotelMakkah(e.target.value)} placeholder="Nama hotel & kamar" maxLength={120} /></div>
+                  <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Hotel Madinah</p><StyledInput type="text" value={kbHotelMadinah} onChange={e => setKbHotelMadinah(e.target.value)} placeholder="Nama hotel & kamar" maxLength={120} /></div>
+                </div>
+                <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Titik Kumpul</p><StyledInput type="text" value={kbMeetingPoint} onChange={e => setKbMeetingPoint(e.target.value)} placeholder="Cth: Lobby terminal 2" maxLength={160} /></div>
+                <div style={{ height: '1px', background: 'rgba(0,0,0,0.05)' }} />
+                <div className="grid grid-cols-2 gap-4">
+                  <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Nama Muthowwif</p><StyledInput type="text" value={kbGuideName} onChange={e => setKbGuideName(e.target.value)} placeholder="Ust. Ahmad" maxLength={80} /></div>
+                  <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>WA Muthowwif</p><StyledInput type="text" value={kbGuideWhatsapp} onChange={e => setKbGuideWhatsapp(normalizePhone(e.target.value))} placeholder="628xxxxxxxxxx" /></div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Nama Tour Leader</p><StyledInput type="text" value={kbTourLeaderName} onChange={e => setKbTourLeaderName(e.target.value)} placeholder="Bpk. Budi" maxLength={80} /></div>
+                  <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>WA Tour Leader</p><StyledInput type="text" value={kbTourLeaderWhatsapp} onChange={e => setKbTourLeaderWhatsapp(normalizePhone(e.target.value))} placeholder="628xxxxxxxxxx" /></div>
+                </div>
+                <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Catatan Darurat</p><StyledTextarea rows={2} value={kbEmergencyNote} onChange={e => setKbEmergencyNote(e.target.value)} placeholder="Instruksi jika jamaah tersesat..." /></div>
+                <div>
+                  <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Override Fase</p>
+                  <select value={kbFaseOverride} onChange={e => setKbFaseOverride(e.target.value)}
+                    className="w-full rounded-xl px-3 py-2.5 text-[13px] focus:outline-none"
+                    style={{ ...inputBase }}>
+                    <option value="">Auto (dari tanggal)</option>
+                    {FASE_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                  </select>
+                </div>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" checked={kbAktif} onChange={e => setKbAktif(e.target.checked)} className="w-4 h-4 rounded" />
+                  <span className="text-[12px] font-medium" style={{ color: '#374151' }}>Batch aktif (terlihat di login jamaah)</span>
+                </label>
               </div>
-              <div>
-                <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>
-                  Nomor Jamaah <span style={{ color: '#f87171' }}>*</span>
-                </p>
-                <StyledInput
-                  type="text"
-                  value={jmNomorJamaah}
-                  onChange={e => setJmNomorJamaah(e.target.value)}
-                  placeholder="UMR-2026-0001"
-                  required
-                />
+              {kbError && <p className="mt-3 text-[12px]" style={{ color: '#dc2626' }}>{kbError}</p>}
+              <div className="flex items-center gap-3 pt-5">
+                <button type="submit" disabled={kbSaving}
+                  className="px-6 py-2.5 text-[12px] font-semibold rounded-xl disabled:opacity-60"
+                  style={{ background: `linear-gradient(135deg, ${PRIMARY} 0%, ${PRIMARY_DEEP} 100%)`, color: '#ffffff' }}>
+                  {kbSaving ? 'Menyimpan...' : (kbEditId ? 'Simpan Perubahan' : 'Buat Batch')}
+                </button>
+                <button type="button" onClick={() => setKbFormOpen(false)}
+                  className="px-5 py-2.5 text-[12px] font-medium rounded-xl" style={{ color: '#6b7280', border: '1px solid rgba(0,0,0,0.1)' }}>
+                  Batal
+                </button>
               </div>
+            </form>
+          )}
+
+          {keberangkatanLoading && (
+            <p className="text-[12px] py-8 text-center" style={{ color: '#9ca3af' }}>Memuat batch...</p>
+          )}
+
+          {!keberangkatanLoading && keberangkatanList.length === 0 && (
+            <div className="py-12 text-center rounded-2xl" style={{ border: '1px dashed rgba(0,0,0,0.12)' }}>
+              <p className="text-[13px]" style={{ color: '#9ca3af' }}>Belum ada batch keberangkatan.</p>
+              <p className="text-[12px] mt-1" style={{ color: '#d1d5db' }}>Klik "+ Tambah Batch" untuk memulai.</p>
             </div>
-            <div className="grid grid-cols-3 gap-3">
-              <div>
-                <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Rombongan</p>
-                <StyledInput
-                  type="text"
-                  value={jmRombongan}
-                  onChange={e => setJmRombongan(e.target.value)}
-                  placeholder="Rombongan A"
-                />
+          )}
+
+          <div className="space-y-3">
+            {keberangkatanList.map(kb => (
+              <div key={kb.id} className="rounded-2xl px-5 py-4"
+                style={{ ...cardStyle, border: selectedKeberangkatan === kb.id ? `1.5px solid ${PRIMARY_BORDER}` : undefined }}>
+                <div className="flex items-start gap-3">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <p className="font-semibold text-[14px]" style={{ color: '#111827' }}>{kb.nama_batch}</p>
+                      {kb.aktif ? (
+                        <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full" style={{ background: 'rgba(22,163,74,0.1)', color: '#16a34a' }}>Aktif</span>
+                      ) : (
+                        <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full" style={{ background: 'rgba(0,0,0,0.05)', color: '#9ca3af' }}>Nonaktif</span>
+                      )}
+                      {selectedKeberangkatan === kb.id && (
+                        <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full" style={{ background: PRIMARY_BG, color: PRIMARY }}>Dipilih</span>
+                      )}
+                    </div>
+                    {(kb.tanggal_keberangkatan || kb.tanggal_kepulangan) && (
+                      <p className="text-[11px] mt-0.5" style={{ color: '#6b7280' }}>
+                        {kb.tanggal_keberangkatan ? new Date(kb.tanggal_keberangkatan + 'T00:00:00').toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'}
+                        {' → '}
+                        {kb.tanggal_kepulangan ? new Date(kb.tanggal_kepulangan + 'T00:00:00').toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'}
+                      </p>
+                    )}
+                    {kb.hotel_makkah && <p className="text-[10px] mt-0.5" style={{ color: '#9ca3af' }}>🕌 {kb.hotel_makkah}</p>}
+                  </div>
+                  <div className="flex items-center gap-2 flex-none">
+                    <button type="button" onClick={() => setSelectedKeberangkatan(kb.id)}
+                      className="text-[11px] px-3 py-1.5 rounded-lg font-medium transition-all"
+                      style={{ background: selectedKeberangkatan === kb.id ? PRIMARY_BG : 'rgba(0,0,0,0.04)', color: selectedKeberangkatan === kb.id ? PRIMARY : '#6b7280' }}>
+                      Pilih
+                    </button>
+                    <button type="button" onClick={() => openKbForm(kb)}
+                      className="text-[11px] px-3 py-1.5 rounded-lg font-medium transition-all"
+                      style={{ background: 'rgba(0,0,0,0.04)', color: '#374151' }}>
+                      Edit
+                    </button>
+                    <button type="button" onClick={() => handleDeleteKeberangkatan(kb.id, kb.nama_batch)}
+                      className="text-[11px] px-3 py-1.5 rounded-lg font-medium transition-all"
+                      style={{ color: '#dc2626' }}>
+                      Hapus
+                    </button>
+                  </div>
+                </div>
               </div>
-              <div>
-                <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Nomor Bus</p>
-                <StyledInput
-                  type="text"
-                  value={jmBus}
-                  onChange={e => setJmBus(e.target.value)}
-                  placeholder="Bus 3"
-                />
-              </div>
-              <div>
-                <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Nomor Kamar</p>
-                <StyledInput
-                  type="text"
-                  value={jmKamar}
-                  onChange={e => setJmKamar(e.target.value)}
-                  placeholder="804"
-                />
-              </div>
-            </div>
-            <div style={{ maxWidth: '200px' }}>
-              <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Fase</p>
-              <select
-                value={jmFase}
-                onChange={e => setJmFase(e.target.value as JamaahAccountRow['fase'])}
-                className="w-full rounded-xl px-4 py-3 text-sm transition-all duration-150 focus:outline-none appearance-none"
-                style={{ ...inputBase, cursor: 'pointer' }}
-                onFocus={e => {
-                  e.currentTarget.style.border = '1px solid #0ea5e9';
-                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(14,165,233,0.12)';
-                  e.currentTarget.style.background = '#ffffff';
-                }}
-                onBlur={e => {
-                  e.currentTarget.style.border = '1px solid rgba(0,0,0,0.09)';
-                  e.currentTarget.style.boxShadow = 'inset 0 1px 2px rgba(0,0,0,0.04)';
-                  e.currentTarget.style.background = '#fafaf9';
-                }}
-              >
-                {FASE_OPTIONS.map(o => (
-                  <option key={o.value} value={o.value}>{o.label}</option>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ══════════════════════════════════════════════
+          TAB: JAMAAH
+      ══════════════════════════════════════════════ */}
+      {activeTab === 'jamaah' && (
+        <div>
+          {/* Keberangkatan selector */}
+          {keberangkatanList.length > 0 && (
+            <div className="mb-5 flex items-center gap-3">
+              <label className="font-mono text-[10px] uppercase tracking-widest flex-none" style={{ color: '#6b7280' }}>Batch:</label>
+              <select value={selectedKeberangkatan} onChange={e => setSelectedKeberangkatan(e.target.value)}
+                className="flex-1 rounded-xl px-3 py-2 text-[13px] focus:outline-none"
+                style={{ ...inputBase, maxWidth: '360px' }}>
+                {keberangkatanList.map(kb => (
+                  <option key={kb.id} value={kb.id}>{kb.nama_batch}</option>
                 ))}
               </select>
             </div>
-
-            {jmError && (
-              <p className="text-[12px]" style={{ color: '#dc2626' }}>{jmError}</p>
-            )}
-
-            <button
-              type="submit"
-              disabled={jmSubmitting}
-              className="flex items-center gap-2 px-5 py-2.5 text-[12px] font-semibold rounded-xl transition-all duration-150 disabled:opacity-60"
-              style={{
-                background: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)',
-                color: '#ffffff',
-                boxShadow: '0 2px 8px rgba(14,165,233,0.28)',
-              }}
-            >
-              {jmSubmitting ? (
-                <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" fill="none">
-                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeOpacity="0.3" />
-                  <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-                </svg>
-              ) : (
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
-                </svg>
-              )}
-              Tambah Jamaah
-            </button>
-          </form>
-        </div>
-
-        {/* ── Tabel Daftar Jamaah ── */}
-        <div className="rounded-2xl overflow-hidden" style={cardStyle}>
-          {jamaahLoading ? (
-            <div className="py-10 text-center font-mono text-[12px]" style={{ color: '#d1d5db' }}>
-              Memuat daftar jamaah...
-            </div>
-          ) : jamaahList.length === 0 ? (
-            <div className="py-10 text-center">
-              <p className="text-[13px]" style={{ color: '#9ca3af' }}>
-                Belum ada jamaah terdaftar. Tambahkan jamaah pertama di atas.
-              </p>
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr style={{ borderBottom: '1px solid rgba(0,0,0,0.06)', background: '#fafaf9' }}>
-                    {['Nama', 'No. Jamaah', 'Rombongan', 'Bus', 'Kamar', 'Fase', ''].map(h => (
-                      <th
-                        key={h}
-                        className="text-left font-mono text-[10px] uppercase tracking-[0.12em] px-4 py-3 whitespace-nowrap"
-                        style={{ color: '#9ca3af' }}
-                      >
-                        {h}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {jamaahList.map((j, i) => (
-                    <tr
-                      key={j.id}
-                      style={{ borderBottom: i < jamaahList.length - 1 ? '1px solid rgba(0,0,0,0.04)' : 'none' }}
-                    >
-                      <td className="px-4 py-3.5 text-[13px] font-semibold" style={{ color: '#111827' }}>
-                        {j.nama}
-                      </td>
-                      <td className="px-4 py-3.5 font-mono text-[11px]" style={{ color: '#6b7280' }}>
-                        {j.nomor_jamaah}
-                      </td>
-                      <td className="px-4 py-3.5 text-[12px]" style={{ color: '#6b7280' }}>
-                        {j.rombongan ?? '—'}
-                      </td>
-                      <td className="px-4 py-3.5 text-[12px]" style={{ color: '#6b7280' }}>
-                        {j.nomor_bus ?? '—'}
-                      </td>
-                      <td className="px-4 py-3.5 text-[12px]" style={{ color: '#6b7280' }}>
-                        {j.nomor_kamar ?? '—'}
-                      </td>
-                      <td className="px-4 py-3.5">
-                        <select
-                          value={j.fase_override ?? ''}
-                          onChange={e => handleUpdateFase(j.id, e.target.value)}
-                          className="rounded-lg px-2.5 py-1.5 text-[11px] font-semibold transition-all duration-150 focus:outline-none appearance-none cursor-pointer"
-                          style={{
-                            border: '1px solid rgba(0,0,0,0.09)',
-                            background:
-                              j.fase_override === 'persiapan'
-                                ? 'rgba(245,158,11,0.08)'
-                                : j.fase_override === 'tanah-suci'
-                                ? 'rgba(16,185,129,0.08)'
-                                : j.fase_override === 'selesai'
-                                ? 'rgba(107,114,128,0.08)'
-                                : 'rgba(99,102,241,0.08)',
-                            color:
-                              j.fase_override === 'persiapan'
-                                ? '#b45309'
-                                : j.fase_override === 'tanah-suci'
-                                ? '#059669'
-                                : j.fase_override === 'selesai'
-                                ? '#6b7280'
-                                : '#4f46e5',
-                          }}
-                        >
-                          <option value="">Otomatis (dari jadwal)</option>
-                          {FASE_OPTIONS.map(o => (
-                            <option key={o.value} value={o.value}>{o.label}</option>
-                          ))}
-                        </select>
-                      </td>
-                      <td className="px-4 py-3.5 text-right">
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteJamaah(j.id, j.nama)}
-                          className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150"
-                          style={{ color: '#9ca3af', border: '1px solid rgba(0,0,0,0.07)' }}
-                          onMouseEnter={e => {
-                            (e.currentTarget as HTMLButtonElement).style.color = '#dc2626';
-                            (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(220,38,38,0.25)';
-                            (e.currentTarget as HTMLButtonElement).style.background = 'rgba(220,38,38,0.05)';
-                          }}
-                          onMouseLeave={e => {
-                            (e.currentTarget as HTMLButtonElement).style.color = '#9ca3af';
-                            (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,0,0,0.07)';
-                            (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
-                          }}
-                        >
-                          Hapus
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          )}
+          {!selectedKeberangkatan && (
+            <div className="mb-5 rounded-xl px-4 py-3 text-[12px]" style={{ background: 'rgba(245,158,11,0.07)', border: '1px solid rgba(245,158,11,0.2)', color: '#d97706' }}>
+              Buat batch keberangkatan dulu di tab <strong>Keberangkatan</strong> sebelum menambah jamaah.
             </div>
           )}
+
+          {/* Header */}
+          <div className="flex items-center gap-3 mb-5">
+            <h2 className="font-bold" style={{ fontSize: '18px', color: '#111827', letterSpacing: '-0.02em' }}>Daftar Jamaah</h2>
+            <span className="font-mono text-[10px] uppercase tracking-widest px-2 py-1 rounded-full" style={{ background: PRIMARY_BG, color: PRIMARY }}>{jamaahList.length} jamaah</span>
+            <button type="button" onClick={() => { setImportOpen(o => !o); setImportError(''); setImportPreview([]); }}
+              className="ml-auto inline-flex items-center gap-2 px-4 py-2 text-[12px] font-semibold rounded-xl transition-all duration-150"
+              style={{ background: PRIMARY_BG, color: PRIMARY, border: PRIMARY_BORDER }}>
+              <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
+              Import Excel/PDF
+            </button>
+          </div>
+
+          {/* Import panel */}
+          {importOpen && (
+            <div className="rounded-2xl px-6 py-6 mb-4" style={{ ...cardStyle, border: `1px solid ${PRIMARY_BORDER}` }}>
+              <p className="font-mono text-[10px] uppercase tracking-[0.14em] mb-3" style={{ color: PRIMARY }}>Import Jamaah dengan AI</p>
+              <p className="text-[12px] mb-4" style={{ color: '#6b7280' }}>
+                Upload file Excel (.xlsx/.csv) atau PDF berisi daftar jamaah. AI akan membaca & merapikan datanya, lalu Anda bisa review sebelum menyimpan.
+              </p>
+
+              {importPreview.length === 0 ? (
+                <div>
+                  <button type="button" onClick={() => importFileRef.current?.click()} disabled={importLoading}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 text-[12px] font-semibold rounded-xl transition-all disabled:opacity-60"
+                    style={{ background: `linear-gradient(135deg, ${PRIMARY} 0%, ${PRIMARY_DEEP} 100%)`, color: '#fff' }}>
+                    {importLoading ? 'AI sedang membaca...' : 'Pilih File'}
+                  </button>
+                  <input ref={importFileRef} type="file" accept=".xlsx,.xls,.csv,application/pdf,image/png,image/jpeg,image/webp" onChange={handleImportFile} className="hidden" />
+                  <p className="mt-2 text-[10px]" style={{ color: '#9ca3af' }}>Format: Excel, CSV, atau PDF. Maks ~10MB.</p>
+                </div>
+              ) : (
+                <div>
+                  <p className="text-[12px] font-semibold mb-2" style={{ color: '#374151' }}>{importPreview.length} jamaah terbaca — review & edit sebelum simpan:</p>
+                  <div className="overflow-x-auto rounded-xl" style={{ border: '1px solid rgba(0,0,0,0.06)' }}>
+                    <table className="w-full text-[12px]">
+                      <thead><tr style={{ background: '#fafaf9' }}>
+                        {['Nama', 'No. Jamaah', 'Rombongan', 'No. Paspor', ''].map(h => (
+                          <th key={h} className="text-left px-3 py-2 font-mono text-[10px] uppercase" style={{ color: '#9ca3af' }}>{h}</th>
+                        ))}
+                      </tr></thead>
+                      <tbody>
+                        {importPreview.map((r, idx) => (
+                          <tr key={idx} style={{ borderTop: '1px solid rgba(0,0,0,0.04)' }}>
+                            <td className="px-2 py-1.5"><input value={r.nama} onChange={e => updatePreviewRow(idx, 'nama', e.target.value)} className="w-full rounded px-2 py-1 text-[12px]" style={{ border: '1px solid rgba(0,0,0,0.1)' }} /></td>
+                            <td className="px-2 py-1.5"><input value={r.nomor_jamaah} onChange={e => updatePreviewRow(idx, 'nomor_jamaah', e.target.value)} className="w-full rounded px-2 py-1 text-[12px] font-mono" style={{ border: '1px solid rgba(0,0,0,0.1)' }} /></td>
+                            <td className="px-2 py-1.5"><input value={r.rombongan} onChange={e => updatePreviewRow(idx, 'rombongan', e.target.value)} className="w-full rounded px-2 py-1 text-[12px]" style={{ border: '1px solid rgba(0,0,0,0.1)' }} /></td>
+                            <td className="px-2 py-1.5"><input value={r.nomor_paspor} onChange={e => updatePreviewRow(idx, 'nomor_paspor', e.target.value)} className="w-full rounded px-2 py-1 text-[12px] font-mono" style={{ border: '1px solid rgba(0,0,0,0.1)' }} /></td>
+                            <td className="px-2 py-1.5 text-right"><button type="button" onClick={() => removePreviewRow(idx)} className="text-[11px] px-2 py-1 rounded" style={{ color: '#dc2626' }}>Hapus</button></td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="flex gap-2 mt-4">
+                    <button type="button" onClick={confirmImport} disabled={importSaving}
+                      className="px-5 py-2.5 text-[12px] font-semibold rounded-xl disabled:opacity-60"
+                      style={{ background: `linear-gradient(135deg, ${PRIMARY} 0%, ${PRIMARY_DEEP} 100%)`, color: '#fff' }}>
+                      {importSaving ? 'Menyimpan...' : `Simpan ${importPreview.length} Jamaah`}
+                    </button>
+                    <button type="button" onClick={() => { setImportPreview([]); setImportError(''); }}
+                      className="px-5 py-2.5 text-[12px] font-semibold rounded-xl" style={{ color: '#6b7280', border: '1px solid rgba(0,0,0,0.1)' }}>
+                      Batal / Pilih Ulang
+                    </button>
+                  </div>
+                </div>
+              )}
+              {importError && <p className="mt-3 text-[12px]" style={{ color: '#dc2626' }}>{importError}</p>}
+            </div>
+          )}
+
+          {/* Form tambah jamaah cepat */}
+          {selectedKeberangkatan && (
+            <div className="rounded-2xl border p-5 mb-4" style={{ borderColor: 'rgba(0,0,0,0.07)', background: '#fff' }}>
+              <p className="font-mono text-[10px] uppercase tracking-[0.14em] mb-3" style={{ color: '#6b7280' }}>Tambah Jamaah</p>
+              <form onSubmit={handleAddJamaah}>
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
+                  <div className="flex-1">
+                    <FieldLabel>Nama Jamaah *</FieldLabel>
+                    <StyledInput ref={namaRef} type="text" value={jmNama} onChange={e => setJmNama(e.target.value)} placeholder="cth. Budi Santoso" required />
+                  </div>
+                  <div className="sm:w-44">
+                    <FieldLabel>Nomor Jamaah *</FieldLabel>
+                    <StyledInput type="text" value={jmNomorJamaah} onChange={e => setJmNomorJamaah(e.target.value)} placeholder="cth. TU-2026-001" required />
+                  </div>
+                  <button type="submit" disabled={jmSubmitting}
+                    className="flex-none rounded-xl px-5 py-2.5 text-[13px] font-semibold text-white transition-all active:scale-[0.98] disabled:opacity-60"
+                    style={{ background: `linear-gradient(135deg, ${PRIMARY}, ${PRIMARY_DEEP})` }}>
+                    {jmSubmitting ? 'Menyimpan…' : '+ Tambah'}
+                  </button>
+                </div>
+
+                <button type="button" onClick={() => setShowDetailJamaah(v => !v)}
+                  className="mt-3 inline-flex items-center gap-1 text-[12px] font-medium" style={{ color: PRIMARY }}>
+                  {showDetailJamaah ? '− Sembunyikan detail' : '+ Detail opsional (rombongan, bus, kamar, paspor, fase)'}
+                </button>
+
+                {showDetailJamaah && (
+                  <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                    <div><FieldLabel>Rombongan</FieldLabel><StyledInput type="text" value={jmRombongan} onChange={e => setJmRombongan(e.target.value)} placeholder="A / 1" /></div>
+                    <div><FieldLabel>No. Bus</FieldLabel><StyledInput type="text" value={jmBus} onChange={e => setJmBus(e.target.value)} placeholder="3" /></div>
+                    <div><FieldLabel>No. Kamar</FieldLabel><StyledInput type="text" value={jmKamar} onChange={e => setJmKamar(e.target.value)} placeholder="812" /></div>
+                    <div><FieldLabel>No. Paspor</FieldLabel><StyledInput type="text" value={jmPaspor} onChange={e => setJmPaspor(e.target.value)} placeholder="C1234567" /></div>
+                    <div className="col-span-2 sm:col-span-1">
+                      <FieldLabel>Fase</FieldLabel>
+                      <select value={jmFase} onChange={e => setJmFase(e.target.value as JamaahAccountRow['fase'])}
+                        className="w-full rounded-xl px-3 py-2.5 text-[14px] focus:outline-none"
+                        style={{ border: '1px solid rgba(0,0,0,0.15)', ...inputBase }}>
+                        {FASE_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                      </select>
+                    </div>
+                  </div>
+                )}
+
+                {jmError && <p className="mt-2 text-[12px]" style={{ color: '#dc2626' }}>{jmError}</p>}
+              </form>
+            </div>
+          )}
+
+          {/* List jamaah */}
+          <div className="rounded-2xl overflow-hidden" style={cardStyle}>
+            {jamaahLoading ? (
+              <div className="py-8 text-center font-mono text-[12px]" style={{ color: '#d1d5db' }}>Memuat...</div>
+            ) : !selectedKeberangkatan ? (
+              <div className="py-8 text-center text-[13px]" style={{ color: '#9ca3af' }}>Pilih batch keberangkatan untuk melihat jamaah.</div>
+            ) : jamaahList.length === 0 ? (
+              <div className="py-8 text-center text-[13px]" style={{ color: '#9ca3af' }}>Belum ada jamaah terdaftar di batch ini.</div>
+            ) : (
+              <ul className="divide-y" style={{ borderColor: 'rgba(0,0,0,0.04)' }}>
+                {jamaahList.map((j) => {
+                  const isEditing = editingJamaahId === j.id;
+                  const chips = [
+                    j.rombongan ? `Romb. ${j.rombongan}` : null,
+                    j.nomor_bus ? `Bus ${j.nomor_bus}` : null,
+                    j.nomor_kamar ? `Kmr ${j.nomor_kamar}` : null,
+                    j.nomor_paspor ? j.nomor_paspor : null,
+                  ].filter(Boolean) as string[];
+
+                  if (isEditing) {
+                    return (
+                      <li key={j.id} className="px-5 py-4" style={{ background: `rgba(14,165,233,0.03)` }}>
+                        <div className="grid grid-cols-2 gap-2 mb-2 sm:grid-cols-4">
+                          <div>
+                            <p className="font-mono text-[9px] uppercase tracking-widest mb-1" style={{ color: '#9ca3af' }}>Nama</p>
+                            <input value={editNama} onChange={e => setEditNama(e.target.value)}
+                              className="w-full rounded-lg px-2 py-1.5 text-[13px] focus:outline-none"
+                              style={{ border: `1px solid ${PRIMARY_BORDER}`, background: '#fff', color: '#111827' }} />
+                          </div>
+                          <div>
+                            <p className="font-mono text-[9px] uppercase tracking-widest mb-1" style={{ color: '#9ca3af' }}>No. Jamaah</p>
+                            <input value={editNomorJamaah} onChange={e => setEditNomorJamaah(e.target.value)}
+                              className="w-full rounded-lg px-2 py-1.5 text-[12px] font-mono focus:outline-none"
+                              style={{ border: `1px solid ${PRIMARY_BORDER}`, background: '#fff', color: '#374151' }} />
+                          </div>
+                          <div>
+                            <p className="font-mono text-[9px] uppercase tracking-widest mb-1" style={{ color: '#9ca3af' }}>Rombongan</p>
+                            <input value={editRombongan} onChange={e => setEditRombongan(e.target.value)} placeholder="—"
+                              className="w-full rounded-lg px-2 py-1.5 text-[12px] focus:outline-none"
+                              style={{ border: `1px solid ${PRIMARY_BORDER}`, background: '#fff', color: '#374151' }} />
+                          </div>
+                          <div>
+                            <p className="font-mono text-[9px] uppercase tracking-widest mb-1" style={{ color: '#9ca3af' }}>No. Paspor</p>
+                            <input value={editPaspor} onChange={e => setEditPaspor(e.target.value)} placeholder="—"
+                              className="w-full rounded-lg px-2 py-1.5 text-[12px] font-mono focus:outline-none"
+                              style={{ border: `1px solid ${PRIMARY_BORDER}`, background: '#fff', color: '#374151' }} />
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 mt-2">
+                          <button type="button" onClick={() => saveEditJamaah(j.id)} disabled={editSaving}
+                            className="font-mono text-[11px] px-4 py-1.5 rounded-lg transition-all duration-150 disabled:opacity-60"
+                            style={{ background: `linear-gradient(135deg, ${PRIMARY} 0%, ${PRIMARY_DEEP} 100%)`, color: '#fff' }}>
+                            {editSaving ? 'Menyimpan...' : 'Simpan'}
+                          </button>
+                          <button type="button" onClick={cancelEditJamaah} disabled={editSaving}
+                            className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150"
+                            style={{ color: '#9ca3af', border: '1px solid rgba(0,0,0,0.07)' }}>
+                            Batal
+                          </button>
+                        </div>
+                        {editError && <p className="mt-1 text-[12px]" style={{ color: '#dc2626' }}>{editError}</p>}
+                      </li>
+                    );
+                  }
+
+                  return (
+                    <li key={j.id} className="flex items-center gap-3 px-5 py-3.5">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-baseline gap-2 flex-wrap">
+                          <span className="text-[13px] font-semibold" style={{ color: '#111827' }}>{j.nama}</span>
+                          <span className="font-mono text-[11px]" style={{ color: '#6b7280' }}>{j.nomor_jamaah}</span>
+                        </div>
+                        {chips.length > 0 && (
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {chips.map(chip => (
+                              <span key={chip} className="font-mono text-[10px] px-1.5 py-0.5 rounded-md" style={{ background: 'rgba(0,0,0,0.04)', color: '#6b7280' }}>{chip}</span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      <select value={j.fase_override ?? ''} onChange={e => handleUpdateJamaahFase(j.id, e.target.value)}
+                        className="hidden sm:block text-[11px] rounded-lg px-2 py-1 focus:outline-none transition-all flex-none"
+                        style={{ border: '1px solid rgba(0,0,0,0.09)', background: '#fafaf9', color: '#374151' }}>
+                        <option value="">Auto</option>
+                        {FASE_OPTIONS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
+                      </select>
+                      <div className="flex items-center gap-1.5 flex-none">
+                        <button type="button" onClick={() => startEditJamaah(j)}
+                          className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150"
+                          style={{ color: PRIMARY, border: `1px solid ${PRIMARY_BORDER}` }}
+                          onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = PRIMARY_BG; }}
+                          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}>
+                          Edit
+                        </button>
+                        <button type="button" onClick={() => handleDeleteJamaah(j.id, j.nama)}
+                          className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150"
+                          style={{ color: '#9ca3af', border: '1px solid rgba(0,0,0,0.07)' }}
+                          onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#dc2626'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(220,38,38,0.25)'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(220,38,38,0.05)'; }}
+                          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#9ca3af'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,0,0,0.07)'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}>
+                          Hapus
+                        </button>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* ══════════════════════════════════════════════
+          TAB: AGENDA
+      ══════════════════════════════════════════════ */}
+      {activeTab === 'agenda' && (
+        <div>
+          <div className="flex items-center gap-3 mb-5">
+            <h2 className="font-bold" style={{ fontSize: '18px', color: '#111827', letterSpacing: '-0.02em' }}>Agenda Perjalanan</h2>
+            <span className="font-mono text-[10px] uppercase tracking-widest px-2 py-1 rounded-full" style={{ background: PRIMARY_BG, color: PRIMARY }}>{agendaItems.length} item</span>
+          </div>
+
+          {/* Keberangkatan selector */}
+          {keberangkatanList.length > 0 && (
+            <div className="mb-5 flex items-center gap-3">
+              <label className="font-mono text-[10px] uppercase tracking-widest flex-none" style={{ color: '#6b7280' }}>Batch:</label>
+              <select value={selectedKeberangkatan} onChange={e => setSelectedKeberangkatan(e.target.value)}
+                className="flex-1 rounded-xl px-3 py-2 text-[13px] focus:outline-none"
+                style={{ ...inputBase, maxWidth: '360px' }}>
+                {keberangkatanList.map(kb => (
+                  <option key={kb.id} value={kb.id}>{kb.nama_batch}</option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {!selectedKeberangkatan ? (
+            <div className="mb-5 rounded-xl px-4 py-3 text-[12px]" style={{ background: 'rgba(245,158,11,0.07)', border: '1px solid rgba(245,158,11,0.2)', color: '#d97706' }}>
+              Pilih batch keberangkatan untuk mengelola agenda.
+            </div>
+          ) : (
+            <>
+              <div className="rounded-2xl px-6 py-6 mb-4" style={{ ...cardStyle, border: `1px solid ${PRIMARY_BORDER}` }}>
+                <p className="font-mono text-[10px] uppercase tracking-[0.14em] mb-4" style={{ color: '#6b7280' }}>Tambah Agenda Baru</p>
+                <form onSubmit={handleAddAgenda} className="space-y-3">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Tanggal <span style={{ color: '#f87171' }}>*</span></p><StyledInput type="date" value={agTanggal} onChange={e => setAgTanggal(e.target.value)} required /></div>
+                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Jam Mulai</p><StyledInput type="time" value={agJam} onChange={e => setAgJam(e.target.value)} /></div>
+                  </div>
+                  <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Judul Kegiatan <span style={{ color: '#f87171' }}>*</span></p><StyledInput type="text" value={agJudul} onChange={e => setAgJudul(e.target.value)} placeholder="Cth: Perjalanan ke Madinah" required /></div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Lokasi</p><StyledInput type="text" value={agLokasi} onChange={e => setAgLokasi(e.target.value)} placeholder="Bandara Soekarno-Hatta" /></div>
+                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Deskripsi</p><StyledTextarea rows={1} value={agDeskripsi} onChange={e => setAgDeskripsi(e.target.value)} placeholder="Keterangan tambahan..." /></div>
+                  </div>
+                  {agError && <p className="text-[12px]" style={{ color: '#dc2626' }}>{agError}</p>}
+                  <button type="submit" disabled={agSubmitting}
+                    className="flex items-center gap-2 px-5 py-2.5 text-[12px] font-semibold rounded-xl transition-all duration-150 disabled:opacity-60"
+                    style={{ background: `linear-gradient(135deg, ${PRIMARY} 0%, ${PRIMARY_DEEP} 100%)`, color: '#ffffff', boxShadow: '0 2px 8px rgba(14,165,233,0.22)' }}>
+                    {agSubmitting ? (
+                      <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeOpacity="0.3" /><path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" /></svg>
+                    ) : (
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                    )}
+                    Tambah Agenda
+                  </button>
+                </form>
+              </div>
+
+              <div className="rounded-2xl overflow-hidden" style={cardStyle}>
+                {agendaLoading ? (
+                  <div className="py-10 text-center font-mono text-[12px]" style={{ color: '#d1d5db' }}>Memuat agenda...</div>
+                ) : agendaItems.length === 0 ? (
+                  <div className="py-10 text-center"><p className="text-[13px]" style={{ color: '#9ca3af' }}>Belum ada agenda.</p></div>
+                ) : (
+                  <table className="w-full">
+                    <thead>
+                      <tr style={{ borderBottom: '1px solid rgba(0,0,0,0.06)', background: '#fafaf9' }}>
+                        {['Tanggal', 'Jam', 'Judul', 'Lokasi', ''].map(h => (
+                          <th key={h} className="text-left font-mono text-[10px] uppercase tracking-[0.12em] px-5 py-3" style={{ color: '#9ca3af' }}>{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {agendaItems.map((item, i) => (
+                        <tr key={item.id} style={{ borderBottom: i < agendaItems.length - 1 ? '1px solid rgba(0,0,0,0.04)' : 'none' }}>
+                          <td className="px-5 py-3.5 text-[13px] font-medium whitespace-nowrap" style={{ color: '#374151' }}>{formatTanggal(item.tanggal)}</td>
+                          <td className="px-5 py-3.5 font-mono text-[12px]" style={{ color: '#6b7280' }}>{item.jam_mulai ? item.jam_mulai.slice(0, 5) : '—'}</td>
+                          <td className="px-5 py-3.5">
+                            <p className="text-[13px] font-semibold" style={{ color: '#111827' }}>{item.judul}</p>
+                            {item.deskripsi && <p className="text-[11px] mt-0.5" style={{ color: '#9ca3af' }}>{item.deskripsi}</p>}
+                          </td>
+                          <td className="px-5 py-3.5 text-[12px]" style={{ color: '#6b7280' }}>{item.lokasi ?? '—'}</td>
+                          <td className="px-5 py-3.5 text-right">
+                            <button type="button" onClick={() => handleDeleteAgenda(item.id, item.judul)}
+                              className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150"
+                              style={{ color: '#9ca3af', border: '1px solid rgba(0,0,0,0.07)' }}
+                              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#dc2626'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(220,38,38,0.25)'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(220,38,38,0.05)'; }}
+                              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#9ca3af'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,0,0,0.07)'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}>
+                              Hapus
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* ══════════════════════════════════════════════
+          TAB: PENGUMUMAN
+      ══════════════════════════════════════════════ */}
+      {activeTab === 'pengumuman' && (
+        <div>
+          <div className="flex items-center gap-3 mb-5">
+            <h2 className="font-bold" style={{ fontSize: '18px', color: '#111827', letterSpacing: '-0.02em' }}>Pengumuman Travel</h2>
+            <span className="font-mono text-[10px] uppercase tracking-widest px-2 py-1 rounded-full" style={{ background: PRIMARY_BG, color: PRIMARY }}>{announcements.length} item</span>
+          </div>
+
+          {/* Keberangkatan selector */}
+          {keberangkatanList.length > 0 && (
+            <div className="mb-5 flex items-center gap-3">
+              <label className="font-mono text-[10px] uppercase tracking-widest flex-none" style={{ color: '#6b7280' }}>Batch:</label>
+              <select value={selectedKeberangkatan} onChange={e => setSelectedKeberangkatan(e.target.value)}
+                className="flex-1 rounded-xl px-3 py-2 text-[13px] focus:outline-none"
+                style={{ ...inputBase, maxWidth: '360px' }}>
+                {keberangkatanList.map(kb => (
+                  <option key={kb.id} value={kb.id}>{kb.nama_batch}</option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {!selectedKeberangkatan ? (
+            <div className="mb-5 rounded-xl px-4 py-3 text-[12px]" style={{ background: 'rgba(245,158,11,0.07)', border: '1px solid rgba(245,158,11,0.2)', color: '#d97706' }}>
+              Pilih batch keberangkatan untuk mengelola pengumuman.
+            </div>
+          ) : (
+            <>
+              <div className="rounded-2xl px-6 py-6 mb-4" style={{ ...cardStyle, border: `1px solid ${PRIMARY_BORDER}` }}>
+                <form onSubmit={handleAddAnnouncement} className="space-y-3">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Label</p><StyledInput type="text" value={annLabel} onChange={e => setAnnLabel(e.target.value)} placeholder="Info / Penting / Darurat" /></div>
+                    <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Judul <span style={{ color: '#f87171' }}>*</span></p><StyledInput type="text" value={annTitle} onChange={e => setAnnTitle(e.target.value)} required placeholder="Perubahan jadwal..." maxLength={120} /></div>
+                  </div>
+                  <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Isi Pengumuman <span style={{ color: '#f87171' }}>*</span></p><StyledTextarea rows={3} value={annContent} onChange={e => setAnnContent(e.target.value)} required placeholder="Detail pengumuman untuk jamaah..." maxLength={1000} /></div>
+                  <label className="flex items-center gap-2.5 cursor-pointer">
+                    <input type="checkbox" checked={annImportant} onChange={e => setAnnImportant(e.target.checked)} className="rounded" />
+                    <span className="text-[12px]" style={{ color: '#374151' }}>Tandai sebagai penting</span>
+                  </label>
+                  {annError && <p className="text-[12px]" style={{ color: '#dc2626' }}>{annError}</p>}
+                  <button type="submit" disabled={annSubmitting}
+                    className="flex items-center gap-2 px-5 py-2.5 text-[12px] font-semibold rounded-xl transition-all duration-150 disabled:opacity-60"
+                    style={{ background: `linear-gradient(135deg, ${PRIMARY} 0%, ${PRIMARY_DEEP} 100%)`, color: '#ffffff', boxShadow: '0 2px 8px rgba(14,165,233,0.22)' }}>
+                    {annSubmitting ? 'Mengirim...' : 'Kirim Pengumuman'}
+                  </button>
+                </form>
+              </div>
+
+              <div className="rounded-2xl overflow-hidden" style={cardStyle}>
+                {annLoading ? (
+                  <div className="py-8 text-center font-mono text-[12px]" style={{ color: '#d1d5db' }}>Memuat...</div>
+                ) : announcements.length === 0 ? (
+                  <div className="py-8 text-center text-[13px]" style={{ color: '#9ca3af' }}>Belum ada pengumuman.</div>
+                ) : (
+                  <div className="divide-y" style={{ borderColor: 'rgba(0,0,0,0.04)' }}>
+                    {announcements.map(ann => (
+                      <div key={ann.id} className="px-5 py-4 flex items-start justify-between gap-4">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="font-mono text-[10px] px-2 py-0.5 rounded-full"
+                              style={{ background: ann.important ? 'rgba(239,68,68,0.08)' : PRIMARY_BG, color: ann.important ? '#dc2626' : PRIMARY }}>
+                              {ann.label}
+                            </span>
+                            <span className="font-mono text-[10px]" style={{ color: '#9ca3af' }}>{formatDatetime(ann.published_at)}</span>
+                          </div>
+                          <p className="text-[13px] font-semibold truncate" style={{ color: '#111827' }}>{ann.title}</p>
+                          <p className="text-[12px] mt-0.5 line-clamp-2" style={{ color: '#6b7280' }}>{ann.content}</p>
+                        </div>
+                        <button type="button" onClick={() => handleDeleteAnnouncement(ann.id, ann.title)}
+                          className="flex-none font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150"
+                          style={{ color: '#9ca3af', border: '1px solid rgba(0,0,0,0.07)' }}
+                          onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#dc2626'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(220,38,38,0.25)'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(220,38,38,0.05)'; }}
+                          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#9ca3af'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,0,0,0.07)'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}>
+                          Hapus
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
     </TravelLayout>
   );
 }

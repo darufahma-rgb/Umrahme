@@ -108,16 +108,13 @@ export default function App() {
       />
 
       {/* ── Travel Agency Portal ── */}
-      <Route path="/travel/login" element={<TravelLogin />} />
       <Route
         path="/travel"
-        element={
-          <TravelAuthProvider>
-            <TravelProtectedRoute>
-              <TravelDashboard />
-            </TravelProtectedRoute>
-          </TravelAuthProvider>
-        }
+        element={<TravelAuthProvider><TravelProtectedRoute><TravelDashboard /></TravelProtectedRoute></TravelAuthProvider>}
+      />
+      <Route
+        path="/travel/login"
+        element={<TravelAuthProvider><TravelLogin /></TravelAuthProvider>}
       />
 
       <Route path="/" element={<LandingPage />} />
