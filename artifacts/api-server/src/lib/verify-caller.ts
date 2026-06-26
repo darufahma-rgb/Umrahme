@@ -28,15 +28,6 @@ export async function verifyCaller(
   const user = (await userResp.json()) as { id?: string };
   if (!user?.id) return { ok: false };
 
-  const adminResp = await fetch(
-    `${supabaseUrl}/rest/v1/app_admins?user_id=eq.${user.id}&select=user_id`,
-    { headers: { apikey: anonKey, Authorization: `Bearer ${token}` } },
-  );
-  if (adminResp.ok) {
-    const rows = (await adminResp.json()) as unknown[];
-    if (Array.isArray(rows) && rows.length > 0) return { ok: true, userId: user.id };
-  }
-
   const travelResp = await fetch(
     `${supabaseUrl}/rest/v1/tenant_users?user_id=eq.${user.id}&select=user_id`,
     { headers: { apikey: anonKey, Authorization: `Bearer ${token}` } },
