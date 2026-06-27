@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { validasiKode, KODE_DEMO } from '../data/jamaah';
+import { validasiKode } from '../data/jamaah';
 import heroBg from '@assets/photo-1635829576353-1a14caec2f6f_1781969073425.avif';
 
 export default function Login() {
@@ -145,19 +145,6 @@ export default function Login() {
                 </>
               ) : 'Masuk'}
             </button>
-
-            {/* Demo hint */}
-            <p className="text-center text-[12px] text-ash pt-1">
-              Demo:{' '}
-              <button
-                type="button"
-                onClick={() => setKode(KODE_DEMO)}
-                className="font-mono font-bold text-primary hover:underline underline-offset-2"
-              >
-                {KODE_DEMO}
-              </button>
-              {' '}+ nama terdaftar
-            </p>
           </form>
         </div>
       </div>
