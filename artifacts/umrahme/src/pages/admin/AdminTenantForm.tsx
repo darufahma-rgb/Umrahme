@@ -89,6 +89,12 @@ const TABS: { id: TabId; label: string }[] = [
   { id: 'akun', label: 'Akun Travel' },
 ];
 
+function generatePassword(len = 14): string {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%';
+  return Array.from(crypto.getRandomValues(new Uint32Array(len)))
+    .map((n) => chars[n % chars.length]).join('');
+}
+
 export default function AdminTenantForm() {
   const { id } = useParams<{ id: string }>();
   const isNew = id === 'baru';
@@ -797,10 +803,11 @@ export default function AdminTenantForm() {
     if (taPassword.length < 8) { setTaError('Password minimal 8 karakter.'); return; }
     setTaSubmitting(true);
     try {
-      await createTravelAccount(id!, taEmail.trim(), taPassword);
       const savedEmail = taEmail.trim();
+      const savedPassword = taPassword;
+      await createTravelAccount(id!, savedEmail, savedPassword);
       setTaEmail(''); setTaPassword('');
-      setTaSuccess(`Akun berhasil dibuat. Travel agency bisa login di /travel/login menggunakan email ${savedEmail}.`);
+      setTaSuccess(`✓ Akun dibuat. Kirim ke travel — Email: ${savedEmail} | Password: ${savedPassword} | Login di: /travel/login`);
       await loadTravelAccounts();
     } catch (err: unknown) { setTaError(err instanceof Error ? err.message : 'Terjadi kesalahan.'); }
     setTaSubmitting(false);
@@ -2059,7 +2066,17 @@ export default function AdminTenantForm() {
               <form onSubmit={handleCreateTravelAccount} className="space-y-3">
                 <div className="grid grid-cols-2 gap-3">
                   <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Email <span style={{ color: '#f87171' }}>*</span></p><StyledInput type="email" value={taEmail} onChange={e => setTaEmail(e.target.value)} placeholder="travel@example.com" required /></div>
-                  <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Password <span style={{ color: '#f87171' }}>*</span></p><StyledInput type="password" value={taPassword} onChange={e => setTaPassword(e.target.value)} placeholder="Min 8 karakter" /></div>
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <p className="text-[11px] font-semibold" style={{ color: '#374151' }}>Password <span style={{ color: '#f87171' }}>*</span></p>
+                      <button type="button" onClick={() => setTaPassword(generatePassword())}
+                        className="text-[11px] font-semibold px-3 py-1 rounded-lg"
+                        style={{ color: '#4338ca', border: '1px solid rgba(67,56,202,0.2)', background: 'rgba(67,56,202,0.04)' }}>
+                        Buat Password
+                      </button>
+                    </div>
+                    <StyledInput type="text" value={taPassword} onChange={e => setTaPassword(e.target.value)} placeholder="Min 8 karakter" />
+                  </div>
                 </div>
                 {taError && <p className="text-[12px]" style={{ color: '#dc2626' }}>{taError}</p>}
                 {taSuccess && <p className="text-[12px]" style={{ color: '#059669' }}>{taSuccess}</p>}
