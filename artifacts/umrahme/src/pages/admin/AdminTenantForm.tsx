@@ -19,6 +19,7 @@ import {
   supabase,
 } from '../../lib/supabase';
 import { darkenHex, generateActivationCode } from '../../lib/colorUtils';
+import { PUBLIC_HOST, slugUrl } from '@/config/site';
 import { insertAgendaDummy } from '../../data/agendaDummy';
 
 const MAX_LOGO_SIZE = 1024 * 1024;
@@ -1359,7 +1360,7 @@ export default function AdminTenantForm() {
                 <div className="rounded-b-2xl px-6 py-6" style={cardStyle}>
                   <FieldLabel>Link Khusus Travel (Slug)</FieldLabel>
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-[12px] flex-none" style={{ color: '#9ca3af' }}>umrahme.app/t/</span>
+                    <span className="font-mono text-[12px] flex-none" style={{ color: '#9ca3af' }}>{PUBLIC_HOST}/t/</span>
                     <StyledInput
                       type="text"
                       value={slug}
@@ -1372,11 +1373,11 @@ export default function AdminTenantForm() {
                   {slug && (
                     <div className="mt-3 flex items-center gap-2 flex-wrap">
                       <span className="font-mono text-[12px] px-3 py-1.5 rounded-lg" style={{ background: 'rgba(67,56,202,0.06)', color: '#4338ca', border: '1px solid rgba(67,56,202,0.12)' }}>
-                        umrahme.app/t/{slug}
+                        {PUBLIC_HOST}/t/{slug}
                       </span>
                       <button type="button"
                         onClick={() => {
-                          navigator.clipboard.writeText(`https://umrahme.app/t/${slug}`);
+                          navigator.clipboard.writeText(slugUrl(slug));
                           setSlugCopied(true);
                           setTimeout(() => setSlugCopied(false), 1500);
                         }}
