@@ -596,7 +596,7 @@ export default function LandingPage() {
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
           backgroundImage: 'url(/hero-bg.avif)',
-          backgroundSize: 'cover', backgroundPosition: 'center 65%',
+          backgroundSize: '130%', backgroundPosition: 'center 80%',
           opacity: 1,
         }} />
         {/* kubah — transisi dome ke section berikutnya */}
