@@ -596,11 +596,12 @@ export default function LandingPage() {
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
           backgroundImage: 'url(/hero-bg.avif)',
-          backgroundSize: 'cover', backgroundPosition: 'center top',
+          backgroundSize: 'cover', backgroundPosition: 'center 65%',
+          opacity: 0.55,
         }} />
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
-          background: 'rgba(0,0,0,0.18)',
+          background: 'linear-gradient(to bottom, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.0) 50%, rgba(0,0,0,0.22) 100%)',
         }} />
         {/* kubah — transisi dome ke section berikutnya */}
         <div style={{ position: 'absolute', bottom: -1, left: 0, right: 0, zIndex: 4, lineHeight: 0, pointerEvents: 'none' }}>
