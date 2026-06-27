@@ -540,7 +540,7 @@ export default function LandingPage() {
       {/* ══════════ HERO ══════════ */}
       <section className="lp-hero-padding" style={{
         position: 'relative',
-        background: `linear-gradient(180deg, ${C.blue1} 0%, ${C.blue2} 45%, ${C.blue3} 100%)`,
+        background: '#0a0a0a',
         padding: '100px 0 90px',
       }}>
         {/* ── NAVBAR (absolute, only in hero) ── */}
@@ -597,7 +597,7 @@ export default function LandingPage() {
           position: 'absolute', inset: 0, pointerEvents: 'none',
           backgroundImage: 'url(/hero-bg.avif)',
           backgroundSize: 'cover', backgroundPosition: 'center 65%',
-          opacity: 0.55,
+          opacity: 1,
         }} />
         {/* kubah — transisi dome ke section berikutnya */}
         <div style={{ position: 'absolute', bottom: -1, left: 0, right: 0, zIndex: 4, lineHeight: 0, pointerEvents: 'none' }}>
