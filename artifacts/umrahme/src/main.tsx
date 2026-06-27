@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import { AuthProvider } from './context/AuthContext';
 import { AdminAuthProvider } from './context/AdminAuthContext';
+import ErrorBoundary from './components/ErrorBoundary';
 import './index.css';
 import { registerSW } from 'virtual:pwa-register';
 
@@ -22,12 +23,14 @@ document.addEventListener('gesturestart', (e) => e.preventDefault());
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <BrowserRouter basename={import.meta.env.BASE_URL}>
-      <AdminAuthProvider>
-        <AuthProvider>
-          <App />
-        </AuthProvider>
-      </AdminAuthProvider>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
+        <AdminAuthProvider>
+          <AuthProvider>
+            <App />
+          </AuthProvider>
+        </AdminAuthProvider>
+      </BrowserRouter>
+    </ErrorBoundary>
   </React.StrictMode>,
 );
