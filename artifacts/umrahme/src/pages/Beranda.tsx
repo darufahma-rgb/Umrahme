@@ -183,7 +183,7 @@ function getPhaseActions(fase: Fase): QA[] {
 function KartuHitung({ n, namaTravel }: { n: number; namaTravel: string }) {
   return (
     <div className="relative overflow-hidden rounded-2xl px-5 py-4"
-      style={{ background: 'linear-gradient(135deg, #0c2340 0%, #0a3d62 60%, #0ea5e9 100%)' }}>
+      style={{ background: 'linear-gradient(135deg, var(--color-primary-deep) 0%, var(--color-primary-deep) 60%, var(--color-primary) 100%)' }}>
       <div className="pointer-events-none absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/[0.06]" />
       <div className="pointer-events-none absolute -bottom-6 -right-6 h-32 w-32 rounded-full bg-sky-300/[0.05]" />
       <div className="relative flex items-center gap-5">

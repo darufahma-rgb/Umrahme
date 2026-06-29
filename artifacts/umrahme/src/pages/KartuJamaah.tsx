@@ -49,7 +49,7 @@ export default function KartuJamaah() {
         {/* ── KARTU UTAMA ─────────────────────────────────────── */}
         <div
           className="relative overflow-hidden rounded-[28px] shadow-drop-lifted"
-          style={{ background: 'linear-gradient(150deg, #0b1f3a 0%, #0d3156 45%, #0c4a82 80%, #1565a8 100%)' }}
+          style={{ background: 'linear-gradient(150deg, var(--color-primary-deep) 0%, var(--color-primary-deep) 45%, var(--color-primary) 80%, var(--color-primary) 100%)' }}
         >
           {/* Dekorasi */}
           <div className="pointer-events-none absolute -right-16 -top-16 h-52 w-52 rounded-full"
