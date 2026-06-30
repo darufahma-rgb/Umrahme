@@ -730,7 +730,9 @@ export default function AdminTenantForm() {
         const { data: { session: agSession1 } } = await supabase.auth.getSession();
         const agAuth1: Record<string, string> = agSession1?.access_token ? { Authorization: `Bearer ${agSession1.access_token}` } : {};
         const resp = await fetch('/api/ai-extract-agenda', { method: 'POST', headers: { 'Content-Type': 'application/json', ...agAuth1 }, body: JSON.stringify({ mode: 'excel', rows }) });
-        const json = await resp.json() as { error?: string; agenda?: typeof result };
+        const rawText1 = await resp.text();
+        let json: { error?: string; agenda?: typeof result } = {};
+        try { json = rawText1 ? JSON.parse(rawText1) : {}; } catch { throw new Error('Gagal memproses file, coba file yang lebih kecil atau format lain.'); }
         if (!resp.ok) throw new Error(json.error || 'Gagal ekstrak Excel.');
         result = json.agenda ?? [];
       } else if (ext === 'pdf' || ['png', 'jpg', 'jpeg', 'webp'].includes(ext || '')) {
@@ -743,7 +745,9 @@ export default function AdminTenantForm() {
         const { data: { session: agSession2 } } = await supabase.auth.getSession();
         const agAuth2: Record<string, string> = agSession2?.access_token ? { Authorization: `Bearer ${agSession2.access_token}` } : {};
         const resp = await fetch('/api/ai-extract-agenda', { method: 'POST', headers: { 'Content-Type': 'application/json', ...agAuth2 }, body: JSON.stringify({ mode: 'pdf', fileBase64: base64, mimeType: file.type }) });
-        const json = await resp.json() as { error?: string; agenda?: typeof result };
+        const rawText2 = await resp.text();
+        let json: { error?: string; agenda?: typeof result } = {};
+        try { json = rawText2 ? JSON.parse(rawText2) : {}; } catch { throw new Error('Gagal memproses file, coba file yang lebih kecil atau format lain.'); }
         if (!resp.ok) throw new Error(json.error || 'Gagal ekstrak PDF.');
         result = json.agenda ?? [];
       } else {
