@@ -238,7 +238,7 @@ export default function LandingPage() {
           padding: 8px 14px; border-radius: 999px;
           font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.95);
           text-decoration: none; transition: color .15s, background .15s;
-          font-family: ${F};
+          font-family: ${F}; white-space: nowrap;
         }
         .lp-nav-link:hover { color: #fff; background: rgba(255,255,255,0.12); }
         .lp-nav-scrolled .lp-nav-link { color: #4C4C4C; }
