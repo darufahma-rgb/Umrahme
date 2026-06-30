@@ -44,7 +44,7 @@ Platform SaaS multi-tenant untuk travel umrah/haji. Jamaah login dengan kode akt
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+- Do not migrate to Replit PostgreSQL — keep Supabase as the database.
 
 ## Gotchas
 
