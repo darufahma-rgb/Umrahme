@@ -982,7 +982,7 @@ export default function LandingPage() {
           </Reveal>
           <Reveal delay={0.14}>
             <p style={{ textAlign: 'center', color: C.muted, maxWidth: 520, margin: '0 auto 28px', fontSize: 14 }}>
-              Mulai gratis dengan 5 jamaah pertama. Tidak perlu kartu kredit, tidak perlu kontrak. Cukup daftar dan rasakan langsung.
+              Gratis untuk Travel Crew Official. Tidak perlu kartu kredit, tidak perlu kontrak. Cukup daftar dan rasakan langsung.
             </p>
           </Reveal>
 
@@ -998,7 +998,7 @@ export default function LandingPage() {
                 <p style={{ color: 'rgba(255,255,255,.55)', fontSize: 12, fontStyle: 'italic', marginBottom: 18 }}>
                   Balik modal hanya dari hemat biaya cetak buku doa.
                 </p>
-                <p style={{ color: 'rgba(255,255,255,.7)', fontSize: 13, marginBottom: 20 }}>Mulai dengan 5 jamaah pertama secara gratis. Rasakan sendiri sebelum memutuskan, tanpa risiko, tanpa komitmen.</p>
+                <p style={{ color: 'rgba(255,255,255,.7)', fontSize: 13, marginBottom: 20 }}>Gratis untuk Travel Crew Official. Rasakan sendiri sebelum memutuskan, tanpa risiko, tanpa komitmen.</p>
                 <ul style={{ listStyle: 'none', flex: 1 }}>
                   {['Lebih murah dari biaya cetak buku doa, langsung balik modal', 'Tanpa biaya setup, tanpa langganan bulanan, tanpa kontrak', 'Bayar hanya untuk jamaah yang benar-benar berangkat', '15 fitur premium aktif penuh, tanpa biaya tersembunyi', 'Aplikasi bermerek travel Anda, perkuat brand di mata jamaah', 'Tingkatkan kepuasan jamaah & dorong referral keberangkatan berikutnya', 'Pendampingan & support langsung via WhatsApp'].map(t => (
                     <li key={t} style={{ display: 'flex', gap: 9, alignItems: 'center', marginBottom: 9, fontSize: 13 }}>
@@ -1008,7 +1008,7 @@ export default function LandingPage() {
                   ))}
                 </ul>
                 <p style={{ fontSize: 12.5, color: C.accent, fontWeight: 600, marginBottom: 12, textAlign: 'center', marginTop: 20 }}>
-                  Coba gratis untuk 5 jamaah pertama Anda, tanpa syarat.
+                  Gratis untuk Travel Crew Official, tanpa syarat.
                 </p>
                 <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="lp-btn lp-btn-accent" style={{ width: '100%', justifyContent: 'center' }}>
                   Dapatkan Sekarang <span className="lp-arrow">→</span>
@@ -1071,7 +1071,7 @@ export default function LandingPage() {
               Jamaah lebih tenang.<br />Muthowif lebih fokus.<br />Travel Anda lebih dipercaya.
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', marginBottom: 28, fontFamily: F }}>
-              Gratis untuk 5 jamaah pertama. Kami setup aplikasi bermerek travel Anda dalam menit.
+              Gratis untuk Travel Crew Official. Kami setup aplikasi bermerek travel Anda dalam menit.
             </p>
             <a
               href={WA_LINK}
