@@ -57,12 +57,12 @@ export function DashboardTravelCompanionCards() {
 
   if (!jamaah) return null;
 
-  const info = getOperationalInfo(keberangkatan ?? null);
+  const info = getOperationalInfo(keberangkatan ?? null, jamaah);
   const focus = getFocusByFase(jamaah.fase);
 
-  const rombongan = jamaah.rombongan ?? info.groupCode;
-  const bus = jamaah.nomorBus ?? info.busNumber;
-  const kamar = jamaah.nomorKamar ?? info.roomNumber;
+  const rombongan = info.groupCode;
+  const bus = info.busNumber;
+  const kamar = info.roomNumber;
   const pembimbing = jamaah.pembimbingNama ?? info.guideName;
   const pembimbingWa = jamaah.pembimbingWhatsapp ?? info.guideWhatsapp;
 

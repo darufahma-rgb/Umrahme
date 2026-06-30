@@ -55,12 +55,28 @@ const DEFAULT_OPERATIONAL_INFO: TravelOperationalInfo = {
     'Jika tersesat atau memerlukan bantuan mendesak, tetap tenang dan hubungi Ust. Ahmad Fauzi. Tunjukkan Kartu Jamaah Digital kepada petugas masjid atau polisi terdekat.',
 };
 
-export function getOperationalInfo(keberangkatan: KeberangkatanRow | null): TravelOperationalInfo {
-  if (!keberangkatan) return DEFAULT_OPERATIONAL_INFO;
+type JamaahOperationalFields = {
+  rombongan?: string | null;
+  nomorBus?: string | null;
+  nomorKamar?: string | null;
+} | null | undefined;
+
+export function getOperationalInfo(
+  keberangkatan: KeberangkatanRow | null,
+  jamaah?: JamaahOperationalFields,
+): TravelOperationalInfo {
+  if (!keberangkatan) {
+    return {
+      ...DEFAULT_OPERATIONAL_INFO,
+      groupCode: jamaah?.rombongan ?? DEFAULT_OPERATIONAL_INFO.groupCode,
+      busNumber: jamaah?.nomorBus ?? DEFAULT_OPERATIONAL_INFO.busNumber,
+      roomNumber: jamaah?.nomorKamar ?? DEFAULT_OPERATIONAL_INFO.roomNumber,
+    };
+  }
   return {
-    groupCode: DEFAULT_OPERATIONAL_INFO.groupCode,
-    busNumber: DEFAULT_OPERATIONAL_INFO.busNumber,
-    roomNumber: DEFAULT_OPERATIONAL_INFO.roomNumber,
+    groupCode: jamaah?.rombongan ?? DEFAULT_OPERATIONAL_INFO.groupCode,
+    busNumber: jamaah?.nomorBus ?? DEFAULT_OPERATIONAL_INFO.busNumber,
+    roomNumber: jamaah?.nomorKamar ?? DEFAULT_OPERATIONAL_INFO.roomNumber,
     hotelMakkah: keberangkatan.hotel_makkah ?? DEFAULT_OPERATIONAL_INFO.hotelMakkah,
     hotelMadinah: keberangkatan.hotel_madinah ?? DEFAULT_OPERATIONAL_INFO.hotelMadinah,
     meetingPoint: keberangkatan.meeting_point ?? DEFAULT_OPERATIONAL_INFO.meetingPoint,

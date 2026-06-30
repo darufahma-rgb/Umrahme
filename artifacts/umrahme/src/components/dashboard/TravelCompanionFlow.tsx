@@ -54,9 +54,9 @@ export function TripIdentityCard() {
   const { jamaah, tenant, keberangkatan } = useAuth();
   if (!jamaah) return null;
 
-  const info        = getOperationalInfo(keberangkatan ?? null);
+  const info        = getOperationalInfo(keberangkatan ?? null, jamaah);
   const namaTravel  = tenant?.nama_travel ?? jamaah.travel;
-  const rombongan = jamaah.rombongan ?? info.groupCode;
+  const rombongan = info.groupCode;
   const paspor    = jamaah.nomorPaspor;
   const hotelMakkah  = jamaah.hotelMakkah  ?? info.hotelMakkah;
   const hotelMadinah = jamaah.hotelMadinah ?? info.hotelMadinah;
