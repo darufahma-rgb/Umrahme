@@ -30,7 +30,7 @@ function NavigatorHero() {
                 className="font-display font-bold text-white"
                 style={{ fontSize: 'clamp(24px, 6vw, 30px)', letterSpacing: '-0.5px', lineHeight: 1.1 }}
               >
-                Ritual Navigator
+                Pemandu Ibadah
               </h2>
               <p className="mt-2 text-[12px] leading-relaxed text-white/50 max-w-[200px]">
                 Ikuti tiap tahap umrah langkah demi langkah — progres tersimpan otomatis.
