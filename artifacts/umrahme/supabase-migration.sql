@@ -32,9 +32,11 @@ CREATE INDEX IF NOT EXISTS travel_announcements_tenant_id_idx
 -- 3. RLS untuk travel_announcements
 ALTER TABLE travel_announcements ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY IF NOT EXISTS "travel_announcements_select"
-  ON travel_announcements FOR SELECT
-  USING (true);
+DO $$ BEGIN
+  CREATE POLICY "travel_announcements_select"
+    ON travel_announcements FOR SELECT USING (true);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
 -- ============================================================
 -- Migration Fase 1: Sistem Akun Jamaah Per-Individu
@@ -65,27 +67,29 @@ CREATE INDEX IF NOT EXISTS idx_jamaah_accounts_lookup
 -- 5. RLS untuk jamaah_accounts
 ALTER TABLE jamaah_accounts ENABLE ROW LEVEL SECURITY;
 
--- READ publik — diperlukan saat validasi login jamaah
-CREATE POLICY IF NOT EXISTS "jamaah_accounts_select"
-  ON jamaah_accounts FOR SELECT
-  USING (true);
+DO $$ BEGIN
+  CREATE POLICY "jamaah_accounts_select"
+    ON jamaah_accounts FOR SELECT USING (true);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
--- INSERT/UPDATE/DELETE hanya lewat admin (service role / authenticated)
-CREATE POLICY IF NOT EXISTS "jamaah_accounts_insert"
-  ON jamaah_accounts FOR INSERT
-  TO authenticated
-  WITH CHECK (true);
+DO $$ BEGIN
+  CREATE POLICY "jamaah_accounts_insert"
+    ON jamaah_accounts FOR INSERT TO authenticated WITH CHECK (true);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
-CREATE POLICY IF NOT EXISTS "jamaah_accounts_update"
-  ON jamaah_accounts FOR UPDATE
-  TO authenticated
-  USING (true)
-  WITH CHECK (true);
+DO $$ BEGIN
+  CREATE POLICY "jamaah_accounts_update"
+    ON jamaah_accounts FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
-CREATE POLICY IF NOT EXISTS "jamaah_accounts_delete"
-  ON jamaah_accounts FOR DELETE
-  TO authenticated
-  USING (true);
+DO $$ BEGIN
+  CREATE POLICY "jamaah_accounts_delete"
+    ON jamaah_accounts FOR DELETE TO authenticated USING (true);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
 -- ============================================================
 -- Seed data demo — ganti <UUID_TENANT_DEMO01> dengan UUID nyata
