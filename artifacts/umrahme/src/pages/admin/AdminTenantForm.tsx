@@ -7,7 +7,7 @@ import {
   fetchTenant, createTenant, updateTenant,
   fetchAgenda, createAgenda, deleteAgenda,
   fetchAnnouncements, createAnnouncement, deleteAnnouncement,
-  fetchJamaah, createJamaah, updateJamaah, deleteJamaah, bulkInsertJamaah, bulkInsertAgenda,
+  fetchJamaah, createJamaah, updateJamaah, deleteJamaah, bulkInsertJamaah,
   fetchTravelAccounts, createTravelAccount, revokeTravelAccess,
   fetchKeberangkatan, createKeberangkatan, updateKeberangkatan, deleteKeberangkatan,
   uploadLogo as apiUploadLogo,
@@ -224,7 +224,7 @@ export default function AdminTenantForm() {
   const [agImportOpen, setAgImportOpen] = useState(false);
   const [agImportLoading, setAgImportLoading] = useState(false);
   const [agImportError, setAgImportError] = useState('');
-  const [agImportPreview, setAgImportPreview] = useState<Array<{ tanggal: string; jam_mulai: string; judul: string; lokasi: string; deskripsi: string }>>([]);
+  const [agImportPreview, setAgImportPreview] = useState<Array<{ tanggal: string; jam_mulai: string; judul: string; lokasi: string; deskripsi: string; urutan: number }>>([]);
   const [agImportSaving, setAgImportSaving] = useState(false);
   const agImportFileRef = useRef<HTMLInputElement>(null);
 
@@ -734,10 +734,10 @@ export default function AdminTenantForm() {
         const agAuth1: Record<string, string> = agSession1?.access_token ? { Authorization: `Bearer ${agSession1.access_token}` } : {};
         const resp = await fetch('/api/ai-extract-agenda', { method: 'POST', headers: { 'Content-Type': 'application/json', ...agAuth1 }, body: JSON.stringify({ mode: 'excel', rows }) });
         const rawText1 = await resp.text();
-        let json: { error?: string; agenda?: typeof result } = {};
+        let json: { error?: string; items?: typeof result } = {};
         try { json = rawText1 ? JSON.parse(rawText1) : {}; } catch { throw new Error('Gagal memproses file, coba file yang lebih kecil atau format lain.'); }
         if (!resp.ok) throw new Error(json.error || 'Gagal ekstrak Excel.');
-        result = json.agenda ?? [];
+        result = json.items ?? [];
       } else if (ext === 'pdf' || ['png', 'jpg', 'jpeg', 'webp'].includes(ext || '')) {
         const base64 = await new Promise<string>((resolve, reject) => {
           const reader = new FileReader();
@@ -749,19 +749,20 @@ export default function AdminTenantForm() {
         const agAuth2: Record<string, string> = agSession2?.access_token ? { Authorization: `Bearer ${agSession2.access_token}` } : {};
         const resp = await fetch('/api/ai-extract-agenda', { method: 'POST', headers: { 'Content-Type': 'application/json', ...agAuth2 }, body: JSON.stringify({ mode: 'pdf', fileBase64: base64, mimeType: file.type }) });
         const rawText2 = await resp.text();
-        let json: { error?: string; agenda?: typeof result } = {};
+        let json: { error?: string; items?: typeof result } = {};
         try { json = rawText2 ? JSON.parse(rawText2) : {}; } catch { throw new Error('Gagal memproses file, coba file yang lebih kecil atau format lain.'); }
         if (!resp.ok) throw new Error(json.error || 'Gagal ekstrak PDF.');
-        result = json.agenda ?? [];
+        result = json.items ?? [];
       } else {
         throw new Error('Format tidak didukung. Pakai Excel, CSV, PDF, atau gambar.');
       }
-      const preview = (result || []).map(a => ({
+      const preview = (result || []).map((a, i) => ({
         tanggal: String(a.tanggal ?? '').trim(),
         jam_mulai: String(a.jam_mulai ?? '').trim(),
         judul: String(a.judul ?? '').trim(),
         lokasi: String(a.lokasi ?? '').trim(),
         deskripsi: String(a.deskripsi ?? '').trim(),
+        urutan: typeof (a as any).urutan === 'number' ? (a as any).urutan : i + 1,
       })).filter(a => a.judul);
       if (preview.length === 0) throw new Error('Tidak ada agenda terbaca. Cek file atau format.');
       setAgImportPreview(preview);
@@ -787,18 +788,33 @@ export default function AdminTenantForm() {
     if (invalid) { setAgImportError('Setiap agenda wajib punya tanggal & judul.'); return; }
     setAgImportSaving(true); setAgImportError('');
     try {
-      const payload = agImportPreview.map(a => ({
+      const { data: { session: saveSession } } = await supabase.auth.getSession();
+      const saveAuth: Record<string, string> = saveSession?.access_token
+        ? { Authorization: `Bearer ${saveSession.access_token}` }
+        : {};
+
+      const items = agImportPreview.map(a => ({
         tanggal: a.tanggal.trim(),
         jam_mulai: a.jam_mulai.trim() || null,
         judul: a.judul.trim(),
         lokasi: a.lokasi.trim() || null,
         deskripsi: a.deskripsi.trim() || null,
-        urutan: 0,
+        urutan: a.urutan,
       }));
-      const { inserted } = await bulkInsertAgenda(id!, selectedKeberangkatan, payload);
+
+      const saveResp = await fetch('/api/ai-extract-agenda/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...saveAuth },
+        body: JSON.stringify({ tenant_id: id, keberangkatan_id: selectedKeberangkatan, items }),
+      });
+      const rawSave = await saveResp.text();
+      let saveJson: { success?: boolean; count?: number; error?: string } = {};
+      try { saveJson = rawSave ? JSON.parse(rawSave) : {}; } catch { throw new Error('Gagal menyimpan agenda.'); }
+      if (!saveResp.ok) throw new Error(saveJson.error || 'Gagal menyimpan agenda.');
+
       setAgImportPreview([]); setAgImportOpen(false);
       await loadAgenda();
-      alert(`${inserted} agenda berhasil ditambahkan.`);
+      alert(`${saveJson.count ?? items.length} agenda berhasil disimpan.`);
     } catch (err: unknown) {
       setAgImportError(err instanceof Error ? err.message : 'Gagal menyimpan.');
     } finally { setAgImportSaving(false); }
