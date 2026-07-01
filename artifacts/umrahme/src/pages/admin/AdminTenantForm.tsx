@@ -113,6 +113,7 @@ export default function AdminTenantForm() {
   const [activationCode, setActivationCode] = useState('');
   const [primaryColor, setPrimaryColor] = useState('#0ea5e9');
   const [primaryDeepColor, setPrimaryDeepColor] = useState('');
+  const [heroTextColor, setHeroTextColor] = useState('#ffffff');
   const [pageTitle, setPageTitle] = useState('');
   const [slug, setSlug] = useState('');
   const [slugCopied, setSlugCopied] = useState(false);
@@ -268,6 +269,7 @@ export default function AdminTenantForm() {
           setActivationCode(t.activation_code);
           setPrimaryColor(t.primary_color);
           setPrimaryDeepColor(t.primary_deep_color);
+          setHeroTextColor(t.hero_text_color ?? '#ffffff');
           setPageTitle(t.page_title);
           setSlug(t.slug ?? '');
           setExistingLogoUrl(t.logo_url);
@@ -481,6 +483,7 @@ export default function AdminTenantForm() {
         nama_travel: namaTravel.trim(),
         primary_color: primaryColor,
         primary_deep_color: deepColor,
+        hero_text_color: heroTextColor,
         logo_url: logoUrl,
         hero_image_url: heroImageUrl || null,
         sertifikat_template_url: sertifikatTemplateUrl || null,
@@ -1084,12 +1087,23 @@ export default function AdminTenantForm() {
                     <div style={{ height: '1px', background: 'rgba(0,0,0,0.06)' }} />
                     <div>
                       <p className="text-[11px] font-semibold mb-2.5" style={{ color: '#374151' }}>Primary-Deep <span className="ml-2 font-normal" style={{ color: '#9ca3af' }}>— hover/active (auto jika kosong)</span></p>
+
                       <div className="flex items-center gap-3">
                         <input type="color" value={primaryDeepColor || darkenHex(primaryColor)} onChange={e => setPrimaryDeepColor(e.target.value)} className="h-10 w-14 rounded-lg cursor-pointer flex-none" style={{ border: '1px solid rgba(0,0,0,0.10)' }} />
                         <input type="text" value={primaryDeepColor} onChange={e => { if (/^#[0-9a-fA-F]{0,6}$/.test(e.target.value)) setPrimaryDeepColor(e.target.value); }} placeholder={darkenHex(primaryColor)} className="font-mono rounded-xl px-3 py-2.5 text-[13px] transition-all duration-150 focus:outline-none" style={{ ...inputBase, width: '120px', letterSpacing: '0.04em' }} onFocus={e => { e.currentTarget.style.border = '1px solid #4338ca'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(67,56,202,0.10)'; e.currentTarget.style.background = '#ffffff'; }} onBlur={e => { e.currentTarget.style.border = '1px solid rgba(0,0,0,0.09)'; e.currentTarget.style.boxShadow = 'inset 0 1px 2px rgba(0,0,0,0.04)'; e.currentTarget.style.background = '#fafaf9'; }} />
                         {primaryDeepColor && (
                           <button type="button" onClick={() => setPrimaryDeepColor('')} className="text-[11px] transition-all duration-150" style={{ color: '#9ca3af' }} onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#4338ca'; }} onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#9ca3af'; }}>Reset ke auto</button>
                         )}
+                      </div>
+                    </div>
+                    <div style={{ height: '1px', background: 'rgba(0,0,0,0.06)' }} />
+                    <div>
+                      <p className="text-[11px] font-semibold mb-0.5" style={{ color: '#374151' }}>Warna Teks Header</p>
+                      <p className="text-[11px] mb-2.5" style={{ color: '#9ca3af' }}>Warna tulisan nama jamaah, nama travel, dan fase di bagian atas aplikasi</p>
+                      <div className="flex items-center gap-3">
+                        <input type="color" value={heroTextColor} onChange={e => setHeroTextColor(e.target.value)} className="h-10 w-14 rounded-lg cursor-pointer flex-none" style={{ border: '1px solid rgba(0,0,0,0.10)' }} />
+                        <input type="text" value={heroTextColor} onChange={e => { if (/^#[0-9a-fA-F]{0,6}$/.test(e.target.value)) setHeroTextColor(e.target.value); }} className="font-mono rounded-xl px-3 py-2.5 text-[13px] transition-all duration-150 focus:outline-none" style={{ ...inputBase, width: '120px', letterSpacing: '0.04em' }} onFocus={e => { e.currentTarget.style.border = '1px solid #4338ca'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(67,56,202,0.10)'; e.currentTarget.style.background = '#ffffff'; }} onBlur={e => { e.currentTarget.style.border = '1px solid rgba(0,0,0,0.09)'; e.currentTarget.style.boxShadow = 'inset 0 1px 2px rgba(0,0,0,0.04)'; e.currentTarget.style.background = '#fafaf9'; }} />
+                        <div className="flex-1 h-8 rounded-lg border border-dashed" style={{ background: heroTextColor, borderColor: 'rgba(0,0,0,0.10)' }} />
                       </div>
                     </div>
                   </div>

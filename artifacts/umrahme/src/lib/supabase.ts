@@ -64,6 +64,7 @@ export type TenantRow = {
   emergency_note: string | null;
   fase_override: 'persiapan' | 'tanah-suci' | 'selesai' | null;
   hero_image_url: string | null;
+  hero_text_color: string | null;
   sertifikat_template_url: string | null;
   sertifikat_layout: SertifikatLayout | null;
 };

@@ -419,22 +419,33 @@ export default function Beranda() {
 
           {/* Greeting */}
           <div className="absolute inset-x-0 bottom-0 px-5 pb-14">
-            <p className="font-mono text-[9.5px] uppercase tracking-[0.30em] text-white/40 mb-0.5">
-              Assalamu'alaikum
-            </p>
-            <h1 className="font-display font-bold text-white" style={{ fontSize: 'clamp(28px,8vw,40px)', letterSpacing: '-1px', lineHeight: 1.05 }}>
-              {firstName}
-            </h1>
-            <div className="mt-2 flex items-center gap-2">
-              <p className="text-[11px] text-white/50">{namaTravel}</p>
-              <span className="h-3 w-px bg-white/20" />
-              <div className="inline-flex items-center gap-1.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-sky-300 animate-pulse" />
-                <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/65">
-                  {faseBadge[jamaah.fase] ?? jamaah.fase}
-                </span>
-              </div>
-            </div>
+            {(() => {
+              const htc = tenant?.hero_text_color ?? '#ffffff';
+              const htcRgba = (a: number) => {
+                const r = parseInt(htc.slice(1,3),16), g = parseInt(htc.slice(3,5),16), b = parseInt(htc.slice(5,7),16);
+                return `rgba(${r},${g},${b},${a})`;
+              };
+              return (
+                <>
+                  <p className="font-mono text-[9.5px] uppercase tracking-[0.30em] mb-0.5" style={{ color: htcRgba(0.4) }}>
+                    Assalamu'alaikum
+                  </p>
+                  <h1 className="font-display font-bold" style={{ fontSize: 'clamp(28px,8vw,40px)', letterSpacing: '-1px', lineHeight: 1.05, color: htc }}>
+                    {firstName}
+                  </h1>
+                  <div className="mt-2 flex items-center gap-2">
+                    <p className="text-[11px]" style={{ color: htcRgba(0.5) }}>{namaTravel}</p>
+                    <span className="h-3 w-px" style={{ background: htcRgba(0.2) }} />
+                    <div className="inline-flex items-center gap-1.5">
+                      <span className="h-1.5 w-1.5 rounded-full bg-sky-300 animate-pulse" />
+                      <span className="font-mono text-[9px] uppercase tracking-[0.18em]" style={{ color: htcRgba(0.65) }}>
+                        {faseBadge[jamaah.fase] ?? jamaah.fase}
+                      </span>
+                    </div>
+                  </div>
+                </>
+              );
+            })()}
           </div>
         </div>
 
@@ -568,9 +579,20 @@ export default function Beranda() {
             <img src={tenant?.hero_image_url || heroBg} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: 'center 30%' }} />
             <div className="pointer-events-none absolute inset-0" style={{ background: `linear-gradient(to bottom, ${heroOverlayTop} 0%, ${heroOverlayBottom} 100%)` }} />
             <div className="absolute inset-x-0 bottom-0 p-5">
-              <p className="font-mono text-[9px] uppercase tracking-[0.28em] text-white/40">Jamaah</p>
-              <p className="mt-0.5 font-display text-[24px] font-bold text-white leading-tight">{jamaah.nama}</p>
-              <p className="mt-0.5 font-mono text-[10px] tracking-widest text-sky-200/50">{jamaah.kodeAktivasi}</p>
+              {(() => {
+                const htc = tenant?.hero_text_color ?? '#ffffff';
+                const htcRgba = (a: number) => {
+                  const r = parseInt(htc.slice(1,3),16), g = parseInt(htc.slice(3,5),16), b = parseInt(htc.slice(5,7),16);
+                  return `rgba(${r},${g},${b},${a})`;
+                };
+                return (
+                  <>
+                    <p className="font-mono text-[9px] uppercase tracking-[0.28em]" style={{ color: htcRgba(0.4) }}>Jamaah</p>
+                    <p className="mt-0.5 font-display text-[24px] font-bold leading-tight" style={{ color: htc }}>{jamaah.nama}</p>
+                    <p className="mt-0.5 font-mono text-[10px] tracking-widest" style={{ color: htcRgba(0.5) }}>{jamaah.kodeAktivasi}</p>
+                  </>
+                );
+              })()}
             </div>
           </div>
         </div>
