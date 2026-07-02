@@ -188,6 +188,13 @@ export default function TravelDashboard() {
   const [agSubmitting, setAgSubmitting] = useState(false);
   const [agError, setAgError] = useState('');
 
+  /* ── Agenda inline edit ──────────────────────────────────────────── */
+  const [agEditingId, setAgEditingId] = useState<string | null>(null);
+  const [agEditFields, setAgEditFields] = useState({ tanggal: '', jam_mulai: '', judul: '', deskripsi: '', lokasi: '', urutan: 0 });
+  const [agEditSaving, setAgEditSaving] = useState(false);
+  const [agEditError, setAgEditError] = useState('');
+  const [agEditSuccess, setAgEditSuccess] = useState('');
+
   /* ── Pengumuman ───────────────────────────────────────────────────── */
   const [announcements, setAnnouncements] = useState<TravelAnnouncementRow[]>([]);
   const [annLoading, setAnnLoading] = useState(false);
@@ -238,6 +245,13 @@ export default function TravelDashboard() {
       loadAnnouncements();
     }
   }, [selectedKeberangkatan, loadJamaah, loadAgenda, loadAnnouncements]);
+
+  // Clear agenda inline-edit state when the selected batch changes
+  useEffect(() => {
+    setAgEditingId(null);
+    setAgEditError('');
+    setAgEditSuccess('');
+  }, [selectedKeberangkatan]);
 
   /* ── Keberangkatan handlers ──────────────────────────────────────── */
 
@@ -521,6 +535,7 @@ export default function TravelDashboard() {
     if (agImportPreview.length === 0 || !selectedKeberangkatan || !tenant?.id) return;
     const invalid = agImportPreview.some(a => !a.judul.trim() || !a.tanggal.trim());
     if (invalid) { setAgImportError('Setiap agenda wajib punya tanggal & judul.'); return; }
+    if (!window.confirm(`Ini akan menambahkan ${agImportPreview.length} agenda baru ke batch ini. Lanjutkan?`)) return;
     setAgImportSaving(true); setAgImportError('');
     try {
       const payload = agImportPreview.map(a => ({
@@ -562,6 +577,59 @@ export default function TravelDashboard() {
     if (!tenant?.id || !window.confirm(`Hapus agenda "${judul}"?`)) return;
     await deleteAgenda(tenant.id, agendaId);
     await loadAgenda();
+  }
+
+  function handleStartAgEdit(item: AgendaItemRow) {
+    setAgEditingId(item.id);
+    setAgEditFields({
+      tanggal: item.tanggal,
+      jam_mulai: item.jam_mulai?.slice(0, 5) ?? '',
+      judul: item.judul,
+      deskripsi: item.deskripsi ?? '',
+      lokasi: item.lokasi ?? '',
+      urutan: item.urutan,
+    });
+    setAgEditError('');
+    setAgEditSuccess('');
+  }
+
+  function handleCancelAgEdit() {
+    setAgEditingId(null);
+    setAgEditError('');
+  }
+
+  async function handleSaveAgEdit() {
+    if (!agEditingId || !tenant?.id || !selectedKeberangkatan) return;
+    if (!agEditFields.tanggal.trim() || !agEditFields.judul.trim()) {
+      setAgEditError('Tanggal dan judul wajib diisi.');
+      return;
+    }
+    setAgEditSaving(true);
+    setAgEditError('');
+    try {
+      const { error } = await supabase
+        .from('agenda_items')
+        .update({
+          tanggal: agEditFields.tanggal.trim(),
+          jam_mulai: agEditFields.jam_mulai.trim() || null,
+          judul: agEditFields.judul.trim(),
+          deskripsi: agEditFields.deskripsi.trim() || null,
+          lokasi: agEditFields.lokasi.trim() || null,
+          urutan: agEditFields.urutan,
+        })
+        .eq('id', agEditingId)
+        .eq('tenant_id', tenant.id)
+        .eq('keberangkatan_id', selectedKeberangkatan);
+      if (error) throw error;
+      setAgEditingId(null);
+      await loadAgenda();
+      setAgEditSuccess('Agenda berhasil diperbarui.');
+      setTimeout(() => setAgEditSuccess(''), 3000);
+    } catch (err: unknown) {
+      setAgEditError(err instanceof Error ? err.message : 'Gagal menyimpan perubahan.');
+    } finally {
+      setAgEditSaving(false);
+    }
   }
 
   /* ── Pengumuman handlers ──────────────────────────────────────────── */
@@ -1219,6 +1287,14 @@ export default function TravelDashboard() {
                 </form>
               </div>
 
+              {agEditSuccess && (
+                <div className="mb-3 rounded-xl px-4 py-2.5 text-[12px] font-medium flex items-center gap-2"
+                  style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)', color: '#059669' }}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                  {agEditSuccess}
+                </div>
+              )}
+
               <div className="rounded-2xl overflow-hidden" style={cardStyle}>
                 {agendaLoading ? (
                   <div className="py-10 text-center font-mono text-[12px]" style={{ color: '#d1d5db' }}>Memuat agenda...</div>
@@ -1235,24 +1311,80 @@ export default function TravelDashboard() {
                     </thead>
                     <tbody>
                       {agendaItems.map((item, i) => (
-                        <tr key={item.id} style={{ borderBottom: i < agendaItems.length - 1 ? '1px solid rgba(0,0,0,0.04)' : 'none' }}>
-                          <td className="px-5 py-3.5 text-[13px] font-medium whitespace-nowrap" style={{ color: '#374151' }}>{formatTanggal(item.tanggal)}</td>
-                          <td className="px-5 py-3.5 font-mono text-[12px]" style={{ color: '#6b7280' }}>{item.jam_mulai ? item.jam_mulai.slice(0, 5) : '—'}</td>
-                          <td className="px-5 py-3.5">
-                            <p className="text-[13px] font-semibold" style={{ color: '#111827' }}>{item.judul}</p>
-                            {item.deskripsi && <p className="text-[11px] mt-0.5" style={{ color: '#9ca3af' }}>{item.deskripsi}</p>}
-                          </td>
-                          <td className="px-5 py-3.5 text-[12px]" style={{ color: '#6b7280' }}>{item.lokasi ?? '—'}</td>
-                          <td className="px-5 py-3.5 text-right">
-                            <button type="button" onClick={() => handleDeleteAgenda(item.id, item.judul)}
-                              className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150"
-                              style={{ color: '#9ca3af', border: '1px solid rgba(0,0,0,0.07)' }}
-                              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#dc2626'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(220,38,38,0.25)'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(220,38,38,0.05)'; }}
-                              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#9ca3af'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,0,0,0.07)'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}>
-                              Hapus
-                            </button>
-                          </td>
-                        </tr>
+                        <React.Fragment key={item.id}>
+                          {/* Read-only row */}
+                          <tr style={{ borderBottom: agEditingId === item.id ? 'none' : (i < agendaItems.length - 1 ? '1px solid rgba(0,0,0,0.04)' : 'none') }}>
+                            <td className="px-5 py-3.5 text-[13px] font-medium whitespace-nowrap" style={{ color: '#374151' }}>{formatTanggal(item.tanggal)}</td>
+                            <td className="px-5 py-3.5 font-mono text-[12px]" style={{ color: '#6b7280' }}>{item.jam_mulai ? item.jam_mulai.slice(0, 5) : '—'}</td>
+                            <td className="px-5 py-3.5">
+                              <p className="text-[13px] font-semibold" style={{ color: '#111827' }}>{item.judul}</p>
+                              {item.deskripsi && <p className="text-[11px] mt-0.5" style={{ color: '#9ca3af' }}>{item.deskripsi}</p>}
+                            </td>
+                            <td className="px-5 py-3.5 text-[12px]" style={{ color: '#6b7280' }}>{item.lokasi ?? '—'}</td>
+                            <td className="px-5 py-3.5 text-right">
+                              <button type="button"
+                                onClick={() => agEditingId === item.id ? handleCancelAgEdit() : handleStartAgEdit(item)}
+                                disabled={agEditSaving}
+                                className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150 disabled:opacity-40"
+                                style={agEditingId === item.id
+                                  ? { color: PRIMARY, border: `1px solid ${PRIMARY_BORDER}`, background: PRIMARY_BG }
+                                  : { color: '#6b7280', border: '1px solid rgba(0,0,0,0.09)' }}
+                                onMouseEnter={e => { if (agEditingId !== item.id && !agEditSaving) { (e.currentTarget as HTMLButtonElement).style.color = PRIMARY; (e.currentTarget as HTMLButtonElement).style.borderColor = PRIMARY_BORDER; (e.currentTarget as HTMLButtonElement).style.background = PRIMARY_BG; } }}
+                                onMouseLeave={e => { if (agEditingId !== item.id && !agEditSaving) { (e.currentTarget as HTMLButtonElement).style.color = '#6b7280'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,0,0,0.09)'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; } }}>
+                                {agEditingId === item.id ? 'Tutup' : 'Edit'}
+                              </button>
+                            </td>
+                          </tr>
+                          {/* Inline edit row */}
+                          {agEditingId === item.id && (
+                            <tr style={{ borderBottom: i < agendaItems.length - 1 ? '1px solid rgba(0,0,0,0.04)' : 'none' }}>
+                              <td colSpan={5} style={{ padding: '16px 20px 20px', background: 'var(--surface-1, #f8fafc)', borderTop: `1px solid ${PRIMARY_BORDER}` }}>
+                                <div className="grid grid-cols-3 gap-3 mb-3">
+                                  <div>
+                                    <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Tanggal <span style={{ color: '#f87171' }}>*</span></p>
+                                    <StyledInput type="date" value={agEditFields.tanggal} onChange={e => setAgEditFields(f => ({ ...f, tanggal: e.target.value }))} />
+                                  </div>
+                                  <div>
+                                    <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Jam Mulai</p>
+                                    <StyledInput type="time" value={agEditFields.jam_mulai} onChange={e => setAgEditFields(f => ({ ...f, jam_mulai: e.target.value }))} />
+                                  </div>
+                                  <div>
+                                    <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Urutan</p>
+                                    <StyledInput type="number" value={agEditFields.urutan} onChange={e => setAgEditFields(f => ({ ...f, urutan: Number(e.target.value) }))} />
+                                  </div>
+                                </div>
+                                <div className="mb-3">
+                                  <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Judul Kegiatan <span style={{ color: '#f87171' }}>*</span></p>
+                                  <StyledInput type="text" value={agEditFields.judul} onChange={e => setAgEditFields(f => ({ ...f, judul: e.target.value }))} />
+                                </div>
+                                <div className="grid grid-cols-2 gap-3 mb-3">
+                                  <div>
+                                    <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Lokasi</p>
+                                    <StyledInput type="text" value={agEditFields.lokasi} onChange={e => setAgEditFields(f => ({ ...f, lokasi: e.target.value }))} />
+                                  </div>
+                                  <div>
+                                    <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Deskripsi</p>
+                                    <StyledTextarea rows={2} value={agEditFields.deskripsi} onChange={e => setAgEditFields(f => ({ ...f, deskripsi: e.target.value }))} />
+                                  </div>
+                                </div>
+                                {agEditError && <p className="text-[12px] mb-2" style={{ color: '#dc2626' }}>{agEditError}</p>}
+                                <div className="flex items-center gap-2">
+                                  <button type="button" onClick={handleSaveAgEdit} disabled={agEditSaving}
+                                    className="inline-flex items-center gap-1.5 px-4 py-2 text-[12px] font-semibold rounded-xl transition-all duration-150 disabled:opacity-60"
+                                    style={{ background: `linear-gradient(135deg, ${PRIMARY} 0%, ${PRIMARY_DEEP} 100%)`, color: '#fff', boxShadow: '0 2px 6px rgba(14,165,233,0.22)' }}>
+                                    {agEditSaving && <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeOpacity="0.3" /><path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" /></svg>}
+                                    {agEditSaving ? 'Menyimpan...' : 'Simpan'}
+                                  </button>
+                                  <button type="button" onClick={handleCancelAgEdit} disabled={agEditSaving}
+                                    className="px-4 py-2 text-[12px] rounded-xl transition-all duration-150"
+                                    style={{ border: '1px solid rgba(0,0,0,0.1)', color: '#6b7280' }}>
+                                    Batal
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          )}
+                        </React.Fragment>
                       ))}
                     </tbody>
                   </table>
