@@ -1,8 +1,8 @@
 // @refresh reset
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
-import type { Fase, Jamaah } from '../types';
+import type { Jamaah } from '../types';
 import { supabase, type TenantRow, type KeberangkatanRow } from '../lib/supabase';
-import { hitungFaseEfektif } from '../data/jamaah';
+import { hitungFaseDariItinerary, hitungFaseEfektif } from '../data/jamaah';
 
 const STORAGE_KEY = 'umrahme.jamaah';
 const TENANT_STORAGE_KEY = 'umrahme.tenant';
@@ -18,7 +18,6 @@ interface AuthValue {
   isLoggedIn: boolean;
   login: (j: Jamaah, t: TenantRow, kb: KeberangkatanRow | null) => void;
   logout: () => void;
-  setFase: (f: Fase) => void;
 }
 
 const AuthContext = createContext<AuthValue | undefined>(undefined);
@@ -65,7 +64,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return {
         ...saved,
         fase: hitungFaseEfektif(
-          savedKeberangkatan.fase_override ?? null,
           savedKeberangkatan.tanggal_keberangkatan,
           savedKeberangkatan.tanggal_kepulangan,
         ),
@@ -77,7 +75,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return {
           ...saved,
           fase: hitungFaseEfektif(
-            savedTenant.fase_override ?? null,
             savedTenant.tanggal_keberangkatan,
             savedTenant.tanggal_kepulangan,
           ),
@@ -103,6 +100,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch { /* abaikan */ }
     applyTenantTheme(tenant);
   }, [tenant]);
+
+  useEffect(() => {
+    if (!keberangkatan?.id) return;
+    let cancelled = false;
+
+    supabase
+      .from('agenda_items')
+      .select('tanggal')
+      .eq('keberangkatan_id', keberangkatan.id)
+      .then(({ data }) => {
+        if (cancelled) return;
+        const fase = hitungFaseDariItinerary(
+          (data ?? []).map((item) => item.tanggal),
+          keberangkatan.tanggal_keberangkatan,
+          keberangkatan.tanggal_kepulangan,
+        );
+        setJamaah((prev) => (prev && prev.fase !== fase ? { ...prev, fase } : prev));
+      });
+
+    return () => { cancelled = true; };
+  }, [keberangkatan?.id, keberangkatan?.tanggal_keberangkatan, keberangkatan?.tanggal_kepulangan]);
 
   useEffect(() => {
     try {
@@ -147,7 +165,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isLoggedIn: !!jamaah,
     login: (j, t, kb) => { setJamaah(j); setTenant(t); setKeberangkatan(kb); },
     logout: () => { setJamaah(null); setTenant(null); setKeberangkatan(null); },
-    setFase: (f) => setJamaah((prev) => (prev ? { ...prev, fase: f } : prev)),
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

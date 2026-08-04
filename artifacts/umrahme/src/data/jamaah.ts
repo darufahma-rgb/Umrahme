@@ -4,17 +4,10 @@ import type { TenantRow, KeberangkatanRow } from '../lib/supabase';
 
 export const KODE_DEMO = 'DEMO01';
 
-/**
- * Hitung fase efektif: fase_override (manual admin) > otomatis dari tanggal > fallback 'persiapan'
- */
 export function hitungFaseEfektif(
-  faseOverride: string | null | undefined,
   tanggalKeberangkatan: string | null | undefined,
   tanggalKepulangan: string | null | undefined,
 ): 'persiapan' | 'tanah-suci' | 'selesai' {
-  if (faseOverride === 'persiapan' || faseOverride === 'tanah-suci' || faseOverride === 'selesai') {
-    return faseOverride;
-  }
   if (!tanggalKeberangkatan) return 'persiapan';
 
   const today = new Date();
@@ -27,6 +20,25 @@ export function hitungFaseEfektif(
   return 'tanah-suci';
 }
 
+/**
+ * Fase jamaah mengikuti agenda itinerary batch. Tanggal batch hanya digunakan
+ * saat itinerary memang belum tersedia.
+ */
+export function hitungFaseDariItinerary(
+  tanggalAgenda: string[],
+  tanggalKeberangkatan: string | null | undefined,
+  tanggalKepulangan: string | null | undefined,
+): 'persiapan' | 'tanah-suci' | 'selesai' {
+  const tanggalValid = tanggalAgenda
+    .filter((tanggal) => /^\d{4}-\d{2}-\d{2}$/.test(tanggal))
+    .sort();
+
+  return hitungFaseEfektif(
+    tanggalValid[0] ?? tanggalKeberangkatan,
+    tanggalValid[tanggalValid.length - 1] ?? tanggalKepulangan,
+  );
+}
+
 export interface HasilValidasi {
   ok: boolean;
   jamaah?: Jamaah;
@@ -35,14 +47,21 @@ export interface HasilValidasi {
   error?: string;
 }
 
-function bangunHasil(
+async function bangunHasil(
   tenant: TenantRow,
   akun: Record<string, any>,
   kb: KeberangkatanRow | null,
   kodeAktivasi: string,
-): HasilValidasi {
-  const fase = hitungFaseEfektif(
-    akun.fase_override ?? kb?.fase_override ?? null,
+): Promise<HasilValidasi> {
+  const { data: agenda } = kb
+    ? await supabase
+      .from('agenda_items')
+      .select('tanggal')
+      .eq('keberangkatan_id', kb.id)
+    : { data: [] as { tanggal: string }[] };
+
+  const fase = hitungFaseDariItinerary(
+    (agenda ?? []).map((item) => item.tanggal),
     kb?.tanggal_keberangkatan ?? tenant.tanggal_keberangkatan,
     kb?.tanggal_kepulangan ?? tenant.tanggal_kepulangan,
   );
@@ -80,7 +99,7 @@ export async function validasiKode(kode: string, nama: string): Promise<HasilVal
   if (error) return { ok: false, error: 'Terjadi kesalahan. Coba lagi.' };
   if (!data?.ok) return { ok: false, error: data?.error ?? 'Login gagal.' };
 
-  return bangunHasil(
+  return await bangunHasil(
     data.tenant as TenantRow,
     data.jamaah,
     (data.keberangkatan ?? null) as KeberangkatanRow | null,
@@ -100,7 +119,7 @@ export async function validasiSlug(slug: string, nama: string): Promise<HasilVal
   if (!data?.ok) return { ok: false, error: data?.error ?? 'Login gagal.' };
 
   const tenant = data.tenant as TenantRow;
-  return bangunHasil(
+  return await bangunHasil(
     tenant,
     data.jamaah,
     (data.keberangkatan ?? null) as KeberangkatanRow | null,

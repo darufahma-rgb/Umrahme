@@ -68,25 +68,25 @@ export default function LoginSlug() {
   const brandDeep  = tenant.primary_deep_color || '#111111';
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f0efed] p-0 sm:p-6">
-      <div className="relative w-full sm:max-w-[390px] h-screen sm:h-auto flex flex-col sm:rounded-[32px] sm:shadow-[0_16px_64px_rgba(0,0,0,0.14),0_4px_16px_rgba(0,0,0,0.08)] overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-[#f3f2ef] p-0 sm:p-8">
+      <div className="relative w-full sm:max-w-[430px] min-h-screen sm:min-h-0 sm:rounded-[20px] sm:shadow-[0_22px_60px_rgba(28,35,32,0.16)] overflow-hidden" style={{ background: '#fff' }}>
 
         {/* Background foto Masjidil Haram */}
         <img
-          src={heroBg}
+          src={tenant.hero_image_url || heroBg}
           alt=""
           aria-hidden
-          className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-          style={{ objectPosition: 'center 45%', transform: 'scale(1.04)', transformOrigin: 'center 45%' }}
+          className="relative block h-auto w-full pointer-events-none"
+          style={{ objectPosition: 'center top', background: brandDeep }}
         />
 
         {/* Gradient gelap di atas */}
-        <div className="pointer-events-none absolute inset-0"
-          style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.10) 60%, transparent 100%)' }}
+        <div className="hidden"
+          style={{ background: 'linear-gradient(180deg, rgba(10,24,25,0.74) 0%, rgba(10,24,25,0.28) 65%, rgba(10,24,25,0.02) 100%)' }}
         />
 
         {/* Header — logo + nama travel */}
-        <div className="relative flex flex-col items-center justify-center gap-3 px-8 pt-12 pb-4" style={{ zIndex: 1 }}>
+        <div className="hidden">
           {tenant.logo_url && (
             <img
               src={tenant.logo_url}
@@ -99,22 +99,21 @@ export default function LoginSlug() {
               style={{ color: 'rgba(255,255,255,0.60)', textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}>
               Aplikasi Jamaah
             </p>
-            <h1 className="font-bold text-white mt-1"
-              style={{ fontSize: 'clamp(18px, 5.5vw, 24px)', textShadow: '0 2px 12px rgba(0,0,0,0.5)', letterSpacing: '-0.3px' }}>
+            <h1 className="font-bold text-white mt-2"
+              style={{ fontSize: 'clamp(21px, 5.7vw, 27px)', textShadow: '0 2px 12px rgba(0,0,0,0.45)' }}>
               {tenant.nama_travel}
             </h1>
           </div>
         </div>
 
         {/* Spacer — jendela foto */}
-        <div className="flex-shrink-0" style={{ height: 'clamp(100px, 24vw, 160px)' }} />
 
         {/* Form sheet putih */}
-        <div className="relative flex flex-col flex-1 px-6 pb-6"
-          style={{ paddingTop: '20px', marginTop: '-16px', borderRadius: '24px 24px 0 0', background: 'white', zIndex: 1 }}>
+        <div className="relative flex flex-col px-7 pb-8 pt-8 sm:px-8"
+          style={{ marginTop: '-26px', borderRadius: '20px 20px 0 0', background: '#fff', zIndex: 1 }}>
 
           <div className="text-center mb-4">
-            <h2 className="font-display font-bold text-ink" style={{ fontSize: 'clamp(20px, 6vw, 26px)', letterSpacing: '-0.5px' }}>
+            <h2 className="font-sans font-bold text-ink" style={{ fontSize: 'clamp(23px, 6vw, 29px)' }}>
               Selamat Datang!
             </h2>
             <p className="mt-0.5 text-[13px] text-charcoal">Masukkan nama Anda untuk masuk.</p>
@@ -123,8 +122,8 @@ export default function LoginSlug() {
           <form onSubmit={handleSubmit} className="space-y-3 flex-1">
 
             {/* Input nama */}
-            <div className="rounded-2xl border px-4 py-3"
-              style={{ borderColor: 'rgba(0,0,0,0.10)', background: '#fafaf9' }}>
+            <div className="rounded-xl border px-4 py-3.5"
+              style={{ borderColor: 'rgba(0,0,0,0.14)', background: '#fff' }}>
               <p className="font-mono text-[8.5px] uppercase tracking-[0.20em] text-mute mb-1.5">
                 Nama Jamaah
               </p>
@@ -152,7 +151,7 @@ export default function LoginSlug() {
             <button
               type="submit"
               disabled={loading || !nama.trim()}
-              className="w-full flex items-center justify-center gap-2 rounded-2xl text-[15px] font-bold text-white transition-all active:scale-[0.98] disabled:opacity-40"
+              className="w-full flex items-center justify-center gap-2 rounded-xl text-[15px] font-bold text-white transition-all active:scale-[0.98] disabled:opacity-40"
               style={{
                 minHeight: '52px',
                 background: loading || !nama.trim() ? 'rgba(0,0,0,0.18)' : brandColor,

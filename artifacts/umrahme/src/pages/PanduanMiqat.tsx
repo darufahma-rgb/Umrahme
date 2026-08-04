@@ -11,12 +11,17 @@ export default function PanduanMiqat() {
         eyebrow="5 batas tempat mulai ihram — pahami sebelum berangkat"
       />
 
-      <div className="space-y-5 px-5 lg:px-8">
+      <div className="mx-auto max-w-5xl space-y-6 px-5 pb-8 pt-5 lg:px-8">
+
+        <section className="border-b border-hairline pb-5">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">Batas Memulai Ihram</p>
+          <p className="mt-2 max-w-2xl text-[13px] leading-relaxed text-charcoal">Pahami titik miqat dan persiapkan niat sebelum perjalanan melintasi batasnya.</p>
+        </section>
 
         {/* ── Apa itu Miqat ── */}
-        <section className="rounded-2xl border border-hairline bg-surface-card p-5 shadow-drop-soft">
-          <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-primary">Pengertian</p>
-          <h2 className="font-display text-lg font-bold text-ink">Apa itu Miqat?</h2>
+        <section className="border-b border-hairline pb-5">
+          <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">Pengertian</p>
+          <h2 className="text-lg font-bold text-ink">Apa itu Miqat?</h2>
           <p className="mt-2 text-[14px] leading-relaxed text-charcoal">
             Miqat adalah batas tempat (<span className="italic">miqat makani</span>) atau waktu (<span className="italic">miqat zamani</span>) yang ditetapkan untuk memulai ihram. Melewati batas miqat tanpa berihram bagi yang hendak umrah/haji mewajibkan <span className="font-semibold text-ink">dam (denda)</span> atau harus kembali ke miqat. Untuk umrah, tidak ada batas waktu — bisa kapan saja sepanjang tahun.
           </p>
@@ -24,7 +29,7 @@ export default function PanduanMiqat() {
 
         {/* ── Dalil ── */}
         <section className="space-y-3">
-          <p className="font-mono text-[10px] uppercase tracking-widest text-mute">Dalil</p>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-mute">Dalil</p>
           <MihrabCard bodyClassName="px-5 py-4">
             <p className="font-mono text-[10px] uppercase tracking-wider text-gold mb-2">HR. Bukhari & Muslim (dari Ibnu Abbas)</p>
             <p className="text-[13.5px] leading-relaxed text-body">
@@ -41,7 +46,7 @@ export default function PanduanMiqat() {
 
         {/* ── 5 Titik Miqat ── */}
         <section>
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-mute">5 Titik Miqat Makani</p>
+          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.14em] text-mute">5 Titik Miqat Makani</p>
           <div className="space-y-3">
             {daftarMiqat.map((m, i) => (
               <div

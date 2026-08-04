@@ -98,11 +98,11 @@ function ProfilSelector({
   };
 
   return (
-    <div className="rounded-md border border-hairline bg-surface-card px-4 py-4 shadow-drop-card">
-      <p className="font-mono text-[10px] uppercase tracking-widest text-mute">
+    <section className="border-y border-hairline py-4">
+      <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-mute">
         Siapa yang berangkat?
       </p>
-      <p className="mt-0.5 text-[13px] text-charcoal">
+      <p className="mt-1 text-[13px] text-charcoal">
         Checklist Barang Bawaan akan menyesuaikan profil Anda.
       </p>
       <div className="mt-3 flex flex-wrap gap-2">
@@ -129,7 +129,7 @@ function ProfilSelector({
           Belum dipilih — menampilkan semua item.
         </p>
       )}
-    </div>
+    </section>
   );
 }
 
@@ -255,62 +255,50 @@ export default function Persiapan() {
 
       {/* ===================== MOBILE (< lg) ===================== */}
       <div className="px-5 pt-4 lg:hidden">
-        <div className="rounded-md border border-hairline bg-surface-card px-5 py-5 shadow-drop-card">
-          <div className="flex items-end justify-between">
+        <section className="border-b border-hairline pb-5">
+          <div className="flex items-end justify-between gap-4">
             <div>
-              <p className="font-mono text-[11px] uppercase tracking-widest text-primary">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">
                 Kesiapan Anda
               </p>
-              <p className="mt-1 font-display text-4xl font-bold text-ink">
+              <p className="mt-1 text-4xl font-extrabold tracking-[-1px] text-ink">
                 {persen}%
               </p>
             </div>
-            <p className="font-mono text-sm text-mute">
-              {totalDone}/{totalItem} tugas
-            </p>
+            <p className="pb-1 text-[13px] font-medium text-mute">{totalDone} dari {totalItem} selesai</p>
           </div>
-          <div className="mt-4 h-2 overflow-hidden rounded-full bg-surface-bone">
+          <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-surface-bone">
             <div
               className="h-full rounded-full bg-primary transition-all duration-500"
               style={{ width: `${persen}%` }}
             />
           </div>
           {totalDone === 0 ? (
-            <p className="mt-3 text-sm leading-relaxed text-charcoal">
-              Belum ada yang dicentang. Mulai dari{' '}
-              <span className="font-medium text-ink">Dokumen Perjalanan</span> di bawah.
+            <p className="mt-3 text-[13px] leading-relaxed text-charcoal">
+              Mulai dari <span className="font-semibold text-ink">Dokumen Perjalanan</span>.
             </p>
           ) : null}
-        </div>
+        </section>
 
-        <div className="mt-4">
+        <div className="mt-5">
           <ProfilSelector profil={profil} onChange={setProfil} />
         </div>
 
-        <div className="mt-4 space-y-3 pb-8">
+        <div className="mt-5 pb-8">
           {statPerKategori.map((k) => {
             const open = openCat === k.id;
             const items = visibleItemsFor(k.id);
             return (
-              <div
-                key={k.id}
-                className={`overflow-hidden rounded-md border transition-colors ${
-                  k.complete ? 'border-gold/30' : 'border-hairline'
-                } bg-surface-card`}
-              >
+              <div key={k.id} className="border-b border-hairline">
                 <button
                   type="button"
                   onClick={() => setOpenCat(open ? null : k.id)}
-                  className="flex min-h-[60px] w-full items-center gap-3 px-4 py-3.5 text-left"
+                  className="flex min-h-[64px] w-full items-center gap-3 py-3 text-left"
                   aria-expanded={open}
                 >
-                  <span
-                    className={`flex h-8 w-8 flex-none items-center justify-center rounded-full border ${
-                      k.complete
-                        ? 'border-gold/50 bg-gold/10 text-gold'
-                        : 'border-hairline bg-surface-bone text-mute'
-                    }`}
-                  >
+                  <span className={`flex h-8 w-8 flex-none items-center justify-center rounded-full ${
+                    k.complete ? 'bg-primary text-on-primary' : 'bg-surface-bone text-mute'
+                  }`}>
                     {k.complete ? (
                       <IconCheck className="h-4 w-4" />
                     ) : (
@@ -333,7 +321,7 @@ export default function Persiapan() {
                 </button>
 
                 {open ? (
-                  <ul className="space-y-1 px-3 pb-3 animate-fade-up">
+                  <ul className="mb-3 space-y-1 rounded-lg bg-surface-bone/60 px-2 py-1 animate-fade-up">
                     {items.map((item) => (
                       <li key={item.id}>
                         <ItemRow item={item} on={checked.has(item.id)} onToggle={() => toggle(item.id)} mobile />
@@ -348,37 +336,35 @@ export default function Persiapan() {
       </div>
 
       {/* ===================== DESKTOP (≥ lg) ===================== */}
-      <div className="hidden lg:block px-8 py-6 max-w-5xl mx-auto">
-        <div className="mb-5 overflow-hidden rounded-md border border-hairline bg-surface-card px-6 py-5 shadow-drop-card">
+      <div className="hidden lg:block max-w-5xl mx-auto px-8 py-6">
+        <section className="mb-5 border-b border-hairline pb-5">
           <div className="flex items-center justify-between">
             <div>
-              <p className="font-mono text-[11px] uppercase tracking-widest text-primary">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">
                 Kesiapan Anda
               </p>
-              <p className="mt-1 font-display text-5xl font-bold text-ink">
+              <p className="mt-1 text-5xl font-extrabold tracking-[-1px] text-ink">
                 {persen}%
               </p>
             </div>
             <div className="text-right">
-              <p className="font-mono text-lg text-ink">
-                {totalDone}/{totalItem}
-              </p>
+              <p className="text-lg font-bold text-ink">{totalDone}/{totalItem}</p>
               <p className="text-sm text-charcoal">tugas selesai</p>
             </div>
           </div>
-          <div className="mt-4 h-2 overflow-hidden rounded-full bg-surface-bone">
+          <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-surface-bone">
             <div
               className="h-full rounded-full bg-primary transition-all duration-500"
               style={{ width: `${persen}%` }}
             />
           </div>
-        </div>
+        </section>
 
         <div className="mb-5">
           <ProfilSelector profil={profil} onChange={setProfil} />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-x-8">
           {statPerKategori.map((k) => {
             const rasioProgress = k.total > 0 ? k.done / k.total : 1;
             const isLaggingBehind = !k.complete && k.id === laggingKategoriId && rasioProgress < 1;
@@ -387,26 +373,18 @@ export default function Persiapan() {
             return (
               <div
                 key={k.id}
-                className={`overflow-hidden rounded-md border transition-all ${
-                  k.complete
-                    ? 'border-gold/25 bg-gold/5'
-                    : isLaggingBehind
-                      ? 'border-primary/30 bg-primary/5'
-                      : 'border-hairline bg-surface-card'
-                }`}
+                className="border-b border-hairline"
               >
                 <div
-                  className={`flex items-center gap-3 border-b px-4 py-3.5 ${
-                    k.complete ? 'border-gold/15' : 'border-hairline'
-                  }`}
+                  className="flex items-center gap-3 py-3.5"
                 >
                   <span
-                    className={`flex h-8 w-8 flex-none items-center justify-center rounded-full border ${
+                    className={`flex h-8 w-8 flex-none items-center justify-center rounded-full ${
                       k.complete
-                        ? 'border-gold/50 bg-gold/10 text-gold'
+                        ? 'bg-primary text-on-primary'
                         : isLaggingBehind
-                          ? 'border-primary/40 bg-primary/10 text-primary'
-                          : 'border-hairline bg-surface-bone text-mute'
+                          ? 'bg-primary/10 text-primary'
+                          : 'bg-surface-bone text-mute'
                     }`}
                   >
                     {k.complete ? (
@@ -434,7 +412,7 @@ export default function Persiapan() {
                   )}
                 </div>
 
-                <ul className="space-y-1 px-3 py-2">
+                <ul className="mb-3 space-y-1 rounded-lg bg-surface-bone/60 px-2 py-1">
                   {items.map((item) => (
                     <li key={item.id}>
                       <ItemRow item={item} on={checked.has(item.id)} onToggle={() => toggle(item.id)} />

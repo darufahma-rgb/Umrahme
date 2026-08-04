@@ -71,10 +71,14 @@ export default function PanduanIhram() {
     <div>
       <PageHeader title="Panduan Ihram" eyebrow="Panduan" backTo="/panduan" />
 
-      <div className="space-y-5 px-5 pt-5 pb-8 lg:px-8 lg:max-w-5xl lg:mx-auto">
+      <div className="mx-auto max-w-5xl space-y-6 px-5 pb-8 pt-5 lg:px-8">
+        <section className="border-b border-hairline pb-5">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">Materi Dasar</p>
+          <p className="mt-2 max-w-2xl text-[13px] leading-relaxed text-charcoal">Niat, larangan, tata cara, dan ketentuan dam selama berada dalam ihram.</p>
+        </section>
         {/* Niat ihram */}
         <div>
-          <h2 className="mb-2.5 font-mono text-[11px] uppercase tracking-widest text-mute">
+          <h2 className="mb-2.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-mute">
             Niat Ihram
           </h2>
           <div className="space-y-3 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-3">
@@ -95,7 +99,7 @@ export default function PanduanIhram() {
 
         {/* Larangan ihram */}
         <div>
-          <h2 className="mb-2.5 font-mono text-[11px] uppercase tracking-widest text-mute">
+          <h2 className="mb-2.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-mute">
             Larangan Ihram
           </h2>
           <div className="mb-3 flex gap-1.5 rounded-full border border-hairline bg-surface-bone p-1">
@@ -135,7 +139,7 @@ export default function PanduanIhram() {
 
         {/* Cara memakai ihram */}
         <div>
-          <h2 className="mb-2.5 font-mono text-[11px] uppercase tracking-widest text-mute">
+          <h2 className="mb-2.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-mute">
             Cara Memakai Ihram
           </h2>
           <div className="space-y-2.5 lg:grid lg:grid-cols-2 lg:gap-2.5 lg:space-y-0">
@@ -156,7 +160,7 @@ export default function PanduanIhram() {
 
         {/* Dam (denda pelanggaran) */}
         <div>
-          <h2 className="mb-2.5 font-mono text-[11px] uppercase tracking-widest text-mute">
+          <h2 className="mb-2.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-mute">
             Dam (Denda Pelanggaran)
           </h2>
           <p className="mb-3 text-[13px] leading-relaxed text-charcoal">{damPengantar}</p>

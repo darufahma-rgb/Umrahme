@@ -13,11 +13,11 @@ function FaqAccordion({ item, defaultOpen = false }: { item: FaqItem; defaultOpe
   }, [defaultOpen]);
 
   return (
-    <div id={item.id} className="overflow-hidden rounded-xl border border-hairline bg-surface-card transition-all">
+    <div id={item.id} className="overflow-hidden border-b border-hairline transition-all">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="flex min-h-[52px] w-full items-start justify-between gap-3 px-4 py-3.5 text-left"
+        className="flex min-h-[56px] w-full items-start justify-between gap-3 py-4 text-left"
         aria-expanded={open}
       >
         <div className="flex items-start gap-2.5 min-w-0">
@@ -30,7 +30,7 @@ function FaqAccordion({ item, defaultOpen = false }: { item: FaqItem; defaultOpe
       </button>
 
       {open ? (
-        <div className="animate-fade-up px-4 pb-4">
+        <div className="animate-fade-up pb-4">
           <div className="border-t border-hairline pt-3">
             <p className="text-[13px] leading-relaxed text-charcoal">{item.jawab}</p>
             {item.catatan ? (
@@ -69,13 +69,15 @@ export default function FaqFikih() {
     <div className="pb-10">
       <PageHeader title="Tanya Jawab Fikih" eyebrow="Panduan" backTo="/panduan" />
 
-      <div className="space-y-6 px-5 pt-5 lg:px-8 lg:max-w-5xl lg:mx-auto">
+      <div className="mx-auto max-w-5xl space-y-6 px-5 pb-8 pt-5 lg:px-8">
 
         {/* Pengantar */}
-        <p className="text-[13px] leading-relaxed text-charcoal">
+        <div className="border-b border-hairline pb-5">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">Referensi Fikih</p>
+        <p className="mt-2 max-w-2xl text-[13px] leading-relaxed text-charcoal">
           Kumpulan pertanyaan yang sering muncul seputar ibadah umrah. Jawaban bersifat panduan umum — untuk kasus spesifik, selalu tanyakan kepada{' '}
           <span className="font-semibold text-ink">pembimbing/muthowif atau ulama terpercaya</span>.
-        </p>
+        </p></div>
 
         {/* Kategori */}
         {faqKategori.map((kat) => (
@@ -89,7 +91,7 @@ export default function FaqFikih() {
             <h2 className="mb-1 font-display text-[16px] font-bold text-ink">{kat.nama}</h2>
             <p className="mb-3 text-[12px] text-charcoal">{kat.ringkas}</p>
 
-            <div className="space-y-2">
+            <div className="border-t border-hairline">
               {kat.items.map((item) => (
                 <FaqAccordion
                   key={item.id}

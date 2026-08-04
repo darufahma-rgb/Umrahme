@@ -2,127 +2,112 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { IconPanduan, IconPeta, IconManasikInteraktif } from '../components/icons';
 
+type GuideItem = {
+  to: string;
+  label: string;
+  desc: string;
+  Icon: React.FC<{ className?: string; style?: React.CSSProperties }>;
+};
+
 export default function Panduan() {
-  const items: {
-    to: string;
-    label: string;
-    desc: string;
-    Icon: React.FC<{ className?: string; style?: React.CSSProperties }>;
-    highlight?: boolean;
-  }[] = [
+  const items: GuideItem[] = [
     {
       to: '/panduan/manasik-interaktif',
       label: 'Manasik Interaktif',
-      desc: 'Kenali, urutkan & uji paham secara interaktif',
+      desc: 'Kenali urutan ibadah dan uji pemahaman Anda secara interaktif.',
       Icon: IconManasikInteraktif,
-      highlight: true,
     },
     {
       to: '/panduan/tata-cara',
       label: 'Tata Cara Umrah',
-      desc: 'Miqat → Ihram → Tawaf → Sa\u2019i → Tahallul',
+      desc: "Miqat, ihram, tawaf, sa'i, hingga tahallul.",
       Icon: IconPanduan,
     },
     {
       to: '/panduan/ihram',
       label: 'Panduan Ihram',
-      desc: 'Niat, larangan & cara memakai ihram',
+      desc: 'Niat, larangan, dan cara memakai ihram.',
       Icon: IconPanduan,
     },
     {
       to: '/panduan/miqat',
       label: 'Panduan Miqat',
-      desc: '5 titik miqat & aturan ihram — jangan sampai terlewat',
+      desc: 'Lima titik miqat dan aturan ihram yang perlu diketahui.',
       Icon: IconPeta,
     },
     {
       to: '/panduan/faq-fikih',
       label: 'Tanya Jawab Fikih',
-      desc: 'Haid, batal wudhu, lupa putaran, kursi roda & lainnya',
+      desc: 'Jawaban untuk kondisi yang sering ditemui jamaah.',
       Icon: IconPanduan,
     },
     {
       to: '/panduan/glosarium',
       label: 'Glosarium Istilah',
-      desc: 'Kamus istilah umrah: ihram, tahallul, raml, dll',
+      desc: 'Kamus istilah penting selama perjalanan umrah.',
       Icon: IconPanduan,
     },
     {
       to: '/peta',
       label: 'Peta Lokasi',
-      desc: '19 masjid & tempat bersejarah',
+      desc: 'Masjid dan tempat bersejarah di sekitar perjalanan Anda.',
       Icon: IconPeta,
     },
   ];
+  const [modulUtama, ...panduanLain] = items;
 
   return (
-    <div>
-      <header
-        className="px-5 pb-1 pt-8 lg:px-8 lg:pt-10"
-        style={{ paddingTop: 'max(2rem, env(safe-area-inset-top))' }}
-      >
-        <h1 className="font-display text-3xl font-bold leading-tight text-ink lg:text-4xl">Panduan</h1>
-        <p className="mt-1 text-sm text-charcoal">
-          Pelajari dengan tenang sebelum berangkat.
+    <div className="mx-auto max-w-5xl px-5 pb-8 pt-8 lg:px-10 lg:pb-12 lg:pt-10">
+      <header>
+        <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">Belajar Umrah</p>
+        <h1 className="mt-1 text-3xl font-extrabold tracking-[-1px] text-ink lg:text-4xl">Panduan</h1>
+        <p className="mt-2 max-w-md text-[14px] leading-relaxed text-charcoal">
+          Materi ringkas untuk menemani persiapan dan ibadah Anda.
         </p>
       </header>
 
-      <div className="mt-5 grid grid-cols-2 gap-3 px-5 pb-6 lg:px-8 lg:pb-10 lg:gap-4">
-        {items.map(({ to, label, desc, Icon, highlight }) => (
-          <Link
-            key={to}
-            to={to}
-            className="group relative flex flex-col overflow-hidden rounded-2xl border border-hairline bg-surface-card shadow-drop-soft transition-all hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.98]"
-            style={{
-              background:
-                'linear-gradient(135deg, color-mix(in srgb, var(--color-primary) 15%, white) 0%, color-mix(in srgb, var(--color-primary) 5%, white) 100%)',
-            }}
-          >
-            {/* gradient top bar */}
-            <span
-              className="absolute left-0 top-0 h-0.5 w-full"
-              style={{
-                background:
-                  'linear-gradient(to right, color-mix(in srgb, var(--color-primary) 50%, transparent), transparent)',
-              }}
-              aria-hidden
-            />
+      <Link
+        to={modulUtama.to}
+        className="group mt-6 flex min-h-[170px] flex-col justify-between rounded-xl p-5 text-white transition-transform active:scale-[0.99] lg:min-h-[190px] lg:p-6"
+        style={{ background: 'var(--color-primary-deep)' }}
+      >
+        <div className="flex items-start justify-between gap-4">
+          <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-white/15 ring-1 ring-white/20">
+            <modulUtama.Icon className="h-5 w-5 text-white" />
+          </span>
+          <span className="rounded-full bg-white/15 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.12em] text-white">Mulai di sini</span>
+        </div>
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-white/60">Modul utama</p>
+          <h2 className="mt-1 text-[22px] font-extrabold tracking-[-0.5px]">{modulUtama.label}</h2>
+          <p className="mt-1.5 max-w-sm text-[13px] leading-relaxed text-white/75">{modulUtama.desc}</p>
+        </div>
+      </Link>
 
-            <div className="flex flex-col gap-3 p-4">
-              {/* ikon + badge */}
-              <div className="flex items-start justify-between">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/70 shadow-sm backdrop-blur-sm">
-                  <Icon className="h-5 w-5" style={{ color: 'var(--color-primary)' }} />
-                </div>
-                {highlight && (
-                  <span
-                    className="rounded-full bg-white/80 px-2 py-0.5 font-mono text-[8px] font-bold uppercase tracking-wider shadow-sm"
-                    style={{ color: 'var(--color-primary)' }}
-                  >
-                    Baru
-                  </span>
-                )}
-              </div>
-
-              {/* teks */}
-              <div>
-                <h2 className="font-display text-[14px] font-bold leading-tight text-ink">{label}</h2>
-                <p className="mt-1 text-[11.5px] leading-snug text-charcoal line-clamp-2">{desc}</p>
-              </div>
-            </div>
-
-            {/* footer arrow */}
-            <div className="mt-auto flex items-center justify-end px-4 pb-3">
-              <span
-                className="font-mono text-[9px] uppercase tracking-wider opacity-70 transition-opacity group-hover:opacity-100"
-                style={{ color: 'var(--color-primary)' }}
-              >
-                Buka →
+      <section className="mt-7">
+        <div className="mb-3">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-mute">Materi lainnya</p>
+          <h2 className="mt-1 text-[18px] font-bold text-ink">Pilih sesuai kebutuhan</h2>
+        </div>
+        <div className="border-y border-hairline sm:grid sm:grid-cols-2 sm:divide-x sm:divide-hairline">
+          {panduanLain.map(({ to, label, desc, Icon }, index) => (
+            <Link
+              key={to}
+              to={to}
+              className={`group flex min-h-[94px] items-center gap-3 border-b border-hairline py-4 transition-colors hover:bg-surface-bone/60 sm:px-4 sm:odd:pl-0 sm:even:pr-0 ${index >= panduanLain.length - 2 ? 'sm:border-b-0' : ''}`}
+            >
+              <span className="flex h-9 w-9 flex-none items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <Icon className="h-[18px] w-[18px]" />
               </span>
-            </div>
-          </Link>
-        ))}
-      </div>
+              <span className="min-w-0 flex-1">
+                <span className="block text-[14px] font-bold text-ink">{label}</span>
+                <span className="mt-1 block text-[12px] leading-relaxed text-charcoal">{desc}</span>
+              </span>
+              <span className="text-[15px] font-medium text-primary transition-transform group-hover:translate-x-0.5">-&gt;</span>
+            </Link>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

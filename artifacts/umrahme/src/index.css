@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Amiri:wght@400;700&family=Libre+Caslon+Condensed:ital,wght@0,400;1,400&family=Roboto:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Amiri:wght@400;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -67,6 +67,17 @@
 }
 
 @layer utilities {
+  /*
+   * Keep every Latin UI style on the same typeface. Arabic content retains
+   * its dedicated Amiri family through the separate font-arab utility.
+   */
+  .font-display,
+  .font-sans,
+  .font-mono,
+  .font-serif {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
+  }
+
   .text-balance {
     text-wrap: balance;
   }

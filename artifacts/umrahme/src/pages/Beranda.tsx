@@ -332,25 +332,23 @@ function getPhaseActions(fase: Fase): QA[] {
   ];
 }
 
-function KartuHitung({ n, namaTravel }: { n: number; namaTravel: string }) {
+function KartuHitung({ n }: { n: number }) {
   return (
-    <div className="relative overflow-hidden rounded-2xl px-5 py-4"
-      style={{ background: 'linear-gradient(135deg, var(--color-primary-deep) 0%, var(--color-primary-deep) 60%, var(--color-primary) 100%)' }}>
-      <div className="pointer-events-none absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/[0.06]" />
-      <div className="pointer-events-none absolute -bottom-6 -right-6 h-32 w-32 rounded-full bg-sky-300/[0.05]" />
-      <div className="relative flex items-center gap-5">
-        <div className="flex-none">
-          <p className="font-mono text-[8.5px] uppercase tracking-[0.22em] text-white/45 mb-0.5">Keberangkatan</p>
-          <p className="font-display font-bold text-white" style={{ fontSize: '52px', letterSpacing: '-2px', lineHeight: 1 }}>
-            H<span className="text-white/35">-</span>{n}
+    <div className="rounded-xl px-5 py-4 text-white" style={{ background: 'var(--color-primary-deep)' }}>
+      <div className="flex items-center gap-4">
+        <div className="flex-none border-r border-white/20 pr-4">
+          <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-white/60">Berangkat dalam</p>
+          <p className="mt-0.5 text-[40px] font-extrabold leading-none tracking-[-1px]">
+            H-{n}
           </p>
         </div>
-        <div className="flex-1">
-          <p className="text-[13px] font-semibold text-white/85 leading-snug">Menuju keberangkatan bersama {namaTravel}</p>
-          <Link to="/profil/persiapan"
-            className="mt-2.5 inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[11.5px] font-semibold text-white"
-            style={{ background: 'rgba(255,255,255,0.16)', border: '1px solid rgba(255,255,255,0.20)' }}>
-            Cek Persiapan <IconChevron className="h-3 w-3" />
+        <div className="min-w-0 flex-1">
+          <p className="text-[13px] font-semibold leading-snug text-white">Persiapan perjalanan Anda</p>
+          <Link
+            to="/profil/persiapan"
+            className="mt-1.5 inline-flex items-center gap-1 text-[11px] font-semibold text-white/75 transition-colors hover:text-white"
+          >
+            Lihat checklist <IconChevron className="h-3 w-3" />
           </Link>
         </div>
       </div>
@@ -608,7 +606,7 @@ export default function Beranda() {
           <GlobalSearch />
 
           {/* Countdown */}
-          {showHitung && <KartuHitung n={hariMenuju!} namaTravel={namaTravel} />}
+          {showHitung && <KartuHitung n={hariMenuju!} />}
 
           {/* Identitas perjalanan selalu berada di atas */}
           <TravelCompanionFlow mobileSection="identity" />
@@ -699,7 +697,7 @@ export default function Beranda() {
 
           <GlobalSearch />
 
-          {showHitung && <KartuHitung n={hariMenuju!} namaTravel={namaTravel} />}
+          {showHitung && <KartuHitung n={hariMenuju!} />}
 
           <TravelCompanionFlow desktop />
 

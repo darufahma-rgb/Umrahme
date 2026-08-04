@@ -130,11 +130,16 @@ export default function AgendaLengkap() {
         backTo="/beranda"
       />
 
-      <div className="px-4 pb-10 pt-4">
+      <div className="mx-auto max-w-4xl px-5 pb-10 pt-4 lg:px-8">
+
+        <div className="mb-5 border-b border-hairline pb-4">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">Rundown Perjalanan</p>
+          <p className="mt-2 text-[13px] leading-relaxed text-charcoal">Ikuti agenda sesuai hari dan waktu yang telah disusun travel Anda.</p>
+        </div>
 
         {/* ── Trip summary strip ── */}
         {!loading && tanggalList.length > 0 && (
-          <div className="mb-5 rounded-2xl border border-hairline bg-white px-4 py-3 shadow-drop-card">
+          <div className="mb-5 border-y border-hairline py-3">
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
               <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-mute">
                 {tenant?.nama_travel}
@@ -205,7 +210,7 @@ export default function AgendaLengkap() {
 
         {/* ── Timeline ── */}
         {!loading && tanggalList.length > 0 && (
-          <div className="space-y-8">
+          <div className="space-y-7">
             {tanggalList.map((tgl) => {
               const dayItems = grouped[tgl];
               const todayDay = isToday(tgl);
@@ -256,7 +261,7 @@ export default function AgendaLengkap() {
                       return (
                         <div
                           key={item.id}
-                          className="relative overflow-hidden rounded-2xl border bg-white px-4 py-3.5 transition-all"
+                          className="relative overflow-hidden border-b bg-white px-3 py-3.5 transition-all"
                           style={{
                             opacity: past ? 0.65 : 1,
                             borderColor: ongoing
@@ -273,7 +278,7 @@ export default function AgendaLengkap() {
                           {ongoing && (
                             <div
                               className="absolute bottom-0 left-0 top-0 w-1"
-                              style={{ background: 'var(--color-primary)', borderRadius: '8px 0 0 8px' }}
+                              style={{ background: 'var(--color-primary)' }}
                             />
                           )}
 
@@ -342,7 +347,7 @@ export default function AgendaLengkap() {
         {!loading && tanggalList.length > 0 && (
           <Link
             to="/beranda"
-            className="mt-8 flex items-center justify-center gap-2 rounded-2xl border border-hairline bg-white px-5 py-3.5 text-[13px] font-semibold text-charcoal transition-all active:scale-[0.98]"
+            className="mt-8 flex items-center justify-center gap-2 border-y border-hairline py-3.5 text-[13px] font-semibold text-charcoal transition-colors hover:text-ink active:scale-[0.98]"
           >
             Kembali ke Beranda
           </Link>

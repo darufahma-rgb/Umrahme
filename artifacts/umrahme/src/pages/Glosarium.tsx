@@ -51,9 +51,11 @@ export default function Glosarium() {
     <div className="pb-10">
       <PageHeader title="Glosarium" eyebrow="Panduan" backTo="/panduan" />
 
-      <div className="px-5 pt-5 space-y-4 lg:px-8 lg:max-w-3xl lg:mx-auto">
+      <div className="mx-auto max-w-3xl space-y-4 px-5 pb-8 pt-5 lg:px-8">
 
         {/* Search bar */}
+        <div className="border-b border-hairline pb-5">
+          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">Kamus Umrah</p>
         <div className="relative">
           <svg
             className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ash"
@@ -67,9 +69,9 @@ export default function Glosarium() {
             value={q}
             onChange={e => setQ(e.target.value)}
             placeholder="Cari istilah atau arti…"
-            className="w-full rounded-full border border-hairline bg-surface-card py-2.5 pl-10 pr-4 text-[14px] text-ink placeholder:text-ash outline-none focus:border-primary/40 focus:ring-2 focus:ring-primary/10 transition"
+            className="w-full border-b border-hairline bg-transparent py-2.5 pl-10 pr-4 text-[14px] text-ink placeholder:text-ash outline-none focus:border-primary/40 transition"
           />
-        </div>
+        </div></div>
 
         {/* Filter kategori */}
         <div className="flex gap-1.5 overflow-x-auto pb-0.5 scrollbar-none">
@@ -101,12 +103,12 @@ export default function Glosarium() {
             <p className="mt-1 text-[12px] text-ash">Coba kata kunci lain</p>
           </div>
         ) : (
-          <div className="space-y-2.5">
+          <div className="border-t border-hairline">
             {hasil.map((it) => (
               <div
                 key={it.id}
                 id={it.id}
-                className="rounded-2xl border border-hairline bg-surface-card p-4 shadow-drop-soft transition-all"
+                className="border-b border-hairline py-4 transition-all"
               >
                 <div className="flex items-start justify-between gap-3">
                   <h3 className="font-display text-[15px] font-bold text-ink">{it.istilah}</h3>

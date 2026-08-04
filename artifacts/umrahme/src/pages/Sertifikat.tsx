@@ -28,7 +28,7 @@ function fontFamilyToCss(f: SertifikatField['fontFamily']): string {
 }
 
 export default function Sertifikat() {
-  const { jamaah, tenant, setFase } = useAuth();
+  const { jamaah, tenant } = useAuth();
   const certRef = useRef<HTMLDivElement>(null);
   const [busy, setBusy] = useState(false);
   if (!jamaah) return null;
@@ -42,16 +42,7 @@ export default function Sertifikat() {
         <EmptyState
           icon={<IconSertifikat className="h-7 w-7" />}
           title="Sertifikat belum tersedia"
-          desc="Sertifikat akan terbit setelah seluruh rangkaian ibadah umrah Anda selesai. Selesaikan tawaf, sa'i, dan tahallul terlebih dahulu."
-          action={
-            <button
-              type="button"
-              onClick={() => setFase('selesai')}
-              className="min-h-[44px] rounded-full bg-primary px-6 font-semibold text-on-primary active:scale-[0.99]"
-            >
-              Tandai Umrah Selesai
-            </button>
-          }
+          desc="Sertifikat akan terbit otomatis setelah seluruh tanggal agenda itinerary batch telah berlalu."
         />
       </div>
     );
@@ -77,7 +68,7 @@ export default function Sertifikat() {
     try {
       const dataUrl = await toPng(certRef.current, {
         pixelRatio: 2,
-        backgroundColor: hasTemplate ? '#ffffff' : '#130a04',
+        backgroundColor: '#f7f5f0',
       });
       const a = document.createElement('a');
       a.download = `Sertifikat-Umrah-${jamaah!.nama.replace(/\s+/g, '-')}.png`;
@@ -94,7 +85,7 @@ export default function Sertifikat() {
     if (!certRef.current) return;
     setBusy(true);
     try {
-      const dataUrl = await toPng(certRef.current, { pixelRatio: 2, backgroundColor: hasTemplate ? '#ffffff' : '#130a04' });
+      const dataUrl = await toPng(certRef.current, { pixelRatio: 2, backgroundColor: '#f7f5f0' });
       const blob = await (await fetch(dataUrl)).blob();
       const file = new File([blob], 'sertifikat-umrah.png', { type: 'image/png' });
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -112,10 +103,10 @@ export default function Sertifikat() {
   const certCard = (
     <div
       ref={certRef}
-      className="relative overflow-hidden rounded-2xl animate-fade-up"
+      className={`relative overflow-hidden animate-fade-up ${hasTemplate ? 'rounded-2xl' : ''}`}
       style={{
-        aspectRatio: '1.414 / 1',
-        background: hasTemplate ? 'transparent' : 'radial-gradient(120% 60% at 50% 0%, rgba(212,162,78,0.18), #130a04 60%)',
+        aspectRatio: '210 / 297',
+        background: hasTemplate ? 'transparent' : '#f7f5f0',
         containerType: 'inline-size',
       } as React.CSSProperties}
     >
@@ -125,7 +116,7 @@ export default function Sertifikat() {
           src={tenant!.sertifikat_template_url!}
           alt=""
           aria-hidden
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-contain"
           crossOrigin="anonymous"
         />
       )}
@@ -138,15 +129,9 @@ export default function Sertifikat() {
         />
       )}
 
-      {/* Border ornamen (hanya kalau TIDAK pakai template) */}
+      {/* Sertifikat default minimal */}
       {!hasTemplate && (
-        <>
-          <div className="pointer-events-none absolute inset-3 rounded-2xl border border-gold/40" />
-          <div className="pointer-events-none absolute inset-[18px] rounded-xl border border-gold/15" />
-          {['left-2 top-2', 'right-2 top-2', 'left-2 bottom-2', 'right-2 bottom-2'].map((p) => (
-            <span key={p} className={`pointer-events-none absolute ${p} h-2 w-2 rotate-45 bg-gold/70`} />
-          ))}
-        </>
+        <div className="pointer-events-none absolute inset-[4%] border border-black/15" />
       )}
 
       {/* Konten teks — layout absolut bila ada template, default bila tidak */}
@@ -170,59 +155,61 @@ export default function Sertifikat() {
           </div>
         ))
       ) : (
-        <div className="relative flex h-full flex-col items-center justify-center px-8 text-center">
-          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-gold">
-            Sertifikat Pelaksanaan
-          </p>
-
-          <h2 className="mt-1.5 font-display text-2xl font-bold" style={{ color: '#f3e9d5' }}>
-            Ibadah Umrah
-          </h2>
-
-          <div className="mx-auto my-4 flex items-center justify-center gap-3">
-            <span className="h-px w-10 bg-gold/40" />
-            <span className="h-1.5 w-1.5 rotate-45 bg-gold/70" />
-            <span className="h-px w-10 bg-gold/40" />
+        <div className="relative grid h-full grid-cols-[26%_1fr] px-[9%] py-[10%] text-[#171717]">
+          <div className="flex border-r border-black/25 pr-[12%]">
+            <p
+              className="text-[10cqw] font-extralight leading-none tracking-[-0.08em]"
+              style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
+            >
+              sertifikat
+            </p>
           </div>
 
-          <p className="text-[11px] uppercase tracking-widest" style={{ color: 'rgba(243,233,213,0.5)' }}>
-            Dengan ini menerangkan bahwa
-          </p>
-
-          <p className="mt-2 font-display text-3xl font-bold leading-tight" style={{ color: '#f3e9d5' }}>
-            {jamaah.nama}
-          </p>
-
-          <p
-            className="font-mono text-[11px] mt-2"
-            style={{ color: 'rgba(243,233,213,0.5)', letterSpacing: '0.15em' }}
-          >
-            {jamaah.nomorJamaah}
-          </p>
-
-          <p className="mt-3 max-w-[34ch] mx-auto text-pretty text-sm leading-relaxed" style={{ color: 'rgba(243,233,213,0.6)' }}>
-            telah menunaikan rangkaian ibadah umrah ke Baitullah Al-Haram dengan penuh khusyuk.
-            Semoga menjadi umrah yang mabrur.
-          </p>
-
-          <div className="mt-6 grid grid-cols-2 gap-3 text-left w-full">
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-widest text-gold/80">Tanggal</p>
-              <p className="mt-0.5 text-sm" style={{ color: '#f3e9d5' }}>{tanggalSekarang}</p>
-            </div>
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-widest text-gold/80">No. Sertifikat</p>
-              <p className="mt-0.5 font-mono text-sm" style={{ color: '#f3e9d5' }}>{nomorSertifikat(jamaah.nomorJamaah)}</p>
-            </div>
-          </div>
-
-          <div className="mt-6 border-t border-gold/15 pt-4 w-full text-center">
-            <p className="font-mono text-[10px] uppercase tracking-widest" style={{ color: 'rgba(243,233,213,0.4)' }}>
-              Diselenggarakan oleh
+          <div className="flex min-w-0 flex-col pl-[12%]">
+            <p className="text-[2.4cqw] font-semibold uppercase tracking-[0.18em] text-black/55">
+              Sertifikat Umrah
             </p>
-            <p className="mt-0.5 font-display text-base font-bold" style={{ color: '#f3e9d5' }}>
-              {tenant?.nama_travel ?? jamaah.travel}
+            <p className="mt-[8%] text-left font-arab text-[3.8cqw] leading-none text-black/80" dir="rtl">
+              بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
             </p>
+            <h2 className="mt-[10%] text-[5.5cqw] font-bold leading-[1.05] tracking-[-0.05em]">
+              Ibadah Umrah
+            </h2>
+
+            <div className="mt-[19%]">
+              <p className="text-[2.6cqw] leading-relaxed text-black/55">
+                Dengan ini menerangkan bahwa
+              </p>
+              <p
+                className="mt-[4%] border-b border-black/40 pb-[3%] text-[4.7cqw] font-extrabold leading-tight tracking-[-0.04em]"
+                style={{ color: tenant?.primary_color ?? 'var(--color-primary)' }}
+              >
+                {jamaah.nama}
+              </p>
+              <p className="mt-[4%] max-w-[27ch] text-[2.5cqw] leading-relaxed text-black/60">
+                telah menunaikan rangkaian ibadah umrah ke Baitullah Al-Haram.
+                Semoga Allah SWT menerima amal ibadahnya dan menjadikannya umrah yang mabrur.
+              </p>
+              <div className="mt-[7%] border-l border-black/25 pl-[5%]">
+                <p className="text-left font-arab text-[3.2cqw] leading-relaxed text-black/80" dir="rtl">
+                  رَبَّنَا تَقَبَّلْ مِنَّا إِنَّكَ أَنتَ السَّمِيعُ الْعَلِيمُ
+                </p>
+                <p className="mt-[2%] text-[2cqw] leading-relaxed text-black/45">
+                  Ya Allah, terimalah ibadah kami. Sesungguhnya Engkaulah Yang Maha Mendengar lagi Maha Mengetahui.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-auto flex flex-col items-start gap-[8%] pt-[12%]">
+              <div>
+                <p className="text-[1.8cqw] font-semibold uppercase tracking-[0.14em] text-black/45">Diselenggarakan oleh</p>
+                <p className="mt-[3%] text-[2.7cqw] font-bold leading-tight">{tenant?.nama_travel ?? jamaah.travel}</p>
+              </div>
+              <div>
+                <p className="text-[1.8cqw] uppercase tracking-[0.12em] text-black/45">{tanggalSekarang}</p>
+                <p className="mt-[4%] text-[1.8cqw] font-medium tracking-[0.08em] text-black/55">{nomorSertifikat(jamaah.nomorJamaah)}</p>
+              </div>
+            </div>
           </div>
         </div>
       )}

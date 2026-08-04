@@ -33,7 +33,11 @@ export default function Peta() {
     <div>
       <PageHeader title="Peta Lokasi" eyebrow="Panduan" backTo="/panduan" />
 
-      <div className="px-4 pt-4 pb-8 sm:px-5 lg:px-8 lg:max-w-5xl lg:mx-auto">
+      <div className="mx-auto max-w-5xl px-4 pb-8 pt-4 sm:px-5 lg:px-8">
+        <div className="mb-5 border-b border-hairline pb-4">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">Jelajahi Tanah Suci</p>
+          <p className="mt-2 text-[13px] leading-relaxed text-charcoal">Kenali masjid dan tempat bersejarah sebelum Anda berkunjung.</p>
+        </div>
         {/* Tab kategori */}
         <div className="mb-3 flex gap-1.5 rounded-full border border-hairline bg-surface-bone p-1">
           {tabs.map((t) => (
@@ -61,7 +65,7 @@ export default function Peta() {
             <Link
               key={l.id}
               to={`/peta/${l.id}`}
-              className="group flex flex-col overflow-hidden rounded-2xl border border-hairline bg-surface-card transition-all hover:border-hairline hover:shadow-drop-soft active:scale-[0.99]"
+            className="group flex flex-col overflow-hidden rounded-xl border border-hairline bg-surface-card transition-all hover:border-primary/30 active:scale-[0.99]"
             >
               {/* ── Gambar ── */}
               <div className="relative aspect-[16/10] w-full overflow-hidden bg-surface-bone">
@@ -95,8 +99,6 @@ export default function Peta() {
                   {l.kota}
                 </span>
 
-                {/* Gradient bawah */}
-                <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/20 to-transparent" aria-hidden />
               </div>
 
               {/* ── Konten ── */}
