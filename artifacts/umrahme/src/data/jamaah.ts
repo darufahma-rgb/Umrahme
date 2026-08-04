@@ -58,8 +58,8 @@ function bangunHasil(
     nomorBus: akun.nomor_bus ?? undefined,
     nomorKamar: akun.nomor_kamar ?? undefined,
     nomorPaspor: akun.nomor_paspor ?? undefined,
-    hotelMakkah: (kb?.hotel_makkah ?? tenant.hotel_makkah) ?? undefined,
-    hotelMadinah: (kb?.hotel_madinah ?? tenant.hotel_madinah) ?? undefined,
+    hotelMakkah: (akun.hotel_makkah ?? kb?.hotel_makkah ?? tenant.hotel_makkah) ?? undefined,
+    hotelMadinah: (akun.hotel_madinah ?? kb?.hotel_madinah ?? tenant.hotel_madinah) ?? undefined,
     pembimbingNama: (kb?.guide_name ?? tenant.guide_name) ?? undefined,
     pembimbingWhatsapp: (kb?.guide_whatsapp ?? tenant.guide_whatsapp) ?? undefined,
   };

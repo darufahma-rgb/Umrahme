@@ -1,7 +1,7 @@
 // @refresh reset
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import type { Fase, Jamaah } from '../types';
-import type { TenantRow, KeberangkatanRow } from '../lib/supabase';
+import { supabase, type TenantRow, type KeberangkatanRow } from '../lib/supabase';
 import { hitungFaseEfektif } from '../data/jamaah';
 
 const STORAGE_KEY = 'umrahme.jamaah';
@@ -119,6 +119,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { ...prev, travel: namaTravel };
     });
   }, [tenant]);
+
+  useEffect(() => {
+    if (!jamaah?.nomorJamaah || !tenant?.id) return;
+    supabase
+      .from('jamaah_accounts')
+      .select('*')
+      .eq('tenant_id', tenant.id)
+      .eq('nomor_jamaah', jamaah.nomorJamaah)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data) {
+          setJamaah(prev => prev ? {
+            ...prev,
+            hotelMakkah: (data.hotel_makkah ?? keberangkatan?.hotel_makkah ?? tenant.hotel_makkah) ?? undefined,
+            hotelMadinah: (data.hotel_madinah ?? keberangkatan?.hotel_madinah ?? tenant.hotel_madinah) ?? undefined,
+            rombongan: data.rombongan ?? prev.rombongan,
+          } : prev);
+        }
+      });
+  }, [jamaah?.nomorJamaah, tenant?.id, keberangkatan?.id]);
 
   const value: AuthValue = {
     jamaah,

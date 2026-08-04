@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState, useEffect, useRef, useCallback, type FormEvent, type ChangeEvent } from 'react';
 import * as XLSX from 'xlsx';
+import { AlertCircle, ArrowRight, BellRing, CalendarClock, CheckCircle2, ClipboardList, HeartPulse, Hotel, MapPin, MessageCircle, Phone, Users } from 'lucide-react';
 import { useTravelAuth } from '../../context/TravelAuthContext';
 import TravelLayout from '../../components/travel/TravelLayout';
 import {
@@ -8,7 +9,8 @@ import {
   fetchJamaah, createJamaah, updateJamaah, deleteJamaah, bulkInsertJamaah,
   fetchAgenda, createAgenda, deleteAgenda, bulkInsertAgenda,
   fetchAnnouncements, createAnnouncement, deleteAnnouncement,
-  type KeberangkatanRow, type JamaahAccountRow, type AgendaItemRow, type TravelAnnouncementRow,
+  fetchHelpRequests, updateHelpRequestStatus,
+  type KeberangkatanRow, type JamaahAccountRow, type AgendaItemRow, type TravelAnnouncementRow, type HelpRequestRow, type HelpRequestStatus,
   supabase,
 } from '../../lib/supabase';
 
@@ -89,21 +91,54 @@ const FASE_OPTIONS: { value: JamaahAccountRow['fase']; label: string }[] = [
   { value: 'selesai', label: 'Selesai' },
 ];
 
-type TabId = 'keberangkatan' | 'jamaah' | 'agenda' | 'pengumuman';
+type TabId = 'overview' | 'keberangkatan' | 'jamaah' | 'agenda' | 'pengumuman' | 'care';
 
 const TABS: { id: TabId; label: string }[] = [
+  { id: 'overview', label: 'Command Center' },
   { id: 'keberangkatan', label: 'Keberangkatan' },
   { id: 'jamaah', label: 'Jamaah' },
   { id: 'agenda', label: 'Agenda' },
   { id: 'pengumuman', label: 'Pengumuman' },
+  { id: 'care', label: 'Care Center' },
 ];
+
+type BatchReadinessItem = {
+  label: string;
+  detail: string;
+  ready: boolean;
+  tab: TabId;
+};
+
+function getBatchReadiness(
+  batch: KeberangkatanRow,
+  jamaah: JamaahAccountRow[],
+  agenda: AgendaItemRow[],
+): BatchReadinessItem[] {
+  const hasTravelDate = Boolean(batch.tanggal_keberangkatan && batch.tanggal_kepulangan);
+  const validDateRange = !batch.tanggal_keberangkatan || !batch.tanggal_kepulangan
+    || batch.tanggal_kepulangan >= batch.tanggal_keberangkatan;
+  const hotelReady = Boolean(batch.hotel_makkah?.trim() && batch.hotel_madinah?.trim());
+  const guideReady = Boolean(batch.guide_name?.trim() && batch.guide_whatsapp?.trim());
+  const meetingReady = Boolean(batch.meeting_point?.trim());
+  const hasJamaah = jamaah.length > 0;
+  const hasAgenda = agenda.length > 0;
+  const overriddenHotels = jamaah.filter((item) => item.hotel_makkah?.trim() || item.hotel_madinah?.trim()).length;
+
+  return [
+    { label: 'Tanggal perjalanan', detail: !validDateRange ? 'Tanggal pulang lebih awal dari keberangkatan.' : hasTravelDate ? 'Tanggal berangkat dan pulang sudah diisi.' : 'Isi tanggal berangkat dan pulang.', ready: hasTravelDate && validDateRange, tab: 'keberangkatan' },
+    { label: 'Hotel Makkah & Madinah', detail: hotelReady ? 'Hotel batch menjadi acuan seluruh jamaah.' : 'Lengkapi dua hotel untuk batch ini.', ready: hotelReady, tab: 'keberangkatan' },
+    { label: 'Pembimbing & titik kumpul', detail: guideReady && meetingReady ? 'Kontak bantuan dan titik kumpul siap dipakai.' : 'Lengkapi pembimbing WhatsApp dan titik kumpul.', ready: guideReady && meetingReady, tab: 'keberangkatan' },
+    { label: 'Jamaah', detail: hasJamaah ? `${jamaah.length} jamaah ada di batch ini.${overriddenHotels ? ` ${overriddenHotels} memiliki override hotel.` : ''}` : 'Belum ada jamaah di batch ini.', ready: hasJamaah && overriddenHotels === 0, tab: 'jamaah' },
+    { label: 'Agenda perjalanan', detail: hasAgenda ? `${agenda.length} agenda siap ditampilkan.` : 'Tambahkan minimal satu agenda perjalanan.', ready: hasAgenda, tab: 'agenda' },
+  ];
+}
 
 /* ─── Component ───────────────────────────────────────────────────── */
 
 export default function TravelDashboard() {
-  const { tenant } = useTravelAuth();
+  const { tenant, email } = useTravelAuth();
 
-  const [activeTab, setActiveTab] = useState<TabId>('keberangkatan');
+  const [activeTab, setActiveTab] = useState<TabId>('overview');
   const [copied, setCopied] = useState(false);
 
   const slugUrl = tenant?.slug ? `${window.location.origin}/t/${tenant.slug}` : null;
@@ -205,6 +240,12 @@ export default function TravelDashboard() {
   const [annSubmitting, setAnnSubmitting] = useState(false);
   const [annError, setAnnError] = useState('');
 
+  /* â”€â”€ Jamaah Care Center â”€â”€ */
+  const [helpRequests, setHelpRequests] = useState<HelpRequestRow[]>([]);
+  const [helpLoading, setHelpLoading] = useState(false);
+  const [helpUpdatingId, setHelpUpdatingId] = useState<string | null>(null);
+  const [helpStatusFilter, setHelpStatusFilter] = useState<HelpRequestStatus | 'semua'>('baru');
+
   /* ── Loaders ─────────────────────────────────────────────────────── */
 
   const loadKeberangkatan = useCallback(async () => {
@@ -234,6 +275,12 @@ export default function TravelDashboard() {
     fetchAnnouncements(selectedKeberangkatan).then(setAnnouncements).catch(() => {}).finally(() => setAnnLoading(false));
   }, [tenant?.id, selectedKeberangkatan]);
 
+  const loadHelpRequests = useCallback(async () => {
+    if (!selectedKeberangkatan) return;
+    setHelpLoading(true);
+    fetchHelpRequests(selectedKeberangkatan).then(setHelpRequests).catch(() => setHelpRequests([])).finally(() => setHelpLoading(false));
+  }, [selectedKeberangkatan]);
+
   useEffect(() => {
     if (tenant?.id) loadKeberangkatan();
   }, [tenant?.id]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -243,8 +290,9 @@ export default function TravelDashboard() {
       loadJamaah();
       loadAgenda();
       loadAnnouncements();
+      loadHelpRequests();
     }
-  }, [selectedKeberangkatan, loadJamaah, loadAgenda, loadAnnouncements]);
+  }, [selectedKeberangkatan, loadJamaah, loadAgenda, loadAnnouncements, loadHelpRequests]);
 
   // Clear agenda inline-edit state when the selected batch changes
   useEffect(() => {
@@ -287,6 +335,10 @@ export default function TravelDashboard() {
     e.preventDefault();
     if (!tenant?.id) return;
     if (!kbNamaBatch.trim()) { setKbError('Nama batch wajib diisi.'); return; }
+    if (kbTanggalBerangkat && kbTanggalPulang && kbTanggalPulang < kbTanggalBerangkat) {
+      setKbError('Tanggal kepulangan tidak boleh lebih awal dari tanggal keberangkatan.');
+      return;
+    }
     setKbSaving(true); setKbError('');
     try {
       const payload = {
@@ -388,6 +440,19 @@ export default function TravelDashboard() {
       setEditingJamaahId(null);
     } catch (err: unknown) { setEditError(err instanceof Error ? err.message : 'Gagal menyimpan perubahan.'); }
     setEditSaving(false);
+  }
+
+  async function clearJamaahHotelOverride(jamaah: JamaahAccountRow) {
+    if (!tenant?.id) return;
+    if (!window.confirm(`Gunakan hotel dari batch untuk ${jamaah.nama}? Override hotel individual akan dihapus.`)) return;
+    try {
+      await updateJamaah(tenant.id, jamaah.id, { hotel_makkah: null, hotel_madinah: null });
+      setJamaahList(prev => prev.map(item => item.id === jamaah.id
+        ? { ...item, hotel_makkah: null, hotel_madinah: null }
+        : item));
+    } catch (err: unknown) {
+      window.alert(err instanceof Error ? err.message : 'Gagal menghapus override hotel.');
+    }
   }
 
   async function handleImportFile(e: ChangeEvent<HTMLInputElement>) {
@@ -657,6 +722,17 @@ export default function TravelDashboard() {
     await loadAnnouncements();
   }
 
+  async function handleHelpStatusChange(request: HelpRequestRow, status: HelpRequestStatus) {
+    if (!tenant?.id) return;
+    setHelpUpdatingId(request.id);
+    try {
+      const updated = await updateHelpRequestStatus(tenant.id, request.id, status, email);
+      setHelpRequests(prev => prev.map(item => item.id === updated.id ? updated : item));
+    } finally {
+      setHelpUpdatingId(null);
+    }
+  }
+
   /* ── Guard: no tenant ────────────────────────────────────────────── */
 
   if (!tenant) {
@@ -673,6 +749,16 @@ export default function TravelDashboard() {
       </TravelLayout>
     );
   }
+
+  const selectedBatch = keberangkatanList.find((item) => item.id === selectedKeberangkatan) ?? null;
+  const batchReadiness = selectedBatch ? getBatchReadiness(selectedBatch, jamaahList, agendaItems) : [];
+  const readinessCount = batchReadiness.filter((item) => item.ready).length;
+  const readinessIssues = batchReadiness.filter((item) => !item.ready);
+  const importantAnnouncements = announcements.filter((item) => item.important).length;
+  const openHelpRequests = helpRequests.filter((item) => item.status !== 'selesai').length;
+  const filteredHelpRequests = helpStatusFilter === 'semua'
+    ? helpRequests
+    : helpRequests.filter((item) => item.status === helpStatusFilter);
 
   /* ── Render ──────────────────────────────────────────────────────── */
 
@@ -743,6 +829,42 @@ export default function TravelDashboard() {
       </div>
 
       {/* ── Tab Bar ── */}
+      {selectedBatch && (
+        <section className="mb-6 overflow-hidden rounded-2xl" style={{ ...cardStyle, border: '1px solid rgba(14,165,233,0.18)' }}>
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b px-5 py-4" style={{ borderColor: 'rgba(0,0,0,0.06)', background: 'rgba(14,165,233,0.035)' }}>
+            <div className="flex items-center gap-3">
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl" style={{ background: PRIMARY_BG, color: PRIMARY }}>
+                <CheckCircle2 className="h-[18px] w-[18px]" />
+              </span>
+              <div>
+                <p className="font-semibold text-[14px]" style={{ color: '#111827' }}>Kesiapan batch: {selectedBatch.nama_batch}</p>
+                <p className="text-[11px]" style={{ color: '#6b7280' }}>{readinessCount} dari {batchReadiness.length} data operasional siap</p>
+              </div>
+            </div>
+            <span className="rounded-full px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-wider" style={{ background: readinessCount === batchReadiness.length ? 'rgba(22,163,74,0.10)' : 'rgba(245,158,11,0.10)', color: readinessCount === batchReadiness.length ? '#15803d' : '#b45309' }}>
+              {readinessCount === batchReadiness.length ? 'Siap rilis' : 'Perlu dilengkapi'}
+            </span>
+          </div>
+          <div className="grid divide-y sm:grid-cols-2 sm:divide-x sm:divide-y-0" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>
+            {batchReadiness.map((item, index) => {
+              const Icon = index === 1 ? Hotel : index === 2 ? Phone : index === 3 ? Users : index === 4 ? MapPin : AlertCircle;
+              return (
+                <button key={item.label} type="button" onClick={() => setActiveTab(item.tab)}
+                  className="flex min-h-[74px] items-center gap-3 px-5 py-3 text-left transition-colors hover:bg-black/[0.015]">
+                  <span className="flex h-8 w-8 flex-none items-center justify-center rounded-lg" style={{ background: item.ready ? 'rgba(22,163,74,0.09)' : 'rgba(245,158,11,0.10)', color: item.ready ? '#16a34a' : '#d97706' }}>
+                    <Icon className="h-4 w-4" />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block text-[12px] font-semibold" style={{ color: '#374151' }}>{item.label}</span>
+                    <span className="mt-0.5 block text-[10.5px] leading-snug" style={{ color: '#6b7280' }}>{item.detail}</span>
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
       <div className="sticky top-0 z-10 mb-6 overflow-x-auto" style={{ background: '#f9f7f3' }}>
         <div className="flex gap-1 px-1 py-1.5 w-max min-w-full"
           style={{ background: 'rgba(0,0,0,0.04)', borderRadius: '14px' }}>
@@ -773,6 +895,188 @@ export default function TravelDashboard() {
       {/* ══════════════════════════════════════════════
           TAB: KEBERANGKATAN
       ══════════════════════════════════════════════ */}
+      {activeTab === 'overview' && (
+        <section>
+          {!selectedBatch ? (
+            <div className="rounded-2xl px-6 py-12 text-center" style={{ ...cardStyle, border: '1px dashed rgba(14,165,233,0.30)' }}>
+              <ClipboardList className="mx-auto h-8 w-8" style={{ color: PRIMARY }} />
+              <h2 className="mt-3 text-[16px] font-bold" style={{ color: '#111827' }}>Mulai dari batch keberangkatan</h2>
+              <p className="mx-auto mt-1 max-w-md text-[12px] leading-relaxed" style={{ color: '#6b7280' }}>
+                Buat batch untuk mengelola hotel, jamaah, agenda, dan komunikasi perjalanan dari satu tempat.
+              </p>
+              <button type="button" onClick={() => setActiveTab('keberangkatan')}
+                className="mt-5 inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-[12px] font-semibold text-white"
+                style={{ background: `linear-gradient(135deg, ${PRIMARY}, ${PRIMARY_DEEP})` }}>
+                Buat Batch <ArrowRight className="h-4 w-4" />
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="flex flex-wrap items-end justify-between gap-4 mb-5">
+                <div>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.16em]" style={{ color: PRIMARY }}>Batch Command Center</p>
+                  <h2 className="mt-1 text-[21px] font-bold" style={{ color: '#111827', letterSpacing: '-0.02em' }}>{selectedBatch.nama_batch}</h2>
+                  <p className="mt-1 text-[12px]" style={{ color: '#6b7280' }}>Kontrol kesiapan keberangkatan dan tindak lanjuti data yang belum lengkap.</p>
+                </div>
+                <button type="button" onClick={() => setActiveTab('keberangkatan')}
+                  className="inline-flex items-center gap-2 rounded-xl px-3.5 py-2 text-[12px] font-semibold"
+                  style={{ color: PRIMARY, background: PRIMARY_BG, border: `1px solid ${PRIMARY_BORDER}` }}>
+                  Kelola Batch <ArrowRight className="h-3.5 w-3.5" />
+                </button>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                {[
+                  { label: 'Kesiapan data', value: `${readinessCount}/${batchReadiness.length}`, sub: readinessIssues.length ? `${readinessIssues.length} perlu ditindaklanjuti` : 'Semua data utama siap', icon: CheckCircle2, tone: readinessIssues.length ? '#d97706' : '#16a34a', bg: readinessIssues.length ? 'rgba(245,158,11,0.09)' : 'rgba(22,163,74,0.09)' },
+                  { label: 'Jamaah batch', value: String(jamaahList.length), sub: jamaahList.length ? 'Terdaftar pada batch ini' : 'Belum ada jamaah', icon: Users, tone: PRIMARY, bg: PRIMARY_BG },
+                  { label: 'Agenda aktif', value: String(agendaItems.length), sub: agendaItems.length ? 'Siap ditampilkan ke jamaah' : 'Belum ada agenda', icon: CalendarClock, tone: '#7c3aed', bg: 'rgba(124,58,237,0.08)' },
+                  { label: 'Info prioritas', value: String(importantAnnouncements), sub: importantAnnouncements ? 'Pengumuman penting aktif' : 'Tidak ada info prioritas', icon: BellRing, tone: '#dc2626', bg: 'rgba(220,38,38,0.08)' },
+                ].map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <div key={item.label} className="min-h-[118px] rounded-2xl p-4" style={cardStyle}>
+                      <div className="flex items-start justify-between gap-3">
+                        <p className="font-mono text-[9px] uppercase tracking-[0.14em]" style={{ color: '#6b7280' }}>{item.label}</p>
+                        <span className="flex h-8 w-8 items-center justify-center rounded-lg" style={{ color: item.tone, background: item.bg }}><Icon className="h-4 w-4" /></span>
+                      </div>
+                      <p className="mt-3 text-[24px] font-bold leading-none" style={{ color: '#111827', letterSpacing: '-0.03em' }}>{item.value}</p>
+                      <p className="mt-2 text-[10.5px] leading-snug" style={{ color: '#6b7280' }}>{item.sub}</p>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="mt-5 grid gap-4 lg:grid-cols-[1.3fr_0.7fr]">
+                <div className="rounded-2xl p-5" style={cardStyle}>
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-[14px] font-bold" style={{ color: '#111827' }}>Tindakan sebelum rilis batch</p>
+                      <p className="mt-0.5 text-[11px]" style={{ color: '#6b7280' }}>Selesaikan item ini sebelum membagikan akses ke jamaah.</p>
+                    </div>
+                    <span className="font-mono text-[10px] font-bold" style={{ color: readinessIssues.length ? '#b45309' : '#16a34a' }}>{readinessIssues.length ? `${readinessIssues.length} TERBUKA` : 'SELESAI'}</span>
+                  </div>
+                  <div className="mt-4 divide-y" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>
+                    {(readinessIssues.length ? readinessIssues : batchReadiness).map((item) => (
+                      <button key={item.label} type="button" onClick={() => setActiveTab(item.tab)}
+                        className="flex w-full items-center gap-3 py-3 text-left first:pt-0 last:pb-0">
+                        <span className="flex h-7 w-7 flex-none items-center justify-center rounded-full" style={{ color: item.ready ? '#16a34a' : '#d97706', background: item.ready ? 'rgba(22,163,74,0.09)' : 'rgba(245,158,11,0.10)' }}>
+                          {item.ready ? <CheckCircle2 className="h-3.5 w-3.5" /> : <AlertCircle className="h-3.5 w-3.5" />}
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="block text-[12px] font-semibold" style={{ color: '#374151' }}>{item.label}</span>
+                          <span className="mt-0.5 block text-[10.5px]" style={{ color: '#6b7280' }}>{item.detail}</span>
+                        </span>
+                        <ArrowRight className="h-3.5 w-3.5 flex-none" style={{ color: '#9ca3af' }} />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="rounded-2xl p-5" style={{ background: '#172554', color: '#fff' }}>
+                  <p className="font-mono text-[9px] uppercase tracking-[0.16em]" style={{ color: '#93c5fd' }}>Kontrol Cepat</p>
+                  <h3 className="mt-2 truncate text-[16px] font-bold leading-snug">{selectedBatch.nama_batch}</h3>
+                  <div className="mt-3 space-y-1.5 text-[11px]" style={{ color: 'rgba(255,255,255,0.72)' }}>
+                    <p className="truncate">{selectedBatch.hotel_makkah || 'Hotel Makkah belum diisi'}</p>
+                    <p className="truncate">{selectedBatch.hotel_madinah || 'Hotel Madinah belum diisi'}</p>
+                  </div>
+                  <div className="mt-5 grid grid-cols-2 gap-2">
+                    <button type="button" onClick={() => setActiveTab('jamaah')} className="rounded-lg px-3 py-2 text-left text-[11px] font-semibold" style={{ background: 'rgba(255,255,255,0.12)' }}>Kelola Jamaah</button>
+                    <button type="button" onClick={() => setActiveTab('care')} className="rounded-lg px-3 py-2 text-left text-[11px] font-semibold" style={{ background: 'rgba(255,255,255,0.12)' }}>Care Center</button>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+        </section>
+      )}
+
+      {activeTab === 'care' && (
+        <section>
+          <div className="flex flex-wrap items-end justify-between gap-4 mb-5">
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em]" style={{ color: '#dc2626' }}>Jamaah Care Center</p>
+              <h2 className="mt-1 text-[20px] font-bold" style={{ color: '#111827', letterSpacing: '-0.02em' }}>Antrean bantuan jamaah</h2>
+              <p className="mt-1 text-[12px]" style={{ color: '#6b7280' }}>{selectedBatch ? selectedBatch.nama_batch : 'Pilih batch untuk melihat laporan bantuan.'}</p>
+            </div>
+            <div className="rounded-xl px-4 py-2.5" style={{ background: openHelpRequests ? 'rgba(220,38,38,0.08)' : 'rgba(22,163,74,0.08)', color: openHelpRequests ? '#dc2626' : '#16a34a' }}>
+              <p className="font-mono text-[18px] font-bold leading-none">{openHelpRequests}</p>
+              <p className="mt-1 font-mono text-[9px] font-bold uppercase tracking-wider">Laporan terbuka</p>
+            </div>
+          </div>
+
+          {!selectedBatch ? (
+            <div className="rounded-2xl px-5 py-10 text-center" style={{ border: '1px dashed rgba(0,0,0,0.14)' }}>
+              <p className="text-[13px]" style={{ color: '#6b7280' }}>Pilih atau buat batch keberangkatan terlebih dahulu.</p>
+              <button type="button" onClick={() => setActiveTab('keberangkatan')} className="mt-3 text-[12px] font-semibold" style={{ color: PRIMARY }}>Kelola Batch</button>
+            </div>
+          ) : (
+            <>
+              <div className="mb-4 flex gap-2 overflow-x-auto pb-1">
+                {([
+                  { value: 'baru', label: 'Baru' },
+                  { value: 'ditangani', label: 'Ditangani' },
+                  { value: 'selesai', label: 'Selesai' },
+                  { value: 'semua', label: 'Semua' },
+                ] as const).map((item) => {
+                  const active = helpStatusFilter === item.value;
+                  return <button key={item.value} type="button" onClick={() => setHelpStatusFilter(item.value)}
+                    className="flex-none rounded-full px-3 py-2 text-[11px] font-semibold"
+                    style={{ background: active ? '#172554' : '#fff', color: active ? '#fff' : '#6b7280', border: active ? '1px solid #172554' : '1px solid rgba(0,0,0,0.08)' }}>{item.label}</button>;
+                })}
+              </div>
+
+              <div className="overflow-hidden rounded-2xl" style={cardStyle}>
+                {helpLoading ? (
+                  <p className="py-10 text-center font-mono text-[12px]" style={{ color: '#9ca3af' }}>Memuat laporan bantuan...</p>
+                ) : filteredHelpRequests.length === 0 ? (
+                  <div className="py-12 text-center">
+                    <CheckCircle2 className="mx-auto h-8 w-8" style={{ color: '#16a34a' }} />
+                    <p className="mt-3 text-[13px] font-semibold" style={{ color: '#374151' }}>Tidak ada laporan pada status ini.</p>
+                  </div>
+                ) : (
+                  <ul className="divide-y" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>
+                    {filteredHelpRequests.map((request) => {
+                      const CategoryIcon = request.kategori === 'kesehatan' ? HeartPulse : request.kategori === 'tersesat' ? MapPin : MessageCircle;
+                      const categoryLabel = request.kategori === 'tersesat' ? 'Terpisah rombongan' : request.kategori === 'kesehatan' ? 'Kesehatan' : request.kategori === 'rombongan' ? 'Rombongan' : 'Lainnya';
+                      const statusStyle = request.status === 'baru'
+                        ? { color: '#dc2626', background: 'rgba(220,38,38,0.08)' }
+                        : request.status === 'ditangani'
+                          ? { color: '#b45309', background: 'rgba(245,158,11,0.10)' }
+                          : { color: '#15803d', background: 'rgba(22,163,74,0.09)' };
+                      const nextStatus: HelpRequestStatus = request.status === 'baru' ? 'ditangani' : request.status === 'ditangani' ? 'selesai' : 'baru';
+                      const actionLabel = request.status === 'baru' ? 'Tangani' : request.status === 'ditangani' ? 'Selesaikan' : 'Buka Kembali';
+                      return (
+                        <li key={request.id} className="px-5 py-4">
+                          <div className="flex items-start gap-3">
+                            <span className="flex h-9 w-9 flex-none items-center justify-center rounded-xl" style={{ color: statusStyle.color, background: statusStyle.background }}><CategoryIcon className="h-4 w-4" /></span>
+                            <div className="min-w-0 flex-1">
+                              <div className="flex flex-wrap items-center gap-2">
+                                <p className="text-[13px] font-bold" style={{ color: '#111827' }}>{request.nama_jamaah}</p>
+                                <span className="font-mono text-[9px] uppercase tracking-wider" style={statusStyle}>{request.status}</span>
+                              </div>
+                              <p className="mt-0.5 text-[10.5px] font-semibold" style={{ color: '#6b7280' }}>{categoryLabel} · {formatDatetime(request.created_at)}</p>
+                              <p className="mt-2 text-[12px] leading-relaxed" style={{ color: '#374151' }}>{request.pesan}</p>
+                            </div>
+                          </div>
+                          <div className="mt-3 flex items-center justify-between gap-3 pl-12">
+                            <p className="truncate text-[10px]" style={{ color: '#9ca3af' }}>{request.handled_by ? `Ditangani oleh ${request.handled_by}` : 'Belum ada petugas'}</p>
+                            <button type="button" disabled={helpUpdatingId === request.id} onClick={() => handleHelpStatusChange(request, nextStatus)}
+                              className="flex-none rounded-lg px-3 py-1.5 text-[11px] font-semibold disabled:opacity-60"
+                              style={{ color: request.status === 'selesai' ? '#6b7280' : '#fff', background: request.status === 'selesai' ? '#f3f4f6' : '#172554' }}>
+                              {helpUpdatingId === request.id ? 'Menyimpan...' : actionLabel}
+                            </button>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
+              </div>
+            </>
+          )}
+        </section>
+      )}
+
       {activeTab === 'keberangkatan' && (
         <div>
           <div className="flex items-center gap-3 mb-5">
@@ -1066,6 +1370,7 @@ export default function TravelDashboard() {
                     j.nomor_kamar ? `Kmr ${j.nomor_kamar}` : null,
                     j.nomor_paspor ? j.nomor_paspor : null,
                   ].filter(Boolean) as string[];
+                  const hasHotelOverride = Boolean(j.hotel_makkah?.trim() || j.hotel_madinah?.trim());
 
                   if (isEditing) {
                     return (
@@ -1127,6 +1432,11 @@ export default function TravelDashboard() {
                             ))}
                           </div>
                         )}
+                        {hasHotelOverride && (
+                          <p className="mt-1 text-[10px] font-semibold" style={{ color: '#b45309' }}>
+                            Override hotel individual aktif
+                          </p>
+                        )}
                       </div>
                       <select value={j.fase_override ?? ''} onChange={e => handleUpdateJamaahFase(j.id, e.target.value)}
                         className="hidden sm:block text-[11px] rounded-lg px-2 py-1 focus:outline-none transition-all flex-none"
@@ -1142,6 +1452,13 @@ export default function TravelDashboard() {
                           onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}>
                           Edit
                         </button>
+                        {hasHotelOverride && (
+                          <button type="button" onClick={() => clearJamaahHotelOverride(j)}
+                            className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150"
+                            style={{ color: '#b45309', border: '1px solid rgba(217,119,6,0.24)', background: 'rgba(245,158,11,0.06)' }}>
+                            Pakai Hotel Batch
+                          </button>
+                        )}
                         <button type="button" onClick={() => handleDeleteJamaah(j.id, j.nama)}
                           className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150"
                           style={{ color: '#9ca3af', border: '1px solid rgba(0,0,0,0.07)' }}

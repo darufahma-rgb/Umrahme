@@ -112,6 +112,26 @@ export type TravelAnnouncementRow = {
   published_at: string;
 };
 
+export type HelpRequestStatus = 'baru' | 'ditangani' | 'selesai';
+export type HelpRequestCategory = 'tersesat' | 'kesehatan' | 'rombongan' | 'lainnya';
+
+export type HelpRequestRow = {
+  id: string;
+  tenant_id: string;
+  keberangkatan_id: string | null;
+  jamaah_id: string | null;
+  nomor_jamaah: string;
+  nama_jamaah: string;
+  kategori: HelpRequestCategory;
+  pesan: string;
+  status: HelpRequestStatus;
+  handled_by: string | null;
+  handled_at: string | null;
+  resolved_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
 export type JamaahAccountRow = {
   id: string;
   tenant_id: string;
@@ -122,6 +142,8 @@ export type JamaahAccountRow = {
   nomor_bus: string | null;
   nomor_kamar: string | null;
   nomor_paspor: string | null;
+  hotel_makkah?: string | null;
+  hotel_madinah?: string | null;
   fase: 'persiapan' | 'tanah-suci' | 'selesai';
   fase_override: 'persiapan' | 'tanah-suci' | 'selesai' | null;
   created_at: string;
@@ -326,6 +348,41 @@ export async function deleteAnnouncement(tenantId: string, annId: string): Promi
   return { ok: true };
 }
 
+// â”€â”€ Jamaah Care Center â”€â”€
+
+export async function fetchHelpRequests(keberangkatanId: string): Promise<HelpRequestRow[]> {
+  const { data, error } = await supabase
+    .from('help_requests')
+    .select('*')
+    .eq('keberangkatan_id', keberangkatanId)
+    .order('created_at', { ascending: false });
+  if (error) throw new Error(error.message);
+  return (data ?? []) as HelpRequestRow[];
+}
+
+export async function updateHelpRequestStatus(
+  tenantId: string,
+  requestId: string,
+  status: HelpRequestStatus,
+  handledBy?: string | null,
+): Promise<HelpRequestRow> {
+  const now = new Date().toISOString();
+  const payload = status === 'ditangani'
+    ? { status, handled_by: handledBy ?? null, handled_at: now, resolved_at: null }
+    : status === 'selesai'
+      ? { status, resolved_at: now }
+      : { status, handled_by: null, handled_at: null, resolved_at: null };
+  const { data, error } = await supabase
+    .from('help_requests')
+    .update(payload)
+    .eq('id', requestId)
+    .eq('tenant_id', tenantId)
+    .select()
+    .single();
+  if (error) throw new Error(error.message);
+  return data as HelpRequestRow;
+}
+
 // ── Jamaah ────────────────────────────────────────────────────
 
 export async function fetchJamaah(keberangkatanId: string): Promise<JamaahAccountRow[]> {
@@ -455,6 +512,24 @@ function getJamaahToken(): string | null {
   } catch {
     return null;
   }
+}
+
+export async function createHelpRequest(
+  tenantId: string,
+  nomorJamaah: string,
+  payload: { kategori: HelpRequestCategory; pesan: string },
+): Promise<HelpRequestRow> {
+  const token = getJamaahToken();
+  if (!token) throw new Error('Sesi tidak valid. Silakan login ulang.');
+  const { data, error } = await supabase.rpc('help_request_create', {
+    p_tenant_id: tenantId,
+    p_nomor_jamaah: nomorJamaah,
+    p_token: token,
+    p_kategori: payload.kategori,
+    p_pesan: payload.pesan.trim(),
+  });
+  if (error) throw new Error(error.message);
+  return data as HelpRequestRow;
 }
 
 export async function getJamaahData<T = unknown>(

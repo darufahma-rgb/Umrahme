@@ -34,6 +34,7 @@ import Tahallul from './pages/Tahallul';
 import AgendaLengkap from './pages/AgendaLengkap';
 import KartuJamaah from './pages/KartuJamaah';
 import Pengumuman from './pages/Pengumuman';
+import Bantuan from './pages/Bantuan';
 
 import AdminLogin from './pages/admin/AdminLogin';
 import AdminTenantList from './pages/admin/AdminTenantList';
@@ -86,6 +87,7 @@ export default function App() {
         <Route path="/profil/agenda" element={<AgendaLengkap />} />
         <Route path="/profil/kartu" element={<KartuJamaah />} />
         <Route path="/pengumuman" element={<Pengumuman />} />
+        <Route path="/bantuan" element={<Bantuan />} />
       </Route>
 
       {/* ── Admin panel — terpisah dari app jamaah ── */}

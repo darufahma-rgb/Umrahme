@@ -93,6 +93,24 @@ CREATE TABLE travel_announcements (
   published_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- Laporan bantuan jamaah per batch, dikelola travel lewat Care Center
+CREATE TABLE help_requests (
+  id                TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
+  tenant_id         TEXT NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+  keberangkatan_id  TEXT REFERENCES keberangkatan(id) ON DELETE SET NULL,
+  jamaah_id         TEXT REFERENCES jamaah_accounts(id) ON DELETE SET NULL,
+  nomor_jamaah      TEXT NOT NULL,
+  nama_jamaah       TEXT NOT NULL,
+  kategori          TEXT NOT NULL,
+  pesan             TEXT NOT NULL,
+  status            TEXT NOT NULL DEFAULT 'baru',
+  handled_by        TEXT,
+  handled_at        TIMESTAMPTZ,
+  resolved_at       TIMESTAMPTZ,
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at        TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
 -- Relasi user ↔ tenant
 CREATE TABLE tenant_users (
   id         TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,

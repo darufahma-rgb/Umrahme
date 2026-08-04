@@ -1,11 +1,23 @@
 import { useState, useEffect, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
+import {
+  CalendarDays,
+  ClipboardCheck,
+  IdCard,
+  MapPinned,
+  MessageCircle,
+  Navigation,
+  PhoneCall,
+  ScrollText,
+  Trophy,
+} from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import heroBg from '@assets/Temanumrah_BG_1782267839246.png';
 import GlobalSearch from '../components/GlobalSearch';
 import { TravelCompanionFlow } from '../components/dashboard/TravelCompanionFlow';
 import { checklistItems } from '../data/checklist';
 import { daftarLokasi } from '../data/lokasi';
+import { getOperationalInfo } from '../data/travelCompanion';
 import { fetchAgenda, type AgendaItemRow } from '../lib/supabase';
 import { getWaktuSaudi } from '../lib/waktu';
 import type { Fase } from '../types';
@@ -142,6 +154,146 @@ function QuickAction({ to, label, icon, accent = false }: {
         {label}
       </span>
     </Link>
+  );
+}
+
+type MainAccessAction = {
+  label: string;
+  sub: string;
+  to?: string;
+  href?: string;
+  icon: ReactNode;
+  tone?: 'primary' | 'green' | 'red' | 'gold';
+};
+
+const accessTone: Record<NonNullable<MainAccessAction['tone']>, { bg: string; color: string; border: string }> = {
+  primary: { bg: 'rgba(14,165,233,0.10)', color: 'var(--color-primary)', border: 'rgba(14,165,233,0.18)' },
+  green:   { bg: 'rgba(34,197,94,0.10)', color: '#16a34a', border: 'rgba(34,197,94,0.18)' },
+  red:     { bg: 'rgba(239,68,68,0.10)', color: '#ef4444', border: 'rgba(239,68,68,0.18)' },
+  gold:    { bg: 'rgba(212,162,78,0.13)', color: '#a07828', border: 'rgba(212,162,78,0.22)' },
+};
+
+function AccessAction({ action }: { action: MainAccessAction }) {
+  const tone = accessTone[action.tone ?? 'primary'];
+  const content = (
+    <>
+      <span
+        className="flex h-10 w-10 flex-none items-center justify-center rounded-xl"
+        style={{ background: tone.bg, color: tone.color, border: `1px solid ${tone.border}` }}
+      >
+        {action.icon}
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block truncate text-[12.5px] font-bold leading-tight text-ink">{action.label}</span>
+        <span className="mt-0.5 block truncate text-[10.5px] leading-tight text-charcoal">{action.sub}</span>
+      </span>
+      <IconChevron className="h-3.5 w-3.5 flex-none text-ash" />
+    </>
+  );
+
+  const className = "flex min-h-[66px] items-center gap-2.5 rounded-2xl bg-white px-3 py-3 text-left active:scale-[0.98] transition-transform";
+  const style = { border: '1px solid rgba(0,0,0,0.07)', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' };
+
+  if (action.href) {
+    return (
+      <a href={action.href} target="_blank" rel="noreferrer" className={className} style={style}>
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <Link to={action.to ?? '/beranda'} className={className} style={style}>
+      {content}
+    </Link>
+  );
+}
+
+function getMainAccessActions(fase: Fase, guideWhatsapp: string): MainAccessAction[] {
+  if (fase === 'tanah-suci') return [
+    { to: '/profil/kartu', label: 'Kartu Jamaah', sub: 'Identitas, hotel, paspor', icon: <IdCard className="h-[18px] w-[18px]" />, tone: 'primary' },
+    { to: '/profil/agenda', label: 'Agenda Hari Ini', sub: 'Jam kumpul dan lokasi', icon: <CalendarDays className="h-[18px] w-[18px]" />, tone: 'green' },
+    { to: '/ibadah/tawaf', label: 'Counter Tawaf', sub: 'Mulai hitung putaran', icon: <Navigation className="h-[18px] w-[18px]" />, tone: 'gold' },
+    { to: '/bantuan', label: 'Bantuan Cepat', sub: guideWhatsapp ? 'Lapor atau hubungi pembimbing' : 'Kirim laporan ke travel', icon: <PhoneCall className="h-[18px] w-[18px]" />, tone: 'red' },
+  ];
+
+  if (fase === 'selesai') return [
+    { to: '/profil/jurnal', label: 'Jurnal Perjalanan', sub: 'Simpan catatan umrah', icon: <ScrollText className="h-[18px] w-[18px]" />, tone: 'primary' },
+    { to: '/profil/sertifikat', label: 'Sertifikat', sub: 'Unduh kenang-kenangan', icon: <Trophy className="h-[18px] w-[18px]" />, tone: 'gold' },
+    { to: '/doa', label: 'Doa Harian', sub: 'Lanjutkan amalan', icon: <MessageCircle className="h-[18px] w-[18px]" />, tone: 'green' },
+    { to: '/profil/kartu', label: 'Kartu Jamaah', sub: 'Data perjalanan', icon: <IdCard className="h-[18px] w-[18px]" />, tone: 'primary' },
+  ];
+
+  return [
+    { to: '/profil/persiapan', label: 'Checklist', sub: 'Dokumen dan barang', icon: <ClipboardCheck className="h-[18px] w-[18px]" />, tone: 'green' },
+    { to: '/profil/agenda', label: 'Agenda', sub: 'Rencana keberangkatan', icon: <CalendarDays className="h-[18px] w-[18px]" />, tone: 'primary' },
+    { to: '/panduan/tata-cara', label: 'Tata Cara', sub: 'Urutan ibadah umrah', icon: <Navigation className="h-[18px] w-[18px]" />, tone: 'gold' },
+    { to: '/bantuan', label: 'Tanya Travel', sub: guideWhatsapp ? 'Lapor atau hubungi pembimbing' : 'Kirim laporan ke travel', icon: <PhoneCall className="h-[18px] w-[18px]" />, tone: 'red' },
+  ];
+}
+
+function SmartAccessPanel({ desktop = false }: { desktop?: boolean }) {
+  const { jamaah, keberangkatan } = useAuth();
+  if (!jamaah) return null;
+
+  const info = getOperationalInfo(keberangkatan ?? null, jamaah);
+  const guideWhatsapp = jamaah.pembimbingWhatsapp ?? info.guideWhatsapp;
+  const actions = getMainAccessActions(jamaah.fase, guideWhatsapp);
+  const gridClass = desktop ? 'grid-cols-4' : 'grid-cols-2';
+  const hotelMakkah = jamaah.hotelMakkah ?? info.hotelMakkah;
+  const hotelMadinah = jamaah.hotelMadinah ?? info.hotelMadinah;
+
+  return (
+    <section className="space-y-3">
+      <div className="flex items-end justify-between gap-3">
+        <div>
+          <p className="font-mono text-[8.5px] uppercase tracking-[0.20em] text-mute">Akses Utama</p>
+          <h2 className="mt-0.5 text-[15px] font-bold text-ink">Yang paling dibutuhkan sekarang</h2>
+        </div>
+        <Link to="/pengumuman" className="inline-flex items-center gap-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-primary">
+          Info Travel
+          <IconChevron className="h-3 w-3" />
+        </Link>
+      </div>
+
+      <div className={`grid ${gridClass} gap-2.5`}>
+        {actions.map((action) => <AccessAction key={action.label} action={action} />)}
+      </div>
+
+      <div className="grid gap-2 rounded-2xl bg-white p-3 shadow-drop-card" style={{ border: '1px solid rgba(0,0,0,0.07)' }}>
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-2.5">
+            <span className="flex h-9 w-9 flex-none items-center justify-center rounded-xl bg-surface-bone text-primary">
+              <MapPinned className="h-4 w-4" />
+            </span>
+            <div className="min-w-0">
+              <p className="truncate text-[12.5px] font-bold text-ink">{info.meetingPoint}</p>
+              <p className="truncate text-[10.5px] text-charcoal">Titik kumpul rombongan</p>
+            </div>
+          </div>
+          <Link to="/peta" className="flex-none rounded-xl bg-surface-bone px-3 py-2 font-mono text-[9px] font-bold uppercase tracking-wider text-primary">
+            Peta
+          </Link>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          {[
+            { label: 'Hotel Makkah', value: hotelMakkah, city: 'Makkah' },
+            { label: 'Hotel Madinah', value: hotelMadinah, city: 'Madinah' },
+          ].map((item) => (
+            <a
+              key={item.label}
+              href={`https://maps.google.com/?q=${encodeURIComponent(item.value + ' ' + item.city + ' Saudi Arabia')}`}
+              target="_blank"
+              rel="noreferrer"
+              className="min-w-0 rounded-xl bg-surface-bone px-3 py-2 active:opacity-70"
+            >
+              <p className="font-mono text-[7.5px] uppercase tracking-[0.16em] text-ash">{item.label}</p>
+              <p className="mt-0.5 truncate text-[11px] font-semibold text-ink">{item.value}</p>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -461,6 +613,9 @@ export default function Beranda() {
           {/* Travel companion cards */}
           <TravelCompanionFlow />
 
+          {/* Akses utama sesuai fase */}
+          <SmartAccessPanel />
+
           {/* Itinerary ringkasan */}
           {keberangkatan?.id && <KartuItinerary keberangkatanId={keberangkatan.id} />}
 
@@ -535,6 +690,8 @@ export default function Beranda() {
           {showHitung && <KartuHitung n={hariMenuju!} namaTravel={namaTravel} />}
 
           <TravelCompanionFlow desktop />
+
+          <SmartAccessPanel desktop />
 
           {/* Itinerary ringkasan */}
           {keberangkatan?.id && <KartuItinerary keberangkatanId={keberangkatan.id} />}
