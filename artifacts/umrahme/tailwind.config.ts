@@ -28,10 +28,10 @@ export default {
         gold: '#d4a24e',
       },
       fontFamily: {
-        display: ['"Bricolage Grotesque"', 'Georgia', 'serif'],
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        display: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
         arab: ['Amiri', '"Noto Naskh Arabic"', 'serif'],
-        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+        mono: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
         xs: '4px',

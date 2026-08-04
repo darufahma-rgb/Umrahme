@@ -69,7 +69,7 @@ export function TripIdentityCard() {
         {/* Greeting */}
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0 flex-1">
-            <p className="font-mono text-[8.5px] uppercase tracking-[0.28em] text-mute">
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-mute">
               Kartu Jamaah
             </p>
             <h2 className="mt-0.5 font-display text-[20px] font-bold leading-tight text-ink" style={{ letterSpacing: '-0.5px' }}>
@@ -117,7 +117,7 @@ export function TripIdentityCard() {
                 <div className="flex items-center justify-between mb-0.5">
                   <div className="flex items-center gap-1">
                     <div className="h-1.5 w-1.5 rounded-full flex-none" style={{ background: dot }} />
-                    <p className="font-mono text-[7px] uppercase tracking-[0.15em] text-ash">{city}</p>
+                    <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-ash">{city}</p>
                   </div>
                   <svg className="h-3 w-3 text-ash flex-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
                     <path d="M7 17L17 7M17 7H7M17 7V17" strokeLinecap="round" strokeLinejoin="round" />
@@ -129,7 +129,7 @@ export function TripIdentityCard() {
               <div key={city} className="rounded-xl bg-surface-bone px-2.5 py-2">
                 <div className="flex items-center gap-1 mb-0.5">
                   <div className="h-1.5 w-1.5 rounded-full flex-none" style={{ background: dot }} />
-                  <p className="font-mono text-[7px] uppercase tracking-[0.15em] text-ash">{city}</p>
+                  <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-ash">{city}</p>
                 </div>
                 <p className="text-[11px] font-semibold leading-tight text-ash italic">Belum diisi</p>
               </div>
@@ -469,7 +469,9 @@ export function EmergencyGuideCard() {
 
 // ── TravelCompanionFlow — orkestrasi ──────────────────────────
 
-export function TravelCompanionFlow({ desktop = false }: { desktop?: boolean }) {
+type MobileSection = 'all' | 'identity' | 'updates';
+
+export function TravelCompanionFlow({ desktop = false, mobileSection = 'all' }: { desktop?: boolean; mobileSection?: MobileSection }) {
   if (desktop) {
     return (
       <div className="space-y-4">
@@ -484,13 +486,22 @@ export function TravelCompanionFlow({ desktop = false }: { desktop?: boolean }) 
     );
   }
 
+  if (mobileSection === 'identity') return <TripIdentityCard />;
+
+  if (mobileSection === 'updates') {
+    return (
+      <div className="space-y-3">
+        <TodayInstructionCard />
+        <PinnedAnnouncementCard />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-3">
       <TripIdentityCard />
-      <TripProgressCard />
       <TodayInstructionCard />
       <PinnedAnnouncementCard />
-      <EmergencyGuideCard />
     </div>
   );
 }

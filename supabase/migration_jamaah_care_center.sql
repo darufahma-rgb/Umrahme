@@ -66,6 +66,12 @@ CREATE POLICY "help_requests_travel_update"
     )
   );
 
+DROP POLICY IF EXISTS "help_requests_admin_full" ON public.help_requests;
+CREATE POLICY "help_requests_admin_full"
+  ON public.help_requests FOR ALL TO authenticated
+  USING (public.is_app_admin())
+  WITH CHECK (public.is_app_admin());
+
 CREATE OR REPLACE FUNCTION public.help_request_create(
   p_tenant_id UUID,
   p_nomor_jamaah TEXT,

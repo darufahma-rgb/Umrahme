@@ -1,43 +1,88 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AdminLayout from '../../components/admin/AdminLayout';
-import { fetchTenants, deleteTenant, type TenantRow } from '../../lib/supabase';
+import { deleteTenant, fetchAdminTenantMetrics, fetchTenants, type AdminTenantMetrics, type TenantRow } from '../../lib/supabase';
+
+type Filter = 'semua' | 'perlu_tindakan' | 'berjalan' | 'tanpa_operator';
+
+function formatDate(value: string | null) {
+  if (!value) return 'Tanggal belum diatur';
+  return new Intl.DateTimeFormat('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(`${value}T00:00:00`));
+}
 
 export default function AdminTenantList() {
   const [tenants, setTenants] = useState<TenantRow[]>([]);
+  const [metrics, setMetrics] = useState<Record<string, AdminTenantMetrics>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [toast, setToast] = useState('');
+  const [query, setQuery] = useState('');
+  const [filter, setFilter] = useState<Filter>('semua');
   const [hapusTarget, setHapusTarget] = useState<TenantRow | null>(null);
   const [konfirmText, setKonfirmText] = useState('');
   const [deleting, setDeleting] = useState(false);
 
+  async function load() {
+    setLoading(true);
+    setError('');
+    try {
+      const tenantRows = await fetchTenants();
+      setTenants(tenantRows);
+      setMetrics(await fetchAdminTenantMetrics(tenantRows.map((tenant) => tenant.id)));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Terjadi kesalahan saat memuat data.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
   useEffect(() => {
-    const msg = sessionStorage.getItem('admin_toast');
-    if (msg) { setToast(msg); sessionStorage.removeItem('admin_toast'); }
-    fetchTenants()
-      .then(setTenants)
-      .catch(err => setError(err instanceof Error ? err.message : 'Terjadi kesalahan.'))
-      .finally(() => setLoading(false));
+    const message = sessionStorage.getItem('admin_toast');
+    if (message) { setToast(message); sessionStorage.removeItem('admin_toast'); }
+    void load();
   }, []);
 
   useEffect(() => {
     if (!toast) return;
-    const t = setTimeout(() => setToast(''), 4000);
-    return () => clearTimeout(t);
+    const timeout = setTimeout(() => setToast(''), 4000);
+    return () => clearTimeout(timeout);
   }, [toast]);
+
+  const summary = useMemo(() => {
+    const values = Object.values(metrics);
+    return {
+      totalJamaah: values.reduce((total, value) => total + value.jamaahCount, 0),
+      activeTravel: values.filter((value) => value.activeBatch).length,
+      attention: tenants.filter((tenant) => {
+        const metric = metrics[tenant.id];
+        return metric && (!tenant.slug || metric.operatorCount === 0 || metric.openHelpCount > 0);
+      }).length,
+      openHelp: values.reduce((total, value) => total + value.openHelpCount, 0),
+    };
+  }, [metrics, tenants]);
+
+  const filteredTenants = useMemo(() => tenants.filter((tenant) => {
+    const metric = metrics[tenant.id];
+    const normalizedQuery = query.trim().toLowerCase();
+    const matchesQuery = !normalizedQuery || [tenant.nama_travel, tenant.activation_code, tenant.slug ?? ''].some((value) => value.toLowerCase().includes(normalizedQuery));
+    if (!matchesQuery || !metric) return false;
+    if (filter === 'perlu_tindakan') return !tenant.slug || metric.operatorCount === 0 || metric.openHelpCount > 0;
+    if (filter === 'berjalan') return Boolean(metric.activeBatch);
+    if (filter === 'tanpa_operator') return metric.operatorCount === 0;
+    return true;
+  }), [filter, metrics, query, tenants]);
 
   async function handleDelete() {
     if (!hapusTarget) return;
     setDeleting(true);
     try {
       await deleteTenant(hapusTarget.id);
-      setTenants((prev) => prev.filter((t) => t.id !== hapusTarget.id));
-      setToast(`Tenant "${hapusTarget.nama_travel}" berhasil dihapus.`);
+      setTenants((previous) => previous.filter((tenant) => tenant.id !== hapusTarget.id));
+      setToast(`Travel ${hapusTarget.nama_travel} berhasil dihapus.`);
       setHapusTarget(null);
       setKonfirmText('');
     } catch (err) {
-      setToast(err instanceof Error ? `Gagal menghapus: ${err.message}` : 'Gagal menghapus tenant.');
+      setToast(err instanceof Error ? `Gagal menghapus: ${err.message}` : 'Gagal menghapus travel.');
     } finally {
       setDeleting(false);
     }
@@ -45,150 +90,103 @@ export default function AdminTenantList() {
 
   return (
     <AdminLayout>
-      {toast && (
-        <div className="mb-6 flex items-center gap-3 px-4 py-3 rounded-xl text-sm" style={{ background: 'rgba(16,185,129,0.07)', border: '1px solid rgba(16,185,129,0.20)', color: '#065f46' }}>
-          <svg className="flex-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
-          {toast}
-        </div>
-      )}
+      {toast && <div className="mb-5 rounded-lg border px-4 py-3 text-sm" style={{ background: '#ecfdf5', borderColor: '#a7f3d0', color: '#065f46' }}>{toast}</div>}
+      {error && <div className="mb-5 rounded-lg border px-4 py-3 text-sm" style={{ background: '#fef2f2', borderColor: '#fecaca', color: '#b91c1c' }}>{error}</div>}
 
-      <div className="flex items-center justify-between mb-7">
-        <div>
-          <h1 className="font-bold leading-tight" style={{ fontSize: '24px', color: '#111827', letterSpacing: '-0.02em' }}>Daftar Tenant</h1>
-          <p className="font-mono text-[11px] mt-0.5" style={{ color: '#9ca3af', letterSpacing: '0.01em' }}>{loading ? '—' : `${tenants.length} tenant terdaftar`}</p>
+      <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+        <div className="max-w-2xl">
+          <p className="text-[11px] font-bold uppercase tracking-[0.12em]" style={{ color: '#15803d' }}>Master Control</p>
+          <h1 className="mt-2 text-[28px] font-bold leading-tight sm:text-[32px]" style={{ color: '#131313' }}>Operasional Semua Travel</h1>
+          <p className="mt-2 text-sm leading-6" style={{ color: '#667085' }}>Pantau kesehatan operasional setiap travel dan ambil tindakan tanpa membuka data satu per satu.</p>
         </div>
-        <Link to="/admin/tenants/baru" className="inline-flex items-center gap-2 font-semibold text-[13px] px-4 py-2.5 rounded-xl transition-all duration-150 active:scale-[0.98]" style={{ background: 'linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)', color: '#ffffff', boxShadow: '0 2px 8px rgba(67,56,202,0.26), 0 1px 2px rgba(67,56,202,0.18)' }}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
-          Tenant Baru
-        </Link>
+        <div className="grid grid-cols-2 gap-2 sm:flex">
+          <button type="button" onClick={() => void load()} className="inline-flex h-11 items-center justify-center rounded-lg border px-4 text-sm font-semibold" style={{ borderColor: '#d6dae5', color: '#344054', background: '#fff' }}>Muat ulang</button>
+          <Link to="/admin/tenants/baru" className="inline-flex h-11 items-center justify-center rounded-lg px-4 text-sm font-semibold shadow-sm" style={{ background: '#0054f9', color: '#fff', boxShadow: '0 4px 10px rgba(0,84,249,0.22)' }}>Tambah Travel</Link>
+        </div>
       </div>
 
-      {error && <div className="mb-5 px-4 py-3 rounded-xl text-sm" style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.18)', color: '#dc2626' }}>{error}</div>}
+      <section className="mt-7 grid grid-cols-2 gap-3 xl:grid-cols-4">
+        {[
+          ['Travel terdaftar', String(tenants.length), '#111827'],
+          ['Jamaah terdata', String(summary.totalJamaah), '#111827'],
+          ['Travel berjalan', String(summary.activeTravel), '#047857'],
+          ['Perlu perhatian', String(summary.attention), summary.attention ? '#b45309' : '#047857'],
+        ].map(([label, value, color]) => (
+          <div key={label} className="rounded-lg border bg-white p-4 sm:p-5" style={{ borderColor: '#e4e7ec', boxShadow: '0 1px 2px rgba(16,24,40,0.03)' }}>
+            <p className="text-xs font-medium" style={{ color: '#667085' }}>{label}</p>
+            <p className="mt-2 text-[26px] font-bold leading-none" style={{ color }}>{value}</p>
+          </div>
+        ))}
+      </section>
 
-      {loading ? (
-        <div className="rounded-2xl py-16 text-center font-mono text-[12px]" style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.06)', color: '#d1d5db' }}>Memuat data...</div>
-      ) : tenants.length === 0 ? (
-        <div className="rounded-2xl py-16 text-center text-sm" style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.06)', color: '#9ca3af' }}>Belum ada tenant. Tambah yang pertama!</div>
-      ) : (
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-          {tenants.map((t) => {
-            const inisial = (t.nama_travel || '?').trim().charAt(0).toUpperCase();
-            return (
-              <div key={t.id}
-                className="rounded-2xl flex flex-col items-center text-center transition-all duration-150"
-                style={{ background: '#ffffff', border: '0.5px solid rgba(0,0,0,0.09)', padding: '1rem', boxShadow: '0 1px 2px rgba(0,0,0,0.03)' }}>
-
-                {/* Avatar warna tema + inisial */}
-                <div className="flex items-center justify-center rounded-full"
-                  style={{ width: '48px', height: '48px', background: t.primary_color, marginBottom: '10px' }}>
-                  {t.logo_url
-                    ? <img src={t.logo_url} alt="" className="w-full h-full object-cover rounded-full" />
-                    : <span style={{ color: '#fff', fontWeight: 500, fontSize: '19px' }}>{inisial}</span>}
-                </div>
-
-                {/* Nama travel */}
-                <p className="font-medium leading-tight" style={{ fontSize: '14px', color: '#111827', margin: '0 0 4px' }}>
-                  {t.nama_travel}
-                </p>
-
-                {/* Kode aktivasi */}
-                <span className="font-mono" style={{ fontSize: '11px', color: '#9ca3af', letterSpacing: '0.04em', marginBottom: '8px' }}>
-                  {t.activation_code}
-                </span>
-
-                {/* Warna tema: dot + hex */}
-                <div className="inline-flex items-center gap-1.5" style={{ marginBottom: '14px' }}>
-                  <span className="flex-none rounded" style={{ width: '9px', height: '9px', background: t.primary_color }} />
-                  <span className="font-mono" style={{ fontSize: '10px', color: '#9ca3af' }}>{t.primary_color}</span>
-                </div>
-
-                {/* Aksi: Edit (lebar) + Hapus (icon) */}
-                <div className="flex items-center gap-1.5 w-full" style={{ marginTop: 'auto' }}>
-                  <Link to={`/admin/tenants/${t.id}`}
-                    className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg transition-all duration-150"
-                    style={{ height: '32px', fontSize: '12px', fontWeight: 600, color: '#4338ca', border: '0.5px solid rgba(67,56,202,0.25)', background: 'transparent' }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(67,56,202,0.06)'; }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'transparent'; }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
-                    Edit
-                  </Link>
-                  <button type="button" onClick={() => { setHapusTarget(t); setKonfirmText(''); }}
-                    aria-label="Hapus"
-                    className="flex-none inline-flex items-center justify-center rounded-lg transition-all duration-150"
-                    style={{ width: '32px', height: '32px', color: '#9ca3af', border: '0.5px solid rgba(0,0,0,0.1)', background: 'transparent' }}
-                    onMouseEnter={e => { const b = e.currentTarget as HTMLButtonElement; b.style.color = '#dc2626'; b.style.borderColor = 'rgba(220,38,38,0.3)'; b.style.background = 'rgba(220,38,38,0.05)'; }}
-                    onMouseLeave={e => { const b = e.currentTarget as HTMLButtonElement; b.style.color = '#9ca3af'; b.style.borderColor = 'rgba(0,0,0,0.1)'; b.style.background = 'transparent'; }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" /></svg>
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
-
-      {/* Modal konfirmasi hapus */}
-      {hapusTarget && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          style={{ background: 'rgba(0,0,0,0.5)' }}
-          onClick={() => !deleting && setHapusTarget(null)}
-        >
-          <div
-            className="w-full max-w-md rounded-2xl p-6"
-            style={{ background: '#ffffff' }}
-            onClick={e => e.stopPropagation()}
-          >
-            <div className="flex items-center gap-3">
-              <div className="flex-none flex items-center justify-center rounded-full"
-                style={{ width: '40px', height: '40px', background: 'rgba(220,38,38,0.1)' }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" /><line x1="10" y1="11" x2="10" y2="17" /><line x1="14" y1="11" x2="14" y2="17" /></svg>
-              </div>
-              <div>
-                <h3 className="text-[16px] font-bold" style={{ color: '#111827' }}>Hapus Tenant</h3>
-                <p className="text-[12px]" style={{ color: '#6b7280' }}>Tindakan ini tidak dapat dibatalkan.</p>
-              </div>
-            </div>
-
-            <p className="mt-4 text-[13px] leading-relaxed" style={{ color: '#374151' }}>
-              Menghapus <b>{hapusTarget.nama_travel}</b> akan menghapus seluruh data terkait (agenda, pengumuman, akun jamaah). Ketik nama travel di bawah untuk konfirmasi:
-            </p>
-
-            <input
-              type="text"
-              value={konfirmText}
-              onChange={e => setKonfirmText(e.target.value)}
-              placeholder={hapusTarget.nama_travel}
-              className="mt-3 w-full rounded-xl px-3 py-2.5 text-[14px] outline-none"
-              style={{ border: '1px solid rgba(0,0,0,0.15)' }}
-              autoFocus
-            />
-
-            <div className="mt-5 flex items-center justify-end gap-2">
-              <button
-                onClick={() => { setHapusTarget(null); setKonfirmText(''); }}
-                disabled={deleting}
-                className="px-4 py-2 rounded-xl text-[13px] font-semibold"
-                style={{ color: '#374151', border: '1px solid rgba(0,0,0,0.15)' }}
-              >
-                Batal
-              </button>
-              <button
-                onClick={handleDelete}
-                disabled={deleting || konfirmText.trim() !== hapusTarget.nama_travel.trim()}
-                className="px-4 py-2 rounded-xl text-[13px] font-semibold transition-all duration-150"
-                style={{
-                  background: (deleting || konfirmText.trim() !== hapusTarget.nama_travel.trim()) ? 'rgba(220,38,38,0.4)' : '#dc2626',
-                  color: '#ffffff',
-                  cursor: (deleting || konfirmText.trim() !== hapusTarget.nama_travel.trim()) ? 'not-allowed' : 'pointer',
-                }}
-              >
-                {deleting ? 'Menghapus…' : 'Hapus Permanen'}
-              </button>
-            </div>
+      <section className="mt-6 rounded-lg border bg-white p-3 sm:p-4" style={{ borderColor: '#e4e7ec', boxShadow: '0 1px 2px rgba(16,24,40,0.03)' }}>
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          <div className="relative w-full lg:max-w-md">
+            <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Cari travel, slug, atau kode" className="h-11 w-full rounded-lg border px-3 text-sm outline-none" style={{ borderColor: '#d6dae5', color: '#172033' }} />
+          </div>
+          <div className="flex gap-2 overflow-x-auto pb-1 lg:flex-wrap lg:overflow-visible lg:pb-0">
+            {([
+              ['semua', `Semua (${tenants.length})`],
+              ['perlu_tindakan', `Perlu tindakan (${summary.attention})`],
+              ['berjalan', `Berjalan (${summary.activeTravel})`],
+              ['tanpa_operator', 'Tanpa operator'],
+            ] as [Filter, string][]).map(([value, label]) => (
+              <button key={value} type="button" onClick={() => setFilter(value)} className="h-9 flex-none whitespace-nowrap rounded-lg px-3 text-xs font-semibold" style={filter === value ? { background: '#e8f7d1', color: '#14532d' } : { background: '#f8fafc', color: '#475467' }}>{label}</button>
+            ))}
           </div>
         </div>
-      )}
+      </section>
+
+      {summary.openHelp > 0 && <div className="mt-4 rounded-lg border px-4 py-3 text-sm" style={{ borderColor: '#fde68a', background: '#fffbeb', color: '#92400e' }}>Ada {summary.openHelp} permintaan bantuan jamaah yang belum selesai. Buka travel terkait untuk menanganinya.</div>}
+
+      <section className="mt-4 overflow-hidden rounded-lg border bg-white" style={{ borderColor: '#e4e7ec', boxShadow: '0 1px 2px rgba(16,24,40,0.03)' }}>
+        <div className="hidden grid-cols-[minmax(240px,1.7fr)_1.25fr_.75fr_.85fr_130px] gap-5 border-b px-6 py-3.5 text-[11px] font-bold uppercase tracking-[0.08em] lg:grid" style={{ borderColor: '#e4e7ec', color: '#667085' }}>
+          <span>Travel</span><span>Operasional</span><span>Jamaah</span><span>Akses</span><span className="text-right">Aksi</span>
+        </div>
+        {loading ? <div className="px-5 py-16 text-center text-sm" style={{ color: '#9ca3af' }}>Memuat dashboard operasional...</div> : filteredTenants.length === 0 ? <div className="px-5 py-16 text-center text-sm" style={{ color: '#9ca3af' }}>Tidak ada travel yang cocok dengan filter.</div> : filteredTenants.map((tenant) => {
+          const metric = metrics[tenant.id];
+          if (!metric) return null;
+          const operationalBatch = metric.activeBatch ?? metric.upcomingBatch;
+          const needsAttention = !tenant.slug || metric.operatorCount === 0 || metric.openHelpCount > 0;
+          return <div key={tenant.id}>
+          <article className="hidden gap-5 border-b px-6 py-5 last:border-b-0 lg:grid lg:grid-cols-[minmax(240px,1.7fr)_1.25fr_.75fr_.85fr_130px] lg:items-center" style={{ borderColor: '#edf0f5' }}>
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 flex-none items-center justify-center overflow-hidden rounded-lg text-sm font-bold" style={{ background: tenant.primary_color, color: '#fff' }}>{tenant.logo_url ? <img src={tenant.logo_url} alt="" className="h-full w-full object-cover" /> : tenant.nama_travel.trim().charAt(0).toUpperCase()}</div>
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-2"><p className="truncate text-sm font-bold" style={{ color: '#111827' }}>{tenant.nama_travel}</p>{needsAttention && <span className="rounded px-1.5 py-0.5 text-[10px] font-semibold" style={{ background: '#fef3c7', color: '#92400e' }}>PERLU CEK</span>}</div>
+                <p className="mt-0.5 truncate font-mono text-[11px]" style={{ color: '#9ca3af' }}>{tenant.slug ? `/t/${tenant.slug}` : `Kode ${tenant.activation_code}`}</p>
+              </div>
+            </div>
+            <div>
+              {operationalBatch ? <><p className="text-sm font-semibold" style={{ color: '#374151' }}>{operationalBatch.nama_batch}</p><p className="mt-0.5 text-xs" style={{ color: metric.activeBatch ? '#047857' : '#6b7280' }}>{metric.activeBatch ? 'Sedang berjalan' : `Berangkat ${formatDate(operationalBatch.tanggal_keberangkatan)}`}</p></> : <p className="text-sm" style={{ color: '#9ca3af' }}>Belum ada batch aktif</p>}
+            </div>
+            <div><p className="text-sm font-bold" style={{ color: '#111827' }}>{metric.jamaahCount}</p><p className="text-xs" style={{ color: '#6b7280' }}>jamaah, {metric.batchCount} batch</p></div>
+            <div><p className="text-sm font-bold" style={{ color: metric.operatorCount ? '#111827' : '#b45309' }}>{metric.operatorCount} operator</p><p className="text-xs" style={{ color: metric.openHelpCount ? '#b45309' : '#6b7280' }}>{metric.openHelpCount ? `${metric.openHelpCount} bantuan terbuka` : 'Tidak ada bantuan terbuka'}</p></div>
+            <div className="flex justify-end gap-2"><Link to={`/admin/tenants/${tenant.id}`} className="inline-flex h-9 items-center justify-center rounded-lg border px-3 text-xs font-semibold" style={{ color: '#0054f9', borderColor: '#bfd4ff', background: '#f4f8ff' }}>Kelola</Link><button type="button" aria-label={`Hapus ${tenant.nama_travel}`} onClick={() => { setHapusTarget(tenant); setKonfirmText(''); }} className="inline-flex h-9 w-9 items-center justify-center rounded-lg border text-sm" style={{ color: '#b91c1c', borderColor: '#fecaca' }}>x</button></div>
+          </article>
+          <article className="border-b p-4 last:border-b-0 lg:hidden" style={{ borderColor: '#edf0f5' }}>
+            <div className="flex items-start gap-3">
+              <div className="flex h-11 w-11 flex-none items-center justify-center overflow-hidden rounded-lg text-sm font-bold" style={{ background: tenant.primary_color, color: '#fff' }}>{tenant.logo_url ? <img src={tenant.logo_url} alt="" className="h-full w-full object-cover" /> : tenant.nama_travel.trim().charAt(0).toUpperCase()}</div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-start justify-between gap-2"><div className="min-w-0"><p className="truncate text-sm font-bold" style={{ color: '#172033' }}>{tenant.nama_travel}</p><p className="mt-0.5 truncate font-mono text-[11px]" style={{ color: '#98a2b3' }}>{tenant.slug ? `/t/${tenant.slug}` : `Kode ${tenant.activation_code}`}</p></div>{needsAttention && <span className="flex-none rounded px-1.5 py-0.5 text-[10px] font-bold" style={{ background: '#fef3c7', color: '#92400e' }}>CEK</span>}</div>
+              </div>
+            </div>
+            <div className="mt-4 rounded-lg px-3 py-2.5" style={{ background: '#f8fafc' }}>
+              <p className="truncate text-sm font-semibold" style={{ color: '#344054' }}>{operationalBatch?.nama_batch ?? 'Belum ada batch aktif'}</p>
+              <p className="mt-0.5 text-xs" style={{ color: metric.activeBatch ? '#047857' : '#667085' }}>{metric.activeBatch ? 'Sedang berjalan' : operationalBatch ? `Berangkat ${formatDate(operationalBatch.tanggal_keberangkatan)}` : 'Buat batch untuk mulai operasional'}</p>
+            </div>
+            <div className="mt-3 grid grid-cols-3 divide-x" style={{ color: '#344054' }}>
+              <div className="pr-2"><p className="text-sm font-bold">{metric.jamaahCount}</p><p className="text-[11px]" style={{ color: '#667085' }}>Jamaah</p></div>
+              <div className="px-3"><p className="text-sm font-bold" style={{ color: metric.operatorCount ? '#344054' : '#b45309' }}>{metric.operatorCount}</p><p className="text-[11px]" style={{ color: '#667085' }}>Operator</p></div>
+              <div className="pl-3"><p className="text-sm font-bold" style={{ color: metric.openHelpCount ? '#b45309' : '#344054' }}>{metric.openHelpCount}</p><p className="text-[11px]" style={{ color: '#667085' }}>Bantuan</p></div>
+            </div>
+            <div className="mt-4 grid grid-cols-[1fr_42px] gap-2"><Link to={`/admin/tenants/${tenant.id}`} className="inline-flex h-10 items-center justify-center rounded-lg text-sm font-semibold" style={{ background: '#e8f7d1', color: '#14532d' }}>Kelola Travel</Link><button type="button" aria-label={`Hapus ${tenant.nama_travel}`} onClick={() => { setHapusTarget(tenant); setKonfirmText(''); }} className="inline-flex h-10 items-center justify-center rounded-lg border text-sm" style={{ color: '#b91c1c', borderColor: '#fecaca' }}>x</button></div>
+          </article>
+          </div>;
+        })}
+      </section>
+
+      {hapusTarget && <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => !deleting && setHapusTarget(null)}><div className="w-full max-w-md rounded-lg bg-white p-6" onClick={(event) => event.stopPropagation()}><h2 className="text-lg font-bold" style={{ color: '#111827' }}>Hapus travel</h2><p className="mt-2 text-sm leading-relaxed" style={{ color: '#4b5563' }}>Semua data travel, batch, jamaah, agenda, dan akses operator akan dihapus. Ketik <b>{hapusTarget.nama_travel}</b> untuk konfirmasi.</p><input autoFocus value={konfirmText} onChange={(event) => setKonfirmText(event.target.value)} className="mt-4 h-10 w-full rounded-lg border px-3 text-sm" style={{ borderColor: '#d1d5db' }} /><div className="mt-5 flex justify-end gap-2"><button type="button" disabled={deleting} onClick={() => setHapusTarget(null)} className="h-10 rounded-lg border px-4 text-sm font-semibold" style={{ borderColor: '#d1d5db', color: '#374151' }}>Batal</button><button type="button" disabled={deleting || konfirmText.trim() !== hapusTarget.nama_travel.trim()} onClick={() => void handleDelete()} className="h-10 rounded-lg px-4 text-sm font-semibold" style={{ background: deleting || konfirmText.trim() !== hapusTarget.nama_travel.trim() ? '#fca5a5' : '#dc2626', color: '#fff' }}>{deleting ? 'Menghapus...' : 'Hapus permanen'}</button></div></div></div>}
     </AdminLayout>
   );
 }

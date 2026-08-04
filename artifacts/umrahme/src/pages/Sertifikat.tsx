@@ -20,10 +20,10 @@ const tanggalSekarang = new Date().toLocaleDateString('id-ID', {
 
 function fontFamilyToCss(f: SertifikatField['fontFamily']): string {
   switch (f) {
-    case 'display': return "'Bricolage Grotesque', sans-serif";
-    case 'mono':    return "'JetBrains Mono', monospace";
+    case 'display': return "'Plus Jakarta Sans', sans-serif";
+    case 'mono':    return "'Plus Jakarta Sans', sans-serif";
     case 'arab':    return "'Amiri', serif";
-    default:        return "'Inter', sans-serif";
+    default:        return "'Plus Jakarta Sans', sans-serif";
   }
 }
 

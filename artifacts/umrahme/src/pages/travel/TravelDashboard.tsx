@@ -1,16 +1,17 @@
 import React from 'react';
 import { useState, useEffect, useRef, useCallback, type FormEvent, type ChangeEvent } from 'react';
 import * as XLSX from 'xlsx';
-import { AlertCircle, ArrowRight, BellRing, CalendarClock, CheckCircle2, ClipboardList, HeartPulse, Hotel, MapPin, MessageCircle, Phone, Users } from 'lucide-react';
+import { AlertCircle, ArrowRight, BellRing, CalendarClock, CheckCircle2, ClipboardList, HeartPulse, Hotel, MapPin, MessageCircle, PackageCheck, Phone, Users } from 'lucide-react';
 import { useTravelAuth } from '../../context/TravelAuthContext';
 import TravelLayout from '../../components/travel/TravelLayout';
 import {
   fetchKeberangkatan, createKeberangkatan, updateKeberangkatan, deleteKeberangkatan,
-  fetchJamaah, createJamaah, updateJamaah, deleteJamaah, bulkInsertJamaah,
+  fetchJamaah, createJamaahWithQuota, updateJamaah, deleteJamaah, bulkInsertJamaah, bulkCreateJamaahWithQuota, fetchTenantQuotaBalance,
   fetchAgenda, createAgenda, deleteAgenda, bulkInsertAgenda,
   fetchAnnouncements, createAnnouncement, deleteAnnouncement,
   fetchHelpRequests, updateHelpRequestStatus,
-  type KeberangkatanRow, type JamaahAccountRow, type AgendaItemRow, type TravelAnnouncementRow, type HelpRequestRow, type HelpRequestStatus,
+  fetchEquipmentCatalog, fetchEquipmentAssignments, createEquipmentCatalogItem, updateEquipmentAssignment,
+  type KeberangkatanRow, type JamaahAccountRow, type AgendaItemRow, type TravelAnnouncementRow, type HelpRequestRow, type HelpRequestStatus, type EquipmentCatalogRow, type EquipmentAssignmentRow, type EquipmentAssignmentStatus, type TenantQuotaBalance,
   supabase,
 } from '../../lib/supabase';
 
@@ -30,6 +31,12 @@ function formatDatetime(iso: string) {
   return new Date(iso).toLocaleString('id-ID', {
     day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit',
   });
+}
+
+function isBatchFinished(batch: Pick<KeberangkatanRow, 'tanggal_kepulangan' | 'fase_override'>) {
+  if (batch.fase_override === 'selesai') return true;
+  if (!batch.tanggal_kepulangan) return false;
+  return batch.tanggal_kepulangan < new Date().toLocaleDateString('en-CA');
 }
 
 /* ─── Styled primitives ───────────────────────────────────────────── */
@@ -91,7 +98,7 @@ const FASE_OPTIONS: { value: JamaahAccountRow['fase']; label: string }[] = [
   { value: 'selesai', label: 'Selesai' },
 ];
 
-type TabId = 'overview' | 'keberangkatan' | 'jamaah' | 'agenda' | 'pengumuman' | 'care';
+type TabId = 'overview' | 'keberangkatan' | 'jamaah' | 'agenda' | 'pengumuman' | 'care' | 'perlengkapan';
 
 const TABS: { id: TabId; label: string }[] = [
   { id: 'overview', label: 'Command Center' },
@@ -100,7 +107,10 @@ const TABS: { id: TabId; label: string }[] = [
   { id: 'agenda', label: 'Agenda' },
   { id: 'pengumuman', label: 'Pengumuman' },
   { id: 'care', label: 'Care Center' },
+  { id: 'perlengkapan', label: 'Perlengkapan' },
 ];
+
+const DEFAULT_EQUIPMENT = ['Koper', 'Tas Sandang', 'Seragam', 'ID Card', 'Buku Panduan', 'Perlengkapan Ibadah'];
 
 type BatchReadinessItem = {
   label: string;
@@ -195,13 +205,16 @@ export default function TravelDashboard() {
   const [editNomorJamaah, setEditNomorJamaah] = useState('');
   const [editRombongan, setEditRombongan] = useState('');
   const [editPaspor, setEditPaspor] = useState('');
+  const [editHotelMakkah, setEditHotelMakkah] = useState('');
+  const [editHotelMadinah, setEditHotelMadinah] = useState('');
   const [editSaving, setEditSaving] = useState(false);
   const [editError, setEditError] = useState('');
 
   const [importOpen, setImportOpen] = useState(false);
   const [importLoading, setImportLoading] = useState(false);
   const [importError, setImportError] = useState('');
-  const [importPreview, setImportPreview] = useState<Array<{ nama: string; nomor_jamaah: string; rombongan: string; nomor_paspor: string }>>([]);
+  const [importPreview, setImportPreview] = useState<Array<{ nama: string; nomor_jamaah: string; nomor_paspor: string; hotel_makkah: string; hotel_madinah: string }>>([]);
+  const [quotaBalance, setQuotaBalance] = useState<TenantQuotaBalance | null>(null);
   const [importSaving, setImportSaving] = useState(false);
   const importFileRef = useRef<HTMLInputElement>(null);
 
@@ -246,6 +259,15 @@ export default function TravelDashboard() {
   const [helpUpdatingId, setHelpUpdatingId] = useState<string | null>(null);
   const [helpStatusFilter, setHelpStatusFilter] = useState<HelpRequestStatus | 'semua'>('baru');
 
+  /* â”€â”€ Perlengkapan Jamaah â”€â”€ */
+  const [equipmentCatalog, setEquipmentCatalog] = useState<EquipmentCatalogRow[]>([]);
+  const [equipmentAssignments, setEquipmentAssignments] = useState<EquipmentAssignmentRow[]>([]);
+  const [equipmentLoading, setEquipmentLoading] = useState(false);
+  const [equipmentSaving, setEquipmentSaving] = useState<string | null>(null);
+  const [equipmentJamaahId, setEquipmentJamaahId] = useState<string | null>(null);
+  const [equipmentLabel, setEquipmentLabel] = useState('');
+  const [equipmentAdding, setEquipmentAdding] = useState(false);
+
   /* ── Loaders ─────────────────────────────────────────────────────── */
 
   const loadKeberangkatan = useCallback(async () => {
@@ -281,9 +303,28 @@ export default function TravelDashboard() {
     fetchHelpRequests(selectedKeberangkatan).then(setHelpRequests).catch(() => setHelpRequests([])).finally(() => setHelpLoading(false));
   }, [selectedKeberangkatan]);
 
+  const loadEquipment = useCallback(async () => {
+    if (!selectedKeberangkatan) return;
+    setEquipmentLoading(true);
+    try {
+      const [catalog, assignments] = await Promise.all([fetchEquipmentCatalog(selectedKeberangkatan), fetchEquipmentAssignments(selectedKeberangkatan)]);
+      setEquipmentCatalog(catalog);
+      setEquipmentAssignments(assignments);
+    } catch {
+      setEquipmentCatalog([]);
+      setEquipmentAssignments([]);
+    } finally {
+      setEquipmentLoading(false);
+    }
+  }, [selectedKeberangkatan]);
+
   useEffect(() => {
     if (tenant?.id) loadKeberangkatan();
   }, [tenant?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (tenant?.id) fetchTenantQuotaBalance(tenant.id).then(setQuotaBalance).catch(() => setQuotaBalance(null));
+  }, [tenant?.id]);
 
   useEffect(() => {
     if (selectedKeberangkatan) {
@@ -291,8 +332,9 @@ export default function TravelDashboard() {
       loadAgenda();
       loadAnnouncements();
       loadHelpRequests();
+      loadEquipment();
     }
-  }, [selectedKeberangkatan, loadJamaah, loadAgenda, loadAnnouncements, loadHelpRequests]);
+  }, [selectedKeberangkatan, loadJamaah, loadAgenda, loadAnnouncements, loadHelpRequests, loadEquipment]);
 
   // Clear agenda inline-edit state when the selected batch changes
   useEffect(() => {
@@ -388,7 +430,7 @@ export default function TravelDashboard() {
     if (!jmNomorJamaah.trim()) { setJmError('Nomor jamaah wajib diisi.'); return; }
     setJmSubmitting(true);
     try {
-      await createJamaah(tenant.id, selectedKeberangkatan, {
+      await createJamaahWithQuota(tenant.id, selectedKeberangkatan, {
         nama: jmNama.trim(), nomor_jamaah: jmNomorJamaah.trim(),
         rombongan: jmRombongan.trim() || null, nomor_bus: jmBus.trim() || null,
         nomor_kamar: jmKamar.trim() || null, nomor_paspor: jmPaspor.trim() || null,
@@ -420,6 +462,8 @@ export default function TravelDashboard() {
     setEditNomorJamaah(j.nomor_jamaah);
     setEditRombongan(j.rombongan ?? '');
     setEditPaspor(j.nomor_paspor ?? '');
+    setEditHotelMakkah(j.hotel_makkah ?? '');
+    setEditHotelMadinah(j.hotel_madinah ?? '');
     setEditError('');
   }
 
@@ -434,6 +478,7 @@ export default function TravelDashboard() {
       const payload = {
         nama: editNama.trim(), nomor_jamaah: editNomorJamaah.trim(),
         rombongan: editRombongan.trim() || null, nomor_paspor: editPaspor.trim() || null,
+        hotel_makkah: editHotelMakkah.trim() || null, hotel_madinah: editHotelMadinah.trim() || null,
       };
       await updateJamaah(tenant.id, jamaahId, payload as Partial<JamaahAccountRow>);
       setJamaahList(prev => prev.map(j => j.id === jamaahId ? { ...j, ...payload } : j));
@@ -461,7 +506,7 @@ export default function TravelDashboard() {
     setImportError(''); setImportLoading(true); setImportPreview([]);
     try {
       const ext = file.name.split('.').pop()?.toLowerCase();
-      let result: Array<{ nama?: unknown; nomor_jamaah?: unknown; rombongan?: unknown; nomor_paspor?: unknown }> = [];
+      let result: Array<{ nama?: unknown; nomor_jamaah?: unknown; nomor_paspor?: unknown; hotel_makkah?: unknown; hotel_madinah?: unknown }> = [];
 
       if (ext === 'xlsx' || ext === 'xls' || ext === 'csv') {
         const buf = await file.arrayBuffer();
@@ -498,8 +543,9 @@ export default function TravelDashboard() {
       const preview = (result || []).map((j, idx) => ({
         nama: String(j.nama ?? '').trim(),
         nomor_jamaah: String(j.nomor_jamaah ?? String(idx + 1).padStart(3, '0')).trim(),
-        rombongan: String(j.rombongan ?? '').trim(),
         nomor_paspor: String(j.nomor_paspor ?? '').trim(),
+        hotel_makkah: String(j.hotel_makkah ?? '').trim(),
+        hotel_madinah: String(j.hotel_madinah ?? '').trim(),
       })).filter(j => j.nama);
 
       if (preview.length === 0) throw new Error('Tidak ada data jamaah terbaca. Cek format file.');
@@ -523,13 +569,13 @@ export default function TravelDashboard() {
     setImportSaving(true); setImportError('');
     try {
       const payload = importPreview.map(r => ({
-        nama: r.nama.trim(), nomor_jamaah: r.nomor_jamaah.trim(),
-        rombongan: r.rombongan.trim() || null, nomor_paspor: r.nomor_paspor.trim() || null,
-        fase: 'persiapan',
+        nama: r.nama.trim(), nomor_jamaah: r.nomor_jamaah.trim(), nomor_paspor: r.nomor_paspor.trim() || null,
+        hotel_makkah: r.hotel_makkah.trim() || null, hotel_madinah: r.hotel_madinah.trim() || null,
       }));
-      const { inserted } = await bulkInsertJamaah(tenant.id, selectedKeberangkatan, payload);
+      const { inserted } = await bulkCreateJamaahWithQuota(tenant.id, selectedKeberangkatan, payload);
       setImportPreview([]); setImportOpen(false);
       await loadJamaah();
+      fetchTenantQuotaBalance(tenant.id).then(setQuotaBalance).catch(() => {});
       alert(`${inserted} jamaah berhasil diimport.`);
     } catch (err: unknown) { setImportError(err instanceof Error ? err.message : 'Gagal menyimpan data.'); }
     setImportSaving(false);
@@ -733,6 +779,37 @@ export default function TravelDashboard() {
     }
   }
 
+  async function addEquipmentItem(label: string) {
+    if (!tenant?.id || !selectedKeberangkatan || !label.trim()) return;
+    setEquipmentAdding(true);
+    try {
+      const item = await createEquipmentCatalogItem(tenant.id, selectedKeberangkatan, { label: label.trim(), sort_order: equipmentCatalog.length });
+      setEquipmentCatalog(prev => [...prev, item]);
+      setEquipmentLabel('');
+    } finally {
+      setEquipmentAdding(false);
+    }
+  }
+
+  async function seedDefaultEquipment() {
+    for (const item of DEFAULT_EQUIPMENT) await addEquipmentItem(item);
+  }
+
+  async function setEquipmentStatus(jamaahId: string, equipmentId: string, status: EquipmentAssignmentStatus) {
+    if (!tenant?.id || !selectedKeberangkatan) return;
+    const key = `${jamaahId}:${equipmentId}`;
+    setEquipmentSaving(key);
+    try {
+      const assignment = await updateEquipmentAssignment(tenant.id, selectedKeberangkatan, jamaahId, equipmentId, status, email);
+      setEquipmentAssignments(prev => {
+        const remaining = prev.filter(item => !(item.jamaah_id === jamaahId && item.equipment_id === equipmentId));
+        return [...remaining, assignment];
+      });
+    } finally {
+      setEquipmentSaving(null);
+    }
+  }
+
   /* ── Guard: no tenant ────────────────────────────────────────────── */
 
   if (!tenant) {
@@ -755,10 +832,13 @@ export default function TravelDashboard() {
   const readinessCount = batchReadiness.filter((item) => item.ready).length;
   const readinessIssues = batchReadiness.filter((item) => !item.ready);
   const importantAnnouncements = announcements.filter((item) => item.important).length;
+  const missingPassports = jamaahList.filter((item) => !item.nomor_paspor?.trim()).length;
+  const hotelOverrides = jamaahList.filter((item) => item.hotel_makkah?.trim() || item.hotel_madinah?.trim()).length;
   const openHelpRequests = helpRequests.filter((item) => item.status !== 'selesai').length;
   const filteredHelpRequests = helpStatusFilter === 'semua'
     ? helpRequests
     : helpRequests.filter((item) => item.status === helpStatusFilter);
+  const receivedEquipmentCount = equipmentAssignments.filter((item) => item.status === 'sudah').length;
 
   /* ── Render ──────────────────────────────────────────────────────── */
 
@@ -931,6 +1011,9 @@ export default function TravelDashboard() {
                   { label: 'Jamaah batch', value: String(jamaahList.length), sub: jamaahList.length ? 'Terdaftar pada batch ini' : 'Belum ada jamaah', icon: Users, tone: PRIMARY, bg: PRIMARY_BG },
                   { label: 'Agenda aktif', value: String(agendaItems.length), sub: agendaItems.length ? 'Siap ditampilkan ke jamaah' : 'Belum ada agenda', icon: CalendarClock, tone: '#7c3aed', bg: 'rgba(124,58,237,0.08)' },
                   { label: 'Info prioritas', value: String(importantAnnouncements), sub: importantAnnouncements ? 'Pengumuman penting aktif' : 'Tidak ada info prioritas', icon: BellRing, tone: '#dc2626', bg: 'rgba(220,38,38,0.08)' },
+                  { label: 'Kuota penerbitan', value: String(quotaBalance?.balance ?? 0), sub: quotaBalance ? `${quotaBalance.total_used} akun telah diterbitkan` : 'Hubungi Umrahme untuk top up', icon: PackageCheck, tone: '#15803d', bg: 'rgba(163,230,53,0.22)' },
+                  { label: 'Data paspor', value: String(missingPassports), sub: missingPassports ? 'Jamaah belum isi paspor' : 'Semua paspor terisi', icon: ClipboardList, tone: missingPassports ? '#d97706' : '#15803d', bg: missingPassports ? 'rgba(245,158,11,0.09)' : 'rgba(22,163,74,0.09)' },
+                  { label: 'Hotel personal', value: String(hotelOverrides), sub: hotelOverrides ? 'Memakai override hotel' : 'Semua ikut hotel batch', icon: Hotel, tone: '#0f766e', bg: 'rgba(13,148,136,0.09)' },
                 ].map((item) => {
                   const Icon = item.icon;
                   return (
@@ -985,6 +1068,71 @@ export default function TravelDashboard() {
                   </div>
                 </div>
               </div>
+            </>
+          )}
+        </section>
+      )}
+
+      {activeTab === 'perlengkapan' && (
+        <section>
+          <div className="flex flex-wrap items-end justify-between gap-4 mb-5">
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em]" style={{ color: '#0f766e' }}>Distribusi Perlengkapan</p>
+              <h2 className="mt-1 text-[20px] font-bold" style={{ color: '#111827', letterSpacing: '-0.02em' }}>Status per jamaah</h2>
+              <p className="mt-1 text-[12px]" style={{ color: '#6b7280' }}>{selectedBatch ? selectedBatch.nama_batch : 'Pilih batch untuk mengatur perlengkapan.'}</p>
+            </div>
+            <div className="rounded-xl px-4 py-2.5" style={{ background: 'rgba(13,148,136,0.09)', color: '#0f766e' }}>
+              <p className="font-mono text-[18px] font-bold leading-none">{receivedEquipmentCount}</p>
+              <p className="mt-1 font-mono text-[9px] font-bold uppercase tracking-wider">Barang diterima</p>
+            </div>
+          </div>
+
+          {!selectedBatch ? (
+            <div className="rounded-2xl px-5 py-10 text-center" style={{ border: '1px dashed rgba(0,0,0,0.14)' }}>
+              <p className="text-[13px]" style={{ color: '#6b7280' }}>Pilih atau buat batch keberangkatan terlebih dahulu.</p>
+            </div>
+          ) : equipmentLoading ? (
+            <p className="py-10 text-center font-mono text-[12px]" style={{ color: '#9ca3af' }}>Memuat perlengkapan...</p>
+          ) : (
+            <>
+              <div className="rounded-2xl p-4 mb-4" style={cardStyle}>
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <p className="text-[13px] font-bold" style={{ color: '#374151' }}>Daftar perlengkapan batch</p>
+                    <p className="mt-0.5 text-[11px]" style={{ color: '#6b7280' }}>{equipmentCatalog.length ? `${equipmentCatalog.length} jenis barang aktif` : 'Belum ada daftar perlengkapan.'}</p>
+                  </div>
+                  {!equipmentCatalog.length && <button type="button" onClick={seedDefaultEquipment} disabled={equipmentAdding} className="rounded-xl px-3 py-2 text-[11px] font-semibold text-white disabled:opacity-60" style={{ background: '#0f766e' }}>Pakai Paket Standar</button>}
+                </div>
+                {equipmentCatalog.length > 0 && <div className="mt-3 flex flex-wrap gap-2">{equipmentCatalog.map(item => <span key={item.id} className="rounded-full px-2.5 py-1 text-[10px] font-semibold" style={{ color: '#0f766e', background: 'rgba(13,148,136,0.08)' }}>{item.label}</span>)}</div>}
+                <form onSubmit={(event) => { event.preventDefault(); addEquipmentItem(equipmentLabel); }} className="mt-3 flex gap-2">
+                  <StyledInput value={equipmentLabel} onChange={event => setEquipmentLabel(event.target.value)} placeholder="Tambah barang, mis. Mukena" maxLength={80} />
+                  <button type="submit" disabled={!equipmentLabel.trim() || equipmentAdding} className="flex-none rounded-xl px-3 text-[11px] font-semibold text-white disabled:opacity-60" style={{ background: '#172554' }}>Tambah</button>
+                </form>
+              </div>
+
+              {equipmentCatalog.length > 0 && (
+                <div className="overflow-hidden rounded-2xl" style={cardStyle}>
+                  {jamaahList.map(jamaah => {
+                    const selected = equipmentJamaahId === jamaah.id;
+                    const assignments = equipmentAssignments.filter(item => item.jamaah_id === jamaah.id);
+                    const received = assignments.filter(item => item.status === 'sudah').length;
+                    return (
+                      <div key={jamaah.id} className="border-b last:border-b-0" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>
+                        <button type="button" onClick={() => setEquipmentJamaahId(selected ? null : jamaah.id)} className="flex w-full items-center gap-3 px-4 py-3.5 text-left">
+                          <span className="flex h-9 w-9 flex-none items-center justify-center rounded-xl" style={{ background: 'rgba(13,148,136,0.08)', color: '#0f766e' }}><PackageCheck className="h-4 w-4" /></span>
+                          <span className="min-w-0 flex-1"><span className="block truncate text-[13px] font-semibold" style={{ color: '#111827' }}>{jamaah.nama}</span><span className="mt-0.5 block text-[10.5px]" style={{ color: '#6b7280' }}>{received} dari {equipmentCatalog.length} diterima</span></span>
+                          <span className="rounded-full px-2 py-1 font-mono text-[10px] font-bold" style={{ color: received === equipmentCatalog.length ? '#15803d' : '#b45309', background: received === equipmentCatalog.length ? 'rgba(22,163,74,0.09)' : 'rgba(245,158,11,0.10)' }}>{received === equipmentCatalog.length ? 'LENGKAP' : 'PROSES'}</span>
+                        </button>
+                        {selected && <div className="grid grid-cols-2 gap-2 px-4 pb-4">{equipmentCatalog.map(item => {
+                          const status = assignments.find(assignment => assignment.equipment_id === item.id)?.status ?? 'belum';
+                          const key = `${jamaah.id}:${item.id}`;
+                          return <button key={item.id} type="button" disabled={equipmentSaving === key} onClick={() => setEquipmentStatus(jamaah.id, item.id, status === 'sudah' ? 'belum' : 'sudah')} className="flex min-h-11 items-center gap-2 rounded-xl px-3 text-left text-[11px] font-semibold disabled:opacity-60" style={{ color: status === 'sudah' ? '#15803d' : '#6b7280', background: status === 'sudah' ? 'rgba(22,163,74,0.09)' : '#f9fafb', border: `1px solid ${status === 'sudah' ? 'rgba(22,163,74,0.22)' : 'rgba(0,0,0,0.08)'}` }}><CheckCircle2 className="h-3.5 w-3.5 flex-none" /> {item.label}</button>;
+                        })}</div>}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </>
           )}
         </section>
@@ -1173,6 +1321,9 @@ export default function TravelDashboard() {
                       ) : (
                         <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full" style={{ background: 'rgba(0,0,0,0.05)', color: '#9ca3af' }}>Nonaktif</span>
                       )}
+                      {isBatchFinished(kb) && (
+                        <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full" style={{ background: 'rgba(71,85,105,0.10)', color: '#475569' }}>Selesai</span>
+                      )}
                       {selectedKeberangkatan === kb.id && (
                         <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full" style={{ background: PRIMARY_BG, color: PRIMARY }}>Dipilih</span>
                       )}
@@ -1270,7 +1421,7 @@ export default function TravelDashboard() {
                   <div className="overflow-x-auto rounded-xl" style={{ border: '1px solid rgba(0,0,0,0.06)' }}>
                     <table className="w-full text-[12px]">
                       <thead><tr style={{ background: '#fafaf9' }}>
-                        {['Nama', 'No. Jamaah', 'Rombongan', 'No. Paspor', ''].map(h => (
+                        {['Nama', 'No. Jamaah', 'No. Paspor', 'Hotel Makkah', 'Hotel Madinah', ''].map(h => (
                           <th key={h} className="text-left px-3 py-2 font-mono text-[10px] uppercase" style={{ color: '#9ca3af' }}>{h}</th>
                         ))}
                       </tr></thead>
@@ -1279,8 +1430,9 @@ export default function TravelDashboard() {
                           <tr key={idx} style={{ borderTop: '1px solid rgba(0,0,0,0.04)' }}>
                             <td className="px-2 py-1.5"><input value={r.nama} onChange={e => updatePreviewRow(idx, 'nama', e.target.value)} className="w-full rounded px-2 py-1 text-[12px]" style={{ border: '1px solid rgba(0,0,0,0.1)' }} /></td>
                             <td className="px-2 py-1.5"><input value={r.nomor_jamaah} onChange={e => updatePreviewRow(idx, 'nomor_jamaah', e.target.value)} className="w-full rounded px-2 py-1 text-[12px] font-mono" style={{ border: '1px solid rgba(0,0,0,0.1)' }} /></td>
-                            <td className="px-2 py-1.5"><input value={r.rombongan} onChange={e => updatePreviewRow(idx, 'rombongan', e.target.value)} className="w-full rounded px-2 py-1 text-[12px]" style={{ border: '1px solid rgba(0,0,0,0.1)' }} /></td>
                             <td className="px-2 py-1.5"><input value={r.nomor_paspor} onChange={e => updatePreviewRow(idx, 'nomor_paspor', e.target.value)} className="w-full rounded px-2 py-1 text-[12px] font-mono" style={{ border: '1px solid rgba(0,0,0,0.1)' }} /></td>
+                            <td className="px-2 py-1.5"><input value={r.hotel_makkah} onChange={e => updatePreviewRow(idx, 'hotel_makkah', e.target.value)} placeholder="Ikuti batch" className="w-full rounded px-2 py-1 text-[12px]" style={{ border: '1px solid rgba(0,0,0,0.1)' }} /></td>
+                            <td className="px-2 py-1.5"><input value={r.hotel_madinah} onChange={e => updatePreviewRow(idx, 'hotel_madinah', e.target.value)} placeholder="Ikuti batch" className="w-full rounded px-2 py-1 text-[12px]" style={{ border: '1px solid rgba(0,0,0,0.1)' }} /></td>
                             <td className="px-2 py-1.5 text-right"><button type="button" onClick={() => removePreviewRow(idx)} className="text-[11px] px-2 py-1 rounded" style={{ color: '#dc2626' }}>Hapus</button></td>
                           </tr>
                         ))}
@@ -1291,7 +1443,7 @@ export default function TravelDashboard() {
                     <button type="button" onClick={confirmImport} disabled={importSaving}
                       className="px-5 py-2.5 text-[12px] font-semibold rounded-xl disabled:opacity-60"
                       style={{ background: `linear-gradient(135deg, ${PRIMARY} 0%, ${PRIMARY_DEEP} 100%)`, color: '#fff' }}>
-                      {importSaving ? 'Menyimpan...' : `Simpan ${importPreview.length} Jamaah`}
+                      {importSaving ? 'Menerbitkan...' : `Terbitkan ${importPreview.length} Jamaah`}
                     </button>
                     <button type="button" onClick={() => { setImportPreview([]); setImportError(''); }}
                       className="px-5 py-2.5 text-[12px] font-semibold rounded-xl" style={{ color: '#6b7280', border: '1px solid rgba(0,0,0,0.1)' }}>
@@ -1365,7 +1517,7 @@ export default function TravelDashboard() {
                 {jamaahList.map((j) => {
                   const isEditing = editingJamaahId === j.id;
                   const chips = [
-                    j.rombongan ? `Romb. ${j.rombongan}` : null,
+                    j.rombongan ? (/^rombongan\b/i.test(j.rombongan.trim()) ? j.rombongan.trim() : `Romb. ${j.rombongan}`) : null,
                     j.nomor_bus ? `Bus ${j.nomor_bus}` : null,
                     j.nomor_kamar ? `Kmr ${j.nomor_kamar}` : null,
                     j.nomor_paspor ? j.nomor_paspor : null,
@@ -1398,6 +1550,20 @@ export default function TravelDashboard() {
                             <p className="font-mono text-[9px] uppercase tracking-widest mb-1" style={{ color: '#9ca3af' }}>No. Paspor</p>
                             <input value={editPaspor} onChange={e => setEditPaspor(e.target.value)} placeholder="—"
                               className="w-full rounded-lg px-2 py-1.5 text-[12px] font-mono focus:outline-none"
+                              style={{ border: `1px solid ${PRIMARY_BORDER}`, background: '#fff', color: '#374151' }} />
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2 mb-2">
+                          <div>
+                            <p className="font-mono text-[9px] uppercase tracking-widest mb-1" style={{ color: '#9ca3af' }}>Upgrade Hotel Makkah</p>
+                            <input value={editHotelMakkah} onChange={e => setEditHotelMakkah(e.target.value)} placeholder="Ikuti hotel batch"
+                              className="w-full rounded-lg px-2 py-1.5 text-[12px] focus:outline-none"
+                              style={{ border: `1px solid ${PRIMARY_BORDER}`, background: '#fff', color: '#374151' }} />
+                          </div>
+                          <div>
+                            <p className="font-mono text-[9px] uppercase tracking-widest mb-1" style={{ color: '#9ca3af' }}>Upgrade Hotel Madinah</p>
+                            <input value={editHotelMadinah} onChange={e => setEditHotelMadinah(e.target.value)} placeholder="Ikuti hotel batch"
+                              className="w-full rounded-lg px-2 py-1.5 text-[12px] focus:outline-none"
                               style={{ border: `1px solid ${PRIMARY_BORDER}`, background: '#fff', color: '#374151' }} />
                           </div>
                         </div>
@@ -1434,7 +1600,7 @@ export default function TravelDashboard() {
                         )}
                         {hasHotelOverride && (
                           <p className="mt-1 text-[10px] font-semibold" style={{ color: '#b45309' }}>
-                            Override hotel individual aktif
+                            Upgrade hotel individual aktif
                           </p>
                         )}
                       </div>
@@ -1456,7 +1622,7 @@ export default function TravelDashboard() {
                           <button type="button" onClick={() => clearJamaahHotelOverride(j)}
                             className="font-mono text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150"
                             style={{ color: '#b45309', border: '1px solid rgba(217,119,6,0.24)', background: 'rgba(245,158,11,0.06)' }}>
-                            Pakai Hotel Batch
+                            Ikuti Hotel Batch
                           </button>
                         )}
                         <button type="button" onClick={() => handleDeleteJamaah(j.id, j.nama)}

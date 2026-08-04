@@ -247,7 +247,7 @@ function SmartAccessPanel({ desktop = false }: { desktop?: boolean }) {
     <section className="space-y-3">
       <div className="flex items-end justify-between gap-3">
         <div>
-          <p className="font-mono text-[8.5px] uppercase tracking-[0.20em] text-mute">Akses Utama</p>
+          <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-mute">Akses Utama</p>
           <h2 className="mt-0.5 text-[15px] font-bold text-ink">Yang paling dibutuhkan sekarang</h2>
         </div>
         <Link to="/pengumuman" className="inline-flex items-center gap-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-primary">
@@ -287,7 +287,7 @@ function SmartAccessPanel({ desktop = false }: { desktop?: boolean }) {
               rel="noreferrer"
               className="min-w-0 rounded-xl bg-surface-bone px-3 py-2 active:opacity-70"
             >
-              <p className="font-mono text-[7.5px] uppercase tracking-[0.16em] text-ash">{item.label}</p>
+              <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-ash">{item.label}</p>
               <p className="mt-0.5 truncate text-[11px] font-semibold text-ink">{item.value}</p>
             </a>
           ))}
@@ -579,7 +579,7 @@ export default function Beranda() {
               };
               return (
                 <>
-                  <p className="font-mono text-[9.5px] uppercase tracking-[0.30em] mb-0.5" style={{ color: htcRgba(0.4) }}>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.24em] mb-0.5" style={{ color: htcRgba(0.55) }}>
                     Assalamu'alaikum
                   </p>
                   <h1 className="font-display font-bold" style={{ fontSize: 'clamp(28px,8vw,40px)', letterSpacing: '-1px', lineHeight: 1.05, color: htc }}>
@@ -590,7 +590,7 @@ export default function Beranda() {
                     <span className="h-3 w-px" style={{ background: htcRgba(0.2) }} />
                     <div className="inline-flex items-center gap-1.5">
                       <span className="h-1.5 w-1.5 rounded-full bg-sky-300 animate-pulse" />
-                      <span className="font-mono text-[9px] uppercase tracking-[0.18em]" style={{ color: htcRgba(0.65) }}>
+                        <span className="font-mono text-[10px] uppercase tracking-[0.14em]" style={{ color: htcRgba(0.78) }}>
                         {faseBadge[jamaah.fase] ?? jamaah.fase}
                       </span>
                     </div>
@@ -610,11 +610,14 @@ export default function Beranda() {
           {/* Countdown */}
           {showHitung && <KartuHitung n={hariMenuju!} namaTravel={namaTravel} />}
 
-          {/* Travel companion cards */}
-          <TravelCompanionFlow />
+          {/* Identitas perjalanan selalu berada di atas */}
+          <TravelCompanionFlow mobileSection="identity" />
 
           {/* Akses utama sesuai fase */}
           <SmartAccessPanel />
+
+          {/* Informasi perjalanan hari ini */}
+          <TravelCompanionFlow mobileSection="updates" />
 
           {/* Itinerary ringkasan */}
           {keberangkatan?.id && <KartuItinerary keberangkatanId={keberangkatan.id} />}
@@ -665,6 +668,15 @@ export default function Beranda() {
           </div>
 
         </div>
+
+        {jamaah.fase === 'tanah-suci' && (
+          <Link
+            to="/bantuan"
+            className="fixed bottom-24 right-4 z-30 inline-flex min-h-11 items-center gap-2 rounded-full bg-red-600 px-4 text-[12px] font-bold text-white shadow-lg active:scale-95"
+          >
+            <PhoneCall className="h-4 w-4" /> Bantuan
+          </Link>
+        )}
       </div>
 
       {/* ==================== DESKTOP ==================== */}

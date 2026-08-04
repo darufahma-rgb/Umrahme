@@ -8,12 +8,12 @@ import {
   fetchAgenda, createAgenda, deleteAgenda,
   fetchAnnouncements, createAnnouncement, deleteAnnouncement,
   fetchJamaah, createJamaah, updateJamaah, deleteJamaah, bulkInsertJamaah,
-  fetchTravelAccounts, createTravelAccount, revokeTravelAccess,
+  fetchTravelAccounts, createTravelAccount, revokeTravelAccess, fetchTokenOrders, fetchTenantQuotaBalance, createTokenOrder, markTokenOrderPaid, cancelTokenOrder,
   fetchKeberangkatan, createKeberangkatan, updateKeberangkatan, deleteKeberangkatan,
   uploadLogo as apiUploadLogo,
   uploadHeroImage as apiUploadHeroImage,
   uploadSertifikatTemplate as apiUploadSertifikatTemplate,
-  type TenantRow, type AgendaItemRow, type TravelAnnouncementRow, type JamaahAccountRow, type TenantUserRow, type KeberangkatanRow,
+  type TenantRow, type AgendaItemRow, type TravelAnnouncementRow, type JamaahAccountRow, type TenantUserRow, type KeberangkatanRow, type TokenOrderRow, type TenantQuotaBalance,
   type SertifikatLayout, type SertifikatField,
   DEFAULT_SERTIFIKAT_LAYOUT,
   supabase,
@@ -205,6 +205,8 @@ export default function AdminTenantForm() {
   const [editNomorJamaah, setEditNomorJamaah] = useState('');
   const [editRombongan, setEditRombongan] = useState('');
   const [editPaspor, setEditPaspor] = useState('');
+  const [editHotelMakkah, setEditHotelMakkah] = useState('');
+  const [editHotelMadinah, setEditHotelMadinah] = useState('');
   const [editSaving, setEditSaving] = useState(false);
   const [editError, setEditError] = useState('');
 
@@ -215,6 +217,12 @@ export default function AdminTenantForm() {
   const [taSubmitting, setTaSubmitting] = useState(false);
   const [taError, setTaError] = useState('');
   const [taSuccess, setTaSuccess] = useState('');
+  const [tokenOrders, setTokenOrders] = useState<TokenOrderRow[]>([]);
+  const [tokenQuantity, setTokenQuantity] = useState('1');
+  const [tokenNote, setTokenNote] = useState('');
+  const [tokenLoading, setTokenLoading] = useState(false);
+  const [quotaSuccess, setQuotaSuccess] = useState('');
+  const [quotaBalance, setQuotaBalance] = useState<TenantQuotaBalance | null>(null);
 
   const [ocrLoading, setOcrLoading] = useState(false);
   const [ocrError, setOcrError] = useState('');
@@ -238,6 +246,16 @@ export default function AdminTenantForm() {
     if (!id || isNew) return;
     setTravelAccountsLoading(true);
     fetchTravelAccounts(id).then(setTravelAccounts).catch(() => {}).finally(() => setTravelAccountsLoading(false));
+  }, [id, isNew]);
+
+  const loadTokenOrders = useCallback(async () => {
+    if (!id || isNew) return;
+    fetchTokenOrders(id).then(setTokenOrders).catch(() => {});
+  }, [id, isNew]);
+
+  const loadQuotaBalance = useCallback(async () => {
+    if (!id || isNew) return;
+    fetchTenantQuotaBalance(id).then(setQuotaBalance).catch(() => {});
   }, [id, isNew]);
 
   const loadKeberangkatan = useCallback(async () => {
@@ -287,8 +305,10 @@ export default function AdminTenantForm() {
         .finally(() => setLoading(false));
       loadKeberangkatan();
       loadTravelAccounts();
+      loadTokenOrders();
+      loadQuotaBalance();
     }
-  }, [id, isNew, loadKeberangkatan, loadTravelAccounts]);
+  }, [id, isNew, loadKeberangkatan, loadTravelAccounts, loadTokenOrders, loadQuotaBalance]);
 
   useEffect(() => {
     if (selectedKeberangkatan) {
@@ -392,10 +412,10 @@ export default function AdminTenantForm() {
 
   function fontFamilyToCss(f: SertifikatField['fontFamily']): string {
     switch (f) {
-      case 'display': return "'Bricolage Grotesque', sans-serif";
-      case 'mono':    return "'JetBrains Mono', monospace";
+      case 'display': return "'Plus Jakarta Sans', sans-serif";
+      case 'mono':    return "'Plus Jakarta Sans', sans-serif";
       case 'arab':    return "'Amiri', serif";
-      default:        return "'Inter', sans-serif";
+      default:        return "'Plus Jakarta Sans', sans-serif";
     }
   }
 
@@ -651,6 +671,8 @@ export default function AdminTenantForm() {
     setEditNomorJamaah(j.nomor_jamaah);
     setEditRombongan(j.rombongan ?? '');
     setEditPaspor(j.nomor_paspor ?? '');
+    setEditHotelMakkah(j.hotel_makkah ?? '');
+    setEditHotelMadinah(j.hotel_madinah ?? '');
     setEditError('');
   }
 
@@ -670,6 +692,8 @@ export default function AdminTenantForm() {
         nomor_jamaah: editNomorJamaah.trim(),
         rombongan: editRombongan.trim() || null,
         nomor_paspor: editPaspor.trim() || null,
+        hotel_makkah: editHotelMakkah.trim() || null,
+        hotel_madinah: editHotelMadinah.trim() || null,
       };
       await updateJamaah(id!, jamaahId, payload as Partial<JamaahAccountRow>);
       setJamaahList(prev => prev.map(j => j.id === jamaahId ? { ...j, ...payload } : j));
@@ -897,6 +921,22 @@ export default function AdminTenantForm() {
     setTaSubmitting(false);
   }
 
+  async function handleCreateTokenOrder(e: FormEvent) {
+    e.preventDefault();
+    const quantity = Number(tokenQuantity);
+    if (!Number.isInteger(quantity) || quantity < 1) return;
+    setTokenLoading(true); setQuotaSuccess('');
+    try { await createTokenOrder(id!, quantity, tokenNote); setTokenNote(''); await loadTokenOrders(); }
+    finally { setTokenLoading(false); }
+  }
+
+  async function handleMarkOrderPaid(orderId: string) {
+    if (!window.confirm('Konfirmasi pembayaran lunas dan terbitkan token? Token hanya dapat dilihat sekali.')) return;
+    setTokenLoading(true);
+    try { const result = await markTokenOrderPaid(orderId); setQuotaSuccess(`${result.quantity} kuota diterbitkan. Saldo travel sekarang ${result.balance} jamaah.`); await Promise.all([loadTokenOrders(), loadQuotaBalance()]); }
+    finally { setTokenLoading(false); }
+  }
+
   function openKbForm(kb?: KeberangkatanRow) {
     if (kb) {
       setKbEditId(kb.id);
@@ -975,6 +1015,11 @@ export default function AdminTenantForm() {
 
   function formatTanggal(iso: string) { return new Date(iso + 'T00:00:00').toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }); }
   function formatDatetime(iso: string) { return new Date(iso).toLocaleString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }); }
+  function isBatchFinished(batch: Pick<KeberangkatanRow, 'tanggal_kepulangan' | 'fase_override'>) {
+    if (batch.fase_override === 'selesai') return true;
+    if (!batch.tanggal_kepulangan) return false;
+    return batch.tanggal_kepulangan < new Date().toLocaleDateString('en-CA');
+  }
 
   function SaveButton({ label }: { label?: string }) {
     return (
@@ -1349,6 +1394,20 @@ export default function AdminTenantForm() {
                             ))}
                           </div>
                         </div>
+                        <div className="grid grid-cols-2 gap-2 mb-2">
+                          <div>
+                            <p className="font-mono text-[9px] uppercase tracking-widest mb-1" style={{ color: '#9ca3af' }}>Upgrade Hotel Makkah</p>
+                            <input value={editHotelMakkah} onChange={e => setEditHotelMakkah(e.target.value)} placeholder="Ikuti hotel batch"
+                              className="w-full rounded-lg px-2 py-1.5 text-[12px] focus:outline-none"
+                              style={{ border: '1px solid rgba(67,56,202,0.25)', background: '#fff', color: '#374151' }} />
+                          </div>
+                          <div>
+                            <p className="font-mono text-[9px] uppercase tracking-widest mb-1" style={{ color: '#9ca3af' }}>Upgrade Hotel Madinah</p>
+                            <input value={editHotelMadinah} onChange={e => setEditHotelMadinah(e.target.value)} placeholder="Ikuti hotel batch"
+                              className="w-full rounded-lg px-2 py-1.5 text-[12px] focus:outline-none"
+                              style={{ border: '1px solid rgba(67,56,202,0.25)', background: '#fff', color: '#374151' }} />
+                          </div>
+                        </div>
 
                         {/* Panel properti field terpilih */}
                         {selectedLayoutField && (() => {
@@ -1394,9 +1453,9 @@ export default function AdminTenantForm() {
                                 <p className="text-[10px] mb-1" style={{ color: '#6b7280' }}>Font</p>
                                 <select value={fld.fontFamily} onChange={e => updateSelectedField({ fontFamily: e.target.value as SertifikatField['fontFamily'] })}
                                   className="w-full rounded-lg px-2 py-1.5 text-[11px]" style={{ border: '1px solid rgba(0,0,0,0.1)', background: '#fff' }}>
-                                  <option value="display">Display (Bricolage)</option>
-                                  <option value="sans">Sans (Inter)</option>
-                                  <option value="mono">Mono (JetBrains)</option>
+                                  <option value="display">Display (Plus Jakarta)</option>
+                                  <option value="sans">Sans (Plus Jakarta)</option>
+                                  <option value="mono">Mono (Plus Jakarta)</option>
                                   <option value="arab">Arab (Amiri)</option>
                                 </select>
                               </div>
@@ -1589,6 +1648,9 @@ export default function AdminTenantForm() {
                           <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full" style={{ background: 'rgba(22,163,74,0.1)', color: '#16a34a' }}>Aktif</span>
                         ) : (
                           <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full" style={{ background: 'rgba(0,0,0,0.05)', color: '#9ca3af' }}>Nonaktif</span>
+                        )}
+                        {isBatchFinished(kb) && (
+                          <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full" style={{ background: 'rgba(71,85,105,0.10)', color: '#475569' }}>Selesai</span>
                         )}
                         {selectedKeberangkatan === kb.id && (
                           <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full" style={{ background: 'rgba(67,56,202,0.1)', color: '#4338ca' }}>Dipilih</span>
@@ -1805,7 +1867,7 @@ export default function AdminTenantForm() {
                   {jamaahList.map((j) => {
                     const isEditing = editingJamaahId === j.id;
                     const chips = [
-                      j.rombongan ? `Romb. ${j.rombongan}` : null,
+                      j.rombongan ? (/^rombongan\b/i.test(j.rombongan.trim()) ? j.rombongan.trim() : `Romb. ${j.rombongan}`) : null,
                       j.nomor_bus ? `Bus ${j.nomor_bus}` : null,
                       j.nomor_kamar ? `Kmr ${j.nomor_kamar}` : null,
                       j.nomor_paspor ? j.nomor_paspor : null,
@@ -2247,6 +2309,24 @@ export default function AdminTenantForm() {
         ══════════════════════════════════════════════ */}
         {activeTab === 'akun' && !isNew && (
           <div className="mb-10">
+            <div className="rounded-2xl px-6 py-6 mb-6" style={{ ...cardStyle, border: '1px solid rgba(21,128,61,0.20)', background: '#f7fff4' }}>
+              <p className="font-mono text-[10px] uppercase tracking-[0.14em]" style={{ color: '#15803d' }}>Kuota Penerbitan Jamaah</p>
+              <h2 className="mt-2 font-bold" style={{ fontSize: '18px', color: '#14532d' }}>Rp35.000 per akun jamaah</h2>
+              <p className="mt-1 text-[12px] leading-relaxed" style={{ color: '#4b6352' }}>Buat tagihan untuk travel. Setelah pembayaran dikonfirmasi, saldo kuota langsung ditambahkan ke travel tersebut.</p>
+              <div className="mt-4 grid grid-cols-3 gap-2">
+                {[['Tersedia', quotaBalance?.balance ?? 0, '#14532d'], ['Diterbitkan', quotaBalance?.total_issued ?? 0, '#0054f9'], ['Terpakai', quotaBalance?.total_used ?? 0, '#92400e']].map(([label, value, color]) => <div key={String(label)} className="rounded-xl bg-white px-3 py-3" style={{ border: '1px solid rgba(21,128,61,0.12)' }}><p className="text-[10px] font-semibold" style={{ color: '#6b7280' }}>{label}</p><p className="mt-1 text-xl font-bold" style={{ color: String(color) }}>{value}</p></div>)}
+              </div>
+              <form onSubmit={handleCreateTokenOrder} className="mt-4 grid gap-3 sm:grid-cols-[130px_1fr_auto]">
+                <StyledInput type="number" min="1" value={tokenQuantity} onChange={e => setTokenQuantity(e.target.value)} placeholder="Jumlah" required />
+                <StyledInput value={tokenNote} onChange={e => setTokenNote(e.target.value)} placeholder="Catatan pembayaran (opsional)" />
+                <button type="submit" disabled={tokenLoading} className="rounded-xl px-4 py-3 text-[12px] font-semibold" style={{ background: '#14532d', color: '#fff' }}>Buat Tagihan</button>
+              </form>
+              <p className="mt-2 text-[11px]" style={{ color: '#6b7280' }}>Total: Rp{((Number(tokenQuantity) || 0) * 35000).toLocaleString('id-ID')}</p>
+              {quotaSuccess && <div className="mt-4 rounded-xl p-4 text-[12px] font-semibold" style={{ background: '#14532d', color: '#d9f99d' }}>{quotaSuccess}</div>}
+              <div className="mt-5 space-y-2">
+                {tokenOrders.length === 0 ? <p className="text-[12px]" style={{ color: '#6b7280' }}>Belum ada transaksi token.</p> : tokenOrders.map(order => <div key={order.id} className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-white px-4 py-3" style={{ border: '1px solid rgba(21,128,61,0.12)' }}><div><p className="text-[12px] font-semibold" style={{ color: '#1f2937' }}>{order.quantity} token · Rp{(order.quantity * order.unit_price).toLocaleString('id-ID')}</p><p className="mt-0.5 text-[10px]" style={{ color: '#6b7280' }}>{order.note || 'Tanpa catatan'} · {formatDatetime(order.created_at)}</p></div><div className="flex items-center gap-2">{order.status === 'menunggu_pembayaran' ? <><span className="rounded-full px-2 py-1 text-[10px] font-bold" style={{ background: '#fef3c7', color: '#92400e' }}>MENUNGGU BAYAR</span><button type="button" disabled={tokenLoading} onClick={() => void handleMarkOrderPaid(order.id)} className="rounded-lg px-3 py-2 text-[11px] font-semibold" style={{ background: '#0054f9', color: '#fff' }}>Konfirmasi Lunas</button><button type="button" onClick={() => void cancelTokenOrder(order.id).then(loadTokenOrders)} className="text-[11px] font-semibold" style={{ color: '#b91c1c' }}>Batal</button></> : <span className="rounded-full px-2 py-1 text-[10px] font-bold" style={order.status === 'lunas' ? { background: '#dcfce7', color: '#166534' } : { background: '#f3f4f6', color: '#6b7280' }}>{order.status === 'lunas' ? 'LUNAS' : 'DIBATALKAN'}</span>}</div></div>)}
+              </div>
+            </div>
             <div className="flex items-center gap-3 mb-5">
               <h2 className="font-bold" style={{ fontSize: '18px', color: '#111827', letterSpacing: '-0.02em' }}>Akun Travel Agency</h2>
               <span className="font-mono text-[10px] uppercase tracking-widest px-2 py-1 rounded-full" style={{ background: 'rgba(67,56,202,0.07)', color: '#4338ca' }}>{travelAccounts.length} akun</span>

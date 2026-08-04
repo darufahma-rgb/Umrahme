@@ -111,6 +111,30 @@ CREATE TABLE help_requests (
   updated_at        TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- Katalog perlengkapan dan status penerimaan per jamaah/batch
+CREATE TABLE equipment_catalog (
+  id                TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
+  tenant_id         TEXT NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+  keberangkatan_id  TEXT NOT NULL REFERENCES keberangkatan(id) ON DELETE CASCADE,
+  label             TEXT NOT NULL,
+  category          TEXT NOT NULL DEFAULT 'umum',
+  sort_order        INTEGER NOT NULL DEFAULT 0,
+  active            BOOLEAN NOT NULL DEFAULT true,
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE equipment_assignments (
+  id                TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
+  tenant_id         TEXT NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+  keberangkatan_id  TEXT NOT NULL REFERENCES keberangkatan(id) ON DELETE CASCADE,
+  jamaah_id         TEXT NOT NULL REFERENCES jamaah_accounts(id) ON DELETE CASCADE,
+  equipment_id      TEXT NOT NULL REFERENCES equipment_catalog(id) ON DELETE CASCADE,
+  status            TEXT NOT NULL DEFAULT 'belum',
+  received_at       TIMESTAMPTZ,
+  updated_by        TEXT,
+  updated_at        TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
 -- Relasi user ↔ tenant
 CREATE TABLE tenant_users (
   id         TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
