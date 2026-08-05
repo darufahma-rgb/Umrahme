@@ -42,6 +42,8 @@ import AdminTenantForm from './pages/admin/AdminTenantForm';
 
 import TravelLogin from './pages/travel/TravelLogin';
 import TravelDashboard from './pages/travel/TravelDashboard';
+import TravelContract from './pages/travel/TravelContract';
+import AdminContracts from './pages/admin/AdminContracts';
 
 import LandingPage from './pages/LandingPage';
 
@@ -108,12 +110,14 @@ export default function App() {
           </AdminProtectedRoute>
         }
       />
+      <Route path="/admin/kontrak" element={<AdminProtectedRoute><AdminContracts /></AdminProtectedRoute>} />
 
       {/* ── Travel Agency Portal ── */}
       <Route
         path="/travel"
         element={<TravelAuthProvider><TravelProtectedRoute><TravelDashboard /></TravelProtectedRoute></TravelAuthProvider>}
       />
+      <Route path="/travel/kontrak" element={<TravelAuthProvider><TravelProtectedRoute><TravelContract /></TravelProtectedRoute></TravelAuthProvider>} />
       <Route
         path="/travel/login"
         element={<TravelAuthProvider><TravelLogin /></TravelAuthProvider>}

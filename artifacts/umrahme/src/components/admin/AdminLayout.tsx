@@ -52,6 +52,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             >
               Travel
             </Link>
+            <Link to="/admin/kontrak" className="rounded-md px-3 py-1.5 text-[13px] font-semibold" style={location.pathname === '/admin/kontrak' ? { color: '#a3e635', background: 'rgba(163,230,53,0.13)' } : { color: 'rgba(255,255,255,0.68)' }}>Kontrak</Link>
           </nav>
         </div>
 

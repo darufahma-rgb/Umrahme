@@ -78,6 +78,8 @@ export default function CounterTawaf() {
     return Number.isFinite(v) && v >= 0 && v <= TOTAL ? v : 0;
   });
   const [konfirmasiReset, setKonfirmasiReset] = useState(false);
+  const [shalatMaqam, setShalatMaqam] = useState(false);
+  const [minumZamzam, setMinumZamzam] = useState(false);
 
   useEffect(() => {
     if (!tid || !nm) return;
@@ -152,14 +154,34 @@ export default function CounterTawaf() {
             <h1 className="mt-2 font-display text-4xl font-bold leading-tight text-ink">
               Tawaf Selesai
             </h1>
-            <p className="mt-2 max-w-[28ch] text-pretty text-[15px] leading-relaxed text-charcoal">
-              Alhamdulillah. Setelah tawaf, lanjutkan dengan shalat di Maqam Ibrahim lalu menuju
-              Sa'i antara Shafa & Marwah.
-            </p>
+            <p className="mt-2 max-w-[28ch] text-pretty text-[15px] leading-relaxed text-charcoal">Centang dua amalan berikut untuk melanjutkan ke Sa'i.</p>
+
+            <div className="mt-6 w-full max-w-xs space-y-3 text-left">
+              <button type="button" onClick={() => setShalatMaqam((value) => !value)} className="flex w-full items-start gap-3 border border-hairline p-4 text-left">
+                <span className={`mt-0.5 flex h-5 w-5 flex-none items-center justify-center border ${shalatMaqam ? 'border-primary bg-primary text-white' : 'border-hairline-strong bg-white'}`}>{shalatMaqam ? '✓' : ''}</span>
+                <span>
+                <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">Langkah 1</span>
+                <span className="mt-1 block text-[14px] font-bold text-ink">Shalat dua rakaat di Maqam Ibrahim</span>
+                <span className="mt-1 block text-[12px] leading-relaxed text-charcoal">Jika memungkinkan, shalatlah di belakang Maqam Ibrahim. Bila padat, pilih tempat yang tidak mengganggu thawaf jamaah lain.</span>
+                </span>
+              </button>
+              <button type="button" onClick={() => setMinumZamzam((value) => !value)} className="flex w-full items-start gap-3 border border-hairline p-4 text-left">
+                <span className={`mt-0.5 flex h-5 w-5 flex-none items-center justify-center border ${minumZamzam ? 'border-primary bg-primary text-white' : 'border-hairline-strong bg-white'}`}>{minumZamzam ? '✓' : ''}</span>
+                <span>
+                <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">Langkah 2</span>
+                <span className="mt-1 block text-[14px] font-bold text-ink">Minum air Zamzam</span>
+                <span className="mt-1 block font-arab text-[17px] leading-relaxed text-gold" dir="rtl">اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا وَرِزْقًا وَاسِعًا وَشِفَاءً مِنْ كُلِّ دَاءٍ</span>
+                <span className="mt-1 block text-[11px] italic leading-relaxed text-charcoal">Allahumma inni as'aluka 'ilman nafi'an, rizqan wasi'an, wa syifa'an min kulli da'.</span>
+                <span className="mt-1 block text-[11px] leading-relaxed text-charcoal">Ya Allah, aku memohon ilmu yang bermanfaat, rezeki yang luas, dan kesembuhan dari setiap penyakit.</span>
+                </span>
+              </button>
+            </div>
 
             <Link
               to="/ibadah/sai"
-              className="mt-8 flex min-h-[52px] w-full max-w-xs items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-on-primary active:scale-[0.99]"
+              aria-disabled={!shalatMaqam || !minumZamzam}
+              onClick={(event) => { if (!shalatMaqam || !minumZamzam) event.preventDefault(); }}
+              className={`mt-6 flex min-h-[52px] w-full max-w-xs items-center justify-center gap-2 rounded-full text-lg font-semibold text-on-primary active:scale-[0.99] ${shalatMaqam && minumZamzam ? 'bg-primary' : 'bg-stone'}`}
             >
               Lanjut ke Sa'i <IconChevron className="h-5 w-5" />
             </Link>

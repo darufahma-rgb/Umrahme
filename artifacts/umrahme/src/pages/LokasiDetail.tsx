@@ -76,14 +76,14 @@ export default function LokasiDetail() {
   const coordText = `${formatCoord(lokasi.koordinat.lat, 'N', 'S')}, ${formatCoord(lokasi.koordinat.lng, 'E', 'W')}`;
 
   return (
-    <div>
+    <div className="location-detail">
       <PageHeader
         title={lokasi.nama}
         eyebrow={lokasi.tipe === 'masjid' ? 'Masjid' : 'Tempat Bersejarah'}
         backTo="/peta"
       />
 
-      <div className="px-5 pt-4 pb-28 space-y-3 lg:max-w-3xl lg:mx-auto lg:px-8">
+      <div className="px-5 pt-5 pb-28 space-y-5 lg:max-w-5xl lg:mx-auto lg:px-8">
 
         {/* ── 1. HERO: gambar / placeholder ─────────────────────── */}
         {lokasi.gambar ? (
@@ -155,8 +155,8 @@ export default function LokasiDetail() {
         </div>
 
         {/* ── 3. RINGKASAN ─────────────────────────────────────── */}
-        <div className="rounded-md border border-hairline bg-surface-card px-5 py-4 shadow-drop-card">
-          <p className="font-mono text-[10px] uppercase tracking-widest text-primary mb-2">Ringkasan</p>
+        <div className="border-l-2 border-primary bg-primary/5 px-5 py-4">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-primary mb-2">Yang Perlu Diketahui</p>
           <p className="text-[14px] leading-relaxed text-body font-medium">{lokasi.ringkas}</p>
         </div>
 

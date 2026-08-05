@@ -67,6 +67,26 @@
 }
 
 @layer utilities {
+  .location-detail .shadow-drop-card,
+  .location-detail .shadow-drop-soft {
+    box-shadow: none;
+  }
+
+  .location-detail .rounded-2xl,
+  .location-detail .rounded-xl {
+    border-radius: 8px;
+  }
+
+  .location-detail .bg-surface-card {
+    background: #ffffff;
+  }
+
+  @media (min-width: 1024px) {
+    .location-detail [class*="lg:max-w-5xl"] {
+      max-width: 68rem;
+    }
+  }
+
   /*
    * Keep every Latin UI style on the same typeface. Arabic content retains
    * its dedicated Amiri family through the separate font-arab utility.

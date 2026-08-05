@@ -60,6 +60,7 @@ export default function TravelLayout({ children }: { children: ReactNode }) {
                 />
               )}
             </Link>
+            <Link to="/travel/kontrak" className="px-3 py-1.5 rounded-md text-[13px] font-medium" style={location.pathname === '/travel/kontrak' ? { color: accentColor, background: `${accentColor}12` } : { color: '#6b7280' }}>Kontrak</Link>
           </nav>
         </div>
 

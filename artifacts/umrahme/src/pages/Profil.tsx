@@ -1,12 +1,58 @@
+import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import PhaseIndicator from '../components/PhaseIndicator';
 import { IconCheck, IconSertifikat, IconChevron, IconJurnal } from '../components/icons';
+import { getJamaahData, setJamaahData, submitJamaahFeedback } from '../lib/supabase';
 
 export default function Profil() {
   const { jamaah, tenant, logout } = useAuth();
   const navigate = useNavigate();
+  const photoInputRef = useRef<HTMLInputElement>(null);
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+  const [photoError, setPhotoError] = useState('');
+  const [rating, setRating] = useState(0);
+  const [komentar, setKomentar] = useState('');
+  const [feedbackState, setFeedbackState] = useState('');
+  useEffect(() => {
+    if (!tenant?.id || !jamaah?.nomorJamaah) return;
+    getJamaahData<string>(tenant.id, jamaah.nomorJamaah, 'foto_profil')
+      .then((foto) => setPhotoUrl(foto))
+      .catch(() => {});
+  }, [tenant?.id, jamaah?.nomorJamaah]);
+
+  const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    setPhotoError('');
+    if (!file.type.startsWith('image/') || file.size > 1024 * 1024) {
+      setPhotoError('Gunakan foto JPG, PNG, atau WebP dengan ukuran maksimal 1 MB.');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const foto = typeof reader.result === 'string' ? reader.result : null;
+      if (!foto) return;
+      setPhotoUrl(foto);
+      if (tenant?.id && jamaah?.nomorJamaah) setJamaahData(tenant.id, jamaah.nomorJamaah, 'foto_profil', foto).catch(() => {
+        setPhotoError('Foto tersimpan di perangkat, tetapi belum tersinkron.');
+      });
+    };
+    reader.readAsDataURL(file);
+  };
+
   if (!jamaah) return null;
+
+  const kirimFeedback = async () => {
+    if (!tenant?.id || !rating) return;
+    setFeedbackState('Mengirim...');
+    try {
+      await submitJamaahFeedback(tenant.id, jamaah.nomorJamaah, rating, komentar);
+      setFeedbackState('Terima kasih, penilaian Anda sudah diterima.');
+    } catch {
+      setFeedbackState('Penilaian belum terkirim. Coba lagi.');
+    }
+  };
 
   const inisial = jamaah.nama
     .split(' ')
@@ -54,9 +100,16 @@ export default function Profil() {
         <section className="rounded-xl p-5 text-white lg:p-6" style={{ background: 'var(--color-primary-deep)' }}>
           <div className="flex items-start justify-between gap-4">
             <div className="flex min-w-0 items-center gap-3.5">
-              <div className="flex h-14 w-14 flex-none items-center justify-center rounded-full bg-white/15 text-lg font-extrabold text-white ring-1 ring-white/20">
-                {inisial}
-              </div>
+              <button
+                type="button"
+                onClick={() => photoInputRef.current?.click()}
+                className="relative flex h-14 w-14 flex-none items-center justify-center overflow-hidden rounded-full bg-white/15 text-lg font-extrabold text-white ring-1 ring-white/20"
+                aria-label="Ubah foto profil"
+              >
+                {photoUrl ? <img src={photoUrl} alt="" className="h-full w-full object-cover" /> : inisial}
+                <span className="absolute inset-x-0 bottom-0 bg-black/40 py-0.5 text-[7px] font-semibold uppercase tracking-wide">Ubah</span>
+              </button>
+              <input ref={photoInputRef} type="file" accept="image/png,image/jpeg,image/webp" className="hidden" onChange={handlePhotoChange} />
               <div className="min-w-0">
                 <h2 className="truncate text-[20px] font-extrabold leading-tight">{jamaah.nama}</h2>
                 <p className="mt-1 text-[11px] font-medium tracking-[0.12em] text-white/65">{jamaah.nomorJamaah}</p>
@@ -69,6 +122,7 @@ export default function Profil() {
           <div className="mt-6 border-t border-white/20 pt-3">
             <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-white/55">Travel Anda</p>
             <p className="mt-1 text-[14px] font-semibold text-white">{tenant?.nama_travel ?? jamaah.travel}</p>
+            {photoError && <p className="mt-2 text-[11px] leading-relaxed text-white/75">{photoError}</p>}
           </div>
         </section>
 
@@ -113,6 +167,21 @@ export default function Profil() {
               <IconChevron className="mt-1 h-4 w-4 flex-none text-ash transition-transform group-hover:translate-x-0.5" />
             </Link>
           ))}
+        </div>
+      </section>
+
+      <section className="mt-7 border-y border-hairline py-5">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">Penilaian Aplikasi</p>
+        <h2 className="mt-1 text-[18px] font-bold text-ink">Bagaimana pengalaman Anda?</h2>
+        <div className="mt-4 flex gap-1">
+          {[1, 2, 3, 4, 5].map((nilai) => (
+            <button key={nilai} type="button" onClick={() => setRating(nilai)} className="h-10 w-10 text-[23px] leading-none" style={{ color: nilai <= rating ? 'var(--color-primary)' : '#d1d5db' }}>{nilai <= rating ? '★' : '☆'}</button>
+          ))}
+        </div>
+        <textarea value={komentar} onChange={(event) => setKomentar(event.target.value)} maxLength={500} placeholder="Tulis masukan bila ada (opsional)" className="mt-3 min-h-[78px] w-full border border-hairline bg-transparent p-3 text-[13px] text-ink outline-none focus:border-primary/40" />
+        <div className="mt-3 flex items-center justify-between gap-3">
+          <p className="text-[11px] text-mute">{feedbackState}</p>
+          <button type="button" disabled={!rating} onClick={() => void kirimFeedback()} className="min-h-[40px] px-4 text-[12px] font-semibold text-white disabled:opacity-40" style={{ background: 'var(--color-primary)' }}>Kirim penilaian</button>
         </div>
       </section>
 

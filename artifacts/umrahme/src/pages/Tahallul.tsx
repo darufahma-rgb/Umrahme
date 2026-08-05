@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { doaById } from '../data/doa';
 import { IconBack, IconChevron, IconScissors } from '../components/icons';
+import { useAuth } from '../context/AuthContext';
+import { setJamaahData } from '../lib/supabase';
 
 const langkah = [
   {
@@ -33,6 +35,7 @@ const langkah = [
 
 export default function Tahallul() {
   const navigate = useNavigate();
+  const { tenant, jamaah } = useAuth();
   const [bukaTerjemahan, setBukaTerjemahan] = useState(false);
   const doa = doaById('tahallul-doa');
 
@@ -148,6 +151,10 @@ export default function Tahallul() {
 
           <Link
             to="/profil/sertifikat"
+            onClick={() => {
+              localStorage.setItem('umrahme.tahallul.selesai', 'true');
+              if (tenant?.id && jamaah?.nomorJamaah) setJamaahData(tenant.id, jamaah.nomorJamaah, 'ibadah.tahallul', true).catch(() => {});
+            }}
             className="mt-6 flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-on-primary active:scale-[0.99] transition"
           >
             Lihat Sertifikat <IconChevron className="h-5 w-5" />

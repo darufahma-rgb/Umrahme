@@ -101,6 +101,38 @@ export type AgendaItemRow = {
   created_at: string;
 };
 
+export type TravelContractRow = {
+  id: string;
+  tenant_id: string;
+  contract_number: string;
+  package_name: string;
+  status: 'draft' | 'active' | 'expired' | 'terminated';
+  starts_at: string | null;
+  ends_at: string | null;
+  annual_fee: number;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export async function fetchTravelContracts(): Promise<TravelContractRow[]> {
+  const { data, error } = await supabase.from('travel_contracts').select('*').order('ends_at', { ascending: true, nullsFirst: false });
+  if (error) throw new Error(error.message);
+  return data as TravelContractRow[];
+}
+
+export async function fetchTravelContract(tenantId: string): Promise<TravelContractRow | null> {
+  const { data, error } = await supabase.from('travel_contracts').select('*').eq('tenant_id', tenantId).maybeSingle();
+  if (error) throw new Error(error.message);
+  return data as TravelContractRow | null;
+}
+
+export async function upsertTravelContract(payload: Omit<TravelContractRow, 'id' | 'created_at' | 'updated_at'>): Promise<TravelContractRow> {
+  const { data, error } = await supabase.from('travel_contracts').upsert(payload, { onConflict: 'tenant_id' }).select().single();
+  if (error) throw new Error(error.message);
+  return data as TravelContractRow;
+}
+
 export type TravelAnnouncementRow = {
   id: string;
   tenant_id: string;
@@ -370,7 +402,15 @@ export async function fetchAgenda(keberangkatanId: string): Promise<AgendaItemRo
     .order('jam_mulai', { ascending: true })
     .order('urutan', { ascending: true });
   if (error) throw new Error(error.message);
-  return data as AgendaItemRow[];
+  // Agenda dapat pernah diimpor ulang oleh travel. Satu aktivitas dengan
+  // waktu dan detail yang sama hanya perlu ditampilkan sekali ke jamaah.
+  const seen = new Set<string>();
+  return (data as AgendaItemRow[]).filter((item) => {
+    const key = [item.tanggal, item.jam_mulai ?? '', item.judul, item.lokasi ?? '', item.deskripsi ?? ''].join('|');
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 export async function createAgenda(tenantId: string, keberangkatanId: string, payload: object): Promise<AgendaItemRow> {
@@ -740,6 +780,18 @@ export async function setJamaahData(
     p_token: token,
     p_key: key,
     p_value: value,
+  });
+  if (error) throw new Error(error.message);
+}
+
+export async function submitJamaahFeedback(
+  tenantId: string, nomorJamaah: string, rating: number, komentar: string,
+): Promise<void> {
+  const token = getJamaahToken();
+  if (!token) throw new Error('Sesi tidak valid. Silakan login ulang.');
+  const { error } = await supabase.rpc('jamaah_feedback_submit', {
+    p_tenant_id: tenantId, p_nomor_jamaah: nomorJamaah, p_token: token,
+    p_rating: rating, p_komentar: komentar || null,
   });
   if (error) throw new Error(error.message);
 }

@@ -1,10 +1,10 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toPng } from 'html-to-image';
 import { useAuth } from '../context/AuthContext';
 import PageHeader from '../components/PageHeader';
 import EmptyState from '../components/EmptyState';
 import { IconSertifikat, IconDownload, IconShare } from '../components/icons';
-import { DEFAULT_SERTIFIKAT_LAYOUT, type SertifikatField } from '../lib/supabase';
+import { DEFAULT_SERTIFIKAT_LAYOUT, getJamaahData, type SertifikatField } from '../lib/supabase';
 
 function nomorSertifikat(nomorJamaah: string): string {
   const tahun = new Date().getFullYear();
@@ -31,9 +31,23 @@ export default function Sertifikat() {
   const { jamaah, tenant } = useAuth();
   const certRef = useRef<HTMLDivElement>(null);
   const [busy, setBusy] = useState(false);
+  const [progresCloud, setProgresCloud] = useState({ tawaf: 0, sai: 0, tahallul: false });
+  useEffect(() => {
+    if (!tenant?.id || !jamaah?.nomorJamaah) return;
+    Promise.all([
+      getJamaahData<number>(tenant.id, jamaah.nomorJamaah, 'counter.tawaf'),
+      getJamaahData<number>(tenant.id, jamaah.nomorJamaah, 'counter.sai'),
+      getJamaahData<boolean>(tenant.id, jamaah.nomorJamaah, 'ibadah.tahallul'),
+    ]).then(([tawaf, sai, tahallul]) => setProgresCloud({ tawaf: tawaf ?? 0, sai: sai ?? 0, tahallul: tahallul === true })).catch(() => {});
+  }, [tenant?.id, jamaah?.nomorJamaah]);
+
   if (!jamaah) return null;
 
-  const selesai = jamaah.fase === 'selesai';
+  const rangkaianUmrahSelesai =
+    (Number(localStorage.getItem('umrahme.tawaf')) >= 7 || progresCloud.tawaf >= 7) &&
+    (Number(localStorage.getItem('umrahme.sai')) >= 7 || progresCloud.sai >= 7) &&
+    (localStorage.getItem('umrahme.tahallul.selesai') === 'true' || progresCloud.tahallul);
+  const selesai = rangkaianUmrahSelesai;
 
   if (!selesai) {
     return (
@@ -42,7 +56,19 @@ export default function Sertifikat() {
         <EmptyState
           icon={<IconSertifikat className="h-7 w-7" />}
           title="Sertifikat belum tersedia"
-          desc="Sertifikat akan terbit otomatis setelah seluruh tanggal agenda itinerary batch telah berlalu."
+          desc="Sertifikat akan terbit setelah Tawaf, Sa'i, dan Tahallul Anda telah diselesaikan."
+          action={
+            <button
+              type="button"
+              onClick={() => {
+                localStorage.setItem('umrahme.tahallul.selesai', 'true');
+                window.location.reload();
+              }}
+              className="min-h-[44px] rounded-full bg-primary px-6 font-semibold text-on-primary active:scale-[0.99]"
+            >
+              Saya sudah Tahallul
+            </button>
+          }
         />
       </div>
     );
