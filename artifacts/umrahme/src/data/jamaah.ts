@@ -67,6 +67,7 @@ async function bangunHasil(
   );
 
   const jamaah: Jamaah = {
+    accountId: akun.id ?? undefined,
     nama: akun.nama,
     nomorJamaah: akun.nomor_jamaah,
     travel: tenant.nama_travel,

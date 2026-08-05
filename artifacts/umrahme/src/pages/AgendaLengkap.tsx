@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import { useAuth } from '../context/AuthContext';
-import { fetchAgenda, type AgendaItemRow } from '../lib/supabase';
+import { fetchAgendaForJamaah, type AgendaItemRow } from '../lib/supabase';
 import { insertAgendaDummy } from '../data/agendaDummy';
 
 function formatTanggalHeader(iso: string) {
@@ -62,7 +62,7 @@ function isOngoing(dayItems: AgendaItemRow[], idx: number, tanggal: string, jam_
 }
 
 export default function AgendaLengkap() {
-  const { keberangkatan, tenant } = useAuth();
+  const { keberangkatan, tenant, jamaah } = useAuth();
   const [items, setItems] = useState<AgendaItemRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -76,10 +76,15 @@ export default function AgendaLengkap() {
   useEffect(() => {
     if (!keberangkatan?.id) { setLoading(false); return; }
     setLoading(true);
-    fetchAgenda(keberangkatan.id)
+    if (!tenant?.id || !jamaah?.nomorJamaah) { setLoading(false); return; }
+    fetchAgendaForJamaah(tenant.id, keberangkatan.id, {
+      accountId: jamaah.accountId,
+      nomorJamaah: jamaah.nomorJamaah,
+      nama: jamaah.nama,
+    })
       .then(data => { setItems(data); setLoading(false); })
       .catch(() => { setError('Gagal memuat agenda.'); setLoading(false); });
-  }, [keberangkatan?.id, refreshKey]);
+  }, [keberangkatan?.id, jamaah?.nomorJamaah, refreshKey, tenant?.id]);
 
   useEffect(() => {
     if (!todayRef.current) return;

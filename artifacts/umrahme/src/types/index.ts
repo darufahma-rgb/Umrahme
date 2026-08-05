@@ -10,6 +10,7 @@ export type Fase = 'persiapan' | 'tanah-suci' | 'selesai';
 
 /** Data jamaah yang disimpan setelah login via kode aktivasi. */
 export interface Jamaah {
+  accountId?: string;
   nama: string;
   nomorJamaah: string; // contoh: "UMR-2026-0142"
   travel: string; // nama travel (white-label)

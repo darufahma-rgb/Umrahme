@@ -115,6 +115,59 @@ export type TravelContractRow = {
   updated_at: string;
 };
 
+export type ItineraryAddonRow = { id: string; tenant_id: string; keberangkatan_id: string; nama: string; deskripsi: string | null; created_at: string };
+export type ItineraryAddonItemRow = {
+  id: string;
+  addon_id: string;
+  tanggal: string;
+  jam_mulai: string | null;
+  judul: string;
+  deskripsi: string | null;
+  lokasi: string | null;
+  urutan: number;
+  created_at: string;
+};
+export async function fetchItineraryAddons(keberangkatanId: string): Promise<ItineraryAddonRow[]> {
+  const { data, error } = await supabase.from('itinerary_addons').select('*').eq('keberangkatan_id', keberangkatanId).order('created_at');
+  if (error) throw new Error(error.message); return data as ItineraryAddonRow[];
+}
+export async function createItineraryAddon(tenantId: string, keberangkatanId: string, nama: string, deskripsi: string): Promise<ItineraryAddonRow> {
+  const { data, error } = await supabase.from('itinerary_addons').insert({ tenant_id: tenantId, keberangkatan_id: keberangkatanId, nama, deskripsi: deskripsi || null }).select().single();
+  if (error) throw new Error(error.message); return data as ItineraryAddonRow;
+}
+
+export async function fetchItineraryAddonMembers(addonId: string): Promise<string[]> {
+  const { data, error } = await supabase.from('itinerary_addon_jamaah').select('jamaah_id').eq('addon_id', addonId);
+  if (error) throw new Error(error.message);
+  return (data ?? []).map((row) => row.jamaah_id as string);
+}
+
+export async function replaceItineraryAddonMembers(addonId: string, jamaahIds: string[]): Promise<void> {
+  const { error: deleteError } = await supabase.from('itinerary_addon_jamaah').delete().eq('addon_id', addonId);
+  if (deleteError) throw new Error(deleteError.message);
+  if (jamaahIds.length === 0) return;
+  const { error } = await supabase.from('itinerary_addon_jamaah').insert(jamaahIds.map((jamaah_id) => ({ addon_id: addonId, jamaah_id })));
+  if (error) throw new Error(error.message);
+}
+
+export async function fetchItineraryAddonItems(addonId: string): Promise<ItineraryAddonItemRow[]> {
+  const { data, error } = await supabase
+    .from('itinerary_addon_items')
+    .select('*')
+    .eq('addon_id', addonId)
+    .order('tanggal')
+    .order('jam_mulai')
+    .order('urutan');
+  if (error) throw new Error(error.message);
+  return (data ?? []) as ItineraryAddonItemRow[];
+}
+
+export async function createItineraryAddonItem(addonId: string, payload: Omit<ItineraryAddonItemRow, 'id' | 'addon_id' | 'created_at'>): Promise<ItineraryAddonItemRow> {
+  const { data, error } = await supabase.from('itinerary_addon_items').insert({ addon_id: addonId, ...payload }).select().single();
+  if (error) throw new Error(error.message);
+  return data as ItineraryAddonItemRow;
+}
+
 export async function fetchTravelContracts(): Promise<TravelContractRow[]> {
   const { data, error } = await supabase.from('travel_contracts').select('*').order('ends_at', { ascending: true, nullsFirst: false });
   if (error) throw new Error(error.message);
@@ -411,6 +464,79 @@ export async function fetchAgenda(keberangkatanId: string): Promise<AgendaItemRo
     seen.add(key);
     return true;
   });
+}
+
+export async function fetchAgendaForJamaah(
+  tenantId: string,
+  keberangkatanId: string,
+  identity: { accountId?: string; nomorJamaah: string; nama: string },
+): Promise<AgendaItemRow[]> {
+  // AlUla adalah itinerary addon, bukan agenda umum. Filter ini melindungi
+  // jamaah reguler dari data agenda lama yang belum sempat dibersihkan.
+  const isAlUlaAgenda = (item: Pick<AgendaItemRow, 'judul' | 'deskripsi' | 'lokasi'>) =>
+    `${item.judul} ${item.deskripsi ?? ''} ${item.lokasi ?? ''}`.toLowerCase().replace(/[^a-z0-9]+/g, '').includes('alula');
+  const normalizeName = (name: string) => name.toUpperCase().replace(/[^A-Z0-9]+/g, '');
+  const alUlaParticipantNames = new Set([
+    'SHEILLASYLVIA', 'ROMLIUDINSUHENDI', 'EDIHUDIN', 'LILISUDINMISNA',
+    'LENIHERLINA', 'NANANGSUHERMAN', 'WINAKARLINA', 'NAUFALFADHILMUHAMAD',
+    'CORINNAFITRIANASITIROHIDA', 'MRHESTURAMADHAN', 'MRHEZAPAHLEVI',
+    'ERIKASHAQUEENAMECCA',
+  ]);
+  const isKnownAlUlaParticipant = alUlaParticipantNames.has(normalizeName(identity.nama));
+  const baseAgenda = (await fetchAgenda(keberangkatanId)).filter((item) => !isAlUlaAgenda(item));
+  let accountQuery = supabase
+    .from('jamaah_accounts')
+    .select('id')
+    .eq('tenant_id', tenantId)
+    .eq('keberangkatan_id', keberangkatanId);
+  if (identity.accountId) accountQuery = accountQuery.eq('id', identity.accountId);
+  else accountQuery = accountQuery.eq('nama', identity.nama);
+  const { data: jamaah, error: jamaahError } = await accountQuery.maybeSingle();
+  if (jamaahError || !jamaah) return isKnownAlUlaParticipant ? appendAlUlaFallback(baseAgenda, tenantId, keberangkatanId) : baseAgenda;
+
+  const { data: memberships, error: membershipError } = await supabase
+    .from('itinerary_addon_jamaah')
+    .select('addon_id')
+    .eq('jamaah_id', jamaah.id);
+  const hasAddonMembership = !membershipError && Boolean(memberships?.length);
+  if (!hasAddonMembership && !isKnownAlUlaParticipant) return baseAgenda;
+  if (!hasAddonMembership) return appendAlUlaFallback(baseAgenda, tenantId, keberangkatanId);
+
+  const addonIds = memberships.map((row) => row.addon_id as string);
+  const { data: addonItems, error: addonError } = await supabase
+    .from('itinerary_addon_items')
+    .select('*')
+    .in('addon_id', addonIds)
+    .order('tanggal')
+    .order('jam_mulai')
+    .order('urutan');
+  if (addonError || !addonItems?.length) return appendAlUlaFallback(baseAgenda, tenantId, keberangkatanId);
+
+  // Peserta AlUla tidak mengikuti agenda istirahat reguler pada jam yang sama.
+  const agendaForAddonMember = baseAgenda.filter((item) => !(item.tanggal === '2026-08-22' && item.jam_mulai?.slice(0, 5) === '07:30' && item.judul === 'Istirahat di Hotel Madinah'));
+  const merged = [...agendaForAddonMember, ...(addonItems as ItineraryAddonItemRow[]).map((item) => ({
+    id: `addon-${item.id}`,
+    tenant_id: tenantId,
+    keberangkatan_id: keberangkatanId,
+    tanggal: item.tanggal,
+    jam_mulai: item.jam_mulai,
+    judul: item.judul,
+    deskripsi: item.deskripsi,
+    lokasi: item.lokasi,
+    urutan: item.urutan,
+    created_at: item.created_at,
+  }))];
+  return merged.sort((a, b) => [a.tanggal, a.jam_mulai ?? '', a.urutan].join('|').localeCompare([b.tanggal, b.jam_mulai ?? '', b.urutan].join('|')));
+}
+
+function appendAlUlaFallback(baseAgenda: AgendaItemRow[], tenantId: string, keberangkatanId: string): AgendaItemRow[] {
+  const agendaForAddonMember = baseAgenda.filter((item) => !(item.tanggal === '2026-08-22' && item.jam_mulai?.slice(0, 5) === '07:30' && item.judul === 'Istirahat di Hotel Madinah'));
+  const items: AgendaItemRow[] = [
+    { id: 'fallback-alula-city-tour', tenant_id: tenantId, keberangkatan_id: keberangkatanId, tanggal: '2026-08-22', jam_mulai: '07:30', judul: 'City Tour Al-Ula', deskripsi: 'Perjalanan menuju Al-Ula.', lokasi: 'Madinah - Al Ula', urutan: 1, created_at: '' },
+    { id: 'fallback-alula-return', tenant_id: tenantId, keberangkatan_id: keberangkatanId, tanggal: '2026-08-22', jam_mulai: '15:00', judul: 'Kembali Ke Madinah dari Al-Ula', deskripsi: 'Perjalanan pulang ke Madinah.', lokasi: 'Al Ula - Hotel Madinah', urutan: 2, created_at: '' },
+    { id: 'fallback-alula-kajian', tenant_id: tenantId, keberangkatan_id: keberangkatanId, tanggal: '2026-08-22', jam_mulai: '15:30', judul: 'Sholat Ashar, Maghrib, Isya & Kajian Bahasa Indonesia', deskripsi: 'Sholat berjamaah di Masjid Nabawi, kajian Bahasa Indonesia, makan malam, dan istirahat.', lokasi: 'Masjid Nabawi Madinah', urutan: 3, created_at: '' },
+  ];
+  return [...agendaForAddonMember, ...items].sort((a, b) => [a.tanggal, a.jam_mulai ?? '', a.urutan].join('|').localeCompare([b.tanggal, b.jam_mulai ?? '', b.urutan].join('|')));
 }
 
 export async function createAgenda(tenantId: string, keberangkatanId: string, payload: object): Promise<AgendaItemRow> {

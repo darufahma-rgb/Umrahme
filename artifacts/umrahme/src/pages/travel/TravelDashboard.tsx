@@ -8,10 +8,11 @@ import {
   fetchKeberangkatan, createKeberangkatan, updateKeberangkatan, deleteKeberangkatan,
   fetchJamaah, createJamaahWithQuota, updateJamaah, deleteJamaah, bulkInsertJamaah, bulkCreateJamaahWithQuota, fetchTenantQuotaBalance,
   fetchAgenda, createAgenda, deleteAgenda, bulkInsertAgenda,
+  fetchItineraryAddons, createItineraryAddon, fetchItineraryAddonMembers, replaceItineraryAddonMembers, fetchItineraryAddonItems, createItineraryAddonItem,
   fetchAnnouncements, createAnnouncement, deleteAnnouncement,
   fetchHelpRequests, updateHelpRequestStatus,
   fetchEquipmentCatalog, fetchEquipmentAssignments, createEquipmentCatalogItem, updateEquipmentAssignment,
-  type KeberangkatanRow, type JamaahAccountRow, type AgendaItemRow, type TravelAnnouncementRow, type HelpRequestRow, type HelpRequestStatus, type EquipmentCatalogRow, type EquipmentAssignmentRow, type EquipmentAssignmentStatus, type TenantQuotaBalance,
+  type KeberangkatanRow, type JamaahAccountRow, type AgendaItemRow, type TravelAnnouncementRow, type HelpRequestRow, type HelpRequestStatus, type EquipmentCatalogRow, type EquipmentAssignmentRow, type EquipmentAssignmentStatus, type TenantQuotaBalance, type ItineraryAddonRow, type ItineraryAddonItemRow,
   supabase,
 } from '../../lib/supabase';
 
@@ -98,13 +99,14 @@ const FASE_OPTIONS: { value: JamaahAccountRow['fase']; label: string }[] = [
   { value: 'selesai', label: 'Selesai' },
 ];
 
-type TabId = 'overview' | 'keberangkatan' | 'jamaah' | 'agenda' | 'pengumuman' | 'care' | 'perlengkapan';
+type TabId = 'overview' | 'keberangkatan' | 'jamaah' | 'agenda' | 'addon' | 'pengumuman' | 'care' | 'perlengkapan';
 
 const TABS: { id: TabId; label: string }[] = [
   { id: 'overview', label: 'Command Center' },
   { id: 'keberangkatan', label: 'Keberangkatan' },
   { id: 'jamaah', label: 'Jamaah' },
   { id: 'agenda', label: 'Agenda' },
+  { id: 'addon', label: 'Itinerary Addon' },
   { id: 'pengumuman', label: 'Pengumuman' },
   { id: 'care', label: 'Care Center' },
   { id: 'perlengkapan', label: 'Perlengkapan' },
@@ -236,6 +238,21 @@ export default function TravelDashboard() {
   const [agSubmitting, setAgSubmitting] = useState(false);
   const [agError, setAgError] = useState('');
 
+  /* Itinerary addon: agenda khusus sebagian jamaah, tanpa memecah batch. */
+  const [itineraryAddons, setItineraryAddons] = useState<ItineraryAddonRow[]>([]);
+  const [selectedAddonId, setSelectedAddonId] = useState('');
+  const [addonMembers, setAddonMembers] = useState<string[]>([]);
+  const [addonItems, setAddonItems] = useState<ItineraryAddonItemRow[]>([]);
+  const [addonName, setAddonName] = useState('');
+  const [addonDescription, setAddonDescription] = useState('');
+  const [addonTanggal, setAddonTanggal] = useState('');
+  const [addonJam, setAddonJam] = useState('');
+  const [addonJudul, setAddonJudul] = useState('');
+  const [addonDeskripsi, setAddonDeskripsi] = useState('');
+  const [addonLokasi, setAddonLokasi] = useState('');
+  const [addonSaving, setAddonSaving] = useState(false);
+  const [addonError, setAddonError] = useState('');
+
   /* ── Agenda inline edit ──────────────────────────────────────────── */
   const [agEditingId, setAgEditingId] = useState<string | null>(null);
   const [agEditFields, setAgEditFields] = useState({ tanggal: '', jam_mulai: '', judul: '', deskripsi: '', lokasi: '', urutan: 0 });
@@ -291,6 +308,18 @@ export default function TravelDashboard() {
     fetchAgenda(selectedKeberangkatan).then(setAgendaItems).catch(() => {}).finally(() => setAgendaLoading(false));
   }, [tenant?.id, selectedKeberangkatan]);
 
+  const loadItineraryAddons = useCallback(async () => {
+    if (!selectedKeberangkatan) return;
+    try {
+      const list = await fetchItineraryAddons(selectedKeberangkatan);
+      setItineraryAddons(list);
+      setSelectedAddonId((current) => list.some((item) => item.id === current) ? current : (list[0]?.id ?? ''));
+    } catch {
+      setItineraryAddons([]);
+      setSelectedAddonId('');
+    }
+  }, [selectedKeberangkatan]);
+
   const loadAnnouncements = useCallback(async () => {
     if (!tenant?.id || !selectedKeberangkatan) return;
     setAnnLoading(true);
@@ -330,11 +359,19 @@ export default function TravelDashboard() {
     if (selectedKeberangkatan) {
       loadJamaah();
       loadAgenda();
+      loadItineraryAddons();
       loadAnnouncements();
       loadHelpRequests();
       loadEquipment();
     }
-  }, [selectedKeberangkatan, loadJamaah, loadAgenda, loadAnnouncements, loadHelpRequests, loadEquipment]);
+  }, [selectedKeberangkatan, loadJamaah, loadAgenda, loadItineraryAddons, loadAnnouncements, loadHelpRequests, loadEquipment]);
+
+  useEffect(() => {
+    if (!selectedAddonId) { setAddonMembers([]); setAddonItems([]); return; }
+    void Promise.all([fetchItineraryAddonMembers(selectedAddonId), fetchItineraryAddonItems(selectedAddonId)])
+      .then(([members, items]) => { setAddonMembers(members); setAddonItems(items); })
+      .catch(() => { setAddonMembers([]); setAddonItems([]); });
+  }, [selectedAddonId]);
 
   // Clear agenda inline-edit state when the selected batch changes
   useEffect(() => {
@@ -688,6 +725,50 @@ export default function TravelDashboard() {
     if (!tenant?.id || !window.confirm(`Hapus agenda "${judul}"?`)) return;
     await deleteAgenda(tenant.id, agendaId);
     await loadAgenda();
+  }
+
+  async function handleCreateAddon(e: FormEvent) {
+    e.preventDefault();
+    if (!tenant?.id || !selectedKeberangkatan || !addonName.trim()) return;
+    setAddonSaving(true); setAddonError('');
+    try {
+      const addon = await createItineraryAddon(tenant.id, selectedKeberangkatan, addonName.trim(), addonDescription.trim());
+      setAddonName(''); setAddonDescription('');
+      await loadItineraryAddons();
+      setSelectedAddonId(addon.id);
+    } catch (err: unknown) {
+      setAddonError(err instanceof Error ? err.message : 'Gagal membuat itinerary addon.');
+    } finally { setAddonSaving(false); }
+  }
+
+  async function handleSaveAddonMembers() {
+    if (!selectedAddonId) return;
+    setAddonSaving(true); setAddonError('');
+    try {
+      await replaceItineraryAddonMembers(selectedAddonId, addonMembers);
+    } catch (err: unknown) {
+      setAddonError(err instanceof Error ? err.message : 'Gagal menyimpan peserta addon.');
+    } finally { setAddonSaving(false); }
+  }
+
+  async function handleAddAddonItem(e: FormEvent) {
+    e.preventDefault();
+    if (!selectedAddonId || !addonTanggal || !addonJudul.trim()) return;
+    setAddonSaving(true); setAddonError('');
+    try {
+      const item = await createItineraryAddonItem(selectedAddonId, {
+        tanggal: addonTanggal,
+        jam_mulai: addonJam || null,
+        judul: addonJudul.trim(),
+        deskripsi: addonDeskripsi.trim() || null,
+        lokasi: addonLokasi.trim() || null,
+        urutan: addonItems.length + 1,
+      });
+      setAddonItems((current) => [...current, item]);
+      setAddonTanggal(''); setAddonJam(''); setAddonJudul(''); setAddonDeskripsi(''); setAddonLokasi('');
+    } catch (err: unknown) {
+      setAddonError(err instanceof Error ? err.message : 'Gagal menambah agenda addon.');
+    } finally { setAddonSaving(false); }
   }
 
   function handleStartAgEdit(item: AgendaItemRow) {
@@ -1881,6 +1962,45 @@ export default function TravelDashboard() {
       {/* ══════════════════════════════════════════════
           TAB: PENGUMUMAN
       ══════════════════════════════════════════════ */}
+      {activeTab === 'addon' && (
+        <section className="space-y-5">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.14em]" style={{ color: PRIMARY }}>Itinerary Addon</p>
+              <h2 className="mt-1 text-[22px] font-bold" style={{ color: '#111827' }}>Agenda khusus tanpa memecah batch</h2>
+              <p className="mt-1 text-[13px]" style={{ color: '#6b7280' }}>Pilih jamaah peserta, lalu agenda addon hanya tampil di aplikasi mereka.</p>
+            </div>
+            {selectedBatch && <span className="rounded-full px-3 py-1.5 text-[11px] font-semibold" style={{ background: PRIMARY_BG, color: PRIMARY_DEEP }}>{selectedBatch.nama_batch}</span>}
+          </div>
+          {!selectedKeberangkatan ? <div className="rounded-2xl p-5 text-[13px]" style={cardStyle}>Pilih batch keberangkatan terlebih dahulu.</div> : <>
+            <div className="grid gap-5 xl:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
+              <form onSubmit={handleCreateAddon} className="rounded-2xl p-5" style={cardStyle}>
+                <FieldLabel>Buat itinerary addon</FieldLabel>
+                <StyledInput value={addonName} onChange={e => setAddonName(e.target.value)} placeholder="Contoh: Trip AlUla" required />
+                <StyledTextarea className="mt-3" rows={3} value={addonDescription} onChange={e => setAddonDescription(e.target.value)} placeholder="Catatan untuk tim travel..." />
+                <button type="submit" disabled={addonSaving} className="mt-3 rounded-xl px-4 py-2.5 text-[12px] font-semibold text-white disabled:opacity-60" style={{ background: PRIMARY }}>Buat addon</button>
+              </form>
+              <div className="rounded-2xl p-5" style={cardStyle}>
+                <FieldLabel>Addon dalam batch ini</FieldLabel>
+                {itineraryAddons.length === 0 ? <p className="text-[13px]" style={{ color: '#9ca3af' }}>Belum ada itinerary addon.</p> : <div className="flex flex-wrap gap-2">{itineraryAddons.map(addon => <button key={addon.id} type="button" onClick={() => setSelectedAddonId(addon.id)} className="rounded-xl px-3 py-2 text-left text-[12px]" style={{ background: addon.id === selectedAddonId ? PRIMARY_BG : '#fafaf9', border: `1px solid ${addon.id === selectedAddonId ? PRIMARY_BORDER : 'rgba(0,0,0,0.08)'}`, color: addon.id === selectedAddonId ? PRIMARY_DEEP : '#374151' }}><span className="block font-semibold">{addon.nama}</span>{addon.deskripsi && <span className="mt-0.5 block text-[10px] opacity-75">{addon.deskripsi}</span>}</button>)}</div>}
+              </div>
+            </div>
+            {selectedAddonId && <div className="grid gap-5 xl:grid-cols-2">
+              <div className="rounded-2xl p-5" style={cardStyle}>
+                <div className="flex items-center justify-between gap-3"><div><FieldLabel>Peserta addon</FieldLabel><p className="text-[12px]" style={{ color: '#6b7280' }}>{addonMembers.length} jamaah akan menerima agenda ini.</p></div><button type="button" onClick={() => void handleSaveAddonMembers()} disabled={addonSaving} className="rounded-xl px-3 py-2 text-[11px] font-semibold text-white disabled:opacity-60" style={{ background: PRIMARY }}>Simpan peserta</button></div>
+                <div className="mt-4 max-h-[360px] space-y-1 overflow-y-auto pr-1">{jamaahList.map(jamaah => { const checked = addonMembers.includes(jamaah.id); return <label key={jamaah.id} className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 hover:bg-black/[0.02]"><input type="checkbox" checked={checked} onChange={() => setAddonMembers(current => checked ? current.filter(id => id !== jamaah.id) : [...current, jamaah.id])} className="h-4 w-4 accent-sky-500" /><span className="min-w-0"><span className="block text-[12px] font-semibold" style={{ color: '#374151' }}>{jamaah.nama}</span><span className="block text-[10px]" style={{ color: '#9ca3af' }}>{jamaah.nomor_jamaah}</span></span></label>; })}</div>
+              </div>
+              <div className="rounded-2xl p-5" style={cardStyle}>
+                <FieldLabel>Tambah agenda addon</FieldLabel>
+                <form onSubmit={handleAddAddonItem} className="space-y-3"><div className="grid grid-cols-2 gap-3"><StyledInput type="date" value={addonTanggal} onChange={e => setAddonTanggal(e.target.value)} required /><StyledInput type="time" value={addonJam} onChange={e => setAddonJam(e.target.value)} /></div><StyledInput value={addonJudul} onChange={e => setAddonJudul(e.target.value)} placeholder="Judul kegiatan" required /><StyledInput value={addonLokasi} onChange={e => setAddonLokasi(e.target.value)} placeholder="Lokasi" /><StyledTextarea rows={2} value={addonDeskripsi} onChange={e => setAddonDeskripsi(e.target.value)} placeholder="Deskripsi singkat" /><button type="submit" disabled={addonSaving} className="rounded-xl px-4 py-2.5 text-[12px] font-semibold text-white disabled:opacity-60" style={{ background: PRIMARY }}>Tambah agenda</button></form>
+                <div className="mt-5 space-y-2">{addonItems.length === 0 ? <p className="text-[12px]" style={{ color: '#9ca3af' }}>Belum ada agenda khusus.</p> : addonItems.map(item => <div key={item.id} className="rounded-xl px-3 py-2.5" style={{ background: '#fafaf9' }}><p className="text-[12px] font-semibold" style={{ color: '#374151' }}>{item.tanggal} {item.jam_mulai?.slice(0, 5)} · {item.judul}</p><p className="mt-0.5 text-[10px]" style={{ color: '#9ca3af' }}>{item.lokasi ?? 'Lokasi belum diisi'}</p></div>)}</div>
+              </div>
+            </div>}
+            {addonError && <p className="rounded-xl px-4 py-3 text-[12px]" style={{ background: 'rgba(220,38,38,0.06)', color: '#dc2626' }}>{addonError}</p>}
+          </>}
+        </section>
+      )}
+
       {activeTab === 'pengumuman' && (
         <div>
           <div className="flex items-center gap-3 mb-5">
