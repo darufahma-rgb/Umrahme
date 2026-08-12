@@ -10,6 +10,7 @@ import {
   manasikModulList,
   type ManasikKartu,
   type ManasikUrutanItem,
+  type ManasikSkenario,
   type ManasikKuisSoal,
   type ManasikModul,
 } from '../data/manasikInteraktif';
@@ -194,17 +195,18 @@ function IlustrasiManasik({ tipe }: { tipe: ManasikKartu['ilustrasiTipe'] }) {
 }
 
 // =============================================================================
-// Bagian Indicator (A → B → C)
+// Bagian Indicator (A → B → Simulasi → C)
 // =============================================================================
-type Tahap = 'A' | 'B' | 'C' | 'ringkasan';
+type Tahap = 'A' | 'B' | 'simulasi' | 'C' | 'ringkasan';
 
 function TahapIndicator({ tahap }: { tahap: Tahap }) {
   const steps: { id: Tahap; label: string; sublabel: string }[] = [
     { id: 'A', label: 'A', sublabel: 'Kenali' },
     { id: 'B', label: 'B', sublabel: 'Urutkan' },
+    { id: 'simulasi', label: 'S', sublabel: 'Simulasi' },
     { id: 'C', label: 'C', sublabel: 'Uji Paham' },
   ];
-  const idx = tahap === 'ringkasan' ? 3 : ['A', 'B', 'C'].indexOf(tahap);
+  const idx = tahap === 'ringkasan' ? 4 : ['A', 'B', 'simulasi', 'C'].indexOf(tahap);
 
   return (
     <div className="flex items-center justify-center gap-0 px-5 py-4">
@@ -214,7 +216,7 @@ function TahapIndicator({ tahap }: { tahap: Tahap }) {
         return (
           <div key={step.id} className="flex items-center">
             {i > 0 && (
-              <div className={`h-px w-8 transition-colors ${done ? 'bg-primary' : 'bg-hairline'}`} />
+              <div className={`h-px w-5 transition-colors sm:w-8 ${done ? 'bg-primary' : 'bg-hairline'}`} />
             )}
             <div className="flex flex-col items-center gap-0.5">
               <div
@@ -272,6 +274,22 @@ function BagianAKenali({ kartuList, onSelesai }: { kartuList: ManasikKartu[]; on
           <p className="mt-2 text-[14px] leading-relaxed text-charcoal">
             {kartu.penjelasan}
           </p>
+          {kartu.poin && kartu.poin.length > 0 && (
+            <ul className="mt-4 space-y-2 border-t border-hairline pt-4">
+              {kartu.poin.map((poin) => (
+                <li key={poin} className="flex items-start gap-2.5 text-[13px] leading-relaxed text-charcoal">
+                  <span className="mt-2 h-1.5 w-1.5 flex-none rounded-full bg-primary" aria-hidden />
+                  <span>{poin}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+          {kartu.peringatan && (
+            <div className="mt-4 border-l-2 border-gold bg-gold/5 px-3 py-3">
+              <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-gold">Perhatikan</p>
+              <p className="mt-1 text-[12px] leading-relaxed text-charcoal">{kartu.peringatan}</p>
+            </div>
+          )}
         </div>
       </div>
 
@@ -413,7 +431,7 @@ function BagianBUrutkan({
             </button>
             <button type="button" onClick={() => { reset(); setTimeout(() => onSelesai(false), 0); }}
               className="flex-1 rounded-full bg-primary px-4 py-2.5 text-center text-[13px] font-semibold text-on-primary active:scale-[0.98]">
-              Lanjut ke Uji Paham →
+              Lanjut ke Simulasi →
             </button>
           </div>
         </div>
@@ -445,9 +463,131 @@ function BagianBUrutkan({
 }
 
 // =============================================================================
+// Simulasi Situasi — keputusan praktis di lapangan
+// =============================================================================
+function BagianSimulasi({
+  skenarioList,
+  onSelesai,
+}: {
+  skenarioList: ManasikSkenario[];
+  onSelesai: (score: number, total: number) => void;
+}) {
+  const [idx, setIdx] = useState(0);
+  const [dipilih, setDipilih] = useState<number | null>(null);
+  const [skor, setSkor] = useState(0);
+  const skenario = skenarioList[idx];
+  const isLast = idx === skenarioList.length - 1;
+
+  const pilihJawaban = (pilihanIdx: number) => {
+    if (dipilih !== null) return;
+    setDipilih(pilihanIdx);
+    if (skenario.pilihan[pilihanIdx].benar) setSkor((nilai) => nilai + 1);
+  };
+
+  const lanjut = () => {
+    if (dipilih === null) return;
+    if (isLast) {
+      onSelesai(skor, skenarioList.length);
+      return;
+    }
+    setIdx((nilai) => nilai + 1);
+    setDipilih(null);
+  };
+
+  return (
+    <div className="px-5">
+      <div className="mb-4 flex items-center justify-between gap-4">
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-primary">Simulasi Situasi</p>
+          <p className="mt-1 text-[12px] text-mute">Kasus {idx + 1} dari {skenarioList.length}</p>
+        </div>
+        <div className="flex gap-1" aria-hidden>
+          {skenarioList.map((item, itemIdx) => (
+            <span
+              key={item.id}
+              className={`h-1.5 rounded-full transition-all ${itemIdx === idx ? 'w-6 bg-primary' : itemIdx < idx ? 'w-3 bg-primary/50' : 'w-3 bg-hairline'}`}
+            />
+          ))}
+        </div>
+      </div>
+
+      <section className="overflow-hidden rounded-md border border-hairline bg-surface-card shadow-drop-card">
+        <div className="border-b border-hairline bg-surface-bone px-5 py-5">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-mute">{skenario.judul}</p>
+          <p className="mt-2 text-[15px] leading-relaxed text-ink">{skenario.situasi}</p>
+        </div>
+        <div className="px-5 py-5">
+          <h2 className="text-[17px] font-bold leading-snug text-ink">{skenario.pertanyaan}</h2>
+          <div className="mt-4 space-y-2">
+            {skenario.pilihan.map((pilihan, pilihanIdx) => {
+              const isSelected = dipilih === pilihanIdx;
+              const hasAnswered = dipilih !== null;
+              const style = hasAnswered
+                ? pilihan.benar
+                  ? 'border-emerald-500/50 bg-emerald-50 text-ink'
+                  : isSelected
+                    ? 'border-red-500/50 bg-red-50 text-ink'
+                    : 'border-hairline bg-canvas text-ash'
+                : 'border-hairline bg-white text-charcoal hover:border-primary/40';
+
+              return (
+                <button
+                  key={pilihan.teks}
+                  type="button"
+                  disabled={hasAnswered}
+                  onClick={() => pilihJawaban(pilihanIdx)}
+                  className={`flex w-full items-start gap-3 rounded-md border px-4 py-3.5 text-left transition-all active:scale-[0.99] ${style}`}
+                >
+                  <span className={`mt-0.5 flex h-6 w-6 flex-none items-center justify-center rounded-full border font-mono text-[11px] font-semibold ${
+                    hasAnswered && pilihan.benar
+                      ? 'border-emerald-500 bg-emerald-500 text-white'
+                      : hasAnswered && isSelected
+                        ? 'border-red-500 bg-red-500 text-white'
+                        : 'border-hairline bg-surface-bone text-mute'
+                  }`}>
+                    {hasAnswered && pilihan.benar ? '✓' : hasAnswered && isSelected ? '×' : String.fromCharCode(65 + pilihanIdx)}
+                  </span>
+                  <span className="text-[13px] leading-relaxed">{pilihan.teks}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {dipilih !== null && (
+        <div className={`mt-3 border-l-2 px-4 py-3 ${
+          skenario.pilihan[dipilih].benar ? 'border-emerald-500 bg-emerald-50' : 'border-red-500 bg-red-50'
+        }`}>
+          <p className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+            skenario.pilihan[dipilih].benar ? 'text-emerald-700' : 'text-red-600'
+          }`}>
+            {skenario.pilihan[dipilih].benar ? 'Tindakan tepat' : 'Belum tepat'}
+          </p>
+          <p className="mt-1 text-[12px] leading-relaxed text-charcoal">
+            {skenario.pilihan[dipilih].penjelasan}
+          </p>
+        </div>
+      )}
+
+      {dipilih !== null && (
+        <button
+          type="button"
+          onClick={lanjut}
+          className="mt-4 w-full rounded-full bg-primary py-3.5 text-center font-semibold text-on-primary active:scale-[0.98]"
+        >
+          {isLast ? 'Lanjut ke Uji Paham →' : 'Skenario Berikutnya →'}
+        </button>
+      )}
+    </div>
+  );
+}
+
+// =============================================================================
 // Bagian C — Uji Paham (MCQ)
 // =============================================================================
 function BagianCKuis({ soalList, onSelesai }: { soalList: ManasikKuisSoal[]; onSelesai: (score: number, total: number) => void }) {
+  const [started, setStarted] = useState(false);
   const [soalIdx, setSoalIdx] = useState(0);
   const [dipilih, setDipilih] = useState<number | null>(null);
   const [feedbackShown, setFeedbackShown] = useState(false);
@@ -466,13 +606,50 @@ function BagianCKuis({ soalList, onSelesai }: { soalList: ManasikKuisSoal[]; onS
 
   const lanjut = () => {
     if (isLast) {
-      onSelesai(dipilih === soal.jawabanBenarIndex ? skor : skor, soalList.length);
+      onSelesai(skor, soalList.length);
     } else {
       setSoalIdx((i) => i + 1);
       setDipilih(null);
       setFeedbackShown(false);
     }
   };
+
+  if (!started) {
+    return (
+      <div className="px-5">
+        <div className="overflow-hidden rounded-md border border-hairline bg-surface-card shadow-drop-card">
+          <div className="border-b border-hairline bg-surface-bone px-5 py-6">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">Uji Pemahaman</p>
+            <h2 className="mt-2 text-2xl font-bold leading-tight text-ink">Siap menguji ingatan?</h2>
+            <p className="mt-2 text-[13px] leading-relaxed text-charcoal">
+              Jawab berdasarkan materi yang baru dipelajari. Setiap jawaban langsung disertai penjelasan.
+            </p>
+          </div>
+          <div className="grid grid-cols-3 divide-x divide-hairline">
+            <div className="px-3 py-4 text-center">
+              <p className="text-lg font-bold text-ink">{soalList.length}</p>
+              <p className="mt-0.5 text-[10px] text-mute">Pertanyaan</p>
+            </div>
+            <div className="px-3 py-4 text-center">
+              <p className="text-lg font-bold text-ink">~3</p>
+              <p className="mt-0.5 text-[10px] text-mute">Menit</p>
+            </div>
+            <div className="px-3 py-4 text-center">
+              <p className="text-lg font-bold text-ink">∞</p>
+              <p className="mt-0.5 text-[10px] text-mute">Bisa diulang</p>
+            </div>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={() => setStarted(true)}
+          className="mt-4 w-full rounded-full bg-primary py-3.5 text-center font-semibold text-on-primary active:scale-[0.98]"
+        >
+          Mulai Kuis
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="px-5" key={soalIdx}>
@@ -555,12 +732,14 @@ function BagianCKuis({ soalList, onSelesai }: { soalList: ManasikKuisSoal[]; onS
 // Ringkasan Modul
 // =============================================================================
 function RingkasanModul({
-  modul, skor, total, onUlangDariAwal, onLanjut, isLastModul,
+  modul, skor, total, simulasiSkor, simulasiTotal, onUlangDariAwal, onLanjut, isLastModul,
 }: {
-  modul: ManasikModul; skor: number; total: number;
+  modul: ManasikModul; skor: number; total: number; simulasiSkor: number; simulasiTotal: number;
   onUlangDariAwal: () => void; onLanjut: () => void; isLastModul: boolean;
 }) {
-  const persen = total > 0 ? Math.round((skor / total) * 100) : 100;
+  const totalJawaban = total + simulasiTotal;
+  const totalBenar = skor + simulasiSkor;
+  const persen = totalJawaban > 0 ? Math.round((totalBenar / totalJawaban) * 100) : 100;
   const level = persen >= 80 ? 'tinggi' : persen >= 60 ? 'cukup' : 'perlu-ulang';
   const pesan =
     level === 'tinggi' ? 'Pemahaman Anda sangat baik!'
@@ -583,12 +762,18 @@ function RingkasanModul({
         </h2>
         <p className="mt-1 text-[13px] text-charcoal">{modul.judul}</p>
 
-        {total > 0 && (
+        {totalJawaban > 0 && (
           <div className="mt-5">
-            <p className="font-display text-4xl font-bold text-ink">
-              {skor}/{total}
-            </p>
-            <p className="mt-0.5 font-mono text-[11px] text-mute">soal dijawab benar</p>
+            <div className="grid grid-cols-2 divide-x divide-hairline border-y border-hairline">
+              <div className="px-3 py-3">
+                <p className="text-2xl font-bold text-ink">{simulasiSkor}/{simulasiTotal}</p>
+                <p className="mt-0.5 text-[10px] uppercase tracking-[0.12em] text-mute">Simulasi</p>
+              </div>
+              <div className="px-3 py-3">
+                <p className="text-2xl font-bold text-ink">{skor}/{total}</p>
+                <p className="mt-0.5 text-[10px] uppercase tracking-[0.12em] text-mute">Uji Paham</p>
+              </div>
+            </div>
             <div className="mx-auto mt-3 h-1.5 max-w-[160px] overflow-hidden rounded-full bg-surface-bone">
               <div
                 className={`h-full rounded-full transition-all duration-700 ${
@@ -636,6 +821,8 @@ export default function ManasikModulDetail() {
   const modul = getModulById(modulId ?? '');
 
   const [tahap, setTahap] = useState<Tahap>('A');
+  const [simulasiSkor, setSimulasiSkor] = useState(0);
+  const [simulasiTotal, setSimulasiTotal] = useState(0);
   const [partCSkor, setPartCSkor] = useState(0);
   const [partCTotal, setPartCTotal] = useState(0);
 
@@ -648,13 +835,21 @@ export default function ManasikModulDetail() {
     if (!modul) return;
     window.scrollTo({ top: 0, behavior: 'smooth' });
     const p = getModulProgress(modul.id);
-    if (p.selesai) {
-      setPartCSkor(p.partCScore);
-      setPartCTotal(p.partCTotal);
+    setSimulasiSkor(p.partSimulasiScore);
+    setSimulasiTotal(p.partSimulasiTotal);
+    setPartCSkor(p.partCScore);
+    setPartCTotal(p.partCTotal);
+    if (p.selesai && p.partSimulasiDone) {
       setTahap('ringkasan');
+    } else if (p.selesai) {
+      setTahap('simulasi');
+    } else if (p.partSimulasiDone) {
+      setTahap('C');
+    } else if (p.partBDone) {
+      setTahap('simulasi');
+    } else if (p.partADone) {
+      setTahap('B');
     } else {
-      setPartCSkor(0);
-      setPartCTotal(0);
       setTahap('A');
     }
   }, [modul?.id]);
@@ -673,7 +868,19 @@ export default function ManasikModulDetail() {
   const handlePartBSelesai = (benar: boolean) => {
     saveModulProgress(modul.id, { partBDone: true, partBBenar: benar });
     if (tenantId && nomor) pushManasikToCloud(tenantId, nomor).catch(() => {});
-    setTahap('C');
+    setTahap('simulasi');
+  };
+  const handleSimulasiSelesai = (score: number, total: number) => {
+    const kuisLamaSudahSelesai = getModulProgress(modul.id).selesai;
+    setSimulasiSkor(score);
+    setSimulasiTotal(total);
+    saveModulProgress(modul.id, {
+      partSimulasiDone: true,
+      partSimulasiScore: score,
+      partSimulasiTotal: total,
+    });
+    if (tenantId && nomor) pushManasikToCloud(tenantId, nomor).catch(() => {});
+    setTahap(kuisLamaSudahSelesai ? 'ringkasan' : 'C');
   };
   const handlePartCSelesai = (score: number, total: number) => {
     setPartCSkor(score);
@@ -684,6 +891,8 @@ export default function ManasikModulDetail() {
   };
   const handleUlangDariAwal = () => {
     resetModulProgress(modul.id);
+    setSimulasiSkor(0);
+    setSimulasiTotal(0);
     setPartCSkor(0);
     setPartCTotal(0);
     setTahap('A');
@@ -694,7 +903,6 @@ export default function ManasikModulDetail() {
   };
 
   const eyebrow = `Manasik · Modul ${modul.urutan}/${manasikModulList.length}`;
-
   return (
     <div className="pb-24">
       <PageHeader title={modul.judul} eyebrow={eyebrow} backTo="/panduan/manasik-interaktif" />
@@ -706,10 +914,14 @@ export default function ManasikModulDetail() {
         {tahap === 'B' && (
           <BagianBUrutkan items={modul.urutanItems} shuffledItems={shuffledUrutanItems} onSelesai={handlePartBSelesai} />
         )}
+        {tahap === 'simulasi' && (
+          <BagianSimulasi skenarioList={modul.skenario} onSelesai={handleSimulasiSelesai} />
+        )}
         {tahap === 'C' && <BagianCKuis soalList={modul.kuisSoal} onSelesai={handlePartCSelesai} />}
         {tahap === 'ringkasan' && (
           <div className="pt-4">
             <RingkasanModul modul={modul} skor={partCSkor} total={partCTotal}
+              simulasiSkor={simulasiSkor} simulasiTotal={simulasiTotal}
               onUlangDariAwal={handleUlangDariAwal} onLanjut={handleLanjut} isLastModul={isLastModul} />
           </div>
         )}
