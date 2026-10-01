@@ -260,22 +260,27 @@ function SmartAccessPanel({ desktop = false }: { desktop?: boolean }) {
         {actions.map((action) => <AccessAction key={action.label} action={action} />)}
       </div>
 
-      <div className="grid gap-2 rounded-2xl bg-white p-3 shadow-drop-card" style={{ border: '1px solid rgba(0,0,0,0.07)' }}>
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex min-w-0 items-center gap-2.5">
-            <span className="flex h-9 w-9 flex-none items-center justify-center rounded-xl bg-surface-bone text-primary">
+      <div className="grid gap-2 rounded-2xl bg-white p-3 shadow-drop-card overflow-hidden" style={{ border: '1px solid rgba(0,0,0,0.07)' }}>
+        <div className="flex items-center justify-between gap-2.5 min-w-0">
+          <div className="flex flex-1 min-w-0 items-center gap-2.5">
+            <span className="flex h-9 w-9 flex-none shrink-0 items-center justify-center rounded-xl bg-surface-bone text-primary">
               <MapPinned className="h-4 w-4" />
             </span>
-            <div className="min-w-0">
-              <p className="truncate text-[12.5px] font-bold text-ink">{info.meetingPoint}</p>
-              <p className="truncate text-[10.5px] text-charcoal">Titik kumpul rombongan</p>
+            <div className="min-w-0 flex-1">
+              <p className="line-clamp-2 text-[12px] sm:text-[12.5px] font-bold leading-tight text-ink" title={info.meetingPoint}>
+                {info.meetingPoint}
+              </p>
+              <p className="mt-0.5 truncate text-[10.5px] text-charcoal">Titik kumpul rombongan</p>
             </div>
           </div>
-          <Link to="/peta" className="flex-none rounded-xl bg-surface-bone px-3 py-2 font-mono text-[9px] font-bold uppercase tracking-wider text-primary">
+          <Link
+            to="/peta"
+            className="flex-none shrink-0 rounded-xl bg-surface-bone px-3 py-2 font-mono text-[9px] font-bold uppercase tracking-wider text-primary active:opacity-70 transition-opacity"
+          >
             Peta
           </Link>
         </div>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-2 min-w-0">
           {[
             { label: 'Hotel Makkah', value: hotelMakkah, city: 'Makkah' },
             { label: 'Hotel Madinah', value: hotelMadinah, city: 'Madinah' },
@@ -285,10 +290,10 @@ function SmartAccessPanel({ desktop = false }: { desktop?: boolean }) {
               href={`https://maps.google.com/?q=${encodeURIComponent(item.value + ' ' + item.city + ' Saudi Arabia')}`}
               target="_blank"
               rel="noreferrer"
-              className="min-w-0 rounded-xl bg-surface-bone px-3 py-2 active:opacity-70"
+              className="min-w-0 overflow-hidden rounded-xl bg-surface-bone px-3 py-2 active:opacity-70 transition-opacity"
             >
               <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-ash">{item.label}</p>
-              <p className="mt-0.5 truncate text-[11px] font-semibold text-ink">{item.value}</p>
+              <p className="mt-0.5 truncate text-[11px] font-semibold text-ink" title={item.value}>{item.value}</p>
             </a>
           ))}
         </div>
