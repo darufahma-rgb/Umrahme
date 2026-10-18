@@ -11,8 +11,10 @@
 -- Petunjuk:
 -- Salin dan jalankan seluruh script ini di Supabase SQL Editor.
 -- Script ini bersifat idempoten (aman dijalankan berulang kali tanpa duplikasi data).
--- Akun dicocokkan berdasarkan nomor_jamaah (DM-NOV-xxx / TL-NOV-001 / MUT-NOV-001),
--- sehingga akun TL & Muthowwif batch 18 Oktober (yang masih berjalan) tidak ikut dipindah.
+-- Akun dicocokkan berdasarkan nama (unik per tenant). Akun TL & Muthowwif hanya
+-- dipindah ke batch ini jika batch mereka sebelumnya sudah selesai; jika masih
+-- berjalan (mis. batch 18 Oktober), akun dilewati -> jalankan ulang script ini
+-- setelah rombongan sebelumnya pulang.
 -- ==============================================================================
 
 DO $$
@@ -67,16 +69,17 @@ BEGIN
   -- 3. Upsert 23 Jamaah (Title Case) + 2 Petugas
 
   -- Jamaah #1: Jonaidi Salim Wahab (Pullman Zamzam - Al-Ansr Golden Tulip)
-  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-001') THEN
+  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Jonaidi Salim Wahab')) THEN
     UPDATE public.jamaah_accounts
     SET
       keberangkatan_id = v_batch_id,
       nama = 'Jonaidi Salim Wahab',
+      nomor_jamaah = 'DM-NOV-001',
       rombongan = 'Rombongan Umroh Eksklusif 02 November 2026',
       hotel_makkah = 'Pullman Zamzam',
       hotel_madinah = 'Al-Ansr Golden Tulip',
       fase = 'persiapan'
-    WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-001';
+    WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Jonaidi Salim Wahab');
   ELSE
     INSERT INTO public.jamaah_accounts (
       tenant_id, keberangkatan_id, nama, nomor_jamaah, rombongan,
@@ -90,16 +93,17 @@ BEGIN
   END IF;
 
   -- Jamaah #2: Nurhayati Adry (Pullman Zamzam - Al-Ansr Golden Tulip)
-  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-002') THEN
+  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Nurhayati Adry')) THEN
     UPDATE public.jamaah_accounts
     SET
       keberangkatan_id = v_batch_id,
       nama = 'Nurhayati Adry',
+      nomor_jamaah = 'DM-NOV-002',
       rombongan = 'Rombongan Umroh Eksklusif 02 November 2026',
       hotel_makkah = 'Pullman Zamzam',
       hotel_madinah = 'Al-Ansr Golden Tulip',
       fase = 'persiapan'
-    WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-002';
+    WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Nurhayati Adry');
   ELSE
     INSERT INTO public.jamaah_accounts (
       tenant_id, keberangkatan_id, nama, nomor_jamaah, rombongan,
@@ -113,16 +117,17 @@ BEGIN
   END IF;
 
   -- Jamaah #3: Tiara Gumilang Ramadhani (Pullman Zamzam - Al-Ansr Golden Tulip)
-  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-003') THEN
+  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Tiara Gumilang Ramadhani')) THEN
     UPDATE public.jamaah_accounts
     SET
       keberangkatan_id = v_batch_id,
       nama = 'Tiara Gumilang Ramadhani',
+      nomor_jamaah = 'DM-NOV-003',
       rombongan = 'Rombongan Umroh Eksklusif 02 November 2026',
       hotel_makkah = 'Pullman Zamzam',
       hotel_madinah = 'Al-Ansr Golden Tulip',
       fase = 'persiapan'
-    WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-003';
+    WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Tiara Gumilang Ramadhani');
   ELSE
     INSERT INTO public.jamaah_accounts (
       tenant_id, keberangkatan_id, nama, nomor_jamaah, rombongan,
@@ -136,16 +141,17 @@ BEGIN
   END IF;
 
   -- Jamaah #4: Nida Nafila Attamimi (Pullman Zamzam - Al-Ansr Golden Tulip)
-  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-004') THEN
+  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Nida Nafila Attamimi')) THEN
     UPDATE public.jamaah_accounts
     SET
       keberangkatan_id = v_batch_id,
       nama = 'Nida Nafila Attamimi',
+      nomor_jamaah = 'DM-NOV-004',
       rombongan = 'Rombongan Umroh Eksklusif 02 November 2026',
       hotel_makkah = 'Pullman Zamzam',
       hotel_madinah = 'Al-Ansr Golden Tulip',
       fase = 'persiapan'
-    WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-004';
+    WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Nida Nafila Attamimi');
   ELSE
     INSERT INTO public.jamaah_accounts (
       tenant_id, keberangkatan_id, nama, nomor_jamaah, rombongan,
@@ -159,16 +165,17 @@ BEGIN
   END IF;
 
   -- Jamaah #5: Fauzi Attamimi (Pullman Zamzam - Al-Ansr Golden Tulip)
-  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-005') THEN
+  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Fauzi Attamimi')) THEN
     UPDATE public.jamaah_accounts
     SET
       keberangkatan_id = v_batch_id,
       nama = 'Fauzi Attamimi',
+      nomor_jamaah = 'DM-NOV-005',
       rombongan = 'Rombongan Umroh Eksklusif 02 November 2026',
       hotel_makkah = 'Pullman Zamzam',
       hotel_madinah = 'Al-Ansr Golden Tulip',
       fase = 'persiapan'
-    WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-005';
+    WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Fauzi Attamimi');
   ELSE
     INSERT INTO public.jamaah_accounts (
       tenant_id, keberangkatan_id, nama, nomor_jamaah, rombongan,
@@ -182,16 +189,17 @@ BEGIN
   END IF;
 
   -- Jamaah #6: Fauzia Assagaf (Pullman Zamzam - Al-Ansr Golden Tulip)
-  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-006') THEN
+  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Fauzia Assagaf')) THEN
     UPDATE public.jamaah_accounts
     SET
       keberangkatan_id = v_batch_id,
       nama = 'Fauzia Assagaf',
+      nomor_jamaah = 'DM-NOV-006',
       rombongan = 'Rombongan Umroh Eksklusif 02 November 2026',
       hotel_makkah = 'Pullman Zamzam',
       hotel_madinah = 'Al-Ansr Golden Tulip',
       fase = 'persiapan'
-    WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-006';
+    WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Fauzia Assagaf');
   ELSE
     INSERT INTO public.jamaah_accounts (
       tenant_id, keberangkatan_id, nama, nomor_jamaah, rombongan,
@@ -205,16 +213,17 @@ BEGIN
   END IF;
 
   -- Jamaah #7: Tatang Sumantri (Pullman Zamzam - Al-Ansr Golden Tulip)
-  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-007') THEN
+  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Tatang Sumantri')) THEN
     UPDATE public.jamaah_accounts
     SET
       keberangkatan_id = v_batch_id,
       nama = 'Tatang Sumantri',
+      nomor_jamaah = 'DM-NOV-007',
       rombongan = 'Rombongan Umroh Eksklusif 02 November 2026',
       hotel_makkah = 'Pullman Zamzam',
       hotel_madinah = 'Al-Ansr Golden Tulip',
       fase = 'persiapan'
-    WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-007';
+    WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Tatang Sumantri');
   ELSE
     INSERT INTO public.jamaah_accounts (
       tenant_id, keberangkatan_id, nama, nomor_jamaah, rombongan,
@@ -228,16 +237,17 @@ BEGIN
   END IF;
 
   -- Jamaah #8: Ida Hermawati (Pullman Zamzam - Al-Ansr Golden Tulip)
-  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-008') THEN
+  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Ida Hermawati')) THEN
     UPDATE public.jamaah_accounts
     SET
       keberangkatan_id = v_batch_id,
       nama = 'Ida Hermawati',
+      nomor_jamaah = 'DM-NOV-008',
       rombongan = 'Rombongan Umroh Eksklusif 02 November 2026',
       hotel_makkah = 'Pullman Zamzam',
       hotel_madinah = 'Al-Ansr Golden Tulip',
       fase = 'persiapan'
-    WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-008';
+    WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Ida Hermawati');
   ELSE
     INSERT INTO public.jamaah_accounts (
       tenant_id, keberangkatan_id, nama, nomor_jamaah, rombongan,
@@ -251,16 +261,17 @@ BEGIN
   END IF;
 
   -- Jamaah #9: Ubaedillah Ahmad (Pullman Zamzam - Al-Ansr Golden Tulip)
-  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-009') THEN
+  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Ubaedillah Ahmad')) THEN
     UPDATE public.jamaah_accounts
     SET
       keberangkatan_id = v_batch_id,
       nama = 'Ubaedillah Ahmad',
+      nomor_jamaah = 'DM-NOV-009',
       rombongan = 'Rombongan Umroh Eksklusif 02 November 2026',
       hotel_makkah = 'Pullman Zamzam',
       hotel_madinah = 'Al-Ansr Golden Tulip',
       fase = 'persiapan'
-    WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-009';
+    WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Ubaedillah Ahmad');
   ELSE
     INSERT INTO public.jamaah_accounts (
       tenant_id, keberangkatan_id, nama, nomor_jamaah, rombongan,
@@ -274,16 +285,17 @@ BEGIN
   END IF;
 
   -- Jamaah #10: Ferry Mulyanto (Pullman Zamzam - Al-Ansr Golden Tulip)
-  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-010') THEN
+  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Ferry Mulyanto')) THEN
     UPDATE public.jamaah_accounts
     SET
       keberangkatan_id = v_batch_id,
       nama = 'Ferry Mulyanto',
+      nomor_jamaah = 'DM-NOV-010',
       rombongan = 'Rombongan Umroh Eksklusif 02 November 2026',
       hotel_makkah = 'Pullman Zamzam',
       hotel_madinah = 'Al-Ansr Golden Tulip',
       fase = 'persiapan'
-    WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-010';
+    WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Ferry Mulyanto');
   ELSE
     INSERT INTO public.jamaah_accounts (
       tenant_id, keberangkatan_id, nama, nomor_jamaah, rombongan,
@@ -297,16 +309,17 @@ BEGIN
   END IF;
 
   -- Jamaah #11: Jihan Widyawati Sifa (Pullman Zamzam - Al-Ansr Golden Tulip)
-  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-011') THEN
+  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Jihan Widyawati Sifa')) THEN
     UPDATE public.jamaah_accounts
     SET
       keberangkatan_id = v_batch_id,
       nama = 'Jihan Widyawati Sifa',
+      nomor_jamaah = 'DM-NOV-011',
       rombongan = 'Rombongan Umroh Eksklusif 02 November 2026',
       hotel_makkah = 'Pullman Zamzam',
       hotel_madinah = 'Al-Ansr Golden Tulip',
       fase = 'persiapan'
-    WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-011';
+    WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Jihan Widyawati Sifa');
   ELSE
     INSERT INTO public.jamaah_accounts (
       tenant_id, keberangkatan_id, nama, nomor_jamaah, rombongan,
@@ -320,16 +333,17 @@ BEGIN
   END IF;
 
   -- Jamaah #12: Meirani Rahmania (Pullman Zamzam - Al-Ansr Golden Tulip)
-  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-012') THEN
+  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Meirani Rahmania')) THEN
     UPDATE public.jamaah_accounts
     SET
       keberangkatan_id = v_batch_id,
       nama = 'Meirani Rahmania',
+      nomor_jamaah = 'DM-NOV-012',
       rombongan = 'Rombongan Umroh Eksklusif 02 November 2026',
       hotel_makkah = 'Pullman Zamzam',
       hotel_madinah = 'Al-Ansr Golden Tulip',
       fase = 'persiapan'
-    WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-012';
+    WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Meirani Rahmania');
   ELSE
     INSERT INTO public.jamaah_accounts (
       tenant_id, keberangkatan_id, nama, nomor_jamaah, rombongan,
@@ -343,16 +357,17 @@ BEGIN
   END IF;
 
   -- Jamaah #13: Suci Yuni Siswati Syiffa (Pullman Zamzam - Al-Ansr Golden Tulip)
-  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-013') THEN
+  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Suci Yuni Siswati Syiffa')) THEN
     UPDATE public.jamaah_accounts
     SET
       keberangkatan_id = v_batch_id,
       nama = 'Suci Yuni Siswati Syiffa',
+      nomor_jamaah = 'DM-NOV-013',
       rombongan = 'Rombongan Umroh Eksklusif 02 November 2026',
       hotel_makkah = 'Pullman Zamzam',
       hotel_madinah = 'Al-Ansr Golden Tulip',
       fase = 'persiapan'
-    WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-013';
+    WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Suci Yuni Siswati Syiffa');
   ELSE
     INSERT INTO public.jamaah_accounts (
       tenant_id, keberangkatan_id, nama, nomor_jamaah, rombongan,
@@ -366,16 +381,17 @@ BEGIN
   END IF;
 
   -- Jamaah #14: Nur Aisyah Ahmad (Pullman Zamzam - Al-Ansr Golden Tulip)
-  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-014') THEN
+  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Nur Aisyah Ahmad')) THEN
     UPDATE public.jamaah_accounts
     SET
       keberangkatan_id = v_batch_id,
       nama = 'Nur Aisyah Ahmad',
+      nomor_jamaah = 'DM-NOV-014',
       rombongan = 'Rombongan Umroh Eksklusif 02 November 2026',
       hotel_makkah = 'Pullman Zamzam',
       hotel_madinah = 'Al-Ansr Golden Tulip',
       fase = 'persiapan'
-    WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-014';
+    WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Nur Aisyah Ahmad');
   ELSE
     INSERT INTO public.jamaah_accounts (
       tenant_id, keberangkatan_id, nama, nomor_jamaah, rombongan,
@@ -389,16 +405,17 @@ BEGIN
   END IF;
 
   -- Jamaah #15: Andri Yuliawan (Pullman Zamzam - Al-Ansr Golden Tulip)
-  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-015') THEN
+  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Andri Yuliawan')) THEN
     UPDATE public.jamaah_accounts
     SET
       keberangkatan_id = v_batch_id,
       nama = 'Andri Yuliawan',
+      nomor_jamaah = 'DM-NOV-015',
       rombongan = 'Rombongan Umroh Eksklusif 02 November 2026',
       hotel_makkah = 'Pullman Zamzam',
       hotel_madinah = 'Al-Ansr Golden Tulip',
       fase = 'persiapan'
-    WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-015';
+    WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Andri Yuliawan');
   ELSE
     INSERT INTO public.jamaah_accounts (
       tenant_id, keberangkatan_id, nama, nomor_jamaah, rombongan,
@@ -412,16 +429,17 @@ BEGIN
   END IF;
 
   -- Jamaah #16: Dwi Novi Kusuma Wardany (Pullman Zamzam - Al-Ansr Golden Tulip)
-  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-016') THEN
+  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Dwi Novi Kusuma Wardany')) THEN
     UPDATE public.jamaah_accounts
     SET
       keberangkatan_id = v_batch_id,
       nama = 'Dwi Novi Kusuma Wardany',
+      nomor_jamaah = 'DM-NOV-016',
       rombongan = 'Rombongan Umroh Eksklusif 02 November 2026',
       hotel_makkah = 'Pullman Zamzam',
       hotel_madinah = 'Al-Ansr Golden Tulip',
       fase = 'persiapan'
-    WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-016';
+    WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Dwi Novi Kusuma Wardany');
   ELSE
     INSERT INTO public.jamaah_accounts (
       tenant_id, keberangkatan_id, nama, nomor_jamaah, rombongan,
@@ -435,16 +453,17 @@ BEGIN
   END IF;
 
   -- Jamaah #17: Aqil Zufar Zayyaan Al Rasyid (Pullman Zamzam - Al-Ansr Golden Tulip)
-  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-017') THEN
+  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Aqil Zufar Zayyaan Al Rasyid')) THEN
     UPDATE public.jamaah_accounts
     SET
       keberangkatan_id = v_batch_id,
       nama = 'Aqil Zufar Zayyaan Al Rasyid',
+      nomor_jamaah = 'DM-NOV-017',
       rombongan = 'Rombongan Umroh Eksklusif 02 November 2026',
       hotel_makkah = 'Pullman Zamzam',
       hotel_madinah = 'Al-Ansr Golden Tulip',
       fase = 'persiapan'
-    WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-017';
+    WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Aqil Zufar Zayyaan Al Rasyid');
   ELSE
     INSERT INTO public.jamaah_accounts (
       tenant_id, keberangkatan_id, nama, nomor_jamaah, rombongan,
@@ -458,16 +477,17 @@ BEGIN
   END IF;
 
   -- Jamaah #18: Bagus Dwi Ananda (Pullman Zamzam - Al-Ansr Golden Tulip)
-  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-018') THEN
+  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Bagus Dwi Ananda')) THEN
     UPDATE public.jamaah_accounts
     SET
       keberangkatan_id = v_batch_id,
       nama = 'Bagus Dwi Ananda',
+      nomor_jamaah = 'DM-NOV-018',
       rombongan = 'Rombongan Umroh Eksklusif 02 November 2026',
       hotel_makkah = 'Pullman Zamzam',
       hotel_madinah = 'Al-Ansr Golden Tulip',
       fase = 'persiapan'
-    WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-018';
+    WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Bagus Dwi Ananda');
   ELSE
     INSERT INTO public.jamaah_accounts (
       tenant_id, keberangkatan_id, nama, nomor_jamaah, rombongan,
@@ -481,16 +501,17 @@ BEGIN
   END IF;
 
   -- Jamaah #19: Bambang Setyawan (Pullman Zamzam - Al-Ansr Golden Tulip)
-  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-019') THEN
+  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Bambang Setyawan')) THEN
     UPDATE public.jamaah_accounts
     SET
       keberangkatan_id = v_batch_id,
       nama = 'Bambang Setyawan',
+      nomor_jamaah = 'DM-NOV-019',
       rombongan = 'Rombongan Umroh Eksklusif 02 November 2026',
       hotel_makkah = 'Pullman Zamzam',
       hotel_madinah = 'Al-Ansr Golden Tulip',
       fase = 'persiapan'
-    WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-019';
+    WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Bambang Setyawan');
   ELSE
     INSERT INTO public.jamaah_accounts (
       tenant_id, keberangkatan_id, nama, nomor_jamaah, rombongan,
@@ -504,16 +525,17 @@ BEGIN
   END IF;
 
   -- Jamaah #20: Soemiraning Kasiadi (Pullman Zamzam - Al-Ansr Golden Tulip)
-  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-020') THEN
+  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Soemiraning Kasiadi')) THEN
     UPDATE public.jamaah_accounts
     SET
       keberangkatan_id = v_batch_id,
       nama = 'Soemiraning Kasiadi',
+      nomor_jamaah = 'DM-NOV-020',
       rombongan = 'Rombongan Umroh Eksklusif 02 November 2026',
       hotel_makkah = 'Pullman Zamzam',
       hotel_madinah = 'Al-Ansr Golden Tulip',
       fase = 'persiapan'
-    WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-020';
+    WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Soemiraning Kasiadi');
   ELSE
     INSERT INTO public.jamaah_accounts (
       tenant_id, keberangkatan_id, nama, nomor_jamaah, rombongan,
@@ -527,16 +549,17 @@ BEGIN
   END IF;
 
   -- Jamaah #21: Nursilawati Nurdin (Pullman Zamzam - Al-Ansr Golden Tulip)
-  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-021') THEN
+  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Nursilawati Nurdin')) THEN
     UPDATE public.jamaah_accounts
     SET
       keberangkatan_id = v_batch_id,
       nama = 'Nursilawati Nurdin',
+      nomor_jamaah = 'DM-NOV-021',
       rombongan = 'Rombongan Umroh Eksklusif 02 November 2026',
       hotel_makkah = 'Pullman Zamzam',
       hotel_madinah = 'Al-Ansr Golden Tulip',
       fase = 'persiapan'
-    WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-021';
+    WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Nursilawati Nurdin');
   ELSE
     INSERT INTO public.jamaah_accounts (
       tenant_id, keberangkatan_id, nama, nomor_jamaah, rombongan,
@@ -550,16 +573,17 @@ BEGIN
   END IF;
 
   -- Jamaah #22: Rifqi Wisnu Wardhana (Pullman Zamzam - Al-Ansr Golden Tulip)
-  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-022') THEN
+  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Rifqi Wisnu Wardhana')) THEN
     UPDATE public.jamaah_accounts
     SET
       keberangkatan_id = v_batch_id,
       nama = 'Rifqi Wisnu Wardhana',
+      nomor_jamaah = 'DM-NOV-022',
       rombongan = 'Rombongan Umroh Eksklusif 02 November 2026',
       hotel_makkah = 'Pullman Zamzam',
       hotel_madinah = 'Al-Ansr Golden Tulip',
       fase = 'persiapan'
-    WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-022';
+    WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Rifqi Wisnu Wardhana');
   ELSE
     INSERT INTO public.jamaah_accounts (
       tenant_id, keberangkatan_id, nama, nomor_jamaah, rombongan,
@@ -573,16 +597,17 @@ BEGIN
   END IF;
 
   -- Jamaah #23: Nurfadilah M Rajab (Pullman Zamzam - Al-Ansr Golden Tulip)
-  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-023') THEN
+  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Nurfadilah M Rajab')) THEN
     UPDATE public.jamaah_accounts
     SET
       keberangkatan_id = v_batch_id,
       nama = 'Nurfadilah M Rajab',
+      nomor_jamaah = 'DM-NOV-023',
       rombongan = 'Rombongan Umroh Eksklusif 02 November 2026',
       hotel_makkah = 'Pullman Zamzam',
       hotel_madinah = 'Al-Ansr Golden Tulip',
       fase = 'persiapan'
-    WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'DM-NOV-023';
+    WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Nurfadilah M Rajab');
   ELSE
     INSERT INTO public.jamaah_accounts (
       tenant_id, keberangkatan_id, nama, nomor_jamaah, rombongan,
@@ -596,16 +621,25 @@ BEGIN
   END IF;
 
   -- Tour Leader (Pullman Zamzam - Al-Ansr Golden Tulip)
-  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'TL-NOV-001') THEN
+  IF EXISTS (
+    SELECT 1 FROM public.jamaah_accounts ja
+    JOIN public.keberangkatan k ON k.id = ja.keberangkatan_id
+    WHERE ja.tenant_id = v_tenant_id AND lower(trim(ja.nama)) = lower('Ust. Hudi Supriyadi Daeng Pabeta, Lc.')
+      AND ja.keberangkatan_id <> v_batch_id
+      AND k.tanggal_kepulangan + 1 >= current_date
+  ) THEN
+    RAISE NOTICE 'Akun % masih bertugas di batch lain yang belum selesai, dilewati. Jalankan ulang script setelah batch tersebut pulang.', 'Ust. Hudi Supriyadi Daeng Pabeta, Lc.';
+  ELSIF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Ust. Hudi Supriyadi Daeng Pabeta, Lc.')) THEN
     UPDATE public.jamaah_accounts
     SET
       keberangkatan_id = v_batch_id,
       nama = 'Ust. Hudi Supriyadi Daeng Pabeta, Lc.',
+      nomor_jamaah = 'TL-NOV-001',
       rombongan = 'Rombongan Umroh Eksklusif 02 November 2026',
       hotel_makkah = 'Pullman Zamzam',
       hotel_madinah = 'Al-Ansr Golden Tulip',
       fase = 'persiapan'
-    WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'TL-NOV-001';
+    WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Ust. Hudi Supriyadi Daeng Pabeta, Lc.');
   ELSE
     INSERT INTO public.jamaah_accounts (
       tenant_id, keberangkatan_id, nama, nomor_jamaah, rombongan,
@@ -619,16 +653,25 @@ BEGIN
   END IF;
 
   -- Muthowwif (Pullman Zamzam - Al-Ansr Golden Tulip)
-  IF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'MUT-NOV-001') THEN
+  IF EXISTS (
+    SELECT 1 FROM public.jamaah_accounts ja
+    JOIN public.keberangkatan k ON k.id = ja.keberangkatan_id
+    WHERE ja.tenant_id = v_tenant_id AND lower(trim(ja.nama)) = lower('Ust. Sujani Vona Reza, Lc.')
+      AND ja.keberangkatan_id <> v_batch_id
+      AND k.tanggal_kepulangan + 1 >= current_date
+  ) THEN
+    RAISE NOTICE 'Akun % masih bertugas di batch lain yang belum selesai, dilewati. Jalankan ulang script setelah batch tersebut pulang.', 'Ust. Sujani Vona Reza, Lc.';
+  ELSIF EXISTS (SELECT 1 FROM public.jamaah_accounts WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Ust. Sujani Vona Reza, Lc.')) THEN
     UPDATE public.jamaah_accounts
     SET
       keberangkatan_id = v_batch_id,
       nama = 'Ust. Sujani Vona Reza, Lc.',
+      nomor_jamaah = 'MUT-NOV-001',
       rombongan = 'Rombongan Umroh Eksklusif 02 November 2026',
       hotel_makkah = 'Pullman Zamzam',
       hotel_madinah = 'Al-Ansr Golden Tulip',
       fase = 'persiapan'
-    WHERE tenant_id = v_tenant_id AND nomor_jamaah = 'MUT-NOV-001';
+    WHERE tenant_id = v_tenant_id AND lower(trim(nama)) = lower('Ust. Sujani Vona Reza, Lc.');
   ELSE
     INSERT INTO public.jamaah_accounts (
       tenant_id, keberangkatan_id, nama, nomor_jamaah, rombongan,
