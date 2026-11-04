@@ -1897,6 +1897,14 @@ export default function TravelDashboard() {
                                 onMouseLeave={e => { if (agEditingId !== item.id && !agEditSaving) { (e.currentTarget as HTMLButtonElement).style.color = '#6b7280'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,0,0,0.09)'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; } }}>
                                 {agEditingId === item.id ? 'Tutup' : 'Edit'}
                               </button>
+                              <button type="button" onClick={() => handleDeleteAgenda(item.id, item.judul)}
+                                disabled={agEditSaving}
+                                className="font-mono text-[11px] px-3 py-1.5 ml-2 rounded-lg transition-all duration-150 disabled:opacity-40"
+                                style={{ color: '#6b7280', border: '1px solid rgba(0,0,0,0.09)' }}
+                                onMouseEnter={e => { if (!agEditSaving) { (e.currentTarget as HTMLButtonElement).style.color = '#dc2626'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(220,38,38,0.25)'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(220,38,38,0.05)'; } }}
+                                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#6b7280'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,0,0,0.09)'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}>
+                                Hapus
+                              </button>
                             </td>
                           </tr>
                           {/* Inline edit row */}
