@@ -46,21 +46,21 @@ function isBatchFinished(batch: Pick<KeberangkatanRow, 'tanggal_kepulangan' | 'f
 
 const inputBase: React.CSSProperties = {
   border: '1px solid rgba(0,0,0,0.09)',
-  background: '#fafaf9',
-  color: '#111827',
+  background: '#ffffff',
+  color: '#202020',
   boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.04)',
 };
 
 const cardStyle: React.CSSProperties = {
   background: '#ffffff',
-  border: '1px solid rgba(0,0,0,0.06)',
-  boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.04)',
+  border: '1px solid rgba(32,32,32,0.10)',
+  boxShadow: '0 2px 8px rgba(32,32,32,0.05)',
 };
 
-const PRIMARY = '#0ea5e9';
-const PRIMARY_DEEP = '#0284c7';
-const PRIMARY_BG = 'rgba(14,165,233,0.07)';
-const PRIMARY_BORDER = 'rgba(14,165,233,0.18)';
+const PRIMARY = 'var(--color-primary)';
+const PRIMARY_DEEP = 'var(--color-primary-deep)';
+const PRIMARY_BG = 'color-mix(in srgb, var(--color-primary) 7%, transparent)';
+const PRIMARY_BORDER = 'color-mix(in srgb, var(--color-primary) 18%, transparent)';
 
 const StyledInput = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
   function StyledInput(props, ref) {
@@ -70,7 +70,7 @@ const StyledInput = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes
         ref={ref}
         className={`w-full rounded-xl px-4 py-3 text-sm transition-all duration-150 focus:outline-none ${props.className ?? ''}`}
         style={{ ...inputBase, ...props.style }}
-        onFocus={e => { e.currentTarget.style.border = `1px solid ${PRIMARY}`; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(14,165,233,0.12)'; e.currentTarget.style.background = '#ffffff'; props.onFocus?.(e); }}
+        onFocus={e => { e.currentTarget.style.border = `1px solid ${PRIMARY}`; e.currentTarget.style.boxShadow = '0 0 0 3px color-mix(in srgb, var(--color-primary) 12%, transparent)'; e.currentTarget.style.background = '#ffffff'; props.onFocus?.(e); }}
         onBlur={e => { e.currentTarget.style.border = '1px solid rgba(0,0,0,0.09)'; e.currentTarget.style.boxShadow = 'inset 0 1px 2px rgba(0,0,0,0.04)'; e.currentTarget.style.background = '#fafaf9'; props.onBlur?.(e); }}
       />
     );
@@ -83,7 +83,7 @@ function StyledTextarea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement>
       {...props}
       className={`w-full rounded-xl px-4 py-3 text-sm transition-all duration-150 focus:outline-none resize-none ${props.className ?? ''}`}
       style={{ ...inputBase, ...props.style }}
-      onFocus={e => { e.currentTarget.style.border = `1px solid ${PRIMARY}`; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(14,165,233,0.12)'; e.currentTarget.style.background = '#ffffff'; props.onFocus?.(e); }}
+      onFocus={e => { e.currentTarget.style.border = `1px solid ${PRIMARY}`; e.currentTarget.style.boxShadow = '0 0 0 3px color-mix(in srgb, var(--color-primary) 12%, transparent)'; e.currentTarget.style.background = '#ffffff'; props.onFocus?.(e); }}
       onBlur={e => { e.currentTarget.style.border = '1px solid rgba(0,0,0,0.09)'; e.currentTarget.style.boxShadow = 'inset 0 1px 2px rgba(0,0,0,0.04)'; e.currentTarget.style.background = '#fafaf9'; props.onBlur?.(e); }}
     />
   );
@@ -1017,58 +1017,50 @@ export default function TravelDashboard() {
     <TravelLayout>
 
       {/* ── Header Tenant ── */}
-      <div className="mb-6">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="font-mono text-[10px] uppercase tracking-widest mb-1" style={{ color: '#9ca3af' }}>
-              Portal Travel Agency
-            </p>
-            <h1 className="font-bold" style={{ fontSize: '26px', color: '#111827', letterSpacing: '-0.02em' }}>
-              {tenant.nama_travel}
-            </h1>
-          </div>
-          <div className="rounded-2xl px-5 py-3 text-center" style={cardStyle}>
-            <p className="font-mono text-[26px] font-bold" style={{ color: '#111827', letterSpacing: '-1px' }}>
-              {jamaahList.length}
-            </p>
-            <p className="font-mono text-[9px] uppercase tracking-[0.18em] mt-0.5" style={{ color: '#9ca3af' }}>
-              {selectedKeberangkatan ? 'Jamaah Batch Ini' : 'Total Jamaah'}
-            </p>
+      <div className="mb-5 space-y-3">
+        <div className="relative overflow-hidden rounded-2xl shadow-drop-card">
+          {tenant.hero_image_url
+            ? <img src={tenant.hero_image_url} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: 'center 30%' }} />
+            : <div aria-hidden className="absolute inset-0" style={{ background: 'var(--color-primary)' }} />}
+          <div className="pointer-events-none absolute inset-0" style={{ background: 'linear-gradient(100deg, color-mix(in srgb, var(--color-primary-deep) 92%, transparent) 0%, color-mix(in srgb, var(--color-primary-deep) 45%, transparent) 100%)' }} />
+          <div className="relative flex flex-wrap items-end justify-between gap-4 p-5 sm:p-6">
+            <div className="min-w-0">
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/70">Portal Travel</p>
+              <h1 className="mt-1 font-display text-[24px] font-bold leading-tight text-white sm:text-[28px]" style={{ letterSpacing: '-0.5px' }}>
+                {tenant.nama_travel}
+              </h1>
+              {selectedBatch && <p className="mt-1 text-[12.5px] font-medium text-white/80">{selectedBatch.nama_batch}</p>}
+            </div>
+            <div className="flex-none text-white sm:text-right">
+              <p className="font-display text-[34px] font-bold leading-none" style={{ letterSpacing: '-1px' }}>{jamaahList.length}</p>
+              <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.14em] text-white/70">
+                {selectedKeberangkatan ? 'Jamaah batch ini' : 'Total jamaah'}
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* Kode aktivasi */}
-        <div className="mt-4 inline-flex items-center gap-3 rounded-xl px-4 py-3"
-          style={{ background: 'rgba(14,165,233,0.06)', border: PRIMARY_BORDER }}>
-          <div>
-            <p className="font-mono text-[9px] uppercase tracking-[0.18em]" style={{ color: PRIMARY }}>
-              Kode Aktivasi Jamaah
-            </p>
-            <p className="font-mono text-[20px] font-bold tracking-[0.12em]" style={{ color: PRIMARY_DEEP, letterSpacing: '0.1em' }}>
-              {tenant.activation_code}
-            </p>
+        <div className="grid gap-3 md:grid-cols-2">
+          {/* Kode aktivasi */}
+          <div className="rounded-2xl border border-hairline bg-white p-4 shadow-drop-card">
+            <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-mute">Kode Aktivasi Jamaah</p>
+            <p className="mt-1 font-display text-[20px] font-bold text-primary" style={{ letterSpacing: '0.06em' }}>{tenant.activation_code}</p>
+            <p className="mt-0.5 text-[11.5px] text-charcoal">Bagikan kode ini ke jamaah untuk login ke aplikasi.</p>
           </div>
-          <div className="h-10 w-px" style={{ background: PRIMARY_BORDER }} />
-          <p className="text-[12px] max-w-[220px]" style={{ color: '#0369a1' }}>
-            Bagikan kode ini ke jamaah untuk login ke aplikasi.
-          </p>
-        </div>
 
         {/* Link slug branded */}
         {slugUrl && (
-          <div className="mt-3 flex items-center gap-3 rounded-xl px-4 py-3"
-            style={{ background: 'rgba(16,185,129,0.06)', border: '1px solid rgba(16,185,129,0.18)' }}>
+          <div className="flex items-center gap-3 rounded-2xl border border-hairline bg-white p-4 shadow-drop-card">
             <div className="flex-1 min-w-0">
-              <p className="font-mono text-[9px] uppercase tracking-[0.18em]" style={{ color: '#059669' }}>
-                Link Login Branded
-              </p>
-              <p className="font-mono text-[12px] font-semibold truncate mt-0.5" style={{ color: '#047857' }}>
+              <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-mute">Link Login Jamaah</p>
+              <p className="mt-1 truncate text-[13.5px] font-semibold text-ink">
                 {slugUrl}
               </p>
+              <p className="mt-0.5 text-[11.5px] text-charcoal">Jamaah cukup membuka link ini dan mengetik nama.</p>
             </div>
             <button onClick={handleCopySlug}
-              className="flex-none flex items-center gap-1.5 rounded-lg px-3 py-2 text-[12px] font-semibold transition-all active:scale-95"
-              style={{ background: copied ? 'rgba(16,185,129,0.18)' : 'rgba(16,185,129,0.12)', color: '#059669', border: '1px solid rgba(16,185,129,0.22)' }}>
+              className="flex-none flex items-center gap-1.5 rounded-xl px-3 py-2 text-[12px] font-semibold transition-all active:scale-95"
+              style={{ background: copied ? 'rgba(22,163,74,0.10)' : 'var(--color-primary)', color: copied ? '#15803d' : '#ffffff' }}>
               {copied ? (
                 <><svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>Tersalin!</>
               ) : (
@@ -1077,64 +1069,54 @@ export default function TravelDashboard() {
             </button>
           </div>
         )}
+        </div>
       </div>
 
       {/* ── Tab Bar ── */}
       {selectedBatch && (
-        <section className="mb-6 overflow-hidden rounded-2xl" style={{ ...cardStyle, border: '1px solid rgba(14,165,233,0.18)' }}>
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b px-5 py-4" style={{ borderColor: 'rgba(0,0,0,0.06)', background: 'rgba(14,165,233,0.035)' }}>
-            <div className="flex items-center gap-3">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl" style={{ background: PRIMARY_BG, color: PRIMARY }}>
-                <CheckCircle2 className="h-[18px] w-[18px]" />
-              </span>
-              <div>
-                <p className="font-semibold text-[14px]" style={{ color: '#111827' }}>Kesiapan batch: {selectedBatch.nama_batch}</p>
-                <p className="text-[11px]" style={{ color: '#6b7280' }}>{readinessCount} dari {batchReadiness.length} data operasional siap</p>
+        <section className="mb-5 overflow-hidden rounded-2xl border border-hairline bg-white shadow-drop-card">
+          <div className="h-1 w-full" style={{ background: 'linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary-deep) 100%)' }} />
+          <div className="p-4 sm:p-5">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="min-w-0">
+                <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-mute">Kesiapan Batch</p>
+                <p className="mt-0.5 text-[15px] font-bold text-ink">{readinessCount} dari {batchReadiness.length} data operasional siap</p>
               </div>
+              <span className="rounded-full px-2.5 py-1 text-[11px] font-bold" style={{ background: readinessCount === batchReadiness.length ? 'rgba(22,163,74,0.10)' : 'rgba(245,158,11,0.10)', color: readinessCount === batchReadiness.length ? '#15803d' : '#b45309' }}>
+                {readinessCount === batchReadiness.length ? 'Siap rilis' : 'Perlu dilengkapi'}
+              </span>
             </div>
-            <span className="rounded-full px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-wider" style={{ background: readinessCount === batchReadiness.length ? 'rgba(22,163,74,0.10)' : 'rgba(245,158,11,0.10)', color: readinessCount === batchReadiness.length ? '#15803d' : '#b45309' }}>
-              {readinessCount === batchReadiness.length ? 'Siap rilis' : 'Perlu dilengkapi'}
-            </span>
-          </div>
-          <div className="grid divide-y sm:grid-cols-2 sm:divide-x sm:divide-y-0" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>
-            {batchReadiness.map((item, index) => {
-              const Icon = index === 1 ? Hotel : index === 2 ? Phone : index === 3 ? Users : index === 4 ? MapPin : AlertCircle;
-              return (
-                <button key={item.label} type="button" onClick={() => setActiveTab(item.tab)}
-                  className="flex min-h-[74px] items-center gap-3 px-5 py-3 text-left transition-colors hover:bg-black/[0.015]">
-                  <span className="flex h-8 w-8 flex-none items-center justify-center rounded-lg" style={{ background: item.ready ? 'rgba(22,163,74,0.09)' : 'rgba(245,158,11,0.10)', color: item.ready ? '#16a34a' : '#d97706' }}>
-                    <Icon className="h-4 w-4" />
-                  </span>
-                  <span className="min-w-0">
-                    <span className="block text-[12px] font-semibold" style={{ color: '#374151' }}>{item.label}</span>
-                    <span className="mt-0.5 block text-[10.5px] leading-snug" style={{ color: '#6b7280' }}>{item.detail}</span>
-                  </span>
-                </button>
-              );
-            })}
+            <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
+              {batchReadiness.map((item, index) => {
+                const Icon = index === 1 ? Hotel : index === 2 ? Phone : index === 3 ? Users : index === 4 ? MapPin : AlertCircle;
+                return (
+                  <button key={item.label} type="button" onClick={() => setActiveTab(item.tab)}
+                    className="flex items-start gap-2.5 rounded-xl bg-surface-bone px-3 py-2.5 text-left transition-opacity hover:opacity-80">
+                    <Icon className="mt-0.5 h-4 w-4 flex-none" style={{ color: item.ready ? '#16a34a' : '#d97706' }} />
+                    <span className="min-w-0">
+                      <span className="block text-[12px] font-bold leading-tight text-ink">{item.label}</span>
+                      <span className="mt-0.5 block text-[10.5px] leading-snug text-charcoal">{item.detail}</span>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </section>
       )}
 
-      <div className="sticky top-0 z-10 mb-6 overflow-x-auto" style={{ background: '#f9f7f3' }}>
-        <div className="flex gap-1 px-1 py-1.5 w-max min-w-full"
-          style={{ background: 'rgba(0,0,0,0.04)', borderRadius: '14px' }}>
+      <div className="sticky top-0 z-10 -mx-1 mb-5 overflow-x-auto bg-canvas px-1 py-2" style={{ scrollbarWidth: 'none' }}>
+        <div className="flex w-max min-w-full gap-1.5">
           {TABS.map(t => {
             const active = activeTab === t.id;
             return (
               <button key={t.id} type="button" onClick={() => setActiveTab(t.id)}
-                className="relative flex-none whitespace-nowrap transition-all duration-200"
+                aria-current={active ? 'page' : undefined}
+                className="flex-none whitespace-nowrap rounded-full px-3.5 py-2 text-[12.5px] font-semibold transition-colors"
                 style={{
-                  padding: '7px 16px',
-                  borderRadius: '10px',
-                  fontSize: '13px',
-                  fontWeight: active ? 600 : 500,
-                  border: 'none',
-                  cursor: 'pointer',
-                  color: active ? '#1e1b4b' : '#6b7280',
-                  background: active ? '#ffffff' : 'transparent',
-                  boxShadow: active ? '0 1px 4px rgba(0,0,0,0.10), 0 0.5px 1px rgba(0,0,0,0.06)' : 'none',
-                  letterSpacing: active ? '-0.01em' : '0',
+                  color: active ? '#ffffff' : '#575757',
+                  background: active ? 'var(--color-primary)' : '#ffffff',
+                  border: `1px solid ${active ? 'var(--color-primary)' : 'rgba(32,32,32,0.10)'}`,
                 }}>
                 {t.label}
               </button>
@@ -1149,9 +1131,9 @@ export default function TravelDashboard() {
       {activeTab === 'overview' && (
         <section>
           {!selectedBatch ? (
-            <div className="rounded-2xl px-6 py-12 text-center" style={{ ...cardStyle, border: '1px dashed rgba(14,165,233,0.30)' }}>
+            <div className="rounded-2xl px-6 py-12 text-center" style={{ ...cardStyle, border: '1px dashed color-mix(in srgb, var(--color-primary) 30%, transparent)' }}>
               <ClipboardList className="mx-auto h-8 w-8" style={{ color: PRIMARY }} />
-              <h2 className="mt-3 text-[16px] font-bold" style={{ color: '#111827' }}>Mulai dari batch keberangkatan</h2>
+              <h2 className="mt-3 text-[16px] font-bold" style={{ color: '#202020' }}>Mulai dari batch keberangkatan</h2>
               <p className="mx-auto mt-1 max-w-md text-[12px] leading-relaxed" style={{ color: '#6b7280' }}>
                 Buat batch untuk mengelola hotel, jamaah, agenda, dan komunikasi perjalanan dari satu tempat.
               </p>
@@ -1166,7 +1148,7 @@ export default function TravelDashboard() {
               <div className="flex flex-wrap items-end justify-between gap-4 mb-5">
                 <div>
                   <p className="font-mono text-[10px] uppercase tracking-[0.16em]" style={{ color: PRIMARY }}>Batch Command Center</p>
-                  <h2 className="mt-1 text-[21px] font-bold" style={{ color: '#111827', letterSpacing: '-0.02em' }}>{selectedBatch.nama_batch}</h2>
+                  <h2 className="mt-1 text-[21px] font-bold" style={{ color: '#202020', letterSpacing: '-0.02em' }}>{selectedBatch.nama_batch}</h2>
                   <p className="mt-1 text-[12px]" style={{ color: '#6b7280' }}>Kontrol kesiapan keberangkatan dan tindak lanjuti data yang belum lengkap.</p>
                 </div>
                 <button type="button" onClick={() => setActiveTab('keberangkatan')}
@@ -1176,15 +1158,14 @@ export default function TravelDashboard() {
                 </button>
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {[
-                  { label: 'Kesiapan data', value: `${readinessCount}/${batchReadiness.length}`, sub: readinessIssues.length ? `${readinessIssues.length} perlu ditindaklanjuti` : 'Semua data utama siap', icon: CheckCircle2, tone: readinessIssues.length ? '#d97706' : '#16a34a', bg: readinessIssues.length ? 'rgba(245,158,11,0.09)' : 'rgba(22,163,74,0.09)' },
                   { label: 'Jamaah batch', value: String(jamaahList.length), sub: jamaahList.length ? 'Terdaftar pada batch ini' : 'Belum ada jamaah', icon: Users, tone: PRIMARY, bg: PRIMARY_BG },
-                  { label: 'Agenda aktif', value: String(agendaItems.length), sub: agendaItems.length ? 'Siap ditampilkan ke jamaah' : 'Belum ada agenda', icon: CalendarClock, tone: '#7c3aed', bg: 'rgba(124,58,237,0.08)' },
-                  { label: 'Info prioritas', value: String(importantAnnouncements), sub: importantAnnouncements ? 'Pengumuman penting aktif' : 'Tidak ada info prioritas', icon: BellRing, tone: '#dc2626', bg: 'rgba(220,38,38,0.08)' },
-                  { label: 'Kuota penerbitan', value: String(quotaBalance?.balance ?? 0), sub: quotaBalance ? `${quotaBalance.total_used} akun telah diterbitkan` : 'Hubungi Umrahme untuk top up', icon: PackageCheck, tone: '#15803d', bg: 'rgba(163,230,53,0.22)' },
+                  { label: 'Agenda aktif', value: String(agendaItems.length), sub: agendaItems.length ? 'Siap ditampilkan ke jamaah' : 'Belum ada agenda', icon: CalendarClock, tone: PRIMARY, bg: PRIMARY_BG },
+                  { label: 'Info prioritas', value: String(importantAnnouncements), sub: importantAnnouncements ? 'Pengumuman penting aktif' : 'Tidak ada info prioritas', icon: BellRing, tone: importantAnnouncements ? '#dc2626' : PRIMARY, bg: importantAnnouncements ? 'rgba(220,38,38,0.08)' : PRIMARY_BG },
+                  { label: 'Kuota penerbitan', value: String(quotaBalance?.balance ?? 0), sub: quotaBalance ? `${quotaBalance.total_used} akun telah diterbitkan` : 'Hubungi Umrahme untuk top up', icon: PackageCheck, tone: PRIMARY, bg: PRIMARY_BG },
                   { label: 'Data paspor', value: String(missingPassports), sub: missingPassports ? 'Jamaah belum isi paspor' : 'Semua paspor terisi', icon: ClipboardList, tone: missingPassports ? '#d97706' : '#15803d', bg: missingPassports ? 'rgba(245,158,11,0.09)' : 'rgba(22,163,74,0.09)' },
-                  { label: 'Hotel personal', value: String(hotelOverrides), sub: hotelOverrides ? 'Memakai override hotel' : 'Semua ikut hotel batch', icon: Hotel, tone: '#0f766e', bg: 'rgba(13,148,136,0.09)' },
+                  { label: 'Hotel personal', value: String(hotelOverrides), sub: hotelOverrides ? 'Memakai override hotel' : 'Semua ikut hotel batch', icon: Hotel, tone: PRIMARY, bg: PRIMARY_BG },
                 ].map((item) => {
                   const Icon = item.icon;
                   return (
@@ -1193,7 +1174,7 @@ export default function TravelDashboard() {
                         <p className="font-mono text-[9px] uppercase tracking-[0.14em]" style={{ color: '#6b7280' }}>{item.label}</p>
                         <span className="flex h-8 w-8 items-center justify-center rounded-lg" style={{ color: item.tone, background: item.bg }}><Icon className="h-4 w-4" /></span>
                       </div>
-                      <p className="mt-3 text-[24px] font-bold leading-none" style={{ color: '#111827', letterSpacing: '-0.03em' }}>{item.value}</p>
+                      <p className="mt-3 text-[24px] font-bold leading-none" style={{ color: '#202020', letterSpacing: '-0.03em' }}>{item.value}</p>
                       <p className="mt-2 text-[10.5px] leading-snug" style={{ color: '#6b7280' }}>{item.sub}</p>
                     </div>
                   );
@@ -1204,7 +1185,7 @@ export default function TravelDashboard() {
                 <div className="rounded-2xl p-5" style={cardStyle}>
                   <div className="flex items-center justify-between gap-3">
                     <div>
-                      <p className="text-[14px] font-bold" style={{ color: '#111827' }}>Tindakan sebelum rilis batch</p>
+                      <p className="text-[14px] font-bold" style={{ color: '#202020' }}>Tindakan sebelum rilis batch</p>
                       <p className="mt-0.5 text-[11px]" style={{ color: '#6b7280' }}>Selesaikan item ini sebelum membagikan akses ke jamaah.</p>
                     </div>
                     <span className="font-mono text-[10px] font-bold" style={{ color: readinessIssues.length ? '#b45309' : '#16a34a' }}>{readinessIssues.length ? `${readinessIssues.length} TERBUKA` : 'SELESAI'}</span>
@@ -1226,7 +1207,7 @@ export default function TravelDashboard() {
                   </div>
                 </div>
 
-                <div className="rounded-2xl p-5" style={{ background: '#172554', color: '#fff' }}>
+                <div className="rounded-2xl p-5" style={{ background: 'var(--color-primary-deep)', color: '#fff' }}>
                   <p className="font-mono text-[9px] uppercase tracking-[0.16em]" style={{ color: '#93c5fd' }}>Kontrol Cepat</p>
                   <h3 className="mt-2 truncate text-[16px] font-bold leading-snug">{selectedBatch.nama_batch}</h3>
                   <div className="mt-3 space-y-1.5 text-[11px]" style={{ color: 'rgba(255,255,255,0.72)' }}>
@@ -1249,7 +1230,7 @@ export default function TravelDashboard() {
           <div className="flex flex-wrap items-end justify-between gap-4 mb-5">
             <div>
               <p className="font-mono text-[10px] uppercase tracking-[0.16em]" style={{ color: '#0f766e' }}>Distribusi Perlengkapan</p>
-              <h2 className="mt-1 text-[20px] font-bold" style={{ color: '#111827', letterSpacing: '-0.02em' }}>Status per jamaah</h2>
+              <h2 className="mt-1 text-[20px] font-bold" style={{ color: '#202020', letterSpacing: '-0.02em' }}>Status per jamaah</h2>
               <p className="mt-1 text-[12px]" style={{ color: '#6b7280' }}>{selectedBatch ? selectedBatch.nama_batch : 'Pilih batch untuk mengatur perlengkapan.'}</p>
             </div>
             <div className="rounded-xl px-4 py-2.5" style={{ background: 'rgba(13,148,136,0.09)', color: '#0f766e' }}>
@@ -1277,7 +1258,7 @@ export default function TravelDashboard() {
                 {equipmentCatalog.length > 0 && <div className="mt-3 flex flex-wrap gap-2">{equipmentCatalog.map(item => <span key={item.id} className="rounded-full px-2.5 py-1 text-[10px] font-semibold" style={{ color: '#0f766e', background: 'rgba(13,148,136,0.08)' }}>{item.label}</span>)}</div>}
                 <form onSubmit={(event) => { event.preventDefault(); addEquipmentItem(equipmentLabel); }} className="mt-3 flex gap-2">
                   <StyledInput value={equipmentLabel} onChange={event => setEquipmentLabel(event.target.value)} placeholder="Tambah barang, mis. Mukena" maxLength={80} />
-                  <button type="submit" disabled={!equipmentLabel.trim() || equipmentAdding} className="flex-none rounded-xl px-3 text-[11px] font-semibold text-white disabled:opacity-60" style={{ background: '#172554' }}>Tambah</button>
+                  <button type="submit" disabled={!equipmentLabel.trim() || equipmentAdding} className="flex-none rounded-xl px-3 text-[11px] font-semibold text-white disabled:opacity-60" style={{ background: 'var(--color-primary-deep)' }}>Tambah</button>
                 </form>
               </div>
 
@@ -1291,7 +1272,7 @@ export default function TravelDashboard() {
                       <div key={jamaah.id} className="border-b last:border-b-0" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>
                         <button type="button" onClick={() => setEquipmentJamaahId(selected ? null : jamaah.id)} className="flex w-full items-center gap-3 px-4 py-3.5 text-left">
                           <span className="flex h-9 w-9 flex-none items-center justify-center rounded-xl" style={{ background: 'rgba(13,148,136,0.08)', color: '#0f766e' }}><PackageCheck className="h-4 w-4" /></span>
-                          <span className="min-w-0 flex-1"><span className="block truncate text-[13px] font-semibold" style={{ color: '#111827' }}>{jamaah.nama}</span><span className="mt-0.5 block text-[10.5px]" style={{ color: '#6b7280' }}>{received} dari {equipmentCatalog.length} diterima</span></span>
+                          <span className="min-w-0 flex-1"><span className="block truncate text-[13px] font-semibold" style={{ color: '#202020' }}>{jamaah.nama}</span><span className="mt-0.5 block text-[10.5px]" style={{ color: '#6b7280' }}>{received} dari {equipmentCatalog.length} diterima</span></span>
                           <span className="rounded-full px-2 py-1 font-mono text-[10px] font-bold" style={{ color: received === equipmentCatalog.length ? '#15803d' : '#b45309', background: received === equipmentCatalog.length ? 'rgba(22,163,74,0.09)' : 'rgba(245,158,11,0.10)' }}>{received === equipmentCatalog.length ? 'LENGKAP' : 'PROSES'}</span>
                         </button>
                         {selected && <div className="grid grid-cols-2 gap-2 px-4 pb-4">{equipmentCatalog.map(item => {
@@ -1314,7 +1295,7 @@ export default function TravelDashboard() {
           <div className="flex flex-wrap items-end justify-between gap-4 mb-5">
             <div>
               <p className="font-mono text-[10px] uppercase tracking-[0.16em]" style={{ color: PRIMARY_DEEP }}>Dokumen Perjalanan</p>
-              <h2 className="mt-1 text-[20px] font-bold" style={{ color: '#111827', letterSpacing: '-0.02em' }}>Status paspor, visa & tiket</h2>
+              <h2 className="mt-1 text-[20px] font-bold" style={{ color: '#202020', letterSpacing: '-0.02em' }}>Status paspor, visa & tiket</h2>
               <p className="mt-1 text-[12px]" style={{ color: '#6b7280' }}>{selectedBatch ? `${selectedBatch.nama_batch}. Jamaah melihat status ini di menu Profil.` : 'Pilih batch untuk mengatur status dokumen.'}</p>
             </div>
             {selectedBatch && jamaahList.length > 0 && (
@@ -1378,7 +1359,7 @@ export default function TravelDashboard() {
                   {docJamaahList.map(jamaah => (
                     <tr key={jamaah.id} style={{ borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
                       <td className="px-5 py-3 align-top">
-                        <p className="text-[13px] font-semibold" style={{ color: '#111827' }}>{jamaah.nama}</p>
+                        <p className="text-[13px] font-semibold" style={{ color: '#202020' }}>{jamaah.nama}</p>
                         <p className="font-mono text-[10px]" style={{ color: '#9ca3af' }}>{jamaah.nomor_jamaah}</p>
                       </td>
                       {DOC_TYPES.map(({ type }) => {
@@ -1423,7 +1404,7 @@ export default function TravelDashboard() {
           <div className="flex flex-wrap items-end justify-between gap-4 mb-5">
             <div>
               <p className="font-mono text-[10px] uppercase tracking-[0.16em]" style={{ color: '#dc2626' }}>Jamaah Care Center</p>
-              <h2 className="mt-1 text-[20px] font-bold" style={{ color: '#111827', letterSpacing: '-0.02em' }}>Antrean bantuan jamaah</h2>
+              <h2 className="mt-1 text-[20px] font-bold" style={{ color: '#202020', letterSpacing: '-0.02em' }}>Antrean bantuan jamaah</h2>
               <p className="mt-1 text-[12px]" style={{ color: '#6b7280' }}>{selectedBatch ? selectedBatch.nama_batch : 'Pilih batch untuk melihat laporan bantuan.'}</p>
             </div>
             <div className="rounded-xl px-4 py-2.5" style={{ background: openHelpRequests ? 'rgba(220,38,38,0.08)' : 'rgba(22,163,74,0.08)', color: openHelpRequests ? '#dc2626' : '#16a34a' }}>
@@ -1449,7 +1430,7 @@ export default function TravelDashboard() {
                   const active = helpStatusFilter === item.value;
                   return <button key={item.value} type="button" onClick={() => setHelpStatusFilter(item.value)}
                     className="flex-none rounded-full px-3 py-2 text-[11px] font-semibold"
-                    style={{ background: active ? '#172554' : '#fff', color: active ? '#fff' : '#6b7280', border: active ? '1px solid #172554' : '1px solid rgba(0,0,0,0.08)' }}>{item.label}</button>;
+                    style={{ background: active ? 'var(--color-primary-deep)' : '#fff', color: active ? '#fff' : '#6b7280', border: active ? '1px solid var(--color-primary-deep)' : '1px solid rgba(0,0,0,0.08)' }}>{item.label}</button>;
                 })}
               </div>
 
@@ -1479,7 +1460,7 @@ export default function TravelDashboard() {
                             <span className="flex h-9 w-9 flex-none items-center justify-center rounded-xl" style={{ color: statusStyle.color, background: statusStyle.background }}><CategoryIcon className="h-4 w-4" /></span>
                             <div className="min-w-0 flex-1">
                               <div className="flex flex-wrap items-center gap-2">
-                                <p className="text-[13px] font-bold" style={{ color: '#111827' }}>{request.nama_jamaah}</p>
+                                <p className="text-[13px] font-bold" style={{ color: '#202020' }}>{request.nama_jamaah}</p>
                                 <span className="font-mono text-[9px] uppercase tracking-wider" style={statusStyle}>{request.status}</span>
                               </div>
                               <p className="mt-0.5 text-[10.5px] font-semibold" style={{ color: '#6b7280' }}>{categoryLabel} · {formatDatetime(request.created_at)}</p>
@@ -1490,7 +1471,7 @@ export default function TravelDashboard() {
                             <p className="truncate text-[10px]" style={{ color: '#9ca3af' }}>{request.handled_by ? `Ditangani oleh ${request.handled_by}` : 'Belum ada petugas'}</p>
                             <button type="button" disabled={helpUpdatingId === request.id} onClick={() => handleHelpStatusChange(request, nextStatus)}
                               className="flex-none rounded-lg px-3 py-1.5 text-[11px] font-semibold disabled:opacity-60"
-                              style={{ color: request.status === 'selesai' ? '#6b7280' : '#fff', background: request.status === 'selesai' ? '#f3f4f6' : '#172554' }}>
+                              style={{ color: request.status === 'selesai' ? '#6b7280' : '#fff', background: request.status === 'selesai' ? '#f3f4f6' : 'var(--color-primary-deep)' }}>
                               {helpUpdatingId === request.id ? 'Menyimpan...' : actionLabel}
                             </button>
                           </div>
@@ -1508,7 +1489,7 @@ export default function TravelDashboard() {
       {activeTab === 'keberangkatan' && (
         <div>
           <div className="flex items-center gap-3 mb-5">
-            <h2 className="font-bold" style={{ fontSize: '18px', color: '#111827', letterSpacing: '-0.02em' }}>Batch Keberangkatan</h2>
+            <h2 className="font-bold" style={{ fontSize: '18px', color: '#202020', letterSpacing: '-0.02em' }}>Batch Keberangkatan</h2>
             <span className="font-mono text-[10px] uppercase tracking-widest px-2 py-1 rounded-full" style={{ background: PRIMARY_BG, color: PRIMARY }}>{keberangkatanList.length} batch</span>
             <button type="button" onClick={() => openKbForm()}
               className="ml-auto inline-flex items-center gap-2 px-4 py-2 text-[12px] font-semibold rounded-xl transition-all duration-150"
@@ -1595,7 +1576,7 @@ export default function TravelDashboard() {
                 <div className="flex items-start gap-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <p className="font-semibold text-[14px]" style={{ color: '#111827' }}>{kb.nama_batch}</p>
+                      <p className="font-semibold text-[14px]" style={{ color: '#202020' }}>{kb.nama_batch}</p>
                       {kb.aktif ? (
                         <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full" style={{ background: 'rgba(22,163,74,0.1)', color: '#16a34a' }}>Aktif</span>
                       ) : (
@@ -1667,7 +1648,7 @@ export default function TravelDashboard() {
 
           {/* Header */}
           <div className="flex items-center gap-3 mb-5">
-            <h2 className="font-bold" style={{ fontSize: '18px', color: '#111827', letterSpacing: '-0.02em' }}>Daftar Jamaah</h2>
+            <h2 className="font-bold" style={{ fontSize: '18px', color: '#202020', letterSpacing: '-0.02em' }}>Daftar Jamaah</h2>
             <span className="font-mono text-[10px] uppercase tracking-widest px-2 py-1 rounded-full" style={{ background: PRIMARY_BG, color: PRIMARY }}>{jamaahList.length} jamaah</span>
             <button type="button" onClick={() => { setImportOpen(o => !o); setImportError(''); setImportPreview([]); }}
               className="ml-auto inline-flex items-center gap-2 px-4 py-2 text-[12px] font-semibold rounded-xl transition-all duration-150"
@@ -1806,13 +1787,13 @@ export default function TravelDashboard() {
 
                   if (isEditing) {
                     return (
-                      <li key={j.id} className="px-5 py-4" style={{ background: `rgba(14,165,233,0.03)` }}>
+                      <li key={j.id} className="px-5 py-4" style={{ background: `color-mix(in srgb, var(--color-primary) 3%, transparent)` }}>
                         <div className="grid grid-cols-2 gap-2 mb-2 sm:grid-cols-4">
                           <div>
                             <p className="font-mono text-[9px] uppercase tracking-widest mb-1" style={{ color: '#9ca3af' }}>Nama</p>
                             <input value={editNama} onChange={e => setEditNama(e.target.value)}
                               className="w-full rounded-lg px-2 py-1.5 text-[13px] focus:outline-none"
-                              style={{ border: `1px solid ${PRIMARY_BORDER}`, background: '#fff', color: '#111827' }} />
+                              style={{ border: `1px solid ${PRIMARY_BORDER}`, background: '#fff', color: '#202020' }} />
                           </div>
                           <div>
                             <p className="font-mono text-[9px] uppercase tracking-widest mb-1" style={{ color: '#9ca3af' }}>No. Jamaah</p>
@@ -1868,7 +1849,7 @@ export default function TravelDashboard() {
                     <li key={j.id} className="flex items-center gap-3 px-5 py-3.5">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-baseline gap-2 flex-wrap">
-                          <span className="text-[13px] font-semibold" style={{ color: '#111827' }}>{j.nama}</span>
+                          <span className="text-[13px] font-semibold" style={{ color: '#202020' }}>{j.nama}</span>
                           <span className="font-mono text-[11px]" style={{ color: '#6b7280' }}>{j.nomor_jamaah}</span>
                         </div>
                         {chips.length > 0 && (
@@ -1886,7 +1867,7 @@ export default function TravelDashboard() {
                       </div>
                       <select value={j.fase_override ?? ''} onChange={e => handleUpdateJamaahFase(j.id, e.target.value)}
                         className="hidden sm:block text-[11px] rounded-lg px-2 py-1 focus:outline-none transition-all flex-none"
-                        style={{ border: '1px solid rgba(0,0,0,0.09)', background: '#fafaf9', color: '#374151' }}>
+                        style={{ border: '1px solid rgba(0,0,0,0.09)', background: '#ffffff', color: '#374151' }}>
                         <option value="">Auto</option>
                         {FASE_OPTIONS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
                       </select>
@@ -1928,7 +1909,7 @@ export default function TravelDashboard() {
       {activeTab === 'agenda' && (
         <div>
           <div className="flex items-center gap-3 mb-5">
-            <h2 className="font-bold" style={{ fontSize: '18px', color: '#111827', letterSpacing: '-0.02em' }}>Agenda Perjalanan</h2>
+            <h2 className="font-bold" style={{ fontSize: '18px', color: '#202020', letterSpacing: '-0.02em' }}>Agenda Perjalanan</h2>
             <span className="font-mono text-[10px] uppercase tracking-widest px-2 py-1 rounded-full" style={{ background: PRIMARY_BG, color: PRIMARY }}>{agendaItems.length} item</span>
             {selectedKeberangkatan && (
               <button type="button" onClick={() => { setAgImportOpen(o => !o); setAgImportError(''); setAgImportPreview([]); }}
@@ -1986,7 +1967,7 @@ export default function TravelDashboard() {
                       <div className="overflow-x-auto rounded-xl mb-3" style={{ border: '1px solid rgba(0,0,0,0.07)' }}>
                         <table className="w-full text-[11px]">
                           <thead>
-                            <tr style={{ background: '#fafaf9', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+                            <tr style={{ background: '#ffffff', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
                               {['Tanggal', 'Jam', 'Judul', 'Lokasi', 'Deskripsi', ''].map(h => (
                                 <th key={h} className="text-left font-mono uppercase tracking-wider px-3 py-2" style={{ color: '#9ca3af', fontSize: '10px' }}>{h}</th>
                               ))}
@@ -2039,7 +2020,7 @@ export default function TravelDashboard() {
                   {agError && <p className="text-[12px]" style={{ color: '#dc2626' }}>{agError}</p>}
                   <button type="submit" disabled={agSubmitting}
                     className="flex items-center gap-2 px-5 py-2.5 text-[12px] font-semibold rounded-xl transition-all duration-150 disabled:opacity-60"
-                    style={{ background: `linear-gradient(135deg, ${PRIMARY} 0%, ${PRIMARY_DEEP} 100%)`, color: '#ffffff', boxShadow: '0 2px 8px rgba(14,165,233,0.22)' }}>
+                    style={{ background: `linear-gradient(135deg, ${PRIMARY} 0%, ${PRIMARY_DEEP} 100%)`, color: '#ffffff', boxShadow: '0 2px 8px color-mix(in srgb, var(--color-primary) 22%, transparent)' }}>
                     {agSubmitting ? (
                       <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeOpacity="0.3" /><path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" /></svg>
                     ) : (
@@ -2080,7 +2061,7 @@ export default function TravelDashboard() {
                             <td className="px-5 py-3.5 text-[13px] font-medium whitespace-nowrap" style={{ color: '#374151' }}>{formatTanggal(item.tanggal)}</td>
                             <td className="px-5 py-3.5 font-mono text-[12px]" style={{ color: '#6b7280' }}>{item.jam_mulai ? item.jam_mulai.slice(0, 5) : '—'}</td>
                             <td className="px-5 py-3.5">
-                              <p className="text-[13px] font-semibold" style={{ color: '#111827' }}>{item.judul}</p>
+                              <p className="text-[13px] font-semibold" style={{ color: '#202020' }}>{item.judul}</p>
                               {item.deskripsi && <p className="text-[11px] mt-0.5" style={{ color: '#9ca3af' }}>{item.deskripsi}</p>}
                             </td>
                             <td className="px-5 py-3.5 text-[12px]" style={{ color: '#6b7280' }}>{item.lokasi ?? '—'}</td>
@@ -2142,7 +2123,7 @@ export default function TravelDashboard() {
                                 <div className="flex items-center gap-2">
                                   <button type="button" onClick={handleSaveAgEdit} disabled={agEditSaving}
                                     className="inline-flex items-center gap-1.5 px-4 py-2 text-[12px] font-semibold rounded-xl transition-all duration-150 disabled:opacity-60"
-                                    style={{ background: `linear-gradient(135deg, ${PRIMARY} 0%, ${PRIMARY_DEEP} 100%)`, color: '#fff', boxShadow: '0 2px 6px rgba(14,165,233,0.22)' }}>
+                                    style={{ background: `linear-gradient(135deg, ${PRIMARY} 0%, ${PRIMARY_DEEP} 100%)`, color: '#fff', boxShadow: '0 2px 6px color-mix(in srgb, var(--color-primary) 22%, transparent)' }}>
                                     {agEditSaving && <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeOpacity="0.3" /><path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" /></svg>}
                                     {agEditSaving ? 'Menyimpan...' : 'Simpan'}
                                   </button>
@@ -2174,7 +2155,7 @@ export default function TravelDashboard() {
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
               <p className="font-mono text-[10px] uppercase tracking-[0.14em]" style={{ color: PRIMARY }}>Itinerary Addon</p>
-              <h2 className="mt-1 text-[22px] font-bold" style={{ color: '#111827' }}>Agenda khusus tanpa memecah batch</h2>
+              <h2 className="mt-1 text-[22px] font-bold" style={{ color: '#202020' }}>Agenda khusus tanpa memecah batch</h2>
               <p className="mt-1 text-[13px]" style={{ color: '#6b7280' }}>Pilih jamaah peserta, lalu agenda addon hanya tampil di aplikasi mereka.</p>
             </div>
             {selectedBatch && <span className="rounded-full px-3 py-1.5 text-[11px] font-semibold" style={{ background: PRIMARY_BG, color: PRIMARY_DEEP }}>{selectedBatch.nama_batch}</span>}
@@ -2211,7 +2192,7 @@ export default function TravelDashboard() {
       {activeTab === 'pengumuman' && (
         <div>
           <div className="flex items-center gap-3 mb-5">
-            <h2 className="font-bold" style={{ fontSize: '18px', color: '#111827', letterSpacing: '-0.02em' }}>Pengumuman Travel</h2>
+            <h2 className="font-bold" style={{ fontSize: '18px', color: '#202020', letterSpacing: '-0.02em' }}>Pengumuman Travel</h2>
             <span className="font-mono text-[10px] uppercase tracking-widest px-2 py-1 rounded-full" style={{ background: PRIMARY_BG, color: PRIMARY }}>{announcements.length} item</span>
           </div>
 
@@ -2249,7 +2230,7 @@ export default function TravelDashboard() {
                   {annError && <p className="text-[12px]" style={{ color: '#dc2626' }}>{annError}</p>}
                   <button type="submit" disabled={annSubmitting}
                     className="flex items-center gap-2 px-5 py-2.5 text-[12px] font-semibold rounded-xl transition-all duration-150 disabled:opacity-60"
-                    style={{ background: `linear-gradient(135deg, ${PRIMARY} 0%, ${PRIMARY_DEEP} 100%)`, color: '#ffffff', boxShadow: '0 2px 8px rgba(14,165,233,0.22)' }}>
+                    style={{ background: `linear-gradient(135deg, ${PRIMARY} 0%, ${PRIMARY_DEEP} 100%)`, color: '#ffffff', boxShadow: '0 2px 8px color-mix(in srgb, var(--color-primary) 22%, transparent)' }}>
                     {annSubmitting ? 'Mengirim...' : 'Kirim Pengumuman'}
                   </button>
                 </form>
@@ -2272,7 +2253,7 @@ export default function TravelDashboard() {
                             </span>
                             <span className="font-mono text-[10px]" style={{ color: '#9ca3af' }}>{formatDatetime(ann.published_at)}</span>
                           </div>
-                          <p className="text-[13px] font-semibold truncate" style={{ color: '#111827' }}>{ann.title}</p>
+                          <p className="text-[13px] font-semibold truncate" style={{ color: '#202020' }}>{ann.title}</p>
                           <p className="text-[12px] mt-0.5 line-clamp-2" style={{ color: '#6b7280' }}>{ann.content}</p>
                         </div>
                         <button type="button" onClick={() => handleDeleteAnnouncement(ann.id, ann.title)}
