@@ -1170,7 +1170,7 @@ export default function TravelDashboard() {
                 ))}
               </div>
 
-              <div className="grid gap-3 lg:grid-cols-[1.25fr_1fr] lg:items-start">
+              <div className="grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] lg:items-start">
                 {/* Kesiapan */}
                 <div className="overflow-hidden rounded-2xl border border-hairline bg-white shadow-drop-card">
                   <div className="flex items-center justify-between gap-3 px-4 pb-1 pt-3.5">
