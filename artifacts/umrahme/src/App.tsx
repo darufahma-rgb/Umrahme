@@ -25,6 +25,7 @@ import Peta from './pages/Peta';
 import LokasiDetail from './pages/LokasiDetail';
 import Profil from './pages/Profil';
 import Persiapan from './pages/Persiapan';
+import Dokumen from './pages/Dokumen';
 import Sertifikat from './pages/Sertifikat';
 import ManasikInteraktif from './pages/ManasikInteraktif';
 import ManasikModulDetail from './pages/ManasikModulDetail';
@@ -84,6 +85,7 @@ export default function App() {
         <Route path="/peta/:id" element={<LokasiDetail />} />
         <Route path="/profil" element={<Profil />} />
         <Route path="/profil/persiapan" element={<Persiapan />} />
+        <Route path="/profil/dokumen" element={<Dokumen />} />
         <Route path="/profil/sertifikat" element={<Sertifikat />} />
         <Route path="/profil/jurnal" element={<Jurnal />} />
         <Route path="/profil/agenda" element={<AgendaLengkap />} />

@@ -12,6 +12,8 @@ import {
   fetchAnnouncements, createAnnouncement, deleteAnnouncement,
   fetchHelpRequests, updateHelpRequestStatus,
   fetchEquipmentCatalog, fetchEquipmentAssignments, createEquipmentCatalogItem, updateEquipmentAssignment,
+  fetchJamaahDocuments, updateJamaahDocument,
+  type JamaahDocumentRow, type JamaahDocumentStatus,
   type KeberangkatanRow, type JamaahAccountRow, type AgendaItemRow, type TravelAnnouncementRow, type HelpRequestRow, type HelpRequestStatus, type EquipmentCatalogRow, type EquipmentAssignmentRow, type EquipmentAssignmentStatus, type TenantQuotaBalance, type ItineraryAddonRow, type ItineraryAddonItemRow,
   supabase,
 } from '../../lib/supabase';
@@ -99,17 +101,30 @@ const FASE_OPTIONS: { value: JamaahAccountRow['fase']; label: string }[] = [
   { value: 'selesai', label: 'Selesai' },
 ];
 
-type TabId = 'overview' | 'keberangkatan' | 'jamaah' | 'agenda' | 'addon' | 'pengumuman' | 'care' | 'perlengkapan';
+type TabId = 'overview' | 'keberangkatan' | 'jamaah' | 'dokumen' | 'agenda' | 'addon' | 'pengumuman' | 'care' | 'perlengkapan';
 
 const TABS: { id: TabId; label: string }[] = [
   { id: 'overview', label: 'Command Center' },
   { id: 'keberangkatan', label: 'Keberangkatan' },
   { id: 'jamaah', label: 'Jamaah' },
+  { id: 'dokumen', label: 'Dokumen' },
   { id: 'agenda', label: 'Agenda' },
   { id: 'addon', label: 'Itinerary Addon' },
   { id: 'pengumuman', label: 'Pengumuman' },
   { id: 'care', label: 'Care Center' },
   { id: 'perlengkapan', label: 'Perlengkapan' },
+];
+
+const DOC_TYPES: { type: 'paspor' | 'visa' | 'tiket'; label: string }[] = [
+  { type: 'paspor', label: 'Paspor' },
+  { type: 'visa', label: 'Visa' },
+  { type: 'tiket', label: 'Tiket' },
+];
+
+const DOC_STATUS_OPTIONS: { value: JamaahDocumentStatus; label: string; color: string; bg: string }[] = [
+  { value: 'belum', label: 'Belum', color: '#6b7280', bg: '#f9fafb' },
+  { value: 'proses', label: 'Proses', color: '#b45309', bg: 'rgba(245,158,11,0.10)' },
+  { value: 'lengkap', label: 'Lengkap', color: '#15803d', bg: 'rgba(22,163,74,0.09)' },
 ];
 
 const DEFAULT_EQUIPMENT = ['Koper', 'Tas Sandang', 'Seragam', 'ID Card', 'Buku Panduan', 'Perlengkapan Ibadah'];
@@ -285,6 +300,12 @@ export default function TravelDashboard() {
   const [equipmentLabel, setEquipmentLabel] = useState('');
   const [equipmentAdding, setEquipmentAdding] = useState(false);
 
+  /* ── Dokumen Jamaah (paspor, visa, tiket) ── */
+  const [docRows, setDocRows] = useState<JamaahDocumentRow[]>([]);
+  const [docLoading, setDocLoading] = useState(false);
+  const [docSaving, setDocSaving] = useState<string | null>(null);
+  const [docError, setDocError] = useState('');
+
   /* ── Loaders ─────────────────────────────────────────────────────── */
 
   const loadKeberangkatan = useCallback(async () => {
@@ -346,6 +367,22 @@ export default function TravelDashboard() {
       setEquipmentLoading(false);
     }
   }, [selectedKeberangkatan]);
+
+  const loadDocuments = useCallback(async () => {
+    if (!tenant?.id) return;
+    if (jamaahList.length === 0) { setDocRows([]); return; }
+    setDocLoading(true); setDocError('');
+    try {
+      setDocRows(await fetchJamaahDocuments(tenant.id, jamaahList.map(j => j.id)));
+    } catch (err: unknown) {
+      setDocRows([]);
+      setDocError(err instanceof Error ? err.message : 'Gagal memuat status dokumen.');
+    } finally {
+      setDocLoading(false);
+    }
+  }, [tenant?.id, jamaahList]);
+
+  useEffect(() => { void loadDocuments(); }, [loadDocuments]);
 
   useEffect(() => {
     if (tenant?.id) loadKeberangkatan();
@@ -891,6 +928,40 @@ export default function TravelDashboard() {
     }
   }
 
+  function docStatusOf(jamaahId: string, type: JamaahDocumentRow['document_type']): JamaahDocumentStatus {
+    return docRows.find(d => d.jamaah_id === jamaahId && d.document_type === type)?.status ?? 'belum';
+  }
+
+  async function setDocStatus(jamaahId: string, type: JamaahDocumentRow['document_type'], status: JamaahDocumentStatus) {
+    if (!tenant?.id) return;
+    const key = `${jamaahId}:${type}`;
+    setDocSaving(key); setDocError('');
+    try {
+      const saved = await updateJamaahDocument(tenant.id, jamaahId, type, status);
+      setDocRows(prev => [...prev.filter(d => !(d.jamaah_id === jamaahId && d.document_type === type)), saved]);
+    } catch (err: unknown) {
+      setDocError(err instanceof Error ? err.message : 'Gagal menyimpan status dokumen.');
+    } finally {
+      setDocSaving(null);
+    }
+  }
+
+  async function setDocStatusForAll(type: JamaahDocumentRow['document_type'], status: JamaahDocumentStatus) {
+    if (!tenant?.id || jamaahList.length === 0) return;
+    const label = DOC_STATUS_OPTIONS.find(o => o.value === status)?.label ?? status;
+    if (!window.confirm(`Ubah status ${type} semua ${jamaahList.length} jamaah di batch ini menjadi "${label}"?`)) return;
+    setDocSaving(`all:${type}`); setDocError('');
+    try {
+      const saved = await Promise.all(jamaahList.map(j => updateJamaahDocument(tenant.id, j.id, type, status)));
+      setDocRows(prev => [...prev.filter(d => d.document_type !== type), ...saved]);
+    } catch (err: unknown) {
+      setDocError(err instanceof Error ? err.message : 'Gagal menyimpan status dokumen.');
+      await loadDocuments();
+    } finally {
+      setDocSaving(null);
+    }
+  }
+
   /* ── Guard: no tenant ────────────────────────────────────────────── */
 
   if (!tenant) {
@@ -1215,6 +1286,96 @@ export default function TravelDashboard() {
                 </div>
               )}
             </>
+          )}
+        </section>
+      )}
+
+      {activeTab === 'dokumen' && (
+        <section>
+          <div className="flex flex-wrap items-end justify-between gap-4 mb-5">
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em]" style={{ color: PRIMARY_DEEP }}>Dokumen Perjalanan</p>
+              <h2 className="mt-1 text-[20px] font-bold" style={{ color: '#111827', letterSpacing: '-0.02em' }}>Status paspor, visa & tiket</h2>
+              <p className="mt-1 text-[12px]" style={{ color: '#6b7280' }}>{selectedBatch ? `${selectedBatch.nama_batch}. Jamaah melihat status ini di menu Profil.` : 'Pilih batch untuk mengatur status dokumen.'}</p>
+            </div>
+            {selectedBatch && jamaahList.length > 0 && (
+              <div className="flex gap-2">
+                {DOC_TYPES.map(({ type, label }) => {
+                  const done = jamaahList.filter(j => docStatusOf(j.id, type) === 'lengkap').length;
+                  return (
+                    <div key={type} className="rounded-xl px-3 py-2.5 text-center" style={{ background: PRIMARY_BG, color: PRIMARY_DEEP }}>
+                      <p className="font-mono text-[16px] font-bold leading-none">{done}/{jamaahList.length}</p>
+                      <p className="mt-1 font-mono text-[9px] font-bold uppercase tracking-wider">{label}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {docError && <p className="mb-3 rounded-xl px-4 py-2.5 text-[12px]" style={{ color: '#b91c1c', background: 'rgba(220,38,38,0.07)' }}>{docError}</p>}
+
+          {!selectedBatch ? (
+            <div className="rounded-2xl px-5 py-10 text-center" style={{ border: '1px dashed rgba(0,0,0,0.14)' }}>
+              <p className="text-[13px]" style={{ color: '#6b7280' }}>Pilih atau buat batch keberangkatan terlebih dahulu.</p>
+              <button type="button" onClick={() => setActiveTab('keberangkatan')} className="mt-3 text-[12px] font-semibold" style={{ color: PRIMARY }}>Kelola Batch</button>
+            </div>
+          ) : jamaahList.length === 0 ? (
+            <div className="rounded-2xl px-5 py-10 text-center" style={{ border: '1px dashed rgba(0,0,0,0.14)' }}>
+              <p className="text-[13px]" style={{ color: '#6b7280' }}>Belum ada jamaah di batch ini.</p>
+            </div>
+          ) : docLoading ? (
+            <p className="py-10 text-center font-mono text-[12px]" style={{ color: '#9ca3af' }}>Memuat status dokumen...</p>
+          ) : (
+            <div className="overflow-x-auto rounded-2xl" style={cardStyle}>
+              <table className="w-full min-w-[560px] text-left">
+                <thead>
+                  <tr style={{ borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+                    <th className="px-5 py-3 font-mono text-[10px] uppercase tracking-wider" style={{ color: '#9ca3af' }}>Jamaah</th>
+                    {DOC_TYPES.map(({ type, label }) => (
+                      <th key={type} className="px-3 py-3 font-mono text-[10px] uppercase tracking-wider" style={{ color: '#9ca3af' }}>
+                        <span className="block">{label}</span>
+                        <select
+                          value=""
+                          disabled={docSaving !== null}
+                          onChange={e => { if (e.target.value) void setDocStatusForAll(type, e.target.value as JamaahDocumentStatus); }}
+                          className="mt-1 rounded-md px-1.5 py-1 text-[10px] normal-case tracking-normal"
+                          style={{ border: '1px solid rgba(0,0,0,0.09)', background: '#fff', color: '#6b7280' }}>
+                          <option value="">Set semua…</option>
+                          {DOC_STATUS_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                        </select>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {jamaahList.map(jamaah => (
+                    <tr key={jamaah.id} style={{ borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
+                      <td className="px-5 py-3">
+                        <p className="text-[13px] font-semibold" style={{ color: '#111827' }}>{jamaah.nama}</p>
+                        <p className="font-mono text-[10px]" style={{ color: '#9ca3af' }}>{jamaah.nomor_jamaah}</p>
+                      </td>
+                      {DOC_TYPES.map(({ type }) => {
+                        const status = docStatusOf(jamaah.id, type);
+                        const opt = DOC_STATUS_OPTIONS.find(o => o.value === status) ?? DOC_STATUS_OPTIONS[0];
+                        return (
+                          <td key={type} className="px-3 py-3">
+                            <select
+                              value={status}
+                              disabled={docSaving === `${jamaah.id}:${type}` || docSaving === `all:${type}`}
+                              onChange={e => void setDocStatus(jamaah.id, type, e.target.value as JamaahDocumentStatus)}
+                              className="rounded-lg px-2.5 py-1.5 text-[11px] font-semibold disabled:opacity-50"
+                              style={{ color: opt.color, background: opt.bg, border: `1px solid ${status === 'belum' ? 'rgba(0,0,0,0.09)' : opt.color + '40'}` }}>
+                              {DOC_STATUS_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                            </select>
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </section>
       )}

@@ -747,10 +747,21 @@ export async function fetchJamaahDocuments(tenantId: string, jamaahIds: string[]
   return (data ?? []) as JamaahDocumentRow[];
 }
 
-export async function updateJamaahDocument(tenantId: string, jamaahId: string, documentType: JamaahDocumentRow['document_type'], status: JamaahDocumentStatus): Promise<JamaahDocumentRow> {
-  const { data, error } = await supabase.from('jamaah_documents').upsert({ tenant_id: tenantId, jamaah_id: jamaahId, document_type: documentType, status, updated_at: new Date().toISOString() }, { onConflict: 'jamaah_id,document_type' }).select().single();
+export async function updateJamaahDocument(tenantId: string, jamaahId: string, documentType: JamaahDocumentRow['document_type'], status: JamaahDocumentStatus, note?: string | null): Promise<JamaahDocumentRow> {
+  const row = { tenant_id: tenantId, jamaah_id: jamaahId, document_type: documentType, status, updated_at: new Date().toISOString(), ...(note !== undefined ? { note } : {}) };
+  const { data, error } = await supabase.from('jamaah_documents').upsert(row, { onConflict: 'jamaah_id,document_type' }).select().single();
   if (error) throw new Error(error.message);
   return data as JamaahDocumentRow;
+}
+
+export async function fetchMyJamaahDocuments(tenantId: string, nomorJamaah: string): Promise<JamaahDocumentRow[]> {
+  const token = getJamaahToken();
+  if (!token) throw new Error('Sesi tidak valid. Silakan login ulang.');
+  const { data, error } = await supabase.rpc('jamaah_documents_get', {
+    p_tenant_id: tenantId, p_nomor_jamaah: nomorJamaah, p_token: token,
+  });
+  if (error) throw new Error(error.message);
+  return (data ?? []) as JamaahDocumentRow[];
 }
 
 // ── Travel Accounts ───────────────────────────────────────────
