@@ -1130,12 +1130,8 @@ export default function TravelDashboard() {
           ) : (
             <>
               {/* Ringkasan batch */}
-              <div className="relative overflow-hidden rounded-2xl text-white shadow-drop-card">
-                {tenant.hero_image_url
-                  ? <img src={tenant.hero_image_url} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: 'center 30%' }} />
-                  : <div aria-hidden className="absolute inset-0" style={{ background: 'var(--color-primary)' }} />}
-                <div className="pointer-events-none absolute inset-0" style={{ background: 'linear-gradient(100deg, color-mix(in srgb, var(--color-primary-deep) 94%, transparent) 0%, color-mix(in srgb, var(--color-primary-deep) 55%, transparent) 100%)' }} />
-                <div className="relative p-4 sm:p-5">
+              <div className="overflow-hidden rounded-2xl text-white shadow-drop-card" style={{ background: 'linear-gradient(100deg, var(--color-primary-deep) 0%, var(--color-primary) 100%)' }}>
+                <div className="p-4 sm:p-5">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <p className="truncate text-[11px] font-medium text-white/70">{tenant.nama_travel}</p>
