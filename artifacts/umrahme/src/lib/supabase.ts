@@ -376,14 +376,12 @@ export async function deleteTenant(id: string): Promise<void> {
   if (error) throw new Error(error.message);
 }
 
-export async function fetchTenantBySlug(slug: string): Promise<TenantRow | null> {
-  const { data, error } = await supabase
-    .from('tenants')
-    .select('*')
-    .eq('slug', slug.toLowerCase())
-    .maybeSingle();
+export type TenantPublicRow = Pick<TenantRow, 'nama_travel' | 'primary_color' | 'primary_deep_color' | 'logo_url' | 'hero_image_url'>;
+
+export async function fetchTenantBySlug(slug: string): Promise<TenantPublicRow | null> {
+  const { data, error } = await supabase.rpc('tenant_public_by_slug', { p_slug: slug });
   if (error) throw new Error(error.message);
-  return data as TenantRow | null;
+  return (data ?? null) as TenantPublicRow | null;
 }
 
 export async function checkActivationCode(code: string, excludeId?: string): Promise<{ taken: boolean }> {
@@ -484,20 +482,12 @@ export async function fetchAgendaForJamaah(
   ]);
   const isKnownAlUlaParticipant = alUlaParticipantNames.has(normalizeName(identity.nama));
   const baseAgenda = (await fetchAgenda(keberangkatanId)).filter((item) => !isAlUlaAgenda(item));
-  let accountQuery = supabase
-    .from('jamaah_accounts')
-    .select('id')
-    .eq('tenant_id', tenantId)
-    .eq('keberangkatan_id', keberangkatanId);
-  if (identity.accountId) accountQuery = accountQuery.eq('id', identity.accountId);
-  else accountQuery = accountQuery.eq('nama', identity.nama);
-  const { data: jamaah, error: jamaahError } = await accountQuery.maybeSingle();
-  if (jamaahError || !jamaah) return isKnownAlUlaParticipant ? appendAlUlaFallback(baseAgenda, tenantId, keberangkatanId) : baseAgenda;
+  if (!identity.accountId) return isKnownAlUlaParticipant ? appendAlUlaFallback(baseAgenda, tenantId, keberangkatanId) : baseAgenda;
 
   const { data: memberships, error: membershipError } = await supabase
     .from('itinerary_addon_jamaah')
     .select('addon_id')
-    .eq('jamaah_id', jamaah.id);
+    .eq('jamaah_id', identity.accountId);
   const hasAddonMembership = !membershipError && Boolean(memberships?.length);
   if (!hasAddonMembership && !isKnownAlUlaParticipant) return baseAgenda;
   if (!hasAddonMembership) return appendAlUlaFallback(baseAgenda, tenantId, keberangkatanId);
@@ -752,6 +742,18 @@ export async function updateJamaahDocument(tenantId: string, jamaahId: string, d
   const { data, error } = await supabase.from('jamaah_documents').upsert(row, { onConflict: 'jamaah_id,document_type' }).select().single();
   if (error) throw new Error(error.message);
   return data as JamaahDocumentRow;
+}
+
+export type JamaahSelfRow = { hotel_makkah: string | null; hotel_madinah: string | null; rombongan: string | null };
+
+export async function fetchJamaahSelf(tenantId: string, nomorJamaah: string): Promise<JamaahSelfRow | null> {
+  const token = getJamaahToken();
+  if (!token) return null;
+  const { data, error } = await supabase.rpc('jamaah_self_get', {
+    p_tenant_id: tenantId, p_nomor_jamaah: nomorJamaah, p_token: token,
+  });
+  if (error) throw new Error(error.message);
+  return (data ?? null) as JamaahSelfRow | null;
 }
 
 export async function fetchMyJamaahDocuments(tenantId: string, nomorJamaah: string): Promise<JamaahDocumentRow[]> {

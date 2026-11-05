@@ -1,7 +1,7 @@
 // @refresh reset
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import type { Jamaah } from '../types';
-import { supabase, type TenantRow, type KeberangkatanRow } from '../lib/supabase';
+import { supabase, fetchJamaahSelf, type TenantRow, type KeberangkatanRow } from '../lib/supabase';
 import { hitungFaseDariItinerary, hitungFaseEfektif } from '../data/jamaah';
 
 const STORAGE_KEY = 'umrahme.jamaah';
@@ -140,13 +140,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!jamaah?.nomorJamaah || !tenant?.id) return;
-    supabase
-      .from('jamaah_accounts')
-      .select('*')
-      .eq('tenant_id', tenant.id)
-      .eq('nomor_jamaah', jamaah.nomorJamaah)
-      .maybeSingle()
-      .then(({ data }) => {
+    fetchJamaahSelf(tenant.id, jamaah.nomorJamaah)
+      .then((data) => {
         if (data) {
           setJamaah(prev => prev ? {
             ...prev,
@@ -155,7 +150,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             rombongan: data.rombongan ?? prev.rombongan,
           } : prev);
         }
-      });
+      })
+      .catch(() => {});
   }, [jamaah?.nomorJamaah, tenant?.id, keberangkatan?.id]);
 
   const value: AuthValue = {

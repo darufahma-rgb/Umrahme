@@ -2,7 +2,7 @@ import { useState, useEffect, type FormEvent } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { validasiSlug } from '../data/jamaah';
-import { fetchTenantBySlug, type TenantRow } from '../lib/supabase';
+import { fetchTenantBySlug, type TenantPublicRow } from '../lib/supabase';
 import heroBg from '@assets/photo-1635829576353-1a14caec2f6f_1781969073425.avif';
 
 export default function LoginSlug() {
@@ -10,7 +10,7 @@ export default function LoginSlug() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const [tenant, setTenant] = useState<TenantRow | null>(null);
+  const [tenant, setTenant] = useState<TenantPublicRow | null>(null);
   const [tenantLoading, setTenantLoading] = useState(true);
   const [nama, setNama] = useState('');
   const [error, setError] = useState('');
