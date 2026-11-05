@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect, useRef, useCallback, type FormEvent, type ChangeEvent } from 'react';
 import * as XLSX from 'xlsx';
-import { AlertCircle, ArrowRight, BellRing, CalendarClock, CheckCircle2, ClipboardList, HeartPulse, Hotel, MapPin, MessageCircle, PackageCheck, Phone, Users } from 'lucide-react';
+import { AlertCircle, ArrowRight, CheckCircle2, ClipboardList, HeartPulse, MapPin, MessageCircle, PackageCheck } from 'lucide-react';
 import { useTravelAuth } from '../../context/TravelAuthContext';
 import TravelLayout from '../../components/travel/TravelLayout';
 import {
@@ -28,6 +28,14 @@ function formatTanggal(iso: string) {
   return new Date(iso + 'T00:00:00').toLocaleDateString('id-ID', {
     weekday: 'short', day: 'numeric', month: 'short', year: 'numeric',
   });
+}
+
+function formatRentangTanggal(mulai: string | null, selesai: string | null) {
+  if (!mulai) return 'Tanggal belum diisi';
+  const pendek = (iso: string) => new Date(iso + 'T00:00:00').toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+  if (!selesai) return pendek(mulai);
+  const hari = Math.round((new Date(selesai + 'T00:00:00').getTime() - new Date(mulai + 'T00:00:00').getTime()) / 86400000) + 1;
+  return `${pendek(mulai)} – ${pendek(selesai)} · ${hari} hari`;
 }
 
 function formatDatetime(iso: string) {
@@ -68,7 +76,7 @@ const StyledInput = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes
       <input
         {...props}
         ref={ref}
-        className={`w-full rounded-xl px-4 py-3 text-sm transition-all duration-150 focus:outline-none ${props.className ?? ''}`}
+        className={`w-full rounded-xl px-3.5 py-2.5 text-[13px] transition-all duration-150 focus:outline-none ${props.className ?? ''}`}
         style={{ ...inputBase, ...props.style }}
         onFocus={e => { e.currentTarget.style.border = `1px solid ${PRIMARY}`; e.currentTarget.style.boxShadow = '0 0 0 3px color-mix(in srgb, var(--color-primary) 12%, transparent)'; e.currentTarget.style.background = '#ffffff'; props.onFocus?.(e); }}
         onBlur={e => { e.currentTarget.style.border = '1px solid rgba(0,0,0,0.09)'; e.currentTarget.style.boxShadow = 'inset 0 1px 2px rgba(0,0,0,0.04)'; e.currentTarget.style.background = '#fafaf9'; props.onBlur?.(e); }}
@@ -81,7 +89,7 @@ function StyledTextarea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement>
   return (
     <textarea
       {...props}
-      className={`w-full rounded-xl px-4 py-3 text-sm transition-all duration-150 focus:outline-none resize-none ${props.className ?? ''}`}
+      className={`w-full rounded-xl px-3.5 py-2.5 text-[13px] transition-all duration-150 focus:outline-none resize-none ${props.className ?? ''}`}
       style={{ ...inputBase, ...props.style }}
       onFocus={e => { e.currentTarget.style.border = `1px solid ${PRIMARY}`; e.currentTarget.style.boxShadow = '0 0 0 3px color-mix(in srgb, var(--color-primary) 12%, transparent)'; e.currentTarget.style.background = '#ffffff'; props.onFocus?.(e); }}
       onBlur={e => { e.currentTarget.style.border = '1px solid rgba(0,0,0,0.09)'; e.currentTarget.style.boxShadow = 'inset 0 1px 2px rgba(0,0,0,0.04)'; e.currentTarget.style.background = '#fafaf9'; props.onBlur?.(e); }}
@@ -306,6 +314,11 @@ export default function TravelDashboard() {
   const [docSaving, setDocSaving] = useState<string | null>(null);
   const [docError, setDocError] = useState('');
   const [docSearch, setDocSearch] = useState('');
+
+  /* ── Form tambah: dilipat agar daftar langsung terlihat ── */
+  const [jmFormOpen, setJmFormOpen] = useState(false);
+  const [agFormOpen, setAgFormOpen] = useState(false);
+  const [annFormOpen, setAnnFormOpen] = useState(false);
 
   /* ── Loaders ─────────────────────────────────────────────────────── */
 
@@ -998,121 +1011,92 @@ export default function TravelDashboard() {
   const batchReadiness = selectedBatch ? getBatchReadiness(selectedBatch, jamaahList, agendaItems) : [];
   const readinessCount = batchReadiness.filter((item) => item.ready).length;
   const readinessIssues = batchReadiness.filter((item) => !item.ready);
-  const importantAnnouncements = announcements.filter((item) => item.important).length;
   const missingPassports = jamaahList.filter((item) => !item.nomor_paspor?.trim()).length;
-  const hotelOverrides = jamaahList.filter((item) => item.hotel_makkah?.trim() || item.hotel_madinah?.trim()).length;
   const openHelpRequests = helpRequests.filter((item) => item.status !== 'selesai').length;
   const filteredHelpRequests = helpStatusFilter === 'semua'
     ? helpRequests
     : helpRequests.filter((item) => item.status === helpStatusFilter);
   const receivedEquipmentCount = equipmentAssignments.filter((item) => item.status === 'sudah').length;
+  const visaSiapCount = jamaahList.filter((item) => docStatusOf(item.id, 'visa') === 'lengkap').length;
   const docQuery = docSearch.trim().toLowerCase();
   const docJamaahList = docQuery
     ? jamaahList.filter((item) => item.nama.toLowerCase().includes(docQuery) || item.nomor_jamaah.toLowerCase().includes(docQuery))
     : jamaahList;
+
+  const agEditForm = (
+    <>
+      <div className="grid grid-cols-2 gap-3 mb-3 sm:grid-cols-3">
+                                  <div>
+                                    <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Tanggal <span style={{ color: '#f87171' }}>*</span></p>
+                                    <StyledInput type="date" value={agEditFields.tanggal} onChange={e => setAgEditFields(f => ({ ...f, tanggal: e.target.value }))} />
+                                  </div>
+                                  <div>
+                                    <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Jam Mulai</p>
+                                    <StyledInput type="time" value={agEditFields.jam_mulai} onChange={e => setAgEditFields(f => ({ ...f, jam_mulai: e.target.value }))} />
+                                  </div>
+                                  <div>
+                                    <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Urutan</p>
+                                    <StyledInput type="number" value={agEditFields.urutan} onChange={e => setAgEditFields(f => ({ ...f, urutan: Number(e.target.value) }))} />
+                                  </div>
+                                </div>
+                                <div className="mb-3">
+                                  <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Judul Kegiatan <span style={{ color: '#f87171' }}>*</span></p>
+                                  <StyledInput type="text" value={agEditFields.judul} onChange={e => setAgEditFields(f => ({ ...f, judul: e.target.value }))} />
+                                </div>
+                                <div className="grid gap-3 mb-3 sm:grid-cols-2">
+                                  <div>
+                                    <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Lokasi</p>
+                                    <StyledInput type="text" value={agEditFields.lokasi} onChange={e => setAgEditFields(f => ({ ...f, lokasi: e.target.value }))} />
+                                  </div>
+                                  <div>
+                                    <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Deskripsi</p>
+                                    <StyledTextarea rows={2} value={agEditFields.deskripsi} onChange={e => setAgEditFields(f => ({ ...f, deskripsi: e.target.value }))} />
+                                  </div>
+                                </div>
+                                {agEditError && <p className="text-[12px] mb-2" style={{ color: '#dc2626' }}>{agEditError}</p>}
+                                <div className="flex items-center gap-2">
+                                  <button type="button" onClick={handleSaveAgEdit} disabled={agEditSaving}
+                                    className="inline-flex items-center gap-1.5 px-4 py-2 text-[12px] font-semibold rounded-xl transition-all duration-150 disabled:opacity-60"
+                                    style={{ background: `linear-gradient(135deg, ${PRIMARY} 0%, ${PRIMARY_DEEP} 100%)`, color: '#fff', boxShadow: '0 2px 6px color-mix(in srgb, var(--color-primary) 22%, transparent)' }}>
+                                    {agEditSaving && <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeOpacity="0.3" /><path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" /></svg>}
+                                    {agEditSaving ? 'Menyimpan...' : 'Simpan'}
+                                  </button>
+                                  <button type="button" onClick={handleCancelAgEdit} disabled={agEditSaving}
+                                    className="px-4 py-2 text-[12px] rounded-xl transition-all duration-150"
+                                    style={{ border: '1px solid rgba(0,0,0,0.1)', color: '#6b7280' }}>
+                                    Batal
+                                  </button>
+                                </div>
+    </>
+  );
 
   /* ── Render ──────────────────────────────────────────────────────── */
 
   return (
     <TravelLayout>
 
-      {/* ── Header Tenant ── */}
-      <div className="mb-5 space-y-3">
-        <div className="relative overflow-hidden rounded-2xl shadow-drop-card">
-          {tenant.hero_image_url
-            ? <img src={tenant.hero_image_url} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: 'center 30%' }} />
-            : <div aria-hidden className="absolute inset-0" style={{ background: 'var(--color-primary)' }} />}
-          <div className="pointer-events-none absolute inset-0" style={{ background: 'linear-gradient(100deg, color-mix(in srgb, var(--color-primary-deep) 92%, transparent) 0%, color-mix(in srgb, var(--color-primary-deep) 45%, transparent) 100%)' }} />
-          <div className="relative flex flex-wrap items-end justify-between gap-4 p-5 sm:p-6">
-            <div className="min-w-0">
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/70">Portal Travel</p>
-              <h1 className="mt-1 font-display text-[24px] font-bold leading-tight text-white sm:text-[28px]" style={{ letterSpacing: '-0.5px' }}>
-                {tenant.nama_travel}
-              </h1>
-              {selectedBatch && <p className="mt-1 text-[12.5px] font-medium text-white/80">{selectedBatch.nama_batch}</p>}
-            </div>
-            <div className="flex-none text-white sm:text-right">
-              <p className="font-display text-[34px] font-bold leading-none" style={{ letterSpacing: '-1px' }}>{jamaahList.length}</p>
-              <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.14em] text-white/70">
-                {selectedKeberangkatan ? 'Jamaah batch ini' : 'Total jamaah'}
-              </p>
-            </div>
-          </div>
+      {/* ── Pilihan batch & tab: satu tempat untuk semua tab ── */}
+      {keberangkatanList.length > 0 && (
+        <div className="mb-2">
+          <label htmlFor="travel-batch" className="sr-only">Pilih batch keberangkatan</label>
+          <select id="travel-batch" value={selectedKeberangkatan} onChange={e => setSelectedKeberangkatan(e.target.value)}
+            className="w-full rounded-xl border border-hairline bg-white px-3 py-2 text-[13px] font-semibold text-ink focus:outline-none sm:w-auto sm:min-w-[320px]">
+            {keberangkatanList.map(kb => (
+              <option key={kb.id} value={kb.id}>{kb.nama_batch}</option>
+            ))}
+          </select>
         </div>
-
-        <div className="grid gap-3 md:grid-cols-2">
-          {/* Kode aktivasi */}
-          <div className="rounded-2xl border border-hairline bg-white p-4 shadow-drop-card">
-            <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-mute">Kode Aktivasi Jamaah</p>
-            <p className="mt-1 font-display text-[20px] font-bold text-primary" style={{ letterSpacing: '0.06em' }}>{tenant.activation_code}</p>
-            <p className="mt-0.5 text-[11.5px] text-charcoal">Bagikan kode ini ke jamaah untuk login ke aplikasi.</p>
-          </div>
-
-        {/* Link slug branded */}
-        {slugUrl && (
-          <div className="flex items-center gap-3 rounded-2xl border border-hairline bg-white p-4 shadow-drop-card">
-            <div className="flex-1 min-w-0">
-              <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-mute">Link Login Jamaah</p>
-              <p className="mt-1 truncate text-[13.5px] font-semibold text-ink">
-                {slugUrl}
-              </p>
-              <p className="mt-0.5 text-[11.5px] text-charcoal">Jamaah cukup membuka link ini dan mengetik nama.</p>
-            </div>
-            <button onClick={handleCopySlug}
-              className="flex-none flex items-center gap-1.5 rounded-xl px-3 py-2 text-[12px] font-semibold transition-all active:scale-95"
-              style={{ background: copied ? 'rgba(22,163,74,0.10)' : 'var(--color-primary)', color: copied ? '#15803d' : '#ffffff' }}>
-              {copied ? (
-                <><svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>Tersalin!</>
-              ) : (
-                <><svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>Salin Link</>
-              )}
-            </button>
-          </div>
-        )}
-        </div>
-      </div>
-
-      {/* ── Tab Bar ── */}
-      {selectedBatch && (
-        <section className="mb-5 overflow-hidden rounded-2xl border border-hairline bg-white shadow-drop-card">
-          <div className="h-1 w-full" style={{ background: 'linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary-deep) 100%)' }} />
-          <div className="p-4 sm:p-5">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="min-w-0">
-                <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-mute">Kesiapan Batch</p>
-                <p className="mt-0.5 text-[15px] font-bold text-ink">{readinessCount} dari {batchReadiness.length} data operasional siap</p>
-              </div>
-              <span className="rounded-full px-2.5 py-1 text-[11px] font-bold" style={{ background: readinessCount === batchReadiness.length ? 'rgba(22,163,74,0.10)' : 'rgba(245,158,11,0.10)', color: readinessCount === batchReadiness.length ? '#15803d' : '#b45309' }}>
-                {readinessCount === batchReadiness.length ? 'Siap rilis' : 'Perlu dilengkapi'}
-              </span>
-            </div>
-            <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
-              {batchReadiness.map((item, index) => {
-                const Icon = index === 1 ? Hotel : index === 2 ? Phone : index === 3 ? Users : index === 4 ? MapPin : AlertCircle;
-                return (
-                  <button key={item.label} type="button" onClick={() => setActiveTab(item.tab)}
-                    className="flex items-start gap-2.5 rounded-xl bg-surface-bone px-3 py-2.5 text-left transition-opacity hover:opacity-80">
-                    <Icon className="mt-0.5 h-4 w-4 flex-none" style={{ color: item.ready ? '#16a34a' : '#d97706' }} />
-                    <span className="min-w-0">
-                      <span className="block text-[12px] font-bold leading-tight text-ink">{item.label}</span>
-                      <span className="mt-0.5 block text-[10.5px] leading-snug text-charcoal">{item.detail}</span>
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </section>
       )}
 
-      <div className="sticky top-0 z-10 -mx-1 mb-5 overflow-x-auto bg-canvas px-1 py-2" style={{ scrollbarWidth: 'none' }}>
+      <div className="sticky top-0 z-10 -mx-5 mb-4 overflow-x-auto bg-canvas px-5 py-2" style={{ scrollbarWidth: 'none' }}>
         <div className="flex w-max min-w-full gap-1.5">
           {TABS.map(t => {
             const active = activeTab === t.id;
             return (
-              <button key={t.id} type="button" onClick={() => setActiveTab(t.id)}
+              <button key={t.id} type="button"
+                onClick={e => { setActiveTab(t.id); e.currentTarget.scrollIntoView({ inline: 'center', block: 'nearest' }); }}
                 aria-current={active ? 'page' : undefined}
-                className="flex-none whitespace-nowrap rounded-full px-3.5 py-2 text-[12.5px] font-semibold transition-colors"
+                className="flex-none whitespace-nowrap rounded-full px-3 py-1.5 text-[12px] font-semibold transition-colors"
                 style={{
                   color: active ? '#ffffff' : '#575757',
                   background: active ? 'var(--color-primary)' : '#ffffff',
@@ -1126,12 +1110,12 @@ export default function TravelDashboard() {
       </div>
 
       {/* ══════════════════════════════════════════════
-          TAB: KEBERANGKATAN
+          TAB: COMMAND CENTER (laporan batch)
       ══════════════════════════════════════════════ */}
       {activeTab === 'overview' && (
-        <section>
+        <section className="space-y-3">
           {!selectedBatch ? (
-            <div className="rounded-2xl px-6 py-12 text-center" style={{ ...cardStyle, border: '1px dashed color-mix(in srgb, var(--color-primary) 30%, transparent)' }}>
+            <div className="rounded-2xl px-6 py-12 text-center" style={{ ...cardStyle, border: `1px dashed ${PRIMARY_BORDER}` }}>
               <ClipboardList className="mx-auto h-8 w-8" style={{ color: PRIMARY }} />
               <h2 className="mt-3 text-[16px] font-bold" style={{ color: '#202020' }}>Mulai dari batch keberangkatan</h2>
               <p className="mx-auto mt-1 max-w-md text-[12px] leading-relaxed" style={{ color: '#6b7280' }}>
@@ -1139,84 +1123,123 @@ export default function TravelDashboard() {
               </p>
               <button type="button" onClick={() => setActiveTab('keberangkatan')}
                 className="mt-5 inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-[12px] font-semibold text-white"
-                style={{ background: `linear-gradient(135deg, ${PRIMARY}, ${PRIMARY_DEEP})` }}>
+                style={{ background: PRIMARY }}>
                 Buat Batch <ArrowRight className="h-4 w-4" />
               </button>
             </div>
           ) : (
             <>
-              <div className="flex flex-wrap items-end justify-between gap-4 mb-5">
-                <div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.16em]" style={{ color: PRIMARY }}>Batch Command Center</p>
-                  <h2 className="mt-1 text-[21px] font-bold" style={{ color: '#202020', letterSpacing: '-0.02em' }}>{selectedBatch.nama_batch}</h2>
-                  <p className="mt-1 text-[12px]" style={{ color: '#6b7280' }}>Kontrol kesiapan keberangkatan dan tindak lanjuti data yang belum lengkap.</p>
-                </div>
-                <button type="button" onClick={() => setActiveTab('keberangkatan')}
-                  className="inline-flex items-center gap-2 rounded-xl px-3.5 py-2 text-[12px] font-semibold"
-                  style={{ color: PRIMARY, background: PRIMARY_BG, border: `1px solid ${PRIMARY_BORDER}` }}>
-                  Kelola Batch <ArrowRight className="h-3.5 w-3.5" />
-                </button>
-              </div>
-
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {[
-                  { label: 'Jamaah batch', value: String(jamaahList.length), sub: jamaahList.length ? 'Terdaftar pada batch ini' : 'Belum ada jamaah', icon: Users, tone: PRIMARY, bg: PRIMARY_BG },
-                  { label: 'Agenda aktif', value: String(agendaItems.length), sub: agendaItems.length ? 'Siap ditampilkan ke jamaah' : 'Belum ada agenda', icon: CalendarClock, tone: PRIMARY, bg: PRIMARY_BG },
-                  { label: 'Info prioritas', value: String(importantAnnouncements), sub: importantAnnouncements ? 'Pengumuman penting aktif' : 'Tidak ada info prioritas', icon: BellRing, tone: importantAnnouncements ? '#dc2626' : PRIMARY, bg: importantAnnouncements ? 'rgba(220,38,38,0.08)' : PRIMARY_BG },
-                  { label: 'Kuota penerbitan', value: String(quotaBalance?.balance ?? 0), sub: quotaBalance ? `${quotaBalance.total_used} akun telah diterbitkan` : 'Hubungi Umrahme untuk top up', icon: PackageCheck, tone: PRIMARY, bg: PRIMARY_BG },
-                  { label: 'Data paspor', value: String(missingPassports), sub: missingPassports ? 'Jamaah belum isi paspor' : 'Semua paspor terisi', icon: ClipboardList, tone: missingPassports ? '#d97706' : '#15803d', bg: missingPassports ? 'rgba(245,158,11,0.09)' : 'rgba(22,163,74,0.09)' },
-                  { label: 'Hotel personal', value: String(hotelOverrides), sub: hotelOverrides ? 'Memakai override hotel' : 'Semua ikut hotel batch', icon: Hotel, tone: PRIMARY, bg: PRIMARY_BG },
-                ].map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <div key={item.label} className="min-h-[118px] rounded-2xl p-4" style={cardStyle}>
-                      <div className="flex items-start justify-between gap-3">
-                        <p className="font-mono text-[9px] uppercase tracking-[0.14em]" style={{ color: '#6b7280' }}>{item.label}</p>
-                        <span className="flex h-8 w-8 items-center justify-center rounded-lg" style={{ color: item.tone, background: item.bg }}><Icon className="h-4 w-4" /></span>
-                      </div>
-                      <p className="mt-3 text-[24px] font-bold leading-none" style={{ color: '#202020', letterSpacing: '-0.03em' }}>{item.value}</p>
-                      <p className="mt-2 text-[10.5px] leading-snug" style={{ color: '#6b7280' }}>{item.sub}</p>
+              {/* Ringkasan batch */}
+              <div className="relative overflow-hidden rounded-2xl text-white shadow-drop-card">
+                {tenant.hero_image_url
+                  ? <img src={tenant.hero_image_url} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: 'center 30%' }} />
+                  : <div aria-hidden className="absolute inset-0" style={{ background: 'var(--color-primary)' }} />}
+                <div className="pointer-events-none absolute inset-0" style={{ background: 'linear-gradient(100deg, color-mix(in srgb, var(--color-primary-deep) 94%, transparent) 0%, color-mix(in srgb, var(--color-primary-deep) 55%, transparent) 100%)' }} />
+                <div className="relative p-4 sm:p-5">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="truncate text-[11px] font-medium text-white/70">{tenant.nama_travel}</p>
+                      <h1 className="mt-0.5 font-display text-[18px] font-bold leading-tight sm:text-[22px]" style={{ letterSpacing: '-0.3px' }}>{selectedBatch.nama_batch}</h1>
+                      <p className="mt-1 text-[12px] text-white/80">{formatRentangTanggal(selectedBatch.tanggal_keberangkatan, selectedBatch.tanggal_kepulangan)}</p>
                     </div>
-                  );
-                })}
-              </div>
-
-              <div className="mt-5 grid gap-4 lg:grid-cols-[1.3fr_0.7fr]">
-                <div className="rounded-2xl p-5" style={cardStyle}>
-                  <div className="flex items-center justify-between gap-3">
-                    <div>
-                      <p className="text-[14px] font-bold" style={{ color: '#202020' }}>Tindakan sebelum rilis batch</p>
-                      <p className="mt-0.5 text-[11px]" style={{ color: '#6b7280' }}>Selesaikan item ini sebelum membagikan akses ke jamaah.</p>
-                    </div>
-                    <span className="font-mono text-[10px] font-bold" style={{ color: readinessIssues.length ? '#b45309' : '#16a34a' }}>{readinessIssues.length ? `${readinessIssues.length} TERBUKA` : 'SELESAI'}</span>
+                    <span className="flex-none rounded-full bg-white px-2.5 py-1 text-[10.5px] font-bold" style={{ color: readinessIssues.length ? '#b45309' : '#15803d' }}>
+                      {readinessIssues.length ? 'Perlu dilengkapi' : 'Siap rilis'}
+                    </span>
                   </div>
-                  <div className="mt-4 divide-y" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>
-                    {(readinessIssues.length ? readinessIssues : batchReadiness).map((item) => (
+                  <div className="mt-3 flex items-center gap-2.5">
+                    <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/25" role="progressbar" aria-valuemin={0} aria-valuemax={batchReadiness.length} aria-valuenow={readinessCount} aria-label="Kesiapan data batch">
+                      <div className="h-full rounded-full bg-white" style={{ width: `${(readinessCount / Math.max(batchReadiness.length, 1)) * 100}%` }} />
+                    </div>
+                    <span className="flex-none text-[11px] font-semibold text-white/90">{readinessCount}/{batchReadiness.length} data siap</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Angka utama */}
+              <div className="grid grid-cols-3 gap-2 lg:grid-cols-6">
+                {[
+                  { label: 'Jamaah', value: String(jamaahList.length), sub: 'Terdaftar di batch ini', tab: 'jamaah' as TabId, tone: '#202020' },
+                  { label: 'Agenda', value: String(agendaItems.length), sub: 'Tampil ke jamaah', tab: 'agenda' as TabId, tone: '#202020' },
+                  { label: 'Laporan', value: String(openHelpRequests), sub: 'Bantuan belum selesai', tab: 'care' as TabId, tone: openHelpRequests ? '#dc2626' : '#202020' },
+                  { label: 'Visa siap', value: `${visaSiapCount}/${jamaahList.length}`, sub: 'Status tab Dokumen', tab: 'dokumen' as TabId, tone: '#202020' },
+                  { label: 'Tanpa paspor', value: String(missingPassports), sub: 'Nomor belum diisi', tab: 'jamaah' as TabId, tone: missingPassports ? '#b45309' : '#202020' },
+                  { label: 'Kuota', value: String(quotaBalance?.balance ?? 0), sub: quotaBalance ? `${quotaBalance.total_used} sudah terpakai` : 'Hubungi Umrahme', tab: 'jamaah' as TabId, tone: '#202020' },
+                ].map((item) => (
+                  <button key={item.label} type="button" onClick={() => setActiveTab(item.tab)}
+                    className="min-w-0 rounded-2xl border border-hairline bg-white px-3 py-2.5 text-left shadow-drop-card transition-opacity hover:opacity-75">
+                    <p className="truncate text-[10.5px] font-semibold text-charcoal">{item.label}</p>
+                    <p className="mt-0.5 font-display text-[20px] font-bold leading-tight lg:text-[24px]" style={{ color: item.tone, letterSpacing: '-0.5px' }}>{item.value}</p>
+                    <p className="mt-0.5 hidden truncate text-[10.5px] text-mute lg:block">{item.sub}</p>
+                  </button>
+                ))}
+              </div>
+
+              <div className="grid gap-3 lg:grid-cols-[1.25fr_1fr] lg:items-start">
+                {/* Kesiapan */}
+                <div className="overflow-hidden rounded-2xl border border-hairline bg-white shadow-drop-card">
+                  <div className="flex items-center justify-between gap-3 px-4 pb-1 pt-3.5">
+                    <h2 className="text-[13.5px] font-bold text-ink">Kesiapan batch</h2>
+                    <span className="text-[11px] font-semibold" style={{ color: readinessIssues.length ? '#b45309' : '#15803d' }}>
+                      {readinessIssues.length ? `${readinessIssues.length} perlu dilengkapi` : 'Semua siap'}
+                    </span>
+                  </div>
+                  <div className="divide-y divide-hairline px-4 pb-1.5">
+                    {batchReadiness.map((item) => (
                       <button key={item.label} type="button" onClick={() => setActiveTab(item.tab)}
-                        className="flex w-full items-center gap-3 py-3 text-left first:pt-0 last:pb-0">
-                        <span className="flex h-7 w-7 flex-none items-center justify-center rounded-full" style={{ color: item.ready ? '#16a34a' : '#d97706', background: item.ready ? 'rgba(22,163,74,0.09)' : 'rgba(245,158,11,0.10)' }}>
-                          {item.ready ? <CheckCircle2 className="h-3.5 w-3.5" /> : <AlertCircle className="h-3.5 w-3.5" />}
-                        </span>
+                        className="flex w-full items-center gap-2.5 py-2.5 text-left transition-opacity hover:opacity-70">
+                        {item.ready
+                          ? <CheckCircle2 className="h-4 w-4 flex-none" style={{ color: '#16a34a' }} />
+                          : <AlertCircle className="h-4 w-4 flex-none" style={{ color: '#d97706' }} />}
                         <span className="min-w-0 flex-1">
-                          <span className="block text-[12px] font-semibold" style={{ color: '#374151' }}>{item.label}</span>
-                          <span className="mt-0.5 block text-[10.5px]" style={{ color: '#6b7280' }}>{item.detail}</span>
+                          <span className="block text-[12.5px] font-semibold leading-tight text-ink">{item.label}</span>
+                          <span className="mt-0.5 block text-[11px] leading-snug text-charcoal">{item.detail}</span>
                         </span>
-                        <ArrowRight className="h-3.5 w-3.5 flex-none" style={{ color: '#9ca3af' }} />
+                        <ArrowRight className="h-3.5 w-3.5 flex-none text-ash" />
                       </button>
                     ))}
                   </div>
                 </div>
 
-                <div className="rounded-2xl p-5" style={{ background: 'var(--color-primary-deep)', color: '#fff' }}>
-                  <p className="font-mono text-[9px] uppercase tracking-[0.16em]" style={{ color: '#93c5fd' }}>Kontrol Cepat</p>
-                  <h3 className="mt-2 truncate text-[16px] font-bold leading-snug">{selectedBatch.nama_batch}</h3>
-                  <div className="mt-3 space-y-1.5 text-[11px]" style={{ color: 'rgba(255,255,255,0.72)' }}>
-                    <p className="truncate">{selectedBatch.hotel_makkah || 'Hotel Makkah belum diisi'}</p>
-                    <p className="truncate">{selectedBatch.hotel_madinah || 'Hotel Madinah belum diisi'}</p>
+                <div className="space-y-3">
+                  {/* Akses jamaah */}
+                  <div className="rounded-2xl border border-hairline bg-white p-4 shadow-drop-card">
+                    <h2 className="text-[13.5px] font-bold text-ink">Akses jamaah</h2>
+                    {slugUrl && (
+                      <div className="mt-2 flex items-center gap-2">
+                        <p className="min-w-0 flex-1 truncate text-[12.5px] font-medium text-ink">{slugUrl}</p>
+                        <button type="button" onClick={handleCopySlug}
+                          className="flex-none rounded-full px-3 py-1.5 text-[11.5px] font-semibold transition-colors"
+                          style={{ background: copied ? 'rgba(22,163,74,0.10)' : 'var(--color-primary)', color: copied ? '#15803d' : '#ffffff' }}>
+                          {copied ? 'Tersalin' : 'Salin link'}
+                        </button>
+                      </div>
+                    )}
+                    <div className="mt-2 flex items-baseline justify-between gap-3 rounded-xl bg-surface-bone px-3 py-2">
+                      <span className="text-[11.5px] text-charcoal">Kode aktivasi</span>
+                      <span className="truncate text-[13px] font-bold text-ink" style={{ letterSpacing: '0.04em' }}>{tenant.activation_code}</span>
+                    </div>
                   </div>
-                  <div className="mt-5 grid grid-cols-2 gap-2">
-                    <button type="button" onClick={() => setActiveTab('jamaah')} className="rounded-lg px-3 py-2 text-left text-[11px] font-semibold" style={{ background: 'rgba(255,255,255,0.12)' }}>Kelola Jamaah</button>
-                    <button type="button" onClick={() => setActiveTab('care')} className="rounded-lg px-3 py-2 text-left text-[11px] font-semibold" style={{ background: 'rgba(255,255,255,0.12)' }}>Care Center</button>
+
+                  {/* Info batch */}
+                  <div className="rounded-2xl border border-hairline bg-white p-4 shadow-drop-card">
+                    <div className="flex items-center justify-between gap-3">
+                      <h2 className="text-[13.5px] font-bold text-ink">Info batch</h2>
+                      <button type="button" onClick={() => setActiveTab('keberangkatan')} className="text-[11.5px] font-semibold text-primary">Kelola</button>
+                    </div>
+                    <dl className="mt-1.5 divide-y divide-hairline">
+                      {[
+                        { label: 'Hotel Makkah', value: selectedBatch.hotel_makkah },
+                        { label: 'Hotel Madinah', value: selectedBatch.hotel_madinah },
+                        { label: 'Titik kumpul', value: selectedBatch.meeting_point },
+                        { label: 'Muthowwif', value: selectedBatch.guide_name },
+                        { label: 'Tour leader', value: selectedBatch.tour_leader_name },
+                      ].map((row) => (
+                        <div key={row.label} className="flex items-baseline justify-between gap-3 py-1.5">
+                          <dt className="flex-none text-[11.5px] text-charcoal">{row.label}</dt>
+                          <dd className={`min-w-0 text-right text-[12px] font-semibold ${row.value ? 'text-ink' : 'text-ash'}`}>{row.value || 'Belum diisi'}</dd>
+                        </div>
+                      ))}
+                    </dl>
                   </div>
                 </div>
               </div>
@@ -1229,11 +1252,11 @@ export default function TravelDashboard() {
         <section>
           <div className="flex flex-wrap items-end justify-between gap-4 mb-5">
             <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.16em]" style={{ color: '#0f766e' }}>Distribusi Perlengkapan</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em]" style={{ color: PRIMARY }}>Distribusi Perlengkapan</p>
               <h2 className="mt-1 text-[20px] font-bold" style={{ color: '#202020', letterSpacing: '-0.02em' }}>Status per jamaah</h2>
               <p className="mt-1 text-[12px]" style={{ color: '#6b7280' }}>{selectedBatch ? selectedBatch.nama_batch : 'Pilih batch untuk mengatur perlengkapan.'}</p>
             </div>
-            <div className="rounded-xl px-4 py-2.5" style={{ background: 'rgba(13,148,136,0.09)', color: '#0f766e' }}>
+            <div className="rounded-xl px-4 py-2.5" style={{ background: 'color-mix(in srgb, var(--color-primary) 9%, transparent)', color: PRIMARY }}>
               <p className="font-mono text-[18px] font-bold leading-none">{receivedEquipmentCount}</p>
               <p className="mt-1 font-mono text-[9px] font-bold uppercase tracking-wider">Barang diterima</p>
             </div>
@@ -1253,9 +1276,9 @@ export default function TravelDashboard() {
                     <p className="text-[13px] font-bold" style={{ color: '#374151' }}>Daftar perlengkapan batch</p>
                     <p className="mt-0.5 text-[11px]" style={{ color: '#6b7280' }}>{equipmentCatalog.length ? `${equipmentCatalog.length} jenis barang aktif` : 'Belum ada daftar perlengkapan.'}</p>
                   </div>
-                  {!equipmentCatalog.length && <button type="button" onClick={seedDefaultEquipment} disabled={equipmentAdding} className="rounded-xl px-3 py-2 text-[11px] font-semibold text-white disabled:opacity-60" style={{ background: '#0f766e' }}>Pakai Paket Standar</button>}
+                  {!equipmentCatalog.length && <button type="button" onClick={seedDefaultEquipment} disabled={equipmentAdding} className="rounded-xl px-3 py-2 text-[11px] font-semibold text-white disabled:opacity-60" style={{ background: PRIMARY }}>Pakai Paket Standar</button>}
                 </div>
-                {equipmentCatalog.length > 0 && <div className="mt-3 flex flex-wrap gap-2">{equipmentCatalog.map(item => <span key={item.id} className="rounded-full px-2.5 py-1 text-[10px] font-semibold" style={{ color: '#0f766e', background: 'rgba(13,148,136,0.08)' }}>{item.label}</span>)}</div>}
+                {equipmentCatalog.length > 0 && <div className="mt-3 flex flex-wrap gap-2">{equipmentCatalog.map(item => <span key={item.id} className="rounded-full px-2.5 py-1 text-[10px] font-semibold" style={{ color: PRIMARY, background: 'color-mix(in srgb, var(--color-primary) 8%, transparent)' }}>{item.label}</span>)}</div>}
                 <form onSubmit={(event) => { event.preventDefault(); addEquipmentItem(equipmentLabel); }} className="mt-3 flex gap-2">
                   <StyledInput value={equipmentLabel} onChange={event => setEquipmentLabel(event.target.value)} placeholder="Tambah barang, mis. Mukena" maxLength={80} />
                   <button type="submit" disabled={!equipmentLabel.trim() || equipmentAdding} className="flex-none rounded-xl px-3 text-[11px] font-semibold text-white disabled:opacity-60" style={{ background: 'var(--color-primary-deep)' }}>Tambah</button>
@@ -1271,7 +1294,7 @@ export default function TravelDashboard() {
                     return (
                       <div key={jamaah.id} className="border-b last:border-b-0" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>
                         <button type="button" onClick={() => setEquipmentJamaahId(selected ? null : jamaah.id)} className="flex w-full items-center gap-3 px-4 py-3.5 text-left">
-                          <span className="flex h-9 w-9 flex-none items-center justify-center rounded-xl" style={{ background: 'rgba(13,148,136,0.08)', color: '#0f766e' }}><PackageCheck className="h-4 w-4" /></span>
+                          <span className="flex h-9 w-9 flex-none items-center justify-center rounded-xl" style={{ background: 'color-mix(in srgb, var(--color-primary) 8%, transparent)', color: PRIMARY }}><PackageCheck className="h-4 w-4" /></span>
                           <span className="min-w-0 flex-1"><span className="block truncate text-[13px] font-semibold" style={{ color: '#202020' }}>{jamaah.nama}</span><span className="mt-0.5 block text-[10.5px]" style={{ color: '#6b7280' }}>{received} dari {equipmentCatalog.length} diterima</span></span>
                           <span className="rounded-full px-2 py-1 font-mono text-[10px] font-bold" style={{ color: received === equipmentCatalog.length ? '#15803d' : '#b45309', background: received === equipmentCatalog.length ? 'rgba(22,163,74,0.09)' : 'rgba(245,158,11,0.10)' }}>{received === equipmentCatalog.length ? 'LENGKAP' : 'PROSES'}</span>
                         </button>
@@ -1292,20 +1315,19 @@ export default function TravelDashboard() {
 
       {activeTab === 'dokumen' && (
         <section>
-          <div className="flex flex-wrap items-end justify-between gap-4 mb-5">
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
             <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.16em]" style={{ color: PRIMARY_DEEP }}>Dokumen Perjalanan</p>
-              <h2 className="mt-1 text-[20px] font-bold" style={{ color: '#202020', letterSpacing: '-0.02em' }}>Status paspor, visa & tiket</h2>
-              <p className="mt-1 text-[12px]" style={{ color: '#6b7280' }}>{selectedBatch ? `${selectedBatch.nama_batch}. Jamaah melihat status ini di menu Profil.` : 'Pilih batch untuk mengatur status dokumen.'}</p>
+              <h2 className="text-[16px] font-bold" style={{ color: '#202020', letterSpacing: '-0.02em' }}>Paspor, visa & tiket</h2>
+              <p className="mt-0.5 hidden text-[12px] sm:block" style={{ color: '#6b7280' }}>{selectedBatch ? 'Jamaah melihat status ini di menu Dokumen Saya.' : 'Pilih batch untuk mengatur status dokumen.'}</p>
             </div>
             {selectedBatch && jamaahList.length > 0 && (
               <div className="flex gap-2">
                 {DOC_TYPES.map(({ type, label }) => {
                   const done = jamaahList.filter(j => docStatusOf(j.id, type) === 'lengkap').length;
                   return (
-                    <div key={type} className="rounded-xl px-3 py-2.5 text-center" style={{ background: PRIMARY_BG, color: PRIMARY_DEEP }}>
-                      <p className="font-mono text-[16px] font-bold leading-none">{done}/{jamaahList.length}</p>
-                      <p className="mt-1 font-mono text-[9px] font-bold uppercase tracking-wider">{label}</p>
+                    <div key={type} className="rounded-xl border border-hairline bg-white px-2.5 py-1.5 text-center">
+                      <p className="text-[13px] font-bold leading-tight text-ink">{done}/{jamaahList.length}</p>
+                      <p className="text-[10px] font-medium text-charcoal">{label}</p>
                     </div>
                   );
                 })}
@@ -1331,7 +1353,58 @@ export default function TravelDashboard() {
             <div className="mb-3 max-w-sm">
               <StyledInput value={docSearch} onChange={e => setDocSearch(e.target.value)} placeholder="Cari nama atau nomor jamaah" />
             </div>
-            <div className="overflow-x-auto rounded-2xl" style={cardStyle}>
+            {/* HP: satu baris per dokumen */}
+            <div className="mb-3 grid grid-cols-3 gap-2 md:hidden">
+              {DOC_TYPES.map(({ type, label }) => (
+                <label key={type} className="min-w-0 text-[10.5px] font-semibold text-charcoal">
+                  Semua {label}
+                  <select value="" disabled={docSaving !== null}
+                    onChange={e => { if (e.target.value) void setDocStatusForAll(type, e.target.value as JamaahDocumentStatus); }}
+                    className="mt-1 block w-full rounded-lg border border-hairline bg-white px-1.5 py-1.5 text-[11px] font-medium text-charcoal">
+                    <option value="">Set…</option>
+                    {DOC_STATUS_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                  </select>
+                </label>
+              ))}
+            </div>
+            <div className="overflow-hidden rounded-2xl md:hidden" style={cardStyle}>
+              {docJamaahList.length === 0 && <p className="px-4 py-8 text-center text-[12px] text-ash">Jamaah tidak ditemukan.</p>}
+              <ul className="divide-y divide-hairline">
+                {docJamaahList.map(jamaah => (
+                  <li key={jamaah.id} className="px-3.5 py-3">
+                    <p className="text-[12.5px] font-semibold text-ink">{jamaah.nama} <span className="text-[10.5px] font-medium text-ash">{jamaah.nomor_jamaah}</span></p>
+                    <div className="mt-1.5 space-y-1.5">
+                      {DOC_TYPES.map(({ type, label }) => {
+                        const status = docStatusOf(jamaah.id, type);
+                        const opt = DOC_STATUS_OPTIONS.find(o => o.value === status) ?? DOC_STATUS_OPTIONS[0];
+                        const note = docRows.find(d => d.jamaah_id === jamaah.id && d.document_type === type)?.note ?? '';
+                        return (
+                          <div key={type} className="flex items-center gap-1.5">
+                            <span className="w-10 flex-none text-[11px] text-charcoal">{label}</span>
+                            <select value={status}
+                              aria-label={`Status ${label} ${jamaah.nama}`}
+                              disabled={docSaving === `${jamaah.id}:${type}` || docSaving === `all:${type}`}
+                              onChange={e => void setDocStatus(jamaah.id, type, e.target.value as JamaahDocumentStatus)}
+                              className="w-[112px] flex-none rounded-lg px-1.5 py-1 text-[11px] font-semibold disabled:opacity-50"
+                              style={{ color: opt.color, background: opt.bg, border: `1px solid ${status === 'belum' ? 'rgba(0,0,0,0.09)' : opt.color + '40'}` }}>
+                              {DOC_STATUS_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                            </select>
+                            <input key={`${jamaah.id}:${type}:${note}`} defaultValue={note} maxLength={200}
+                              placeholder="Catatan"
+                              aria-label={`Catatan ${label} ${jamaah.nama}`}
+                              onBlur={e => void saveDocNote(jamaah.id, type, e.target.value)}
+                              onKeyDown={e => { if (e.key === 'Enter') e.currentTarget.blur(); }}
+                              className="min-w-0 flex-1 rounded-lg px-2 py-1 text-[11px] focus:outline-none"
+                              style={{ ...inputBase, boxShadow: 'none' }} />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="hidden overflow-x-auto rounded-2xl md:block" style={cardStyle}>
               <table className="w-full min-w-[760px] text-left">
                 <thead>
                   <tr style={{ borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
@@ -1627,19 +1700,6 @@ export default function TravelDashboard() {
       ══════════════════════════════════════════════ */}
       {activeTab === 'jamaah' && (
         <div>
-          {/* Keberangkatan selector */}
-          {keberangkatanList.length > 0 && (
-            <div className="mb-5 flex items-center gap-3">
-              <label className="font-mono text-[10px] uppercase tracking-widest flex-none" style={{ color: '#6b7280' }}>Batch:</label>
-              <select value={selectedKeberangkatan} onChange={e => setSelectedKeberangkatan(e.target.value)}
-                className="flex-1 rounded-xl px-3 py-2 text-[13px] focus:outline-none"
-                style={{ ...inputBase, maxWidth: '360px' }}>
-                {keberangkatanList.map(kb => (
-                  <option key={kb.id} value={kb.id}>{kb.nama_batch}</option>
-                ))}
-              </select>
-            </div>
-          )}
           {!selectedKeberangkatan && (
             <div className="mb-5 rounded-xl px-4 py-3 text-[12px]" style={{ background: 'rgba(245,158,11,0.07)', border: '1px solid rgba(245,158,11,0.2)', color: '#d97706' }}>
               Buat batch keberangkatan dulu di tab <strong>Keberangkatan</strong> sebelum menambah jamaah.
@@ -1647,15 +1707,20 @@ export default function TravelDashboard() {
           )}
 
           {/* Header */}
-          <div className="flex items-center gap-3 mb-5">
-            <h2 className="font-bold" style={{ fontSize: '18px', color: '#202020', letterSpacing: '-0.02em' }}>Daftar Jamaah</h2>
-            <span className="font-mono text-[10px] uppercase tracking-widest px-2 py-1 rounded-full" style={{ background: PRIMARY_BG, color: PRIMARY }}>{jamaahList.length} jamaah</span>
+          <div className="mb-3 flex flex-wrap items-center gap-2">
+            <h2 className="mr-auto text-[16px] font-bold" style={{ color: '#202020', letterSpacing: '-0.02em' }}>
+              Daftar Jamaah <span className="text-[12px] font-semibold text-mute">{jamaahList.length}</span>
+            </h2>
             <button type="button" onClick={() => { setImportOpen(o => !o); setImportError(''); setImportPreview([]); }}
-              className="ml-auto inline-flex items-center gap-2 px-4 py-2 text-[12px] font-semibold rounded-xl transition-all duration-150"
-              style={{ background: PRIMARY_BG, color: PRIMARY, border: PRIMARY_BORDER }}>
-              <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
-              Import Excel/PDF
+              className="rounded-full border border-hairline bg-white px-3 py-1.5 text-[12px] font-semibold text-charcoal">
+              Import<span className="hidden sm:inline"> Excel/PDF</span>
             </button>
+            {selectedKeberangkatan && (
+              <button type="button" onClick={() => setJmFormOpen(o => !o)} aria-expanded={jmFormOpen}
+                className="rounded-full px-3 py-1.5 text-[12px] font-semibold text-white" style={{ background: PRIMARY }}>
+                {jmFormOpen ? 'Tutup form' : '+ Tambah'}
+              </button>
+            )}
           </div>
 
           {/* Import panel */}
@@ -1718,7 +1783,7 @@ export default function TravelDashboard() {
           )}
 
           {/* Form tambah jamaah cepat */}
-          {selectedKeberangkatan && (
+          {selectedKeberangkatan && jmFormOpen && (
             <div className="rounded-2xl border p-5 mb-4" style={{ borderColor: 'rgba(0,0,0,0.07)', background: '#fff' }}>
               <p className="font-mono text-[10px] uppercase tracking-[0.14em] mb-3" style={{ color: '#6b7280' }}>Tambah Jamaah</p>
               <form onSubmit={handleAddJamaah}>
@@ -1908,32 +1973,24 @@ export default function TravelDashboard() {
       ══════════════════════════════════════════════ */}
       {activeTab === 'agenda' && (
         <div>
-          <div className="flex items-center gap-3 mb-5">
-            <h2 className="font-bold" style={{ fontSize: '18px', color: '#202020', letterSpacing: '-0.02em' }}>Agenda Perjalanan</h2>
-            <span className="font-mono text-[10px] uppercase tracking-widest px-2 py-1 rounded-full" style={{ background: PRIMARY_BG, color: PRIMARY }}>{agendaItems.length} item</span>
+          <div className="mb-3 flex flex-wrap items-center gap-2">
+            <h2 className="mr-auto text-[16px] font-bold" style={{ color: '#202020', letterSpacing: '-0.02em' }}>
+              Agenda Perjalanan <span className="text-[12px] font-semibold text-mute">{agendaItems.length}</span>
+            </h2>
             {selectedKeberangkatan && (
-              <button type="button" onClick={() => { setAgImportOpen(o => !o); setAgImportError(''); setAgImportPreview([]); }}
-                className="inline-flex items-center gap-2 px-4 py-2 text-[12px] font-semibold rounded-xl transition-all duration-150"
-                style={{ background: PRIMARY_BG, color: PRIMARY, border: `1px solid ${PRIMARY_BORDER}` }}>
-                <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Susun Itinerary dengan AI
-              </button>
+              <>
+                <button type="button" onClick={() => { setAgImportOpen(o => !o); setAgImportError(''); setAgImportPreview([]); }}
+                  className="rounded-full border border-hairline bg-white px-3 py-1.5 text-[12px] font-semibold text-charcoal">
+                  Susun <span className="hidden sm:inline">dengan </span>AI
+                </button>
+                <button type="button" onClick={() => setAgFormOpen(o => !o)} aria-expanded={agFormOpen}
+                  className="rounded-full px-3 py-1.5 text-[12px] font-semibold text-white" style={{ background: PRIMARY }}>
+                  {agFormOpen ? 'Tutup form' : '+ Tambah'}
+                </button>
+              </>
             )}
           </div>
 
-          {/* Keberangkatan selector */}
-          {keberangkatanList.length > 0 && (
-            <div className="mb-5 flex items-center gap-3">
-              <label className="font-mono text-[10px] uppercase tracking-widest flex-none" style={{ color: '#6b7280' }}>Batch:</label>
-              <select value={selectedKeberangkatan} onChange={e => setSelectedKeberangkatan(e.target.value)}
-                className="flex-1 rounded-xl px-3 py-2 text-[13px] focus:outline-none"
-                style={{ ...inputBase, maxWidth: '360px' }}>
-                {keberangkatanList.map(kb => (
-                  <option key={kb.id} value={kb.id}>{kb.nama_batch}</option>
-                ))}
-              </select>
-            </div>
-          )}
 
           {!selectedKeberangkatan ? (
             <div className="mb-5 rounded-xl px-4 py-3 text-[12px]" style={{ background: 'rgba(245,158,11,0.07)', border: '1px solid rgba(245,158,11,0.2)', color: '#d97706' }}>
@@ -2005,15 +2062,15 @@ export default function TravelDashboard() {
                 </div>
               )}
 
-              <div className="rounded-2xl px-6 py-6 mb-4" style={{ ...cardStyle, border: `1px solid ${PRIMARY_BORDER}` }}>
-                <p className="font-mono text-[10px] uppercase tracking-[0.14em] mb-4" style={{ color: '#6b7280' }}>Tambah Agenda Baru</p>
+              {agFormOpen && (
+              <div className="rounded-2xl p-4 mb-3" style={cardStyle}>
                 <form onSubmit={handleAddAgenda} className="space-y-3">
                   <div className="grid grid-cols-2 gap-3">
                     <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Tanggal <span style={{ color: '#f87171' }}>*</span></p><StyledInput type="date" value={agTanggal} onChange={e => setAgTanggal(e.target.value)} required /></div>
                     <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Jam Mulai</p><StyledInput type="time" value={agJam} onChange={e => setAgJam(e.target.value)} /></div>
                   </div>
                   <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Judul Kegiatan <span style={{ color: '#f87171' }}>*</span></p><StyledInput type="text" value={agJudul} onChange={e => setAgJudul(e.target.value)} placeholder="Cth: Perjalanan ke Madinah" required /></div>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid gap-3 sm:grid-cols-2">
                     <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Lokasi</p><StyledInput type="text" value={agLokasi} onChange={e => setAgLokasi(e.target.value)} placeholder="Bandara Soekarno-Hatta" /></div>
                     <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Deskripsi</p><StyledTextarea rows={1} value={agDeskripsi} onChange={e => setAgDeskripsi(e.target.value)} placeholder="Keterangan tambahan..." /></div>
                   </div>
@@ -2030,6 +2087,7 @@ export default function TravelDashboard() {
                   </button>
                 </form>
               </div>
+              )}
 
               {agEditSuccess && (
                 <div className="mb-3 rounded-xl px-4 py-2.5 text-[12px] font-medium flex items-center gap-2"
@@ -2045,7 +2103,33 @@ export default function TravelDashboard() {
                 ) : agendaItems.length === 0 ? (
                   <div className="py-10 text-center"><p className="text-[13px]" style={{ color: '#9ca3af' }}>Belum ada agenda.</p></div>
                 ) : (
-                  <table className="w-full">
+                  <>
+                  {/* HP: daftar per tanggal */}
+                  <ul className="divide-y divide-hairline md:hidden">
+                    {agendaItems.map((item, i) => (
+                      <li key={item.id}>
+                        {(i === 0 || agendaItems[i - 1].tanggal !== item.tanggal) && (
+                          <p className="bg-surface-bone px-4 py-1.5 text-[11px] font-bold text-charcoal">{formatTanggal(item.tanggal)}</p>
+                        )}
+                        <div className="flex items-start gap-3 px-4 py-2.5">
+                          <span className="w-10 flex-none pt-px text-[12px] font-semibold text-charcoal">{item.jam_mulai ? item.jam_mulai.slice(0, 5) : '—'}</span>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-[12.5px] font-semibold leading-snug text-ink">{item.judul}</p>
+                            {item.lokasi && <p className="mt-0.5 text-[11px] text-charcoal">{item.lokasi}</p>}
+                            {item.deskripsi && <p className="mt-0.5 text-[11px] leading-snug text-mute">{item.deskripsi}</p>}
+                          </div>
+                          <div className="flex flex-none flex-col items-end gap-1">
+                            <button type="button" onClick={() => agEditingId === item.id ? handleCancelAgEdit() : handleStartAgEdit(item)} disabled={agEditSaving} className="px-1 text-[11.5px] font-semibold text-primary disabled:opacity-40">
+                              {agEditingId === item.id ? 'Tutup' : 'Edit'}
+                            </button>
+                            <button type="button" onClick={() => handleDeleteAgenda(item.id, item.judul)} disabled={agEditSaving} className="px-1 text-[11.5px] font-semibold disabled:opacity-40" style={{ color: '#dc2626' }}>Hapus</button>
+                          </div>
+                        </div>
+                        {agEditingId === item.id && <div className="border-t border-hairline bg-canvas p-4">{agEditForm}</div>}
+                      </li>
+                    ))}
+                  </ul>
+                  <table className="hidden w-full md:table">
                     <thead>
                       <tr style={{ borderBottom: '1px solid rgba(0,0,0,0.06)', background: '#fafaf9' }}>
                         {['Tanggal', 'Jam', 'Judul', 'Lokasi', ''].map(h => (
@@ -2091,48 +2175,7 @@ export default function TravelDashboard() {
                           {agEditingId === item.id && (
                             <tr style={{ borderBottom: i < agendaItems.length - 1 ? '1px solid rgba(0,0,0,0.04)' : 'none' }}>
                               <td colSpan={5} style={{ padding: '16px 20px 20px', background: 'var(--surface-1, #f8fafc)', borderTop: `1px solid ${PRIMARY_BORDER}` }}>
-                                <div className="grid grid-cols-3 gap-3 mb-3">
-                                  <div>
-                                    <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Tanggal <span style={{ color: '#f87171' }}>*</span></p>
-                                    <StyledInput type="date" value={agEditFields.tanggal} onChange={e => setAgEditFields(f => ({ ...f, tanggal: e.target.value }))} />
-                                  </div>
-                                  <div>
-                                    <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Jam Mulai</p>
-                                    <StyledInput type="time" value={agEditFields.jam_mulai} onChange={e => setAgEditFields(f => ({ ...f, jam_mulai: e.target.value }))} />
-                                  </div>
-                                  <div>
-                                    <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Urutan</p>
-                                    <StyledInput type="number" value={agEditFields.urutan} onChange={e => setAgEditFields(f => ({ ...f, urutan: Number(e.target.value) }))} />
-                                  </div>
-                                </div>
-                                <div className="mb-3">
-                                  <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Judul Kegiatan <span style={{ color: '#f87171' }}>*</span></p>
-                                  <StyledInput type="text" value={agEditFields.judul} onChange={e => setAgEditFields(f => ({ ...f, judul: e.target.value }))} />
-                                </div>
-                                <div className="grid grid-cols-2 gap-3 mb-3">
-                                  <div>
-                                    <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Lokasi</p>
-                                    <StyledInput type="text" value={agEditFields.lokasi} onChange={e => setAgEditFields(f => ({ ...f, lokasi: e.target.value }))} />
-                                  </div>
-                                  <div>
-                                    <p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Deskripsi</p>
-                                    <StyledTextarea rows={2} value={agEditFields.deskripsi} onChange={e => setAgEditFields(f => ({ ...f, deskripsi: e.target.value }))} />
-                                  </div>
-                                </div>
-                                {agEditError && <p className="text-[12px] mb-2" style={{ color: '#dc2626' }}>{agEditError}</p>}
-                                <div className="flex items-center gap-2">
-                                  <button type="button" onClick={handleSaveAgEdit} disabled={agEditSaving}
-                                    className="inline-flex items-center gap-1.5 px-4 py-2 text-[12px] font-semibold rounded-xl transition-all duration-150 disabled:opacity-60"
-                                    style={{ background: `linear-gradient(135deg, ${PRIMARY} 0%, ${PRIMARY_DEEP} 100%)`, color: '#fff', boxShadow: '0 2px 6px color-mix(in srgb, var(--color-primary) 22%, transparent)' }}>
-                                    {agEditSaving && <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeOpacity="0.3" /><path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" /></svg>}
-                                    {agEditSaving ? 'Menyimpan...' : 'Simpan'}
-                                  </button>
-                                  <button type="button" onClick={handleCancelAgEdit} disabled={agEditSaving}
-                                    className="px-4 py-2 text-[12px] rounded-xl transition-all duration-150"
-                                    style={{ border: '1px solid rgba(0,0,0,0.1)', color: '#6b7280' }}>
-                                    Batal
-                                  </button>
-                                </div>
+                                {agEditForm}
                               </td>
                             </tr>
                           )}
@@ -2140,6 +2183,7 @@ export default function TravelDashboard() {
                       ))}
                     </tbody>
                   </table>
+                  </>
                 )}
               </div>
             </>
@@ -2191,24 +2235,18 @@ export default function TravelDashboard() {
 
       {activeTab === 'pengumuman' && (
         <div>
-          <div className="flex items-center gap-3 mb-5">
-            <h2 className="font-bold" style={{ fontSize: '18px', color: '#202020', letterSpacing: '-0.02em' }}>Pengumuman Travel</h2>
-            <span className="font-mono text-[10px] uppercase tracking-widest px-2 py-1 rounded-full" style={{ background: PRIMARY_BG, color: PRIMARY }}>{announcements.length} item</span>
+          <div className="mb-3 flex flex-wrap items-center gap-2">
+            <h2 className="mr-auto text-[16px] font-bold" style={{ color: '#202020', letterSpacing: '-0.02em' }}>
+              Pengumuman <span className="text-[12px] font-semibold text-mute">{announcements.length}</span>
+            </h2>
+            {selectedKeberangkatan && (
+              <button type="button" onClick={() => setAnnFormOpen(o => !o)} aria-expanded={annFormOpen}
+                className="rounded-full px-3 py-1.5 text-[12px] font-semibold text-white" style={{ background: PRIMARY }}>
+                {annFormOpen ? 'Tutup form' : '+ Buat'}
+              </button>
+            )}
           </div>
 
-          {/* Keberangkatan selector */}
-          {keberangkatanList.length > 0 && (
-            <div className="mb-5 flex items-center gap-3">
-              <label className="font-mono text-[10px] uppercase tracking-widest flex-none" style={{ color: '#6b7280' }}>Batch:</label>
-              <select value={selectedKeberangkatan} onChange={e => setSelectedKeberangkatan(e.target.value)}
-                className="flex-1 rounded-xl px-3 py-2 text-[13px] focus:outline-none"
-                style={{ ...inputBase, maxWidth: '360px' }}>
-                {keberangkatanList.map(kb => (
-                  <option key={kb.id} value={kb.id}>{kb.nama_batch}</option>
-                ))}
-              </select>
-            </div>
-          )}
 
           {!selectedKeberangkatan ? (
             <div className="mb-5 rounded-xl px-4 py-3 text-[12px]" style={{ background: 'rgba(245,158,11,0.07)', border: '1px solid rgba(245,158,11,0.2)', color: '#d97706' }}>
@@ -2216,7 +2254,8 @@ export default function TravelDashboard() {
             </div>
           ) : (
             <>
-              <div className="rounded-2xl px-6 py-6 mb-4" style={{ ...cardStyle, border: `1px solid ${PRIMARY_BORDER}` }}>
+              {annFormOpen && (
+              <div className="rounded-2xl p-4 mb-3" style={cardStyle}>
                 <form onSubmit={handleAddAnnouncement} className="space-y-3">
                   <div className="grid grid-cols-2 gap-3">
                     <div><p className="text-[11px] font-semibold mb-1.5" style={{ color: '#374151' }}>Label</p><StyledInput type="text" value={annLabel} onChange={e => setAnnLabel(e.target.value)} placeholder="Info / Penting / Darurat" /></div>
@@ -2235,6 +2274,7 @@ export default function TravelDashboard() {
                   </button>
                 </form>
               </div>
+              )}
 
               <div className="rounded-2xl overflow-hidden" style={cardStyle}>
                 {annLoading ? (
