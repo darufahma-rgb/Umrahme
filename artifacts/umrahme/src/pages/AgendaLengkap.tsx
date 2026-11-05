@@ -1,9 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import { useAuth } from '../context/AuthContext';
 import { fetchAgendaForJamaah, type AgendaItemRow } from '../lib/supabase';
-import { insertAgendaDummy } from '../data/agendaDummy';
 
 function formatTanggalHeader(iso: string) {
   const d = new Date(iso + 'T00:00:00');
@@ -66,11 +65,7 @@ export default function AgendaLengkap() {
   const [items, setItems] = useState<AgendaItemRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [inserting, setInserting] = useState(false);
   const [hariIniVisible, setHariIniVisible] = useState(true);
-  const [refreshKey, setRefreshKey] = useState(0);
-  const [searchParams] = useSearchParams();
-  const isDemoMode = searchParams.get('demo') === '1';
   const todayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -84,7 +79,7 @@ export default function AgendaLengkap() {
     })
       .then(data => { setItems(data); setLoading(false); })
       .catch(() => { setError('Gagal memuat agenda.'); setLoading(false); });
-  }, [keberangkatan?.id, jamaah?.nomorJamaah, refreshKey, tenant?.id]);
+  }, [keberangkatan?.id, jamaah?.nomorJamaah, tenant?.id]);
 
   useEffect(() => {
     if (!todayRef.current) return;
@@ -116,14 +111,6 @@ export default function AgendaLengkap() {
 
   const todayHariKe = firstDate ? hariKe(todayStr) : null;
   const todayInRange = todayHariKe !== null && todayHariKe >= 1 && todayHariKe <= tanggalList.length;
-
-  const handleInsertDemo = async () => {
-    if (!tenant?.id || !keberangkatan?.id) return;
-    setInserting(true);
-    await insertAgendaDummy(tenant.id, keberangkatan.id);
-    setInserting(false);
-    setRefreshKey((k) => k + 1);
-  };
 
   const showFloating = !hariIniVisible && tanggalList.includes(todayStr) && tanggalList.length > 3;
 
@@ -200,16 +187,6 @@ export default function AgendaLengkap() {
             </div>
             <p className="text-[15px] font-semibold text-ink">Belum ada agenda</p>
             <p className="mt-1 text-[13px] text-charcoal">Admin travel belum menambahkan jadwal perjalanan.</p>
-            {isDemoMode && (
-              <button
-                onClick={handleInsertDemo}
-                disabled={inserting}
-                className="mt-6 rounded-2xl px-6 py-3 text-[13px] font-bold text-white transition-all active:scale-95 disabled:opacity-60"
-                style={{ background: 'var(--color-primary)' }}
-              >
-                {inserting ? 'Memasukkan data demo...' : '✨ Insert Data Demo'}
-              </button>
-            )}
           </div>
         )}
 

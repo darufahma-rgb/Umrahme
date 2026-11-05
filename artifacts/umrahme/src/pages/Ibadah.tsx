@@ -128,7 +128,7 @@ export default function Ibadah() {
     {
       to:    '/ibadah/jadwal-sholat',
       title: 'Jadwal Sholat',
-      desc:  'Waktu 5 sholat + pengingat adzan real-time.',
+      desc:  'Waktu 5 sholat di Makkah, dengan jam Saudi.',
       icon:  <IconMoon className="h-5 w-5" />,
       cta:   'Lihat Jadwal',
     },
