@@ -12,7 +12,7 @@ import {
   fetchAnnouncements, createAnnouncement, deleteAnnouncement,
   fetchHelpRequests, updateHelpRequestStatus,
   fetchEquipmentCatalog, fetchEquipmentAssignments, createEquipmentCatalogItem, updateEquipmentAssignment,
-  fetchJamaahDocuments, updateJamaahDocument,
+  fetchJamaahDocuments, updateJamaahDocument, bulkUpdateJamaahDocuments,
   type JamaahDocumentRow, type JamaahDocumentStatus,
   type KeberangkatanRow, type JamaahAccountRow, type AgendaItemRow, type TravelAnnouncementRow, type HelpRequestRow, type HelpRequestStatus, type EquipmentCatalogRow, type EquipmentAssignmentRow, type EquipmentAssignmentStatus, type TenantQuotaBalance, type ItineraryAddonRow, type ItineraryAddonItemRow,
   supabase,
@@ -305,6 +305,7 @@ export default function TravelDashboard() {
   const [docLoading, setDocLoading] = useState(false);
   const [docSaving, setDocSaving] = useState<string | null>(null);
   const [docError, setDocError] = useState('');
+  const [docSearch, setDocSearch] = useState('');
 
   /* ── Loaders ─────────────────────────────────────────────────────── */
 
@@ -946,13 +947,27 @@ export default function TravelDashboard() {
     }
   }
 
+  async function saveDocNote(jamaahId: string, type: JamaahDocumentRow['document_type'], value: string) {
+    if (!tenant?.id) return;
+    const note = value.trim() || null;
+    const current = docRows.find(d => d.jamaah_id === jamaahId && d.document_type === type)?.note ?? null;
+    if (note === current) return;
+    setDocError('');
+    try {
+      const saved = await updateJamaahDocument(tenant.id, jamaahId, type, docStatusOf(jamaahId, type), note);
+      setDocRows(prev => [...prev.filter(d => !(d.jamaah_id === jamaahId && d.document_type === type)), saved]);
+    } catch (err: unknown) {
+      setDocError(err instanceof Error ? err.message : 'Gagal menyimpan catatan dokumen.');
+    }
+  }
+
   async function setDocStatusForAll(type: JamaahDocumentRow['document_type'], status: JamaahDocumentStatus) {
     if (!tenant?.id || jamaahList.length === 0) return;
     const label = DOC_STATUS_OPTIONS.find(o => o.value === status)?.label ?? status;
     if (!window.confirm(`Ubah status ${type} semua ${jamaahList.length} jamaah di batch ini menjadi "${label}"?`)) return;
     setDocSaving(`all:${type}`); setDocError('');
     try {
-      const saved = await Promise.all(jamaahList.map(j => updateJamaahDocument(tenant.id, j.id, type, status)));
+      const saved = await bulkUpdateJamaahDocuments(tenant.id, jamaahList.map(j => j.id), type, status);
       setDocRows(prev => [...prev.filter(d => d.document_type !== type), ...saved]);
     } catch (err: unknown) {
       setDocError(err instanceof Error ? err.message : 'Gagal menyimpan status dokumen.');
@@ -991,6 +1006,10 @@ export default function TravelDashboard() {
     ? helpRequests
     : helpRequests.filter((item) => item.status === helpStatusFilter);
   const receivedEquipmentCount = equipmentAssignments.filter((item) => item.status === 'sudah').length;
+  const docQuery = docSearch.trim().toLowerCase();
+  const docJamaahList = docQuery
+    ? jamaahList.filter((item) => item.nama.toLowerCase().includes(docQuery) || item.nomor_jamaah.toLowerCase().includes(docQuery))
+    : jamaahList;
 
   /* ── Render ──────────────────────────────────────────────────────── */
 
@@ -1324,11 +1343,15 @@ export default function TravelDashboard() {
             <div className="rounded-2xl px-5 py-10 text-center" style={{ border: '1px dashed rgba(0,0,0,0.14)' }}>
               <p className="text-[13px]" style={{ color: '#6b7280' }}>Belum ada jamaah di batch ini.</p>
             </div>
-          ) : docLoading ? (
+          ) : docLoading && docRows.length === 0 ? (
             <p className="py-10 text-center font-mono text-[12px]" style={{ color: '#9ca3af' }}>Memuat status dokumen...</p>
           ) : (
+            <>
+            <div className="mb-3 max-w-sm">
+              <StyledInput value={docSearch} onChange={e => setDocSearch(e.target.value)} placeholder="Cari nama atau nomor jamaah" />
+            </div>
             <div className="overflow-x-auto rounded-2xl" style={cardStyle}>
-              <table className="w-full min-w-[560px] text-left">
+              <table className="w-full min-w-[760px] text-left">
                 <thead>
                   <tr style={{ borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
                     <th className="px-5 py-3 font-mono text-[10px] uppercase tracking-wider" style={{ color: '#9ca3af' }}>Jamaah</th>
@@ -1349,17 +1372,21 @@ export default function TravelDashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {jamaahList.map(jamaah => (
+                  {docJamaahList.length === 0 && (
+                    <tr><td colSpan={DOC_TYPES.length + 1} className="px-5 py-8 text-center text-[12px]" style={{ color: '#9ca3af' }}>Jamaah tidak ditemukan.</td></tr>
+                  )}
+                  {docJamaahList.map(jamaah => (
                     <tr key={jamaah.id} style={{ borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
-                      <td className="px-5 py-3">
+                      <td className="px-5 py-3 align-top">
                         <p className="text-[13px] font-semibold" style={{ color: '#111827' }}>{jamaah.nama}</p>
                         <p className="font-mono text-[10px]" style={{ color: '#9ca3af' }}>{jamaah.nomor_jamaah}</p>
                       </td>
                       {DOC_TYPES.map(({ type }) => {
                         const status = docStatusOf(jamaah.id, type);
                         const opt = DOC_STATUS_OPTIONS.find(o => o.value === status) ?? DOC_STATUS_OPTIONS[0];
+                        const note = docRows.find(d => d.jamaah_id === jamaah.id && d.document_type === type)?.note ?? '';
                         return (
-                          <td key={type} className="px-3 py-3">
+                          <td key={type} className="px-3 py-3 align-top">
                             <select
                               value={status}
                               disabled={docSaving === `${jamaah.id}:${type}` || docSaving === `all:${type}`}
@@ -1368,6 +1395,16 @@ export default function TravelDashboard() {
                               style={{ color: opt.color, background: opt.bg, border: `1px solid ${status === 'belum' ? 'rgba(0,0,0,0.09)' : opt.color + '40'}` }}>
                               {DOC_STATUS_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
                             </select>
+                            <input
+                              key={`${jamaah.id}:${type}:${note}`}
+                              defaultValue={note}
+                              maxLength={200}
+                              placeholder="Catatan untuk jamaah"
+                              aria-label={`Catatan ${type} ${jamaah.nama}`}
+                              onBlur={e => void saveDocNote(jamaah.id, type, e.target.value)}
+                              onKeyDown={e => { if (e.key === 'Enter') e.currentTarget.blur(); }}
+                              className="mt-1.5 block w-full min-w-[150px] rounded-lg px-2.5 py-1.5 text-[11px] focus:outline-none"
+                              style={{ ...inputBase, boxShadow: 'none' }} />
                           </td>
                         );
                       })}
@@ -1376,6 +1413,7 @@ export default function TravelDashboard() {
                 </tbody>
               </table>
             </div>
+            </>
           )}
         </section>
       )}

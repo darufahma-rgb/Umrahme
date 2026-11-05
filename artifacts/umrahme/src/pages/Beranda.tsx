@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import {
   CalendarDays,
   ClipboardCheck,
+  FileText,
   IdCard,
   MapPinned,
   MessageCircle,
@@ -18,7 +19,7 @@ import { TravelCompanionFlow } from '../components/dashboard/TravelCompanionFlow
 import { checklistItems } from '../data/checklist';
 import { daftarLokasi } from '../data/lokasi';
 import { getOperationalInfo } from '../data/travelCompanion';
-import { fetchAgenda, type AgendaItemRow } from '../lib/supabase';
+import { fetchAgenda, fetchMyJamaahDocuments, type AgendaItemRow } from '../lib/supabase';
 import { getWaktuSaudi } from '../lib/waktu';
 import type { Fase } from '../types';
 import {
@@ -232,6 +233,33 @@ function getMainAccessActions(fase: Fase, guideWhatsapp: string): MainAccessActi
   ];
 }
 
+function DokumenStatusRow() {
+  const { jamaah, tenant } = useAuth();
+  const [siap, setSiap] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!tenant?.id || !jamaah?.nomorJamaah) return;
+    fetchMyJamaahDocuments(tenant.id, jamaah.nomorJamaah)
+      .then((rows) => setSiap(rows.filter((row) => row.status === 'lengkap').length))
+      .catch(() => setSiap(null));
+  }, [tenant?.id, jamaah?.nomorJamaah]);
+
+  return (
+    <Link to="/profil/dokumen" className="flex items-center gap-2.5 rounded-2xl bg-white p-3 shadow-drop-card" style={{ border: '1px solid rgba(0,0,0,0.07)' }}>
+      <span className="flex h-9 w-9 flex-none items-center justify-center rounded-xl bg-surface-bone text-primary">
+        <FileText className="h-4 w-4" />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block text-[12.5px] font-bold leading-tight text-ink">Dokumen Saya</span>
+        <span className="mt-0.5 block truncate text-[10.5px] text-charcoal">
+          {siap === null ? 'Status paspor, visa, dan tiket' : `${siap} dari 3 dokumen sudah siap`}
+        </span>
+      </span>
+      <IconChevron className="h-3 w-3 flex-none text-primary" />
+    </Link>
+  );
+}
+
 function SmartAccessPanel({ desktop = false }: { desktop?: boolean }) {
   const { jamaah, keberangkatan } = useAuth();
   if (!jamaah) return null;
@@ -259,6 +287,8 @@ function SmartAccessPanel({ desktop = false }: { desktop?: boolean }) {
       <div className={`grid ${gridClass} gap-2.5`}>
         {actions.map((action) => <AccessAction key={action.label} action={action} />)}
       </div>
+
+      {jamaah.fase === 'persiapan' && <DokumenStatusRow />}
 
       <div className="grid gap-2 rounded-2xl bg-white p-3 shadow-drop-card overflow-hidden" style={{ border: '1px solid rgba(0,0,0,0.07)' }}>
         <div className="flex items-center justify-between gap-2.5 min-w-0">

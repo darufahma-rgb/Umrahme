@@ -744,6 +744,15 @@ export async function updateJamaahDocument(tenantId: string, jamaahId: string, d
   return data as JamaahDocumentRow;
 }
 
+export async function bulkUpdateJamaahDocuments(tenantId: string, jamaahIds: string[], documentType: JamaahDocumentRow['document_type'], status: JamaahDocumentStatus): Promise<JamaahDocumentRow[]> {
+  if (jamaahIds.length === 0) return [];
+  const updatedAt = new Date().toISOString();
+  const rows = jamaahIds.map((jamaahId) => ({ tenant_id: tenantId, jamaah_id: jamaahId, document_type: documentType, status, updated_at: updatedAt }));
+  const { data, error } = await supabase.from('jamaah_documents').upsert(rows, { onConflict: 'jamaah_id,document_type' }).select();
+  if (error) throw new Error(error.message);
+  return (data ?? []) as JamaahDocumentRow[];
+}
+
 export type JamaahSelfRow = { hotel_makkah: string | null; hotel_madinah: string | null; rombongan: string | null };
 
 export async function fetchJamaahSelf(tenantId: string, nomorJamaah: string): Promise<JamaahSelfRow | null> {
